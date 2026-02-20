@@ -6,80 +6,81 @@
     <style>
         :root { --bg: #050a18; --card: #111a2e; --accent: #4f46e5; --text: #e2e8f0; --price: #38bdf8; }
         body { background: var(--bg); color: var(--text); font-family: sans-serif; padding: 20px; display: flex; justify-content: center; }
-        .container { width: 100%; max-width: 600px; text-align: center; }
-        .grid { display: grid; grid-template-columns: 1fr; gap: 20px; margin-top: 20px; }
-        .card { background: var(--card); padding: 20px; border-radius: 15px; border: 1px solid #1e293b; text-align: left; position: relative; }
-        .token-title { color: #94a3b8; font-size: 0.8rem; font-weight: bold; text-transform: uppercase; }
+        .container { width: 100%; max-width: 500px; text-align: center; }
+        .card { background: var(--card); padding: 25px; border-radius: 20px; border: 1px solid #1e293b; text-align: left; margin-bottom: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+        .token-title { color: #94a3b8; font-size: 0.8rem; font-weight: bold; }
         .price { font-size: 2.2rem; font-weight: bold; color: var(--price); margin: 5px 0; }
         .usd-val { font-size: 1rem; color: #64748b; }
-        .status { font-size: 0.7rem; color: #475569; margin-top: 15px; border-top: 1px solid #1e293b; pt: 10px; }
-        #ada-header { background: #1e293b; padding: 10px; border-radius: 10px; margin-bottom: 20px; color: #facc15; }
+        #ada-header { background: #1e293b; padding: 15px; border-radius: 15px; margin-bottom: 25px; color: #facc15; font-weight: bold; border: 1px dashed #475569; }
+        .status { font-size: 0.65rem; color: #475569; margin-top: 10px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div id="ada-header">ADA Price: $<span id="ada-usd">0.00</span></div>
+    <div id="ada-header">ADA Market: $<span id="ada-usd">...</span></div>
 
-    <div class="grid">
-        <div class="card">
-            <div class="token-title">ORACLE / ADA</div>
-            <div id="price-oracle" class="price">... ₳</div>
-            <div id="usd-oracle" class="usd-val">$0.00 USD</div>
-            <div id="status-oracle" class="status">Cargando datos de DexHunter...</div>
-        </div>
+    <div class="card">
+        <div class="token-title">ORACLE / ADA</div>
+        <div id="price-oracle" class="price">... ₳</div>
+        <div id="usd-oracle" class="usd-val">$0.00 USD</div>
+        <div id="status-oracle" class="status">Iniciando...</div>
+    </div>
 
-        <div class="card">
-            <div class="token-title">VLRM / ADA</div>
-            <div id="price-vlrm" class="price">... ₳</div>
-            <div id="usd-vlrm" class="usd-val">$0.00 USD</div>
-            <div id="status-vlrm" class="status">Cargando datos de DexHunter...</div>
-        </div>
+    <div class="card">
+        <div class="token-title">VLRM / ADA</div>
+        <div id="price-vlrm" class="price">... ₳</div>
+        <div id="usd-vlrm" class="usd-val">$0.00 USD</div>
+        <div id="status-vlrm" class="status">Iniciando...</div>
     </div>
 </div>
 
 <script>
-    // Asset IDs (PolicyID + HexName)
     const ORACLE_ID = "328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b27393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
     const VLRM_ID = "63efb704b7396890e4d9539d030c0e667739043add65c00f96c586c056616c6f72756d";
 
+    // Usamos un proxy público para saltar el bloqueo CORS
+    const proxy = "https://api.allorigins.win/get?url=";
+
     async function update() {
         try {
-            // 1. Obtener precio de ADA (CoinGecko es infalible para esto)
-            const adaRes = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=cardano&vs_currencies=usd");
+            // 1. Obtener ADA Price (vía Proxy para asegurar éxito)
+            const adaUrl = encodeURIComponent("https://api.coingecko.com/api/v3/simple/price?ids=cardano&vs_currencies=usd");
+            const adaRes = await fetch(proxy + adaUrl);
             const adaData = await adaRes.json();
-            const adaPrice = adaData.cardano.usd;
+            const adaPrice = JSON.parse(adaData.contents).cardano.usd;
             document.getElementById('ada-usd').innerText = adaPrice.toFixed(3);
 
-            // 2. Obtener precios de los tokens desde DexHunter
-            // Este endpoint devuelve el precio en ADA directamente
-            const hunterRes = await fetch(`https://api.dexhunter.io/v1/price?units=${ORACLE_ID},${VLRM_ID}`);
-            const hunterData = await hunterRes.json();
+            // 2. Obtener Precios Tokens vía DexHunter (vía Proxy)
+            const hunterUrl = encodeURIComponent(`https://api.dexhunter.io/v1/price?units=${ORACLE_ID},${VLRM_ID}`);
+            const hunterRes = await fetch(proxy + hunterUrl);
+            const hunterDataRaw = await hunterRes.json();
+            const hunterData = JSON.parse(hunterDataRaw.contents);
 
-            // Procesar ORACLE
-            const oraclePriceInAda = hunterData[ORACLE_ID];
-            if (oraclePriceInAda) {
-                document.getElementById('price-oracle').innerText = oraclePriceInAda.toFixed(3) + " ₳";
-                document.getElementById('usd-oracle').innerText = "$" + (oraclePriceInAda * adaPrice).toFixed(4) + " USD";
-                document.getElementById('status-oracle').innerText = "Live: DexHunter OK";
+            // Actualizar ORACLE
+            if (hunterData[ORACLE_ID]) {
+                const p = hunterData[ORACLE_ID];
+                document.getElementById('price-oracle').innerText = p.toFixed(3) + " ₳";
+                document.getElementById('usd-oracle').innerText = "$" + (p * adaPrice).toFixed(4) + " USD";
+                document.getElementById('status-oracle').innerText = "Conexión Segura OK";
             }
 
-            // Procesar VLRM
-            const vlrmPriceInAda = hunterData[VLRM_ID];
-            if (vlrmPriceInAda) {
-                document.getElementById('price-vlrm').innerText = vlrmPriceInAda.toFixed(3) + " ₳";
-                document.getElementById('usd-vlrm').innerText = "$" + (vlrmPriceInAda * adaPrice).toFixed(4) + " USD";
-                document.getElementById('status-vlrm').innerText = "Live: DexHunter OK";
+            // Actualizar VLRM
+            if (hunterData[VLRM_ID]) {
+                const p = hunterData[VLRM_ID];
+                document.getElementById('price-vlrm').innerText = p.toFixed(3) + " ₳";
+                document.getElementById('usd-vlrm').innerText = "$" + (p * adaPrice).toFixed(4) + " USD";
+                document.getElementById('status-vlrm').innerText = "Conexión Segura OK";
             }
 
         } catch (e) {
             console.error(e);
-            document.getElementById('status-oracle').innerText = "Reintentando conectar con DexHunter...";
+            document.getElementById('status-oracle').innerText = "Error de red. Reintentando con Proxy...";
         }
     }
 
     update();
-    setInterval(update, 30000); // Actualiza cada 30 segundos
+    setInterval(update, 40000);
 </script>
 
 </body>
