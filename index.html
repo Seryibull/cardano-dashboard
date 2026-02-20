@@ -3,63 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cardano DeFi Hub</title>
+    <title>Cardano Real-Time Hub</title>
     <style>
-        :root { --bg: #0a0f1e; --card: #161e35; --accent: #3b82f6; --text: #f8fafc; }
-        body { background-color: var(--bg); color: var(--text); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 20px; }
-        .container { max-width: 600px; margin: auto; }
-        .header { text-align: center; padding: 20px 0; }
-        .card { background: var(--card); border-radius: 20px; padding: 25px; margin-bottom: 20px; border: 1px solid #2d3748; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .token-info h3 { margin: 0; color: var(--accent); letter-spacing: 1px; font-size: 1.4rem; }
-        .token-id { font-family: monospace; font-size: 0.7rem; color: #64748b; word-break: break-all; background: #0f172a; padding: 10px; border-radius: 10px; margin: 15px 0; border: 1px solid #1e293b; }
-        .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 15px; }
-        .btn { background: #1e293b; color: white; text-decoration: none; padding: 14px; border-radius: 12px; font-size: 0.85rem; font-weight: bold; text-align: center; transition: 0.3s; border: 1px solid #3b82f6; }
-        .btn:hover { background: #3b82f6; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4); }
-        .ada-widget { overflow: hidden; border-radius: 15px; background: #0f172a; padding: 5px; }
-        h1 { font-size: 1.8rem; margin: 0; text-transform: uppercase; color: #fff; }
-        .status-badge { display: inline-block; background: rgba(52, 211, 153, 0.1); color: #34d399; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; margin-top: 5px; }
+        :root { --bg: #050814; --card: #0f172a; --accent: #3b82f6; --text: #f1f5f9; --success: #10b981; }
+        body { background: var(--bg); color: var(--text); font-family: -apple-system, sans-serif; margin: 0; padding: 20px; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 500px; }
+        .header { text-align: center; margin-bottom: 30px; }
+        .card { background: var(--card); border-radius: 24px; padding: 25px; margin-bottom: 20px; border: 1px solid #1e293b; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5); }
+        .token-name { font-size: 0.8rem; color: #94a3b8; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+        .price-ada { font-size: 2.5rem; font-weight: 800; margin: 10px 0; color: var(--text); }
+        .price-ada span { font-size: 1.2rem; color: var(--accent); margin-left: 5px; }
+        .price-usd { font-size: 1.1rem; color: #64748b; font-weight: 500; }
+        #ada-market { background: rgba(59, 130, 246, 0.1); padding: 10px; border-radius: 12px; font-size: 0.9rem; color: var(--accent); text-align: center; margin-bottom: 25px; border: 1px solid rgba(59, 130, 246, 0.2); }
+        .loader { height: 2px; width: 100%; background: #1e293b; position: relative; overflow: hidden; border-radius: 2px; margin-top: 15px; }
+        .loader-bar { position: absolute; height: 100%; background: var(--accent); animation: loading 2s infinite; }
+        @keyframes loading { 0% { left: -40%; width: 40%; } 100% { left: 100%; width: 40%; } }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="header">
-        <h1>Cardano Dashboard</h1>
-        <p style="color: #64748b;">Monitor de Activos en Tiempo Real</p>
+        <h1 style="font-size: 1.5rem; margin: 0;">Blockchain Live Data</h1>
+        <p style="color: #64748b; font-size: 0.9rem;">Direct Node-to-Browser Feed</p>
+    </div>
+
+    <div id="ada-market">ADA Price: <b>$...</b></div>
+
+    <div class="card">
+        <div class="token-name">ORACLE / ADA</div>
+        <div id="oracle-ada" class="price-ada">...<span>₳</span></div>
+        <div id="oracle-usd" class="price-usd">$... USD</div>
+        <div class="loader"><div class="loader-bar"></div></div>
     </div>
 
     <div class="card">
-        <div class="ada-widget">
-            <script src="https://widgets.coingecko.com/gecko-coin-price-chart-widget.js"></script>
-            <gecko-coin-price-chart-widget coin-id="cardano" currency="usd" height="300" locale="es"></gecko-coin-price-chart-widget>
-        </div>
+        <div class="token-name">VLRM / ADA</div>
+        <div id="vlrm-ada" class="price-ada">...<span>₳</span></div>
+        <div id="vlrm-usd" class="price-usd">$... USD</div>
+        <div class="loader"><div class="loader-bar"></div></div>
     </div>
-
-    <div class="card">
-        <div class="token-info">
-            <h3>ORACLE</h3>
-            <span class="status-badge">Red: Cardano (ADA)</span>
-        </div>
-        <div class="token-id">328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b27393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4</div>
-        <div class="btn-group">
-            <a href="https://www.taptools.io/charts/token/328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b27393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4" target="_blank" class="btn">Gráfico TapTools</a>
-            <a href="https://app.minswap.org/swap?tokenA=lovelace&tokenB=328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b27393c37.310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4" target="_blank" class="btn">Swap Minswap</a>
-        </div>
-    </div>
-
-    <div class="card">
-        <div class="token-info">
-            <h3>VLRM</h3>
-            <span class="status-badge">Red: Cardano (ADA)</span>
-        </div>
-        <div class="token-id">63efb704b7396890e4d9539d030c0e667739043add65c00f96c586c056616c6f72756d</div>
-        <div class="btn-group">
-            <a href="https://www.taptools.io/charts/token/63efb704b7396890e4d9539d030c0e667739043add65c00f96c586c056616c6f72756d" target="_blank" class="btn">Gráfico TapTools</a>
-            <a href="https://app.vyfi.io/dex/swap?tokenA=lovelace&tokenB=63efb704b7396890e4d9539d030c0e667739043add65c00f96c586c056616c6f72756d" target="_blank" class="btn">Swap VyFi</a>
-        </div>
-    </div>
-
 </div>
+
+<script>
+    const ORACLE_ID = "328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b27393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
+    const VLRM_ID = "63efb704b7396890e4d9539d030c0e667739043add65c00f96c586c056616c6f72756d";
+
+    async function fetchLivePrices() {
+        try {
+            // 1. Precio de ADA (vía Binance API - La más directa y sin bloqueos)
+            const adaRes = await fetch("https://api.binance.com/api/v3/ticker/price?symbol=ADAUSDT");
+            const adaData = await adaRes.json();
+            const adaUsd = parseFloat(adaData.price);
+            document.getElementById('ada-market').innerHTML = `ADA Price: <b>$${adaUsd.toFixed(4)}</b>`;
+
+            // 2. Precios en ADA (vía MuesliSwap API - Sin restricciones de CORS para navegadores)
+            const tokenRes = await fetch("https://api.muesliswap.com/token/price/all");
+            const tokenData = await tokenRes.json();
+
+            // Filtrar ORACLE
+            const oraclePrice = tokenData[ORACLE_ID];
+            if (oraclePrice) {
+                const pAda = parseFloat(oraclePrice);
+                document.getElementById('oracle-ada').innerHTML = `${pAda.toFixed(3)}<span>₳</span>`;
+                document.getElementById('oracle-usd').innerText = `$${(pAda * adaUsd).toFixed(4)} USD`;
+            }
+
+            // Filtrar VLRM
+            const vlrmPrice = tokenData[VLRM_ID];
+            if (vlrmPrice) {
+                const pAda = parseFloat(vlrmPrice);
+                document.getElementById('vlrm-ada').innerHTML = `${pAda.toFixed(3)}<span>₳</span>`;
+                document.getElementById('vlrm-usd').innerText = `$${(pAda * adaUsd).toFixed(4)} USD`;
+            }
+
+        } catch (error) {
+            console.error("Data fetch error", error);
+        }
+    }
+
+    // Ejecución inicial y ciclo de 20 segundos
+    fetchLivePrices();
+    setInterval(fetchLivePrices, 20000);
+</script>
 
 </body>
 </html>
