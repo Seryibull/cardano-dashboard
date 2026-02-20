@@ -2,50 +2,98 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Mi Panel DeFi</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cardano DeFi Hub - ORACLE</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body { font-family: sans-serif; background: #0f172a; color: white; display: flex; justify-content: center; padding: 40px; }
-        .card { background: #1e293b; padding: 20px; border-radius: 12px; border: 1px solid #334155; width: 300px; text-align: center; }
-        h1 { color: #38bdf8; font-size: 1.2rem; }
-        .dato { font-size: 2rem; font-weight: bold; margin: 10px 0; color: #f8fafc; }
-        .label { color: #94a3b8; font-size: 0.9rem; }
+        :root { --bg: #0a0f1e; --card: #161e35; --accent: #3b82f6; --text: #f8fafc; }
+        body { background-color: var(--bg); color: var(--text); font-family: sans-serif; margin: 0; padding: 20px; }
+        .container { max-width: 1000px; margin: auto; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .card { background: var(--card); padding: 20px; border-radius: 15px; border: 1px solid #2d3748; }
+        .price { font-size: 1.8rem; font-weight: bold; color: #60a5fa; }
+        .liquidity { font-size: 1rem; color: #10b981; margin-top: 5px; }
+        .badge { display: inline-block; padding: 4px 8px; border-radius: 5px; font-size: 0.7rem; background: #1e293b; margin-bottom: 10px; }
+        h1 { text-align: center; color: #3b82f6; }
     </style>
 </head>
 <body>
 
-    <div class="card">
-        <h1>Ethereum (DeFi Stats)</h1>
-        <div class="label">Precio Actual</div>
-        <div id="precio" class="dato">Cargando...</div>
-        
-        <div class="label">TVL Total</div>
-        <div id="tvl" class="dato">Cargando...</div>
+<div class="container">
+    <h1>Cardano Live: ORACLE & VLRM</h1>
+    <div class="grid">
+        <div class="card">
+            <span class="badge">MINSWAP</span>
+            <h3>ORACLE / ADA</h3>
+            <div id="price-oracle-min" class="price">Cargando...</div>
+            <div id="liq-oracle-min" class="liquidity">Liq: --</div>
+        </div>
+
+        <div class="card">
+            <span class="badge">VYFI</span>
+            <h3>ORACLE / ADA</h3>
+            <div id="price-oracle-vyfi" class="price">Cargando...</div>
+            <div id="liq-oracle-vyfi" class="liquidity">Liq: --</div>
+        </div>
+
+        <div class="card">
+            <span class="badge">VYFI</span>
+            <h3>VLRM / ORACLE</h3>
+            <div id="price-vlrm-vyfi" class="price">Cargando...</div>
+            <div id="liq-vlrm-vyfi" class="liquidity">Liq: --</div>
+        </div>
     </div>
 
-    <script>
-        async function actualizarDatos() {
-            try {
-                // Obtenemos datos de la API de DefiLlama
-                const res = await fetch('https://api.llama.fi/protocol/ethereum');
-                const data = await res.json();
+    <div style="background: var(--card); padding: 20px; border-radius: 15px; height: 300px;">
+        <h3>Tendencia de Liquidez (Simulada)</h3>
+        <canvas id="tvlChart"></canvas>
+    </div>
+</div>
 
-                // Mostramos el TVL (con formato de moneda)
-                document.getElementById('tvl').innerText = '$' + Math.round(data.tvl).toLocaleString();
-                
-                // Obtenemos el precio de Ethereum
-                const resPrecio = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');
-                const dataPrecio = await resPrecio.json();
-                document.getElementById('precio').innerText = '$' + dataPrecio.ethereum.usd.toLocaleString();
+<script>
+    // Direcciones de los pools en GeckoTerminal (Cardano Network)
+    const pools = {
+        oracleMin: "cardano_minswap_be44e11400e2b4f2c5d6c8112316e6d7729114f85e4e69b5523a1a9e", // ID Ejemplo
+        oracleVyfi: "cardano_vyfi_...", 
+        vlrmVyfi: "cardano_vyfi_..."
+    };
 
-            } catch (error) {
-                console.error("Error al obtener datos", error);
-            }
+    async function obtenerDatosReales() {
+        try {
+            // Llamada a la API de GeckoTerminal para Cardano
+            // Nota: Usamos un endpoint general para obtener precios actuales
+            const response = await fetch('https://api.geckoterminal.com/api/v2/networks/cardano/pools/' + pools.oracleMin);
+            const json = await response.json();
+            const data = json.data.attributes;
+
+            document.getElementById('price-oracle-min').innerText = "$" + parseFloat(data.base_token_price_usd).toFixed(4);
+            document.getElementById('liq-oracle-min').innerText = "Liq: $" + Math.round(data.reserve_in_usd).toLocaleString();
+            
+            // Repetiríamos esto para los otros pools...
+            // Por ahora, simulamos los otros para que veas el cambio:
+            document.getElementById('price-oracle-vyfi').innerText = "$0.142"; 
+            document.getElementById('price-vlrm-vyfi').innerText = "$0.085";
+
+        } catch (e) {
+            console.log("Error buscando datos reales, usando respaldo...");
+            document.getElementById('price-oracle-min').innerText = "API Limit";
         }
+    }
 
-        // Ejecutar al cargar la página
-        actualizarDatos();
-        // Actualizar cada 30 segundos
-        setInterval(actualizarDatos, 30000);
-    </script>
+    // Gráfica
+    const ctx = document.getElementById('tvlChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab', 'Dom'],
+            datasets: [{ label: 'Liquidez Total', data: [120, 150, 140, 180, 170, 210, 250], borderColor: '#3b82f6', tension: 0.3 }]
+        },
+        options: { maintainAspectRatio: false }
+    });
+
+    obtenerDatosReales();
+    setInterval(obtenerDatosReales, 60000); // Actualizar cada minuto
+</script>
+
 </body>
 </html>
