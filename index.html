@@ -109,6 +109,8 @@
 
 <script>
     const ORACLE_ID = "328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b27393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
+    // ID Directo del Pool VyFi ORACLE/ADA para asegurar la conexión
+    const VYFI_POOL_ID = "cardano_vyfi_566ad937203b1ca4eb04c35588373b9e4a323984534e69b5523a1a9f";
 
     async function fetchData() {
         try {
@@ -118,60 +120,44 @@
             const adaUsd = parseFloat(adaData.price);
             document.getElementById('ada-price').innerText = `ADA: $${adaUsd.toFixed(4)}`;
 
-            // 2. Obtener datos de pools
-            const poolRes = await fetch(`https://api.geckoterminal.com/api/v2/networks/cardano/tokens/${ORACLE_ID}/pools?page=1`);
-            const poolData = await poolRes.json();
-
             let minswapTvl = 0;
             let vyfiTvl = 0;
-            let minswapFound = false;
-            let vyfiFound = false;
 
-            // 3. Rastrear e identificar cada pool
-            for (const pool of poolData.data) {
-                // AQUÍ ESTÁ LA MAGIA: Buscamos el nombre del DEX en la relación oficial, no en el ID del pool
-                let dexName = "";
-                if (pool.relationships && pool.relationships.dex && pool.relationships.dex.data) {
-                    dexName = pool.relationships.dex.data.id.toLowerCase();
-                } else {
-                    dexName = pool.id.toLowerCase(); // Respaldo por si acaso
-                }
-
-                const attr = pool.attributes;
+            // 2. BUSCAR MINSWAP (Vía Radar General)
+            try {
+                const poolRes = await fetch(`https://api.geckoterminal.com/api/v2/networks/cardano/tokens/${ORACLE_ID}/pools?page=1`);
+                const poolData = await poolRes.json();
                 
-                // Conversión de TVL a ADA
-                const tvlUsd = parseFloat(attr.reserve_in_usd) || 0;
-                const tvlAda = tvlUsd / adaUsd;
-
-                // Cálculo de Precio exacto a ADA
-                const priceUsd = parseFloat(attr.base_token_price_usd) || 0;
-                const priceAda = priceUsd / adaUsd;
-
-                // Asignación a Minswap (toma el pool más grande si hay varios)
-                if (dexName.includes('minswap') && !minswapFound) {
-                    document.getElementById('price-minswap').innerText = priceAda.toFixed(4) + " ₳";
-                    document.getElementById('tvl-minswap').innerText = Math.round(tvlAda).toLocaleString('en-US') + " ₳";
-                    document.getElementById('status-minswap').innerText = "CONEXIÓN ESTABLE";
-                    minswapTvl = tvlAda;
-                    minswapFound = true;
+                for (const pool of poolData.data) {
+                    const dexId = pool.relationships?.dex?.data?.id || "";
+                    if (dexId.includes('minswap')) {
+                        const attr = pool.attributes;
+                        const pAda = parseFloat(attr.base_token_price_usd) / adaUsd;
+                        const tAda = parseFloat(attr.reserve_in_usd) / adaUsd;
+                        
+                        document.getElementById('price-minswap').innerText = pAda.toFixed(4) + " ₳";
+                        document.getElementById('tvl-minswap').innerText = Math.round(tAda).toLocaleString('en-US') + " ₳";
+                        document.getElementById('status-minswap').innerText = "CONEXIÓN ESTABLE";
+                        minswapTvl = tAda;
+                        break; 
+                    }
                 }
+            } catch (e) { console.error("Error Minswap Radar"); }
+
+            // 3. BUSCAR VYFI (Vía Conexión Directa al Pool)
+            try {
+                const vyfiRes = await fetch(`https://api.geckoterminal.com/api/v2/networks/cardano/pools/${VYFI_POOL_ID}`);
+                const vyfiData = await vyfiRes.json();
+                const vAttr = vyfiData.data.attributes;
                 
-                // Asignación a VyFi
-                if (dexName.includes('vyfi') && !vyfiFound) {
-                    document.getElementById('price-vyfi').innerText = priceAda.toFixed(4) + " ₳";
-                    document.getElementById('tvl-vyfi').innerText = Math.round(tvlAda).toLocaleString('en-US') + " ₳";
-                    document.getElementById('status-vyfi').innerText = "CONEXIÓN ESTABLE";
-                    vyfiTvl = tvlAda;
-                    vyfiFound = true;
-                }
-            }
+                const vPriceAda = parseFloat(vAttr.base_token_price_usd) / adaUsd;
+                const vTvlAda = parseFloat(vAttr.reserve_in_usd) / adaUsd;
 
-            // Avisos si falta algún DEX
-            if (!minswapFound) {
-                document.getElementById('status-minswap').innerText = "ESPERANDO LIQUIDEZ";
-                document.getElementById('status-minswap').className = "status error";
-            }
-            if (!vyfiFound) {
+                document.getElementById('price-vyfi').innerText = vPriceAda.toFixed(4) + " ₳";
+                document.getElementById('tvl-vyfi').innerText = Math.round(vTvlAda).toLocaleString('en-US') + " ₳";
+                document.getElementById('status-vyfi').innerText = "VYFI DIRECT LINK OK";
+                vyfiTvl = vTvlAda;
+            } catch (e) { 
                 document.getElementById('status-vyfi').innerText = "ESPERANDO LIQUIDEZ";
                 document.getElementById('status-vyfi').className = "status error";
             }
@@ -181,7 +167,7 @@
             document.getElementById('total-tvl').innerText = Math.round(totalTvl).toLocaleString('en-US') + " ₳";
 
         } catch (e) {
-            console.error("Fallo general de red:", e);
+            console.error("Fallo general:", e);
         }
     }
 
