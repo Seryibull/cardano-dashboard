@@ -43,7 +43,7 @@
     async function updateData() {
         let currentAdaPrice = 0;
 
-        // 1. Obtener precio de ADA (Binance - Estable)
+        // 1. Precio ADA/USD (Binance)
         try {
             const adaRes = await fetch("https://api.binance.com/api/v3/ticker/price?symbol=ADAUSDT");
             const adaData = await adaRes.json();
@@ -51,44 +51,35 @@
             document.getElementById('ada-header').innerText = `ADA Market: $${currentAdaPrice.toFixed(4)}`;
         } catch (e) { console.error("Error ADA"); }
 
-        // 2. Obtener ORACLE (Método Estándar - Suele funcionar bien)
-        try {
-            const resO = await fetch(`https://api.geckoterminal.com/api/v2/networks/cardano/tokens/${ORACLE_ID}`);
-            const jsonO = await resO.json();
-            const pUsdO = parseFloat(jsonO.data.attributes.price_usd);
-            if (currentAdaPrice > 0) {
-                const pAdaO = pUsdO / currentAdaPrice;
-                document.getElementById('oracle-ada').innerText = pAdaO.toFixed(4) + " ₳";
-                document.getElementById('oracle-usd').innerText = "$" + pUsdO.toFixed(6) + " USD";
-                document.getElementById('status-oracle').innerText = "CONECTADO";
-            }
-        } catch (e) { document.getElementById('status-oracle').innerText = "REINTENTANDO..."; }
+        // 2. Obtener precios reales de los tokens (DexHunter API)
+        // Esta API es la que usan herramientas como Eternl o Vespr.
+        async function getRealPrice(unit, prefix) {
+            try {
+                // Consultamos el precio "médium" (promedio ponderado por liquidez)
+                const response = await fetch(`https://api.dexhunter.io/v1/price/${unit}`);
+                const data = await response.json();
+                
+                // DexHunter devuelve el precio directamente en ADA (lovelace ratio)
+                const priceInAda = parseFloat(data.price);
 
-        // 3. Obtener VLRM (MÉTODO MATEMÁTICO DIRECTO)
-        try {
-            // Buscamos los pools donde está VLRM
-            const resV = await fetch(`https://api.geckoterminal.com/api/v2/networks/cardano/tokens/${VLRM_ID}/pools?page=1`);
-            const jsonV = await resV.json();
-            
-            // Accedemos a los datos de reserva del pool
-            const poolData = jsonV.data[0].attributes;
-            
-            // Calculamos el precio dividiendo las reservas (La forma más directa posible)
-            // price = quote_reserve / base_reserve
-            const priceInAda = parseFloat(poolData.base_token_price_quote_token);
-            const priceInUsd = parseFloat(poolData.base_token_price_usd);
-
-            if (!isNaN(priceInAda) && priceInAda > 0) {
-                document.getElementById('vlrm-ada').innerText = priceInAda.toFixed(4) + " ₳";
-                document.getElementById('vlrm-usd').innerText = "$" + priceInUsd.toFixed(6) + " USD";
-                document.getElementById('status-vlrm').innerText = "DATOS DE POOL CRUDOS";
-            } else {
-                throw new Error("Pool vacío");
+                if (!isNaN(priceInAda) && priceInAda > 0) {
+                    document.getElementById(`${prefix}-ada`).innerText = priceInAda.toFixed(4) + " ₳";
+                    document.getElementById(`${prefix}-usd`).innerText = "$" + (priceInAda * currentAdaPrice).toFixed(6) + " USD";
+                    document.getElementById(`status-${prefix}`).innerText = "DEXHUNTER LIVE";
+                }
+            } catch (e) {
+                // Respaldo si DexHunter falla: MuesliSwap
+                const resM = await fetch(`https://api.muesliswap.com/token/price/${unit}`);
+                const pAdaM = await resM.json();
+                if(pAdaM) {
+                    document.getElementById(`${prefix}-ada`).innerText = parseFloat(pAdaM).toFixed(4) + " ₳";
+                    document.getElementById(`status-${prefix}`).innerText = "MUESLISWAP FEED";
+                }
             }
-        } catch (e) {
-            document.getElementById('status-vlrm').innerText = "POOL NO DETECTADO";
-            console.error("Error VLRM Pool:", e);
         }
+
+        getRealPrice(ORACLE_ID, 'oracle');
+        getRealPrice(VLRM_ID, 'vlrm');
     }
 
     updateData();
