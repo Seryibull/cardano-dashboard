@@ -3,44 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cardano Live Hub</title>
+    <title>Cardano DeFi Hub</title>
     <style>
-        body { background: #050a18; color: #e2e8f0; font-family: sans-serif; padding: 20px; text-align: center; }
+        :root { --bg: #0a0f1e; --card: #161e35; --accent: #3b82f6; --text: #f8fafc; }
+        body { background-color: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; }
         .container { max-width: 600px; margin: auto; }
-        .card { background: #111a2e; border-radius: 15px; padding: 15px; margin-bottom: 25px; border: 1px solid #1e293b; overflow: hidden; }
-        h2 { font-size: 1.2rem; color: #3b82f6; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px; }
-        .token-label { margin-bottom: 15px; display: block; color: #94a3b8; font-size: 0.8rem; font-weight: bold; }
-        iframe { background: white; border-radius: 10px; border: none; }
+        .header { text-align: center; padding: 20px 0; }
+        .card { background: var(--card); border-radius: 20px; padding: 25px; margin-bottom: 20px; border: 1px solid #2d3748; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .token-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; }
+        .token-info h3 { margin: 0; color: var(--accent); letter-spacing: 1px; }
+        .token-id { font-family: monospace; font-size: 0.65 mil; color: #64748b; word-break: break-all; background: #0f172a; padding: 10px; border-radius: 10px; margin: 10px 0; border: 1px solid #1e293b; }
+        .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+        .btn { background: #1e293b; color: white; text-decoration: none; padding: 12px; border-radius: 10px; font-size: 0.8rem; font-weight: bold; text-align: center; transition: 0.3s; border: 1px solid #3b82f6; }
+        .btn:hover { background: #3b82f6; transform: translateY(-2px); }
+        .ada-widget { overflow: hidden; border-radius: 15px; }
+        h1 { font-size: 1.5rem; margin: 0; text-transform: uppercase; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>Mi Panel Cardano</h2>
-
-    <div class="card">
-        <script src="https://widgets.coingecko.com/gecko-coin-price-chart-widget.js"></script>
-        <gecko-coin-price-chart-widget coin-id="cardano" currency="usd" height="300" locale="es"></gecko-coin-price-chart-widget>
+    <div class="header">
+        <h1>Cardano Monitor</h1>
+        <p style="color: #64748b;">Ecosistema ORACLE & VLRM</p>
     </div>
 
     <div class="card">
-        <span class="token-label">ORACLE / ADA (TapTools Live)</span>
-        <iframe 
-            src="https://www.taptools.io/charts/token/328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b27393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4?currency=ADA" 
-            width="100%" 
-            height="500">
-        </iframe>
+        <div class="ada-widget">
+            <script src="https://widgets.coingecko.com/gecko-coin-price-chart-widget.js"></script>
+            <gecko-coin-price-chart-widget coin-id="cardano" currency="usd" height="300" locale="es"></gecko-coin-price-chart-widget>
+        </div>
     </div>
 
     <div class="card">
-        <span class="token-label">VLRM / ADA (TapTools Live)</span>
-        <iframe 
-            src="https://www.taptools.io/charts/token/63efb704b7396890e4d9539d030c0e667739043add65c00f96c586c056616c6f72756d?currency=ADA" 
-            width="100%" 
-            height="500">
-        </iframe>
+        <div class="token-header">
+            <div class="token-info">
+                <h3>ORACLE</h3>
+                <span style="font-size: 0.8rem; color: #34d399;">Precio en vivo vía DEX</span>
+            </div>
+        </div>
+        <div class="token-id">ID: 328a18ba...7393c37</div>
+        <div class="btn-group">
+            <a href="https://www.taptools.io/charts/token/328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b27393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4?currency=ADA" target="_blank" class="btn">Ver en TapTools</a>
+            <a href="https://app.minswap.org/swap?currencySymbolA=&currencySymbolB=328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b27393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4&tokenNameB=4f5241434c45" target="_blank" class="btn">Minswap</a>
+        </div>
     </div>
 
+    <div class="card">
+        <div class="token-header">
+            <div class="token-info">
+                <h3>VLRM</h3>
+                <span style="font-size: 0.8rem; color: #34d399;">Precio en vivo vía DEX</span>
+            </div>
+        </div>
+        <div class="token-id">ID: 63efb704...6c6f727</div>
+        <div class="btn-group">
+            <a href="https://www.taptools.io/charts/token/63efb704b7396890e4d9539d030c0e667739043add65c00f96c586c056616c6f72756d?currency=ADA" target="_blank" class="btn">Ver en TapTools</a>
+            <a href="https://app.vyfi.io/dex/swap" target="_blank" class="btn">VyFi DEX</a>
+        </div>
+    </div>
+
+    <p style="font-size: 0.7rem; color: #475569; text-align: center;">Nota: Debido a políticas de seguridad de los DEX, los precios detallados se abren en pestañas seguras.</p>
 </div>
 
 </body>
