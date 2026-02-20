@@ -3,81 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cardano Real-Time Hub</title>
+    <title>Cardano Live Dashboard</title>
     <style>
-        :root { --bg: #050814; --card: #0f172a; --accent: #3b82f6; --text: #f1f5f9; }
-        body { background: var(--bg); color: var(--text); font-family: sans-serif; padding: 20px; display: flex; justify-content: center; }
-        .container { width: 100%; max-width: 450px; }
-        .card { background: var(--card); border-radius: 20px; padding: 25px; margin-bottom: 20px; border: 1px solid #1e293b; position: relative; }
-        .token-label { font-size: 0.75rem; color: #64748b; font-weight: bold; text-transform: uppercase; }
-        .price-ada { font-size: 2.2rem; font-weight: 800; margin: 10px 0; color: #facc15; }
-        .price-usd { font-size: 1rem; color: #94a3b8; }
-        #ada-usd-header { text-align: center; margin-bottom: 20px; font-weight: bold; color: var(--accent); }
-        .status-dot { height: 8px; width: 8px; background-color: #10b981; border-radius: 50%; display: inline-block; margin-right: 5px; }
+        :root { --bg: #050814; --card: #111a2e; --accent: #3b82f6; --text: #f1f5f9; --gold: #facc15; }
+        body { background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, sans-serif; padding: 20px; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 400px; }
+        .card { background: var(--card); border-radius: 20px; padding: 20px; margin-bottom: 20px; border: 1px solid #1e293b; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+        .label { font-size: 0.7rem; color: #64748b; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+        .price-ada { font-size: 2rem; font-weight: 800; color: var(--gold); margin: 5px 0; }
+        .price-usd { font-size: 0.9rem; color: #94a3b8; }
+        #ada-header { text-align: center; margin-bottom: 25px; padding: 10px; background: rgba(59, 130, 246, 0.1); border-radius: 12px; border: 1px solid rgba(59, 130, 246, 0.2); font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div id="ada-usd-header">ADA Market: $...</div>
+    <div id="ada-header">ADA Market: $...</div>
 
     <div class="card">
-        <div class="token-label"><span class="status-dot"></span> ORACLE / ADA</div>
-        <div id="oracle-ada" class="price-ada">0.000 ₳</div>
-        <div id="oracle-usd" class="price-usd">$0.00 USD</div>
+        <div class="label">ORACLE / ADA</div>
+        <div id="oracle-ada" class="price-ada">... ₳</div>
+        <div id="oracle-usd" class="price-usd">$... USD</div>
     </div>
 
     <div class="card">
-        <div class="token-label"><span class="status-dot"></span> VLRM / ADA</div>
-        <div id="vlrm-ada" class="price-ada">0.000 ₳</div>
-        <div id="vlrm-usd" class="price-usd">$0.00 USD</div>
+        <div class="label">VLRM / ADA</div>
+        <div id="vlrm-ada" class="price-ada">... ₳</div>
+        <div id="vlrm-usd" class="price-usd">$... USD</div>
     </div>
 </div>
 
 <script>
-    // IDs de la Blockchain (Policy + Hex Name)
-    const ORACLE = "328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b27393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
-    const VLRM = "63efb704b7396890e4d9539d030c0e667739043add65c00f96c586c056616c6f72756d";
+    // IDs de los tokens (Policy + Hex Name)
+    const ORACLE_ID = "328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b27393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
+    const VLRM_ID = "63efb704b7396890e4d9539d030c0e667739043add65c00f96c586c056616c6f72756d";
 
-    async function updatePrices() {
+    async function updateData() {
         try {
-            // 1. Obtener precio de ADA desde Binance (Precio de mercado global)
+            // 1. Obtener precio de ADA (Directo desde Binance)
             const adaRes = await fetch("https://api.binance.com/api/v3/ticker/price?symbol=ADAUSDT");
             const adaData = await adaRes.json();
-            const adaPrice = parseFloat(adaData.price);
-            document.getElementById('ada-usd-header').innerText = `ADA Market: $${adaPrice.toFixed(4)}`;
+            const adaUsd = parseFloat(adaData.price);
+            document.getElementById('ada-header').innerText = `ADA Market: $${adaUsd.toFixed(4)}`;
 
-            // 2. Obtener precios de los Tokens en ADA desde DexHunter (Directo de los DEXs de Cardano)
-            // Usamos un proxy de "allorigins" para evitar el bloqueo CORS del navegador
-            const hunterUrl = `https://api.dexhunter.io/v1/price?units=${ORACLE},${VLRM}`;
-            const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(hunterUrl)}`;
-            
-            const response = await fetch(proxyUrl);
-            const rawData = await response.json();
-            const data = JSON.parse(rawData.contents);
+            // 2. Obtener Precios de Tokens (Directo desde MuesliSwap API)
+            // Esta API devuelve el precio en ADA directamente
+            const tokenRes = await fetch("https://api.muesliswap.com/token/price/all");
+            const allPrices = await tokenRes.json();
 
             // Procesar ORACLE
-            if (data[ORACLE]) {
-                const pAda = data[ORACLE];
+            const oraclePriceInAda = allPrices[ORACLE_ID];
+            if (oraclePriceInAda) {
+                const pAda = parseFloat(oraclePriceInAda);
                 document.getElementById('oracle-ada').innerText = pAda.toFixed(3) + " ₳";
-                document.getElementById('oracle-usd').innerText = "$" + (pAda * adaPrice).toFixed(4) + " USD";
+                document.getElementById('oracle-usd').innerText = "$" + (pAda * adaUsd).toFixed(4) + " USD";
             }
 
             // Procesar VLRM
-            if (data[VLRM]) {
-                const pAda = data[VLRM];
+            const vlrmPriceInAda = allPrices[VLRM_ID];
+            if (vlrmPriceInAda) {
+                const pAda = parseFloat(vlrmPriceInAda);
                 document.getElementById('vlrm-ada').innerText = pAda.toFixed(3) + " ₳";
-                document.getElementById('vlrm-usd').innerText = "$" + (pAda * adaPrice).toFixed(4) + " USD";
+                document.getElementById('vlrm-usd').innerText = "$" + (pAda * adaUsd).toFixed(4) + " USD";
             }
 
-        } catch (e) {
-            console.error("Error cargando datos de la blockchain:", e);
+        } catch (err) {
+            console.error("Fallo en la sincronización:", err);
         }
     }
 
-    updatePrices();
-    // Actualización cada 30 segundos
-    setInterval(updatePrices, 30000);
+    // Actualización inicial
+    updateData();
+    // Refresco automático cada 30 segundos
+    setInterval(updateData, 30000);
 </script>
 
 </body>
