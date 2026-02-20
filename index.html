@@ -38,7 +38,7 @@
 
 <script>
     const ORACLE_ID = "328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b27393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
-    const VLRM_POOL = "cardano_vyfi_566ad937203b1ca4eb04c35588373b9e4a323984534e69b5523a1a9f";
+    const VLRM_ID = "63efb704b7396890e4d9539d030c0e667739043add65c00f96c586c056616c6f72756d";
 
     async function updateData() {
         let currentAdaPrice = 0;
@@ -51,33 +51,52 @@
             document.getElementById('ada-header').innerText = `ADA Market: $${currentAdaPrice.toFixed(4)}`;
         } catch (e) { console.error("Error ADA:", e); }
 
-        // 2. Obtener ORACLE
-        try {
-            const resO = await fetch(`https://api.geckoterminal.com/api/v2/networks/cardano/tokens/${ORACLE_ID}`);
-            const dataO = await resO.json();
-            const pUsdO = parseFloat(dataO.data.attributes.price_usd);
-            if (currentAdaPrice > 0) {
-                document.getElementById('oracle-ada').innerText = (pUsdO / currentAdaPrice).toFixed(4) + " ₳";
-                document.getElementById('oracle-usd').innerText = "$" + pUsdO.toFixed(6) + " USD";
-                document.getElementById('status-oracle').innerText = "NETWORK OK";
+        // 2. Función genérica para obtener precio de cualquier token por su ID
+        async function fetchToken(tokenId, prefix) {
+            try {
+                // Consultamos el token directamente en la red Cardano de GeckoTerminal
+                const res = await fetch(`https://api.geckoterminal.com/api/v2/networks/cardano/tokens/${tokenId}`);
+                const json = await res.json();
+                
+                // Extraemos el precio en USD
+                const priceUsd = parseFloat(json.data.attributes.price_usd);
+                
+                if (!isNaN(priceUsd) && currentAdaPrice > 0) {
+                    const priceInAda = priceUsd / currentAdaPrice;
+                    document.getElementById(`${prefix}-ada`).innerText = priceInAda.toFixed(4) + " ₳";
+                    document.getElementById(`${prefix}-usd`).innerText = "$" + priceUsd.toFixed(6) + " USD";
+                    document.getElementById(`status-${prefix}`).innerText = "CONECTADO";
+                } else {
+                    throw new Error("Precio no encontrado");
+                }
+            } catch (e) {
+                document.getElementById(`status-${prefix}`).innerText = "BUSCANDO POOL...";
+                // Intento secundario si el token directo falla
+                fetchTokenByPool(tokenId, prefix);
             }
-        } catch (e) { document.getElementById('status-oracle').innerText = "ERROR ORACLE"; }
-
-        // 3. Obtener VLRM (Vía Pool Directo)
-        try {
-            const resV = await fetch(`https://api.geckoterminal.com/api/v2/networks/cardano/pools/${VLRM_POOL}`);
-            const dataV = await resV.json();
-            const pAdaV = parseFloat(dataV.data.attributes.base_token_price_quote_token);
-            const pUsdV = parseFloat(dataV.data.attributes.base_token_price_usd);
-            
-            if (!isNaN(pAdaV)) {
-                document.getElementById('vlrm-ada').innerText = pAdaV.toFixed(4) + " ₳";
-                document.getElementById('vlrm-usd').innerText = "$" + pUsdV.toFixed(6) + " USD";
-                document.getElementById('status-vlrm').innerText = "VYFI POOL LIVE";
-            }
-        } catch (e) { 
-            document.getElementById('status-vlrm').innerText = "REINTENTANDO..."; 
         }
+
+        // 3. Intento secundario por búsqueda de pools (Específico para VLRM si falla el anterior)
+        async function fetchTokenByPool(tokenId, prefix) {
+            try {
+                const res = await fetch(`https://api.geckoterminal.com/api/v2/networks/cardano/tokens/${tokenId}/pools?page=1`);
+                const json = await res.json();
+                // Tomamos el primer pool de la lista (el de mayor liquidez)
+                const pool = json.data[0].attributes;
+                const pUsd = parseFloat(pool.base_token_price_usd);
+                const pAda = parseFloat(pool.base_token_price_quote_token);
+
+                document.getElementById(`${prefix}-ada`).innerText = pAda.toFixed(4) + " ₳";
+                document.getElementById(`${prefix}-usd`).innerText = "$" + pUsd.toFixed(6) + " USD";
+                document.getElementById(`status-${prefix}`).innerText = "POOL OK";
+            } catch (e) {
+                document.getElementById(`status-${prefix}`).innerText = "SIN LIQUIDEZ";
+            }
+        }
+
+        // Ejecutar para ambos
+        fetchToken(ORACLE_ID, 'oracle');
+        fetchToken(VLRM_ID, 'vlrm');
     }
 
     updateData();
