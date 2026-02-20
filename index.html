@@ -43,75 +43,56 @@
     async function updateData() {
         let currentAdaPrice = 0;
 
-        // 1. Obtener ADA/USD (Binance es 100% estable)
+        // 1. Obtener precio de ADA (Binance - Estable)
         try {
             const adaRes = await fetch("https://api.binance.com/api/v3/ticker/price?symbol=ADAUSDT");
             const adaData = await adaRes.json();
             currentAdaPrice = parseFloat(adaData.price);
             document.getElementById('ada-header').innerText = `ADA Market: $${currentAdaPrice.toFixed(4)}`;
-        } catch (e) { console.error("Error ADA:", e); }
+        } catch (e) { console.error("Error ADA"); }
 
-        // 2. Función de obtención con 3 niveles de seguridad
-        async function fetchSecurePrice(tokenId, prefix) {
-            const statusEl = document.getElementById(`status-${prefix}`);
-            const adaEl = document.getElementById(`${prefix}-ada`);
-            const usdEl = document.getElementById(`${prefix}-usd`);
-
-            try {
-                // NIVEL 1: API de MuesliSwap (Muy rápida para precios en ADA)
-                const resM = await fetch(`https://api.muesliswap.com/token/price/${tokenId}`);
-                const priceInAda = await resM.json();
-
-                if (priceInAda && !isNaN(priceInAda) && priceInAda > 0) {
-                    displayPrices(priceInAda, prefix);
-                    statusEl.innerText = "DIRECT FEED OK";
-                    return;
-                }
-                throw new Error("Muesli no data");
-
-            } catch (err) {
-                // NIVEL 2: GeckoTerminal vía TOKEN (Ruta de ORACLE)
-                try {
-                    const resG = await fetch(`https://api.geckoterminal.com/api/v2/networks/cardano/tokens/${tokenId}`);
-                    const dataG = await resG.json();
-                    const pUsd = parseFloat(dataG.data.attributes.price_usd);
-                    
-                    if (!isNaN(pUsd)) {
-                        displayPrices(pUsd / currentAdaPrice, prefix);
-                        statusEl.innerText = "RESERVE FEED OK";
-                        return;
-                    }
-                } catch (err2) {
-                    // NIVEL 3: Búsqueda de todos los Pools (Para tokens de baja liquidez)
-                    try {
-                        const resP = await fetch(`https://api.geckoterminal.com/api/v2/networks/cardano/tokens/${tokenId}/pools?page=1`);
-                        const dataP = await resP.json();
-                        const pool = dataP.data[0].attributes;
-                        const pAda = parseFloat(pool.base_token_price_quote_token);
-                        
-                        if (!isNaN(pAda)) {
-                            displayPrices(pAda, prefix);
-                            statusEl.innerText = "POOL SEARCH OK";
-                            return;
-                        }
-                    } catch (err3) {
-                        statusEl.innerText = "BUSCANDO RED...";
-                    }
-                }
+        // 2. Obtener ORACLE (Método Estándar - Suele funcionar bien)
+        try {
+            const resO = await fetch(`https://api.geckoterminal.com/api/v2/networks/cardano/tokens/${ORACLE_ID}`);
+            const jsonO = await resO.json();
+            const pUsdO = parseFloat(jsonO.data.attributes.price_usd);
+            if (currentAdaPrice > 0) {
+                const pAdaO = pUsdO / currentAdaPrice;
+                document.getElementById('oracle-ada').innerText = pAdaO.toFixed(4) + " ₳";
+                document.getElementById('oracle-usd').innerText = "$" + pUsdO.toFixed(6) + " USD";
+                document.getElementById('status-oracle').innerText = "CONECTADO";
             }
-        }
+        } catch (e) { document.getElementById('status-oracle').innerText = "REINTENTANDO..."; }
 
-        function displayPrices(priceInAda, prefix) {
-            document.getElementById(`${prefix}-ada`).innerText = priceInAda.toFixed(4) + " ₳";
-            document.getElementById(`${prefix}-usd`).innerText = "$" + (priceInAda * currentAdaPrice).toFixed(6) + " USD";
-        }
+        // 3. Obtener VLRM (MÉTODO MATEMÁTICO DIRECTO)
+        try {
+            // Buscamos los pools donde está VLRM
+            const resV = await fetch(`https://api.geckoterminal.com/api/v2/networks/cardano/tokens/${VLRM_ID}/pools?page=1`);
+            const jsonV = await resV.json();
+            
+            // Accedemos a los datos de reserva del pool
+            const poolData = jsonV.data[0].attributes;
+            
+            // Calculamos el precio dividiendo las reservas (La forma más directa posible)
+            // price = quote_reserve / base_reserve
+            const priceInAda = parseFloat(poolData.base_token_price_quote_token);
+            const priceInUsd = parseFloat(poolData.base_token_price_usd);
 
-        fetchSecurePrice(ORACLE_ID, 'oracle');
-        fetchSecurePrice(VLRM_ID, 'vlrm');
+            if (!isNaN(priceInAda) && priceInAda > 0) {
+                document.getElementById('vlrm-ada').innerText = priceInAda.toFixed(4) + " ₳";
+                document.getElementById('vlrm-usd').innerText = "$" + priceInUsd.toFixed(6) + " USD";
+                document.getElementById('status-vlrm').innerText = "DATOS DE POOL CRUDOS";
+            } else {
+                throw new Error("Pool vacío");
+            }
+        } catch (e) {
+            document.getElementById('status-vlrm').innerText = "POOL NO DETECTADO";
+            console.error("Error VLRM Pool:", e);
+        }
     }
 
     updateData();
-    setInterval(updateData, 30000); // Actualiza cada 30 segundos
+    setInterval(updateData, 30000);
 </script>
 
 </body>
