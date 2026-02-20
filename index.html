@@ -2,84 +2,104 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Cardano Live Dashboard</title>
+    <title>Cardano DeFi: ORACLE & VLRM</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        :root { --bg: #0a0f1e; --card: #161e35; --accent: #3b82f6; --text: #f8fafc; }
-        body { background-color: var(--bg); color: var(--text); font-family: sans-serif; padding: 20px; text-align: center; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; max-width: 900px; margin: 20px auto; }
-        .card { background: var(--card); padding: 25px; border-radius: 15px; border: 1px solid #2d3748; transition: 0.3s; }
-        .card:hover { border-color: var(--accent); }
-        .price { font-size: 2rem; font-weight: bold; color: #60a5fa; margin: 10px 0; }
-        .badge { background: #1e293b; padding: 5px 10px; border-radius: 5px; font-size: 0.8rem; }
+        :root { --bg: #050a18; --card: #111a2e; --accent: #4f46e5; --text: #e2e8f0; --price: #34d399; }
+        body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; padding: 40px 20px; margin: 0; }
+        .container { max-width: 900px; margin: auto; }
+        h1 { font-size: 1.5rem; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-bottom: 30px; text-align: center; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .card { background: var(--card); padding: 25px; border-radius: 20px; border: 1px solid #1e293b; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .token-name { color: #94a3b8; font-size: 0.8rem; font-weight: bold; margin-bottom: 10px; }
+        .price { font-size: 2.2rem; font-weight: bold; color: var(--price); margin: 10px 0; }
+        .stats { font-size: 0.9rem; color: #64748b; display: flex; justify-content: space-between; border-top: 1px solid #1e293b; pt: 15px; margin-top: 15px; }
+        #chart-wrapper { background: var(--card); padding: 20px; border-radius: 20px; border: 1px solid #1e293b; height: 300px; }
     </style>
 </head>
 <body>
 
-    <h1>Cardano Ecosystem Monitor</h1>
+<div class="container">
+    <h1>Live Blockchain Monitor</h1>
 
     <div class="grid">
         <div class="card">
-            <span class="badge">TOKEN</span>
-            <h3>ORACLE</h3>
-            <div id="price-oracle" class="price">Cargando...</div>
-            <div id="status-oracle">Conectando con la red...</div>
+            <div class="token-name">ASSET: ORACLE</div>
+            <div id="price-oracle" class="price">$0.00000</div>
+            <div class="stats">
+                <span id="vol-oracle">Vol: $0</span>
+                <span id="change-oracle">0.00%</span>
+            </div>
         </div>
 
         <div class="card">
-            <span class="badge">TOKEN</span>
-            <h3>VLRM</h3>
-            <div id="price-vlrm" class="price">Cargando...</div>
-            <div id="status-vlrm">Conectando con la red...</div>
+            <div class="token-name">ASSET: VLRM</div>
+            <div id="price-vlrm" class="price">$0.00000</div>
+            <div class="stats">
+                <span id="vol-vlrm">Vol: $0</span>
+                <span id="change-vlrm">0.00%</span>
+            </div>
         </div>
     </div>
 
-    <div style="max-width:900px; margin: auto; background: var(--card); padding: 20px; border-radius: 15px;">
-        <canvas id="miniChart" height="100"></canvas>
+    <div id="chart-wrapper">
+        <canvas id="mainChart"></canvas>
     </div>
+</div>
 
 <script>
-    // Usaremos GeckoTerminal que no requiere llaves y es muy estable para Cardano
-    async function fetchPrices() {
-        try {
-            // Dirección de red de Cardano en GeckoTerminal + Policy IDs
-            const url = "https://api.geckoterminal.com/api/v2/networks/cardano/tokens/multi/fb3b359f1498b8120364d2621415dfb0e258673a5a8e029307c08882%2C682bc8159f80a47f2010887e0767228a4740e53f19159981881a547d";
-            
-            const response = await fetch(url);
-            const result = await response.json();
-            const tokens = result.data;
+    const ORACLE_ID = "328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b27393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
+    const VLRM_ID = "63efb704b7396890e4d9539d030c0e667739043add65c00f96c586c056616c6f72756d";
 
-            tokens.forEach(token => {
-                const price = parseFloat(token.attributes.price_usd).toFixed(5);
-                const volume = token.attributes.volume_usd.h24;
+    async function updateData() {
+        try {
+            // Consultamos ambos tokens a la vez
+            const response = await fetch(`https://api.geckoterminal.com/api/v2/networks/cardano/tokens/multi/${ORACLE_ID}%2C${VLRM_ID}`);
+            const result = await response.json();
+            
+            result.data.forEach(token => {
+                const attr = token.attributes;
+                const isOracle = token.id.includes(ORACLE_ID.substring(0, 10));
+                const prefix = isOracle ? "oracle" : "vlrm";
+
+                document.getElementById(`price-${prefix}`).innerText = "$" + parseFloat(attr.price_usd).toFixed(5);
+                document.getElementById(`vol-${prefix}`).innerText = "Vol: $" + Math.round(attr.volume_usd.h24).toLocaleString();
                 
-                if(token.attributes.address.includes('fb3b35')) { // ORACLE
-                    document.getElementById('price-oracle').innerText = "$" + price;
-                    document.getElementById('status-oracle').innerText = "Vol 24h: $" + Math.round(volume).toLocaleString();
-                } else { // VLRM
-                    document.getElementById('price-vlrm').innerText = "$" + price;
-                    document.getElementById('status-vlrm').innerText = "Vol 24h: $" + Math.round(volume).toLocaleString();
-                }
+                const change = attr.price_change_percentage.h24;
+                const changeEl = document.getElementById(`change-${prefix}`);
+                changeEl.innerText = (change > 0 ? "+" : "") + parseFloat(change).toFixed(2) + "%";
+                changeEl.style.color = change > 0 ? "#34d399" : "#f87171";
             });
-        } catch (error) {
-            console.error(error);
-            document.getElementById('status-oracle').innerText = "Reintentando conexión...";
+        } catch (e) {
+            console.error("Error de conexión");
         }
     }
 
-    // Gráfica visual sencilla
-    const ctx = document.getElementById('miniChart').getContext('2d');
-    new Chart(ctx, {
+    // Configuración de la gráfica
+    const ctx = document.getElementById('mainChart').getContext('2d');
+    const myChart = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: ['1h', '2h', '3h', '4h', '5h', '6h'],
-            datasets: [{ label: 'Actividad de Red', data: [10, 25, 15, 30, 45, 40], borderColor: '#3b82f6', tension: 0.4 }]
+            labels: ['12am', '4am', '8am', '12pm', '4pm', '8pm'],
+            datasets: [{
+                label: 'Fluctuación Red',
+                data: [65, 59, 80, 81, 56, 75],
+                borderColor: '#4f46e5',
+                backgroundColor: 'rgba(79, 70, 229, 0.1)',
+                fill: true,
+                tension: 0.4
+            }]
         },
-        options: { plugins: { legend: { display: false } }, scales: { y: { display: false }, x: { display: false } } }
+        options: {
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: { y: { grid: { color: '#1e293b' } }, x: { grid: { display: false } } }
+        }
     });
 
-    fetchPrices();
-    setInterval(fetchPrices, 30000); // Actualizar cada 30 segundos
+    updateData();
+    setInterval(updateData, 30000); // Actualiza cada 30 segundos
 </script>
+
 </body>
 </html>
