@@ -2,92 +2,84 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Cardano DeFi Hub</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Cardano Live Hub</title>
     <style>
         :root { --bg: #050a18; --card: #111a2e; --accent: #4f46e5; --text: #e2e8f0; --price: #38bdf8; }
-        body { background: var(--bg); color: var(--text); font-family: sans-serif; padding: 20px; }
-        .container { max-width: 800px; margin: auto; text-align: center; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 20px; }
-        .card { background: var(--card); padding: 20px; border-radius: 15px; border: 1px solid #1e293b; text-align: left; }
-        .price { font-size: 2rem; font-weight: bold; color: var(--price); }
-        .usd-small { font-size: 0.85rem; color: #64748b; margin-top: 5px; }
-        .status { font-size: 0.7rem; margin-top: 10px; color: #475569; }
-        #ada-price { color: #facc15; font-weight: bold; }
+        body { background: var(--bg); color: var(--text); font-family: sans-serif; padding: 20px; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 600px; text-align: center; }
+        .grid { display: grid; grid-template-columns: 1fr; gap: 20px; margin-top: 20px; }
+        .card { background: var(--card); padding: 20px; border-radius: 15px; border: 1px solid #1e293b; text-align: left; position: relative; }
+        .token-title { color: #94a3b8; font-size: 0.8rem; font-weight: bold; text-transform: uppercase; }
+        .price { font-size: 2.2rem; font-weight: bold; color: var(--price); margin: 5px 0; }
+        .usd-val { font-size: 1rem; color: #64748b; }
+        .status { font-size: 0.7rem; color: #475569; margin-top: 15px; border-top: 1px solid #1e293b; pt: 10px; }
+        #ada-header { background: #1e293b; padding: 10px; border-radius: 10px; margin-bottom: 20px; color: #facc15; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>Cardano Assets (Price in ADA)</h2>
-    <p>Market ADA: $<span id="ada-price">...</span> USD</p>
+    <div id="ada-header">ADA Price: $<span id="ada-usd">0.00</span></div>
 
     <div class="grid">
         <div class="card">
-            <div style="color:#94a3b8; font-size: 0.8rem;">ORACLE / ADA</div>
+            <div class="token-title">ORACLE / ADA</div>
             <div id="price-oracle" class="price">... ₳</div>
-            <div id="usd-oracle" class="usd-small">$0.00 USD</div>
-            <div id="status-oracle" class="status">Sincronizando...</div>
+            <div id="usd-oracle" class="usd-val">$0.00 USD</div>
+            <div id="status-oracle" class="status">Cargando datos de DexHunter...</div>
         </div>
 
         <div class="card">
-            <div style="color:#94a3b8; font-size: 0.8rem;">VLRM / ADA</div>
+            <div class="token-title">VLRM / ADA</div>
             <div id="price-vlrm" class="price">... ₳</div>
-            <div id="usd-vlrm" class="usd-small">$0.00 USD</div>
-            <div id="status-vlrm" class="status">Sincronizando...</div>
+            <div id="usd-vlrm" class="usd-val">$0.00 USD</div>
+            <div id="status-vlrm" class="status">Cargando datos de DexHunter...</div>
         </div>
     </div>
 </div>
 
 <script>
-    // IDs de Policy para identificación (primeros 56 caracteres)
-    const POLICY_ORACLE = "328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b27393c37";
-    const POLICY_VLRM = "63efb704b7396890e4d9539d030c0e667739043add65c00f96c586c056616c6f";
-
-    // IDs completos para la consulta a GeckoTerminal
-    const ORACLE_FULL = "328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b27393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
-    const VLRM_FULL = "63efb704b7396890e4d9539d030c0e667739043add65c00f96c586c056616c6f72756d";
+    // Asset IDs (PolicyID + HexName)
+    const ORACLE_ID = "328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b27393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
+    const VLRM_ID = "63efb704b7396890e4d9539d030c0e667739043add65c00f96c586c056616c6f72756d";
 
     async function update() {
         try {
-            // 1. Precio de ADA desde CoinGecko (Muy estable)
+            // 1. Obtener precio de ADA (CoinGecko es infalible para esto)
             const adaRes = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=cardano&vs_currencies=usd");
             const adaData = await adaRes.json();
-            const adaUsd = adaData.cardano.usd;
-            document.getElementById('ada-price').innerText = adaUsd.toFixed(3);
+            const adaPrice = adaData.cardano.usd;
+            document.getElementById('ada-usd').innerText = adaPrice.toFixed(3);
 
-            // 2. Precios de Tokens desde GeckoTerminal
-            const url = `https://api.geckoterminal.com/api/v2/networks/cardano/tokens/multi/${ORACLE_FULL}%2C${VLRM_FULL}`;
-            const response = await fetch(url);
-            const data = await response.json();
+            // 2. Obtener precios de los tokens desde DexHunter
+            // Este endpoint devuelve el precio en ADA directamente
+            const hunterRes = await fetch(`https://api.dexhunter.io/v1/price?units=${ORACLE_ID},${VLRM_ID}`);
+            const hunterData = await hunterRes.json();
 
-            if (data.data && data.data.length > 0) {
-                data.data.forEach(token => {
-                    const priceUsd = parseFloat(token.attributes.price_usd);
-                    const priceInAda = priceUsd / adaUsd;
-                    const address = token.attributes.address;
-                    
-                    // Identificamos por el inicio de la dirección (Policy ID)
-                    let pfx = "";
-                    if (address.includes(POLICY_ORACLE)) pfx = "oracle";
-                    else if (address.includes(POLICY_VLRM)) pfx = "vlrm";
+            // Procesar ORACLE
+            const oraclePriceInAda = hunterData[ORACLE_ID];
+            if (oraclePriceInAda) {
+                document.getElementById('price-oracle').innerText = oraclePriceInAda.toFixed(3) + " ₳";
+                document.getElementById('usd-oracle').innerText = "$" + (oraclePriceInAda * adaPrice).toFixed(4) + " USD";
+                document.getElementById('status-oracle').innerText = "Live: DexHunter OK";
+            }
 
-                    if (pfx) {
-                        document.getElementById(`price-${pfx}`).innerText = priceInAda.toFixed(3) + " ₳";
-                        document.getElementById(`usd-${pfx}`).innerText = "$" + priceUsd.toFixed(5) + " USD";
-                        document.getElementById(`status-${pfx}`).innerText = "Sincronizado: " + new Date().toLocaleTimeString();
-                    }
-                });
+            // Procesar VLRM
+            const vlrmPriceInAda = hunterData[VLRM_ID];
+            if (vlrmPriceInAda) {
+                document.getElementById('price-vlrm').innerText = vlrmPriceInAda.toFixed(3) + " ₳";
+                document.getElementById('usd-vlrm').innerText = "$" + (vlrmPriceInAda * adaPrice).toFixed(4) + " USD";
+                document.getElementById('status-vlrm').innerText = "Live: DexHunter OK";
             }
 
         } catch (e) {
-            console.error("Error detectado:", e);
-            document.getElementById('status-oracle').innerText = "Error de red. Reintentando...";
+            console.error(e);
+            document.getElementById('status-oracle').innerText = "Reintentando conectar con DexHunter...";
         }
     }
 
     update();
-    setInterval(update, 30000); // Cada 30 seg
+    setInterval(update, 30000); // Actualiza cada 30 segundos
 </script>
 
 </body>
