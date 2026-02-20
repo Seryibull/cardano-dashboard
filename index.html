@@ -3,28 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ORACLE / ADA Analytics</title>
+    <title>ORACLE Ecosystem</title>
     <style>
-        :root { --bg: #020617; --card: #0f172a; --accent: #38bdf8; --text: #f8fafc; --gold: #fbbf24; --minswap: #fa427d; --vyfi: #20e7d5; }
-        body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; padding: 20px; margin: 0; }
-        .container { width: 100%; max-width: 500px; }
-        .header { text-align: center; margin-bottom: 30px; }
-        .header h1 { color: var(--accent); margin: 0; font-size: 1.8rem; }
-        .ada-global { font-weight: bold; color: var(--gold); background: rgba(251, 191, 36, 0.1); padding: 8px; border-radius: 10px; display: inline-block; margin-top: 10px; }
+        /* Paleta de colores Blue & Lilac */
+        :root { 
+            --bg: #080f26;          /* Azul muy oscuro para el fondo */
+            --card: #111c3d;        /* Azul oscuro para las tarjetas */
+            --card-hover: #172652;  /* Azul un poco más claro para el hover */
+            --text: #f8fafc;        /* Blanco hueso */
+            --text-muted: #94a3b8;  /* Gris azulado para etiquetas */
+            --accent: #60a5fa;      /* Azul vibrante general */
+            --minswap: #7dd3fc;     /* Azul claro para Minswap */
+            --vyfi: #d8b4fe;        /* Lila claro para VyFi */
+        }
+
+        body { 
+            background: var(--bg); 
+            color: var(--text); 
+            font-family: 'Segoe UI', system-ui, sans-serif; 
+            display: flex; 
+            justify-content: center; 
+            padding: 20px; 
+            margin: 0; 
+        }
+
+        .container { width: 100%; max-width: 450px; }
         
-        .card { background: var(--card); border-radius: 20px; padding: 20px; margin-bottom: 15px; border: 1px solid #1e293b; transition: transform 0.2s; }
-        .card:hover { transform: translateY(-3px); }
-        .dex-tag { font-size: 0.7rem; font-weight: bold; padding: 4px 8px; border-radius: 6px; text-transform: uppercase; float: right; }
-        .minswap-tag { background: var(--minswap); color: white; }
-        .vyfi-tag { background: var(--vyfi); color: black; }
+        .header { text-align: center; margin-bottom: 25px; }
+        .header h1 { color: #ffffff; margin: 0; font-size: 1.8rem; letter-spacing: 1px; }
+        .ada-global { font-weight: bold; color: var(--accent); background: rgba(96, 165, 250, 0.1); padding: 8px 16px; border-radius: 20px; display: inline-block; margin-top: 10px; border: 1px solid rgba(96, 165, 250, 0.2); }
         
-        .label { font-size: 0.8rem; color: #94a3b8; margin-bottom: 10px; display: block; }
-        .price-big { font-size: 2rem; font-weight: 800; color: var(--text); }
-        .tvl-row { margin-top: 15px; padding-top: 15px; border-top: 1px solid #1e293b; display: flex; justify-content: space-between; align-items: center; }
-        .tvl-val { color: var(--accent); font-weight: 700; }
+        .card { 
+            background: var(--card); 
+            border-radius: 16px; 
+            padding: 22px; 
+            margin-bottom: 18px; 
+            border: 1px solid rgba(255, 255, 255, 0.05); 
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease; 
+        }
+        .card:hover { transform: translateY(-2px); background: var(--card-hover); }
+
+        /* Estilos específicos por DEX */
+        .card-minswap { border-left: 4px solid var(--minswap); }
+        .card-vyfi { border-left: 4px solid var(--vyfi); }
         
-        .total-tvl-card { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); border: 2px solid var(--accent); text-align: center; }
-        .status { font-size: 0.65rem; color: #4ade80; text-align: right; margin-top: 10px; opacity: 0.6; }
+        .dex-tag { font-size: 0.7rem; font-weight: 800; padding: 5px 10px; border-radius: 8px; text-transform: uppercase; float: right; letter-spacing: 0.5px; }
+        .minswap-tag { background: rgba(125, 211, 252, 0.15); color: var(--minswap); border: 1px solid rgba(125, 211, 252, 0.3); }
+        .vyfi-tag { background: rgba(216, 180, 254, 0.15); color: var(--vyfi); border: 1px solid rgba(216, 180, 254, 0.3); }
+        
+        .label { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px; display: block; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+        .price-big { font-size: 2.2rem; font-weight: 800; color: #ffffff; margin-bottom: 15px; }
+        
+        .tvl-row { margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255, 255, 255, 0.05); display: flex; justify-content: space-between; align-items: center; font-size: 0.95rem; }
+        .tvl-minswap { color: var(--minswap); font-weight: 700; font-size: 1.1rem; }
+        .tvl-vyfi { color: var(--vyfi); font-weight: 700; font-size: 1.1rem; }
+        
+        .total-tvl-card { 
+            background: linear-gradient(145deg, #111c3d 0%, #0d1530 100%); 
+            border: 1px solid rgba(96, 165, 250, 0.3); 
+            text-align: center; 
+            padding: 25px;
+        }
+        .total-val { font-size: 2.5rem; font-weight: 900; color: #ffffff; text-shadow: 0 0 15px rgba(255,255,255,0.1); }
+        
+        .status { font-size: 0.65rem; color: #34d399; text-align: right; margin-top: 12px; font-family: monospace; letter-spacing: 0.5px; }
         .error { color: #f87171; }
     </style>
 </head>
@@ -37,28 +80,28 @@
     </div>
 
     <div class="card total-tvl-card">
-        <span class="label">TVL TOTAL ACUMULADO</span>
-        <div id="total-tvl" style="font-size: 2.2rem; font-weight: 900; color: var(--accent);">... ₳</div>
+        <span class="label" style="color: var(--accent);">Liquidez Total (TVL)</span>
+        <div id="total-tvl" class="total-val">... ₳</div>
     </div>
 
-    <div class="card">
+    <div class="card card-minswap">
         <span class="dex-tag minswap-tag">Minswap</span>
-        <span class="label">PRECIO EN POOL</span>
+        <span class="label">Precio del Token</span>
         <div id="price-minswap" class="price-big">... ₳</div>
         <div class="tvl-row">
-            <span>TVL en Pool:</span>
-            <span id="tvl-minswap" class="tvl-val">... ₳</span>
+            <span style="color: var(--text-muted);">Volumen TVL:</span>
+            <span id="tvl-minswap" class="tvl-minswap">... ₳</span>
         </div>
         <div id="status-minswap" class="status">Sincronizando...</div>
     </div>
 
-    <div class="card">
+    <div class="card card-vyfi">
         <span class="dex-tag vyfi-tag">VyFi</span>
-        <span class="label">PRECIO EN POOL</span>
+        <span class="label">Precio del Token</span>
         <div id="price-vyfi" class="price-big">... ₳</div>
         <div class="tvl-row">
-            <span>TVL en Pool:</span>
-            <span id="tvl-vyfi" class="tvl-val">... ₳</span>
+            <span style="color: var(--text-muted);">Volumen TVL:</span>
+            <span id="tvl-vyfi" class="tvl-vyfi">... ₳</span>
         </div>
         <div id="status-vyfi" class="status">Sincronizando...</div>
     </div>
@@ -69,13 +112,13 @@
 
     async function fetchData() {
         try {
-            // 1. Obtener precio exacto de ADA en USD (Binance)
+            // 1. Obtener precio ADA en USD
             const adaRes = await fetch("https://api.binance.com/api/v3/ticker/price?symbol=ADAUSDT");
             const adaData = await adaRes.json();
             const adaUsd = parseFloat(adaData.price);
             document.getElementById('ada-price').innerText = `ADA: $${adaUsd.toFixed(4)}`;
 
-            // 2. Buscar TODOS los pools de ORACLE dinámicamente
+            // 2. Obtener datos de pools
             const poolRes = await fetch(`https://api.geckoterminal.com/api/v2/networks/cardano/tokens/${ORACLE_ID}/pools?page=1`);
             const poolData = await poolRes.json();
 
@@ -84,63 +127,67 @@
             let minswapFound = false;
             let vyfiFound = false;
 
-            // 3. Filtrar y clasificar los pools
+            // 3. Rastrear e identificar cada pool
             for (const pool of poolData.data) {
-                const poolId = pool.id.toLowerCase();
+                // AQUÍ ESTÁ LA MAGIA: Buscamos el nombre del DEX en la relación oficial, no en el ID del pool
+                let dexName = "";
+                if (pool.relationships && pool.relationships.dex && pool.relationships.dex.data) {
+                    dexName = pool.relationships.dex.data.id.toLowerCase();
+                } else {
+                    dexName = pool.id.toLowerCase(); // Respaldo por si acaso
+                }
+
                 const attr = pool.attributes;
                 
-                // Extraer el TVL en USD y convertirlo matemáticamente a ADA
+                // Conversión de TVL a ADA
                 const tvlUsd = parseFloat(attr.reserve_in_usd) || 0;
                 const tvlAda = tvlUsd / adaUsd;
 
-                // Extraer el precio en USD del token y convertirlo a ADA 
-                // (Esto evita errores de inversión de pares Base/Quote)
-                const priceUsd = parseFloat(attr.base_token_price_usd);
+                // Cálculo de Precio exacto a ADA
+                const priceUsd = parseFloat(attr.base_token_price_usd) || 0;
                 const priceAda = priceUsd / adaUsd;
 
-                // Si detectamos la palabra "minswap" en el identificador del pool y aún no lo hemos asignado
-                if (poolId.includes('minswap') && !minswapFound) {
+                // Asignación a Minswap (toma el pool más grande si hay varios)
+                if (dexName.includes('minswap') && !minswapFound) {
                     document.getElementById('price-minswap').innerText = priceAda.toFixed(4) + " ₳";
-                    document.getElementById('tvl-minswap').innerText = Math.round(tvlAda).toLocaleString() + " ₳";
-                    document.getElementById('status-minswap').innerText = "LIVE DATA OK";
+                    document.getElementById('tvl-minswap').innerText = Math.round(tvlAda).toLocaleString('en-US') + " ₳";
+                    document.getElementById('status-minswap').innerText = "CONEXIÓN ESTABLE";
                     minswapTvl = tvlAda;
                     minswapFound = true;
                 }
                 
-                // Si detectamos la palabra "vyfi" en el identificador del pool
-                if (poolId.includes('vyfi') && !vyfiFound) {
+                // Asignación a VyFi
+                if (dexName.includes('vyfi') && !vyfiFound) {
                     document.getElementById('price-vyfi').innerText = priceAda.toFixed(4) + " ₳";
-                    document.getElementById('tvl-vyfi').innerText = Math.round(tvlAda).toLocaleString() + " ₳";
-                    document.getElementById('status-vyfi').innerText = "LIVE DATA OK";
+                    document.getElementById('tvl-vyfi').innerText = Math.round(tvlAda).toLocaleString('en-US') + " ₳";
+                    document.getElementById('status-vyfi').innerText = "CONEXIÓN ESTABLE";
                     vyfiTvl = tvlAda;
                     vyfiFound = true;
                 }
             }
 
-            // Manejo de errores por si algún pool no tiene liquidez actual
+            // Avisos si falta algún DEX
             if (!minswapFound) {
-                document.getElementById('status-minswap').innerText = "SIN LIQUIDEZ DETECTADA";
+                document.getElementById('status-minswap').innerText = "ESPERANDO LIQUIDEZ";
                 document.getElementById('status-minswap').className = "status error";
             }
             if (!vyfiFound) {
-                document.getElementById('status-vyfi').innerText = "SIN LIQUIDEZ DETECTADA";
+                document.getElementById('status-vyfi').innerText = "ESPERANDO LIQUIDEZ";
                 document.getElementById('status-vyfi').className = "status error";
             }
 
-            // 4. Calcular e inyectar el TVL Acumulado Total
+            // 4. Suma del TVL Acumulado
             const totalTvl = minswapTvl + vyfiTvl;
-            document.getElementById('total-tvl').innerText = Math.round(totalTvl).toLocaleString() + " ₳";
+            document.getElementById('total-tvl').innerText = Math.round(totalTvl).toLocaleString('en-US') + " ₳";
 
         } catch (e) {
-            console.error("Fallo general:", e);
-            document.getElementById('status-minswap').innerText = "REINTENTANDO...";
-            document.getElementById('status-vyfi').innerText = "REINTENTANDO...";
+            console.error("Fallo general de red:", e);
         }
     }
 
-    // Ejecutar inmediatamente y luego cada 30 segundos
     fetchData();
     setInterval(fetchData, 30000);
 </script>
+
 </body>
 </html>
