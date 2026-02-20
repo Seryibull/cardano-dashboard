@@ -109,8 +109,8 @@
 
 <script>
     const ORACLE_ID = "328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b27393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
-    // ID Directo del Pool VyFi ORACLE/ADA para asegurar la conexión
-    const VYFI_POOL_ID = "cardano_vyfi_566ad937203b1ca4eb04c35588373b9e4a323984534e69b5523a1a9f";
+    // Usamos el ID de política para búsqueda profunda
+    const POLICY_ID = "328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b2"; 
 
     async function fetchData() {
         try {
@@ -123,43 +123,59 @@
             let minswapTvl = 0;
             let vyfiTvl = 0;
 
-            // 2. BUSCAR MINSWAP (Vía Radar General)
-            try {
-                const poolRes = await fetch(`https://api.geckoterminal.com/api/v2/networks/cardano/tokens/${ORACLE_ID}/pools?page=1`);
-                const poolData = await poolRes.json();
-                
-                for (const pool of poolData.data) {
-                    const dexId = pool.relationships?.dex?.data?.id || "";
-                    if (dexId.includes('minswap')) {
-                        const attr = pool.attributes;
-                        const pAda = parseFloat(attr.base_token_price_usd) / adaUsd;
-                        const tAda = parseFloat(attr.reserve_in_usd) / adaUsd;
-                        
-                        document.getElementById('price-minswap').innerText = pAda.toFixed(4) + " ₳";
-                        document.getElementById('tvl-minswap').innerText = Math.round(tAda).toLocaleString('en-US') + " ₳";
-                        document.getElementById('status-minswap').innerText = "CONEXIÓN ESTABLE";
-                        minswapTvl = tAda;
-                        break; 
-                    }
+            // 2. BUSCAR MINSWAP (Radar dinámico)
+            const poolRes = await fetch(`https://api.geckoterminal.com/api/v2/networks/cardano/tokens/${ORACLE_ID}/pools?page=1`);
+            const poolData = await poolRes.json();
+            
+            for (const pool of poolData.data) {
+                const dexId = pool.relationships?.dex?.data?.id || "";
+                if (dexId.includes('minswap')) {
+                    const attr = pool.attributes;
+                    const pAda = parseFloat(attr.base_token_price_usd) / adaUsd;
+                    const tAda = parseFloat(attr.reserve_in_usd) / adaUsd;
+                    
+                    document.getElementById('price-minswap').innerText = pAda.toFixed(4) + " ₳";
+                    document.getElementById('tvl-minswap').innerText = Math.round(tAda).toLocaleString('en-US') + " ₳";
+                    document.getElementById('status-minswap').innerText = "CONEXIÓN ESTABLE";
+                    minswapTvl = tAda;
+                    break; 
                 }
-            } catch (e) { console.error("Error Minswap Radar"); }
+            }
 
-            // 3. BUSCAR VYFI (Vía Conexión Directa al Pool)
+            // 3. BUSCAR VYFI (Vía DexHunter - Motor de búsqueda más profundo)
             try {
-                const vyfiRes = await fetch(`https://api.geckoterminal.com/api/v2/networks/cardano/pools/${VYFI_POOL_ID}`);
+                // DexHunter suele tener el feed de VyFi más actualizado
+                const vyfiRes = await fetch(`https://api.dexhunter.io/v1/strategy/all-pools/${ORACLE_ID}`);
                 const vyfiData = await vyfiRes.json();
-                const vAttr = vyfiData.data.attributes;
                 
-                const vPriceAda = parseFloat(vAttr.base_token_price_usd) / adaUsd;
-                const vTvlAda = parseFloat(vAttr.reserve_in_usd) / adaUsd;
+                // Buscamos el objeto que pertenezca a VyFi
+                const vPool = vyfiData.find(p => p.dex.toLowerCase().includes('vyfi'));
 
-                document.getElementById('price-vyfi').innerText = vPriceAda.toFixed(4) + " ₳";
-                document.getElementById('tvl-vyfi').innerText = Math.round(vTvlAda).toLocaleString('en-US') + " ₳";
-                document.getElementById('status-vyfi').innerText = "VYFI DIRECT LINK OK";
-                vyfiTvl = vTvlAda;
-            } catch (e) { 
-                document.getElementById('status-vyfi').innerText = "ESPERANDO LIQUIDEZ";
-                document.getElementById('status-vyfi').className = "status error";
+                if (vPool) {
+                    const vPriceAda = parseFloat(vPool.price);
+                    const vTvlAda = parseFloat(vPool.tvl); // DexHunter ya da el TVL procesado
+
+                    document.getElementById('price-vyfi').innerText = vPriceAda.toFixed(4) + " ₳";
+                    document.getElementById('tvl-vyfi').innerText = Math.round(vTvlAda).toLocaleString('en-US') + " ₳";
+                    document.getElementById('status-vyfi').innerText = "VYFI DATA (DEXHUNTER)";
+                    vyfiTvl = vTvlAda;
+                } else {
+                    throw new Error("Pool no encontrado en DexHunter");
+                }
+            } catch (e) {
+                // RESPALDO SI FALLA DEXHUNTER: Reintentar con el ID de pool de VyFi crudo
+                const poolId = "cardano_vyfi_566ad937203b1ca4eb04c35588373b9e4a323984534e69b5523a1a9f";
+                const resFallback = await fetch(`https://api.geckoterminal.com/api/v2/networks/cardano/pools/${poolId}`);
+                const dataFallback = await resFallback.json();
+                const attrF = dataFallback.data.attributes;
+                
+                const pAdaF = parseFloat(attrF.base_token_price_usd) / adaUsd;
+                const tAdaF = (parseFloat(attrF.reserve_in_usd) || 0) / adaUsd;
+
+                document.getElementById('price-vyfi').innerText = pAdaF.toFixed(4) + " ₳";
+                document.getElementById('tvl-vyfi').innerText = Math.round(tAdaF).toLocaleString('en-US') + " ₳";
+                document.getElementById('status-vyfi').innerText = "VYFI DATA (FALLBACK)";
+                vyfiTvl = tAdaF;
             }
 
             // 4. Suma del TVL Acumulado
@@ -168,6 +184,7 @@
 
         } catch (e) {
             console.error("Fallo general:", e);
+            document.getElementById('status-vyfi').innerText = "REINTENTANDO...";
         }
     }
 
