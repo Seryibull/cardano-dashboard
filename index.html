@@ -43,7 +43,7 @@
     async function updateData() {
         let currentAdaPrice = 0;
 
-        // 1. Obtener precio de ADA
+        // 1. Obtener ADA/USD (Binance es 100% estable)
         try {
             const adaRes = await fetch("https://api.binance.com/api/v3/ticker/price?symbol=ADAUSDT");
             const adaData = await adaRes.json();
@@ -51,56 +51,67 @@
             document.getElementById('ada-header').innerText = `ADA Market: $${currentAdaPrice.toFixed(4)}`;
         } catch (e) { console.error("Error ADA:", e); }
 
-        // 2. Función genérica para obtener precio de cualquier token por su ID
-        async function fetchToken(tokenId, prefix) {
+        // 2. Función de obtención con 3 niveles de seguridad
+        async function fetchSecurePrice(tokenId, prefix) {
+            const statusEl = document.getElementById(`status-${prefix}`);
+            const adaEl = document.getElementById(`${prefix}-ada`);
+            const usdEl = document.getElementById(`${prefix}-usd`);
+
             try {
-                // Consultamos el token directamente en la red Cardano de GeckoTerminal
-                const res = await fetch(`https://api.geckoterminal.com/api/v2/networks/cardano/tokens/${tokenId}`);
-                const json = await res.json();
-                
-                // Extraemos el precio en USD
-                const priceUsd = parseFloat(json.data.attributes.price_usd);
-                
-                if (!isNaN(priceUsd) && currentAdaPrice > 0) {
-                    const priceInAda = priceUsd / currentAdaPrice;
-                    document.getElementById(`${prefix}-ada`).innerText = priceInAda.toFixed(4) + " ₳";
-                    document.getElementById(`${prefix}-usd`).innerText = "$" + priceUsd.toFixed(6) + " USD";
-                    document.getElementById(`status-${prefix}`).innerText = "CONECTADO";
-                } else {
-                    throw new Error("Precio no encontrado");
+                // NIVEL 1: API de MuesliSwap (Muy rápida para precios en ADA)
+                const resM = await fetch(`https://api.muesliswap.com/token/price/${tokenId}`);
+                const priceInAda = await resM.json();
+
+                if (priceInAda && !isNaN(priceInAda) && priceInAda > 0) {
+                    displayPrices(priceInAda, prefix);
+                    statusEl.innerText = "DIRECT FEED OK";
+                    return;
                 }
-            } catch (e) {
-                document.getElementById(`status-${prefix}`).innerText = "BUSCANDO POOL...";
-                // Intento secundario si el token directo falla
-                fetchTokenByPool(tokenId, prefix);
+                throw new Error("Muesli no data");
+
+            } catch (err) {
+                // NIVEL 2: GeckoTerminal vía TOKEN (Ruta de ORACLE)
+                try {
+                    const resG = await fetch(`https://api.geckoterminal.com/api/v2/networks/cardano/tokens/${tokenId}`);
+                    const dataG = await resG.json();
+                    const pUsd = parseFloat(dataG.data.attributes.price_usd);
+                    
+                    if (!isNaN(pUsd)) {
+                        displayPrices(pUsd / currentAdaPrice, prefix);
+                        statusEl.innerText = "RESERVE FEED OK";
+                        return;
+                    }
+                } catch (err2) {
+                    // NIVEL 3: Búsqueda de todos los Pools (Para tokens de baja liquidez)
+                    try {
+                        const resP = await fetch(`https://api.geckoterminal.com/api/v2/networks/cardano/tokens/${tokenId}/pools?page=1`);
+                        const dataP = await resP.json();
+                        const pool = dataP.data[0].attributes;
+                        const pAda = parseFloat(pool.base_token_price_quote_token);
+                        
+                        if (!isNaN(pAda)) {
+                            displayPrices(pAda, prefix);
+                            statusEl.innerText = "POOL SEARCH OK";
+                            return;
+                        }
+                    } catch (err3) {
+                        statusEl.innerText = "BUSCANDO RED...";
+                    }
+                }
             }
         }
 
-        // 3. Intento secundario por búsqueda de pools (Específico para VLRM si falla el anterior)
-        async function fetchTokenByPool(tokenId, prefix) {
-            try {
-                const res = await fetch(`https://api.geckoterminal.com/api/v2/networks/cardano/tokens/${tokenId}/pools?page=1`);
-                const json = await res.json();
-                // Tomamos el primer pool de la lista (el de mayor liquidez)
-                const pool = json.data[0].attributes;
-                const pUsd = parseFloat(pool.base_token_price_usd);
-                const pAda = parseFloat(pool.base_token_price_quote_token);
-
-                document.getElementById(`${prefix}-ada`).innerText = pAda.toFixed(4) + " ₳";
-                document.getElementById(`${prefix}-usd`).innerText = "$" + pUsd.toFixed(6) + " USD";
-                document.getElementById(`status-${prefix}`).innerText = "POOL OK";
-            } catch (e) {
-                document.getElementById(`status-${prefix}`).innerText = "SIN LIQUIDEZ";
-            }
+        function displayPrices(priceInAda, prefix) {
+            document.getElementById(`${prefix}-ada`).innerText = priceInAda.toFixed(4) + " ₳";
+            document.getElementById(`${prefix}-usd`).innerText = "$" + (priceInAda * currentAdaPrice).toFixed(6) + " USD";
         }
 
-        // Ejecutar para ambos
-        fetchToken(ORACLE_ID, 'oracle');
-        fetchToken(VLRM_ID, 'vlrm');
+        fetchSecurePrice(ORACLE_ID, 'oracle');
+        fetchSecurePrice(VLRM_ID, 'vlrm');
     }
 
     updateData();
-    setInterval(updateData, 30000);
+    setInterval(updateData, 30000); // Actualiza cada 30 segundos
 </script>
 
 </body>
