@@ -25,6 +25,7 @@
         
         .total-tvl-card { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); border: 2px solid var(--accent); text-align: center; }
         .status { font-size: 0.65rem; color: #4ade80; text-align: right; margin-top: 10px; opacity: 0.6; }
+        .error { color: #f87171; }
     </style>
 </head>
 <body>
@@ -64,50 +65,80 @@
 </div>
 
 <script>
-    // IDs de los Pools de ORACLE/ADA
-    const MINSWAP_POOL = "cardano_minswap_v2_f86c2e42426364ef0a9557f920f69a6857f68c786762394c8e7f1a9f"; // Ejemplo de ID de pool
-    const VYFI_POOL = "cardano_vyfi_566ad937203b1ca4eb04c35588373b9e4a323984534e69b5523a1a9f"; 
+    const ORACLE_ID = "328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b27393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
 
     async function fetchData() {
         try {
-            // 1. Precio Global ADA
+            // 1. Obtener precio exacto de ADA en USD (Binance)
             const adaRes = await fetch("https://api.binance.com/api/v3/ticker/price?symbol=ADAUSDT");
             const adaData = await adaRes.json();
             const adaUsd = parseFloat(adaData.price);
             document.getElementById('ada-price').innerText = `ADA: $${adaUsd.toFixed(4)}`;
 
-            // 2. Datos de los Pools vía GeckoTerminal
-            // Minswap
-            const resMin = await fetch(`https://api.geckoterminal.com/api/v2/networks/cardano/pools/${MINSWAP_POOL}`);
-            const dataMin = await resMin.json();
-            const pMin = parseFloat(dataMin.data.attributes.base_token_price_quote_token);
-            const tvlMinUsd = parseFloat(dataMin.data.attributes.reserve_in_usd);
-            const tvlMinAda = tvlMinUsd / adaUsd;
+            // 2. Buscar TODOS los pools de ORACLE dinámicamente
+            const poolRes = await fetch(`https://api.geckoterminal.com/api/v2/networks/cardano/tokens/${ORACLE_ID}/pools?page=1`);
+            const poolData = await poolRes.json();
 
-            document.getElementById('price-minswap').innerText = pMin.toFixed(4) + " ₳";
-            document.getElementById('tvl-minswap').innerText = Math.round(tvlMinAda).toLocaleString() + " ₳";
-            document.getElementById('status-minswap').innerText = "LIVE DATA";
+            let minswapTvl = 0;
+            let vyfiTvl = 0;
+            let minswapFound = false;
+            let vyfiFound = false;
 
-            // VyFi
-            const resVy = await fetch(`https://api.geckoterminal.com/api/v2/networks/cardano/pools/${VYFI_POOL}`);
-            const dataVy = await resVy.json();
-            const pVy = parseFloat(dataVy.data.attributes.base_token_price_quote_token);
-            const tvlVyUsd = parseFloat(dataVy.data.attributes.reserve_in_usd);
-            const tvlVyAda = tvlVyUsd / adaUsd;
+            // 3. Filtrar y clasificar los pools
+            for (const pool of poolData.data) {
+                const poolId = pool.id.toLowerCase();
+                const attr = pool.attributes;
+                
+                // Extraer el TVL en USD y convertirlo matemáticamente a ADA
+                const tvlUsd = parseFloat(attr.reserve_in_usd) || 0;
+                const tvlAda = tvlUsd / adaUsd;
 
-            document.getElementById('price-vyfi').innerText = pVy.toFixed(4) + " ₳";
-            document.getElementById('tvl-vyfi').innerText = Math.round(tvlVyAda).toLocaleString() + " ₳";
-            document.getElementById('status-vyfi').innerText = "LIVE DATA";
+                // Extraer el precio en USD del token y convertirlo a ADA 
+                // (Esto evita errores de inversión de pares Base/Quote)
+                const priceUsd = parseFloat(attr.base_token_price_usd);
+                const priceAda = priceUsd / adaUsd;
 
-            // 3. TVL Total
-            const totalTvl = tvlMinAda + tvlVyAda;
+                // Si detectamos la palabra "minswap" en el identificador del pool y aún no lo hemos asignado
+                if (poolId.includes('minswap') && !minswapFound) {
+                    document.getElementById('price-minswap').innerText = priceAda.toFixed(4) + " ₳";
+                    document.getElementById('tvl-minswap').innerText = Math.round(tvlAda).toLocaleString() + " ₳";
+                    document.getElementById('status-minswap').innerText = "LIVE DATA OK";
+                    minswapTvl = tvlAda;
+                    minswapFound = true;
+                }
+                
+                // Si detectamos la palabra "vyfi" en el identificador del pool
+                if (poolId.includes('vyfi') && !vyfiFound) {
+                    document.getElementById('price-vyfi').innerText = priceAda.toFixed(4) + " ₳";
+                    document.getElementById('tvl-vyfi').innerText = Math.round(tvlAda).toLocaleString() + " ₳";
+                    document.getElementById('status-vyfi').innerText = "LIVE DATA OK";
+                    vyfiTvl = tvlAda;
+                    vyfiFound = true;
+                }
+            }
+
+            // Manejo de errores por si algún pool no tiene liquidez actual
+            if (!minswapFound) {
+                document.getElementById('status-minswap').innerText = "SIN LIQUIDEZ DETECTADA";
+                document.getElementById('status-minswap').className = "status error";
+            }
+            if (!vyfiFound) {
+                document.getElementById('status-vyfi').innerText = "SIN LIQUIDEZ DETECTADA";
+                document.getElementById('status-vyfi').className = "status error";
+            }
+
+            // 4. Calcular e inyectar el TVL Acumulado Total
+            const totalTvl = minswapTvl + vyfiTvl;
             document.getElementById('total-tvl').innerText = Math.round(totalTvl).toLocaleString() + " ₳";
 
         } catch (e) {
-            console.error("Error cargando datos:", e);
+            console.error("Fallo general:", e);
+            document.getElementById('status-minswap').innerText = "REINTENTANDO...";
+            document.getElementById('status-vyfi').innerText = "REINTENTANDO...";
         }
     }
 
+    // Ejecutar inmediatamente y luego cada 30 segundos
     fetchData();
     setInterval(fetchData, 30000);
 </script>
