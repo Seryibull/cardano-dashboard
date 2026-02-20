@@ -13,13 +13,14 @@
         .price { font-size: 2rem; font-weight: bold; color: var(--price); }
         .usd-small { font-size: 0.85rem; color: #64748b; margin-top: 5px; }
         .status { font-size: 0.7rem; margin-top: 10px; color: #475569; }
+        #ada-price { color: #facc15; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <h2>Cardano Assets (Price in ADA)</h2>
-    <p>ADA Price: $<span id="ada-price">...</span></p>
+    <p>Market ADA: $<span id="ada-price">...</span> USD</p>
 
     <div class="grid">
         <div class="card">
@@ -39,43 +40,54 @@
 </div>
 
 <script>
-    // IDs Unicos
-    const ADA_ID = "cardano"; // ID simplificado para el token nativo
-    const ORACLE_ID = "328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b27393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
-    const VLRM_ID = "63efb704b7396890e4d9539d030c0e667739043add65c00f96c586c056616c6f72756d";
+    // IDs de Policy para identificación (primeros 56 caracteres)
+    const POLICY_ORACLE = "328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b27393c37";
+    const POLICY_VLRM = "63efb704b7396890e4d9539d030c0e667739043add65c00f96c586c056616c6f";
+
+    // IDs completos para la consulta a GeckoTerminal
+    const ORACLE_FULL = "328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b27393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
+    const VLRM_FULL = "63efb704b7396890e4d9539d030c0e667739043add65c00f96c586c056616c6f72756d";
 
     async function update() {
         try {
-            // Consultamos los 3 precios en una sola llamada a GeckoTerminal
-            const url = `https://api.geckoterminal.com/api/v2/networks/cardano/tokens/multi/${ORACLE_ID}%2C${VLRM_ID}`;
-            const response = await fetch(url);
-            const data = await response.json();
-
-            // Obtenemos el precio de ADA de una fuente confiable (CoinGecko Simple API)
+            // 1. Precio de ADA desde CoinGecko (Muy estable)
             const adaRes = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=cardano&vs_currencies=usd");
             const adaData = await adaRes.json();
             const adaUsd = adaData.cardano.usd;
             document.getElementById('ada-price').innerText = adaUsd.toFixed(3);
 
-            data.data.forEach(token => {
-                const priceUsd = parseFloat(token.attributes.price_usd);
-                const priceInAda = priceUsd / adaUsd;
-                const isOracle = token.id.includes(ORACLE_ID.substring(0, 10));
-                const pfx = isOracle ? "oracle" : "vlrm";
+            // 2. Precios de Tokens desde GeckoTerminal
+            const url = `https://api.geckoterminal.com/api/v2/networks/cardano/tokens/multi/${ORACLE_FULL}%2C${VLRM_FULL}`;
+            const response = await fetch(url);
+            const data = await response.json();
 
-                document.getElementById(`price-${pfx}`).innerText = priceInAda.toFixed(3) + " ₳";
-                document.getElementById(`usd-${pfx}`).innerText = "$" + priceUsd.toFixed(5) + " USD";
-                document.getElementById(`status-${pfx}`).innerText = "Actualizado: " + new Date().toLocaleTimeString();
-            });
+            if (data.data && data.data.length > 0) {
+                data.data.forEach(token => {
+                    const priceUsd = parseFloat(token.attributes.price_usd);
+                    const priceInAda = priceUsd / adaUsd;
+                    const address = token.attributes.address;
+                    
+                    // Identificamos por el inicio de la dirección (Policy ID)
+                    let pfx = "";
+                    if (address.includes(POLICY_ORACLE)) pfx = "oracle";
+                    else if (address.includes(POLICY_VLRM)) pfx = "vlrm";
+
+                    if (pfx) {
+                        document.getElementById(`price-${pfx}`).innerText = priceInAda.toFixed(3) + " ₳";
+                        document.getElementById(`usd-${pfx}`).innerText = "$" + priceUsd.toFixed(5) + " USD";
+                        document.getElementById(`status-${pfx}`).innerText = "Sincronizado: " + new Date().toLocaleTimeString();
+                    }
+                });
+            }
 
         } catch (e) {
-            console.error(e);
-            document.getElementById('status-oracle').innerText = "Error de conexión. Reintentando...";
+            console.error("Error detectado:", e);
+            document.getElementById('status-oracle').innerText = "Error de red. Reintentando...";
         }
     }
 
     update();
-    setInterval(update, 30000);
+    setInterval(update, 30000); // Cada 30 seg
 </script>
 
 </body>
