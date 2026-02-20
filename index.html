@@ -2,13 +2,14 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cardano Live Hub</title>
     <style>
         body { background: #050a18; color: #e2e8f0; font-family: sans-serif; padding: 20px; text-align: center; }
-        .container { max-width: 500px; margin: auto; }
-        .card { background: #111a2e; border-radius: 15px; padding: 10px; margin-bottom: 20px; border: 1px solid #1e293b; }
-        h2 { font-size: 1.2rem; color: #3b82f6; text-transform: uppercase; letter-spacing: 2px; }
-        .footer-note { font-size: 0.7rem; color: #475569; margin-top: 20px; }
+        .container { max-width: 600px; margin: auto; }
+        .card { background: #111a2e; border-radius: 15px; padding: 15px; margin-bottom: 25px; border: 1px solid #1e293b; overflow: hidden; }
+        h2 { font-size: 1.2rem; color: #3b82f6; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px; }
+        .token-label { margin-bottom: 10px; display: block; color: #94a3b8; font-size: 0.8rem; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -18,34 +19,29 @@
 
     <div class="card">
         <script src="https://widgets.coingecko.com/gecko-coin-price-chart-widget.js"></script>
-        <gecko-coin-price-chart-widget  coin-id="cardano" currency="usd" height="300" locale="es"></gecko-coin-price-chart-widget>
+        <gecko-coin-price-chart-widget coin-id="cardano" currency="usd" height="300" locale="es"></gecko-coin-price-chart-widget>
     </div>
 
     <div class="card">
-        <p style="font-size: 0.8rem; color: #94a3b8;">ORACLE / ADA (Live Feed)</p>
+        <span class="token-label">ORACLE / ADA (Live)</span>
         <iframe 
+            src="https://www.dexhunter.io/embed/swap/328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b27393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4" 
             width="100%" 
-            height="400" 
-            src="https://www.geckoterminal.com/cardano/pools/cardano_minswap_be44e11400e2b4f2c5d6c8112316e6d7729114f85e4e69b5523a1a9e?embed=1&info=0&swaps=0" 
-            frameborder="0" 
-            allow="clipboard-write" 
-            allowfullscreen>
+            height="500" 
+            style="border:none; border-radius:10px;">
         </iframe>
     </div>
 
     <div class="card">
-        <p style="font-size: 0.8rem; color: #94a3b8;">VLRM / ADA (Live Feed)</p>
+        <span class="token-label">VLRM / ADA (Live)</span>
         <iframe 
+            src="https://www.dexhunter.io/embed/swap/63efb704b7396890e4d9539d030c0e667739043add65c00f96c586c056616c6f72756d" 
             width="100%" 
-            height="400" 
-            src="https://www.geckoterminal.com/cardano/pools/cardano_vyfi_566ad937203b1ca4eb04c35588373b9e4a323984534e69b5523a1a9f?embed=1&info=0&swaps=0" 
-            frameborder="0" 
-            allow="clipboard-write" 
-            allowfullscreen>
+            height="500" 
+            style="border:none; border-radius:10px;">
         </iframe>
     </div>
 
-    <p class="footer-note">Datos actualizados vía CoinGecko & GeckoTerminal</p>
 </div>
 
 </body>
