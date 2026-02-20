@@ -3,85 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cardano Live Dashboard</title>
+    <title>ORACLE / ADA Analytics</title>
     <style>
-        :root { --bg: #050814; --card: #111a2e; --accent: #3b82f6; --text: #f1f5f9; --gold: #facc15; }
-        body { background: var(--bg); color: var(--text); font-family: system-ui, sans-serif; padding: 20px; display: flex; justify-content: center; margin: 0; }
-        .container { width: 100%; max-width: 400px; }
-        .card { background: var(--card); border-radius: 20px; padding: 25px; margin-bottom: 20px; border: 1px solid #1e293b; box-shadow: 0 10px 20px rgba(0,0,0,0.3); position: relative; }
-        .label { font-size: 0.7rem; color: #64748b; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
-        .price-ada { font-size: 2.2rem; font-weight: 800; color: var(--gold); margin: 5px 0; }
-        .price-usd { font-size: 1rem; color: #94a3b8; }
-        #ada-header { text-align: center; margin-bottom: 25px; padding: 12px; background: rgba(59, 130, 246, 0.1); border-radius: 12px; border: 1px solid rgba(59, 130, 246, 0.2); font-weight: bold; }
-        .status { font-size: 0.6rem; color: #34d399; margin-top: 10px; text-align: right; opacity: 0.7; }
+        :root { --bg: #020617; --card: #0f172a; --accent: #38bdf8; --text: #f8fafc; --gold: #fbbf24; --minswap: #fa427d; --vyfi: #20e7d5; }
+        body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; padding: 20px; margin: 0; }
+        .container { width: 100%; max-width: 500px; }
+        .header { text-align: center; margin-bottom: 30px; }
+        .header h1 { color: var(--accent); margin: 0; font-size: 1.8rem; }
+        .ada-global { font-weight: bold; color: var(--gold); background: rgba(251, 191, 36, 0.1); padding: 8px; border-radius: 10px; display: inline-block; margin-top: 10px; }
+        
+        .card { background: var(--card); border-radius: 20px; padding: 20px; margin-bottom: 15px; border: 1px solid #1e293b; transition: transform 0.2s; }
+        .card:hover { transform: translateY(-3px); }
+        .dex-tag { font-size: 0.7rem; font-weight: bold; padding: 4px 8px; border-radius: 6px; text-transform: uppercase; float: right; }
+        .minswap-tag { background: var(--minswap); color: white; }
+        .vyfi-tag { background: var(--vyfi); color: black; }
+        
+        .label { font-size: 0.8rem; color: #94a3b8; margin-bottom: 10px; display: block; }
+        .price-big { font-size: 2rem; font-weight: 800; color: var(--text); }
+        .tvl-row { margin-top: 15px; padding-top: 15px; border-top: 1px solid #1e293b; display: flex; justify-content: space-between; align-items: center; }
+        .tvl-val { color: var(--accent); font-weight: 700; }
+        
+        .total-tvl-card { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); border: 2px solid var(--accent); text-align: center; }
+        .status { font-size: 0.65rem; color: #4ade80; text-align: right; margin-top: 10px; opacity: 0.6; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div id="ada-header">ADA Market: $...</div>
+    <div class="header">
+        <h1>ORACLE Ecosystem</h1>
+        <div id="ada-price" class="ada-global">ADA: $...</div>
+    </div>
 
-    <div class="card">
-        <div class="label">ORACLE / ADA</div>
-        <div id="oracle-ada" class="price-ada">... ₳</div>
-        <div id="oracle-usd" class="price-usd">$... USD</div>
-        <div id="status-oracle" class="status">Sincronizando...</div>
+    <div class="card total-tvl-card">
+        <span class="label">TVL TOTAL ACUMULADO</span>
+        <div id="total-tvl" style="font-size: 2.2rem; font-weight: 900; color: var(--accent);">... ₳</div>
     </div>
 
     <div class="card">
-        <div class="label">VLRM / ADA</div>
-        <div id="vlrm-ada" class="price-ada">... ₳</div>
-        <div id="vlrm-usd" class="price-usd">$... USD</div>
-        <div id="status-vlrm" class="status">Sincronizando...</div>
+        <span class="dex-tag minswap-tag">Minswap</span>
+        <span class="label">PRECIO EN POOL</span>
+        <div id="price-minswap" class="price-big">... ₳</div>
+        <div class="tvl-row">
+            <span>TVL en Pool:</span>
+            <span id="tvl-minswap" class="tvl-val">... ₳</span>
+        </div>
+        <div id="status-minswap" class="status">Sincronizando...</div>
+    </div>
+
+    <div class="card">
+        <span class="dex-tag vyfi-tag">VyFi</span>
+        <span class="label">PRECIO EN POOL</span>
+        <div id="price-vyfi" class="price-big">... ₳</div>
+        <div class="tvl-row">
+            <span>TVL en Pool:</span>
+            <span id="tvl-vyfi" class="tvl-val">... ₳</span>
+        </div>
+        <div id="status-vyfi" class="status">Sincronizando...</div>
     </div>
 </div>
 
 <script>
-    const ORACLE_ID = "328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b27393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
-    const VLRM_ID = "63efb704b7396890e4d9539d030c0e667739043add65c00f96c586c056616c6f72756d";
+    // IDs de los Pools de ORACLE/ADA
+    const MINSWAP_POOL = "cardano_minswap_v2_f86c2e42426364ef0a9557f920f69a6857f68c786762394c8e7f1a9f"; // Ejemplo de ID de pool
+    const VYFI_POOL = "cardano_vyfi_566ad937203b1ca4eb04c35588373b9e4a323984534e69b5523a1a9f"; 
 
-    async function updateData() {
-        let adaPriceUsd = 0;
-
-        // 1. Obtener precio de ADA (Binance)
+    async function fetchData() {
         try {
-            const res = await fetch("https://api.binance.com/api/v3/ticker/price?symbol=ADAUSDT");
-            const data = await res.json();
-            adaPriceUsd = parseFloat(data.price);
-            document.getElementById('ada-header').innerText = `ADA Market: $${adaPriceUsd.toFixed(4)}`;
-        } catch (e) { console.error("Error ADA"); }
+            // 1. Precio Global ADA
+            const adaRes = await fetch("https://api.binance.com/api/v3/ticker/price?symbol=ADAUSDT");
+            const adaData = await adaRes.json();
+            const adaUsd = parseFloat(adaData.price);
+            document.getElementById('ada-price').innerText = `ADA: $${adaUsd.toFixed(4)}`;
 
-        // 2. Obtener Precios desde GeckoTerminal (Ruta compatible con Navegadores)
-        const assets = [
-            { id: ORACLE_ID, prefix: 'oracle' },
-            { id: VLRM_ID, prefix: 'vlrm' }
-        ];
+            // 2. Datos de los Pools vía GeckoTerminal
+            // Minswap
+            const resMin = await fetch(`https://api.geckoterminal.com/api/v2/networks/cardano/pools/${MINSWAP_POOL}`);
+            const dataMin = await resMin.json();
+            const pMin = parseFloat(dataMin.data.attributes.base_token_price_quote_token);
+            const tvlMinUsd = parseFloat(dataMin.data.attributes.reserve_in_usd);
+            const tvlMinAda = tvlMinUsd / adaUsd;
 
-        for (const asset of assets) {
-            try {
-                // Consultamos el pool directamente, que es la información que no falla
-                const response = await fetch(`https://api.geckoterminal.com/api/v2/networks/cardano/tokens/${asset.id}/pools?page=1`);
-                const result = await response.json();
-                
-                // Extraemos los datos del primer pool activo (usualmente Minswap o VyFi)
-                const pool = result.data[0].attributes;
-                const pAda = parseFloat(pool.base_token_price_quote_token);
-                const pUsd = parseFloat(pool.base_token_price_usd);
+            document.getElementById('price-minswap').innerText = pMin.toFixed(4) + " ₳";
+            document.getElementById('tvl-minswap').innerText = Math.round(tvlMinAda).toLocaleString() + " ₳";
+            document.getElementById('status-minswap').innerText = "LIVE DATA";
 
-                if (!isNaN(pAda) && pAda > 0) {
-                    document.getElementById(`${asset.prefix}-ada`).innerText = pAda.toFixed(4) + " ₳";
-                    document.getElementById(`${asset.prefix}-usd`).innerText = "$" + pUsd.toFixed(6) + " USD";
-                    document.getElementById(`status-${asset.prefix}`).innerText = "BLOCKCHAIN DATA OK";
-                }
-            } catch (err) {
-                document.getElementById(`status-${asset.prefix}`).innerText = "REINTENTANDO CONEXIÓN...";
-            }
+            // VyFi
+            const resVy = await fetch(`https://api.geckoterminal.com/api/v2/networks/cardano/pools/${VYFI_POOL}`);
+            const dataVy = await resVy.json();
+            const pVy = parseFloat(dataVy.data.attributes.base_token_price_quote_token);
+            const tvlVyUsd = parseFloat(dataVy.data.attributes.reserve_in_usd);
+            const tvlVyAda = tvlVyUsd / adaUsd;
+
+            document.getElementById('price-vyfi').innerText = pVy.toFixed(4) + " ₳";
+            document.getElementById('tvl-vyfi').innerText = Math.round(tvlVyAda).toLocaleString() + " ₳";
+            document.getElementById('status-vyfi').innerText = "LIVE DATA";
+
+            // 3. TVL Total
+            const totalTvl = tvlMinAda + tvlVyAda;
+            document.getElementById('total-tvl').innerText = Math.round(totalTvl).toLocaleString() + " ₳";
+
+        } catch (e) {
+            console.error("Error cargando datos:", e);
         }
     }
 
-    updateData();
-    setInterval(updateData, 25000);
+    fetchData();
+    setInterval(fetchData, 30000);
 </script>
-
 </body>
 </html>
