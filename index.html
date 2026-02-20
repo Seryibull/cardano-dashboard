@@ -8,12 +8,12 @@
         :root { --bg: #050814; --card: #111a2e; --accent: #3b82f6; --text: #f1f5f9; --gold: #facc15; }
         body { background: var(--bg); color: var(--text); font-family: system-ui, sans-serif; padding: 20px; display: flex; justify-content: center; }
         .container { width: 100%; max-width: 400px; }
-        .card { background: var(--card); border-radius: 20px; padding: 20px; margin-bottom: 20px; border: 1px solid #1e293b; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+        .card { background: var(--card); border-radius: 20px; padding: 25px; margin-bottom: 20px; border: 1px solid #1e293b; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
         .label { font-size: 0.7rem; color: #64748b; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
         .price-ada { font-size: 2.2rem; font-weight: 800; color: var(--gold); margin: 5px 0; }
         .price-usd { font-size: 1rem; color: #94a3b8; }
         #ada-header { text-align: center; margin-bottom: 25px; padding: 12px; background: rgba(59, 130, 246, 0.1); border-radius: 12px; border: 1px solid rgba(59, 130, 246, 0.2); font-weight: bold; }
-        .status { font-size: 0.6rem; color: #475569; margin-top: 10px; text-align: right; }
+        .status { font-size: 0.65rem; color: #34d399; margin-top: 10px; text-align: right; font-family: monospace; }
     </style>
 </head>
 <body>
@@ -43,48 +43,35 @@
     async function updateData() {
         let currentAdaPrice = 0;
 
-        // 1. Obtener precio de ADA (Fuente 1: Binance)
+        // 1. Obtener precio de ADA (Binance)
         try {
             const adaRes = await fetch("https://api.binance.com/api/v3/ticker/price?symbol=ADAUSDT");
             const adaData = await adaRes.json();
             currentAdaPrice = parseFloat(adaData.price);
             document.getElementById('ada-header').innerText = `ADA Market: $${currentAdaPrice.toFixed(4)}`;
-        } catch (e) { 
-            document.getElementById('ada-header').innerText = "Error cargando ADA USD";
-        }
+        } catch (e) { console.error(e); }
 
-        // 2. Obtener precios de Tokens (Fuente: TapTools API)
-        // Usamos una técnica de "fetch" más directa para evitar bloqueos
+        // 2. Obtener precios de Tokens (GeckoTerminal es el que te está respondiendo ahora)
         const tokens = [ORACLE_ID, VLRM_ID];
         
         for (const tid of tokens) {
+            const prefix = tid === ORACLE_ID ? 'oracle' : 'vlrm';
             try {
-                const response = await fetch(`https://openapi.taptools.io/api/v1/token/prices/ch_cardano_${tid}`);
-                // Nota: Si el OpenAPI directo falla por CORS, usamos el respaldo de Gecko
-                const data = await response.json();
+                const response = await fetch(`https://api.geckoterminal.com/api/v2/networks/cardano/tokens/${tid}`);
+                const result = await response.json();
                 
-                const pAda = parseFloat(data.price);
-                const prefix = tid === ORACLE_ID ? 'oracle' : 'vlrm';
-
-                document.getElementById(`${prefix}-ada`).innerText = pAda.toFixed(3) + " ₳";
-                if (currentAdaPrice > 0) {
-                    document.getElementById(`${prefix}-usd`).innerText = "$" + (pAda * currentAdaPrice).toFixed(4) + " USD";
-                }
-                document.getElementById(`status-${prefix}`).innerText = "Blockchain Live";
-            } catch (err) {
-                // Si TapTools bloquea, intentamos vía GeckoTerminal directo (sin proxy)
-                try {
-                    const gRes = await fetch(`https://api.geckoterminal.com/api/v2/networks/cardano/tokens/${tid}`);
-                    const gData = await gRes.json();
-                    const pUsd = parseFloat(gData.data.attributes.price_usd);
-                    const prefix = tid === ORACLE_ID ? 'oracle' : 'vlrm';
+                // Extraemos el precio en USD que viene en la ruta: data.attributes.price_usd
+                const priceUsd = parseFloat(result.data.attributes.price_usd);
+                
+                if (!isNaN(priceUsd) && currentAdaPrice > 0) {
+                    const priceInAda = priceUsd / currentAdaPrice;
                     
-                    document.getElementById(`${prefix}-ada`).innerText = (pUsd / currentAdaPrice).toFixed(3) + " ₳";
-                    document.getElementById(`${prefix}-usd`).innerText = "$" + pUsd.toFixed(4) + " USD";
-                    document.getElementById(`status-${prefix}`).innerText = "Gecko Live Feed";
-                } catch (e2) {
-                    document.getElementById(tid === ORACLE_ID ? 'status-oracle' : 'status-vlrm').innerText = "Reintentando conexión...";
+                    document.getElementById(`${prefix}-ada`).innerText = priceInAda.toFixed(4) + " ₳";
+                    document.getElementById(`${prefix}-usd`).innerText = "$" + priceUsd.toFixed(6) + " USD";
+                    document.getElementById(`status-${prefix}`).innerText = "NETWORK OK";
                 }
+            } catch (err) {
+                document.getElementById(`status-${prefix}`).innerText = "RETRYING...";
             }
         }
     }
