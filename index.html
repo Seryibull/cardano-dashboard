@@ -191,7 +191,7 @@
     </div>
 
     <script>
-        // ¡CAMBIA ESTA VARIABLE POR LA URL DE TU WORKER DE CLOUDFLARE!
+        // Aquí está tu enlace puesto correctamente. Fíjate en las comillas simples ' a los lados.
         const PROXY_URL = 'https://cardano-dex-proxy.seryibull.workers.dev';
 
         async function fetchAdaPrice() {
@@ -203,19 +203,15 @@
                 return data.cardano.usd;
             } catch (error) {
                 console.error("Error obteniendo precio de ADA:", error);
-                document.getElementById('ada-price-usd').innerText = "Error";
+                document.getElementById('ada-price-usd').innerText = "Error API ADA";
                 return null;
             }
         }
 
         async function fetchDexData(adaPriceUsd) {
             try {
-                if(PROXY_URL.includes('AQUI_TU_ENLACE')) {
-                    throw new Error("No has configurado el enlace de Cloudflare en el código.");
-                }
-
                 const response = await fetch(PROXY_URL);
-                if (!response.ok) throw new Error("Fallo al conectar con el Worker");
+                if (!response.ok) throw new Error("Fallo al conectar con el Proxy Cloudflare");
                 const data = await response.json();
 
                 if (data.error) throw new Error(data.error);
@@ -228,9 +224,11 @@
                         const liqUsd = parseFloat(vlrmVyfiPool.attributes.reserve_in_usd);
                         document.getElementById('vlrm-price-ada').innerText = `₳ ${priceAda.toFixed(5)}`;
                         if(adaPriceUsd) document.getElementById('vlrm-liq-ada').innerText = `₳ ${Math.round(liqUsd / adaPriceUsd).toLocaleString()}`;
+                    } else {
+                        document.getElementById('vlrm-price-ada').innerText = "Pool VyFi no hallado";
                     }
                 } else {
-                    document.getElementById('vlrm-price-ada').innerText = "Pool no encontrado";
+                    document.getElementById('vlrm-price-ada').innerText = "Token no indexado";
                 }
 
                 // Procesar ORACLE
@@ -247,6 +245,8 @@
                         totalLiqAda += liqAda;
                         document.getElementById('oracle-vyfi-price').innerText = `₳ ${priceVyfi.toFixed(4)}`;
                         document.getElementById('oracle-vyfi-liq').innerText = `₳ ${Math.round(liqAda).toLocaleString()}`;
+                    } else {
+                        document.getElementById('oracle-vyfi-price').innerText = "No hallado";
                     }
 
                     if (oracleMinPool) {
@@ -256,6 +256,8 @@
                         totalLiqAda += liqAda;
                         document.getElementById('oracle-min-price').innerText = `₳ ${priceMin.toFixed(4)}`;
                         document.getElementById('oracle-min-liq').innerText = `₳ ${Math.round(liqAda).toLocaleString()}`;
+                    } else {
+                        document.getElementById('oracle-min-price').innerText = "No hallado";
                     }
 
                     document.getElementById('oracle-total-liq').innerText = `₳ ${Math.round(totalLiqAda).toLocaleString()}`;
@@ -263,14 +265,18 @@
                     // Arbitraje
                     if (priceVyfi > 0 && priceMin > 0) {
                         calculateArbitrage(priceVyfi, priceMin);
+                    } else {
+                        document.getElementById('arbitrage-action').innerHTML = `<span style="color: var(--text-muted);">Faltan datos de un DEX</span>`;
                     }
+                } else {
+                    document.getElementById('arbitrage-action').innerText = "Token ORACLE no indexado";
                 }
 
-                document.getElementById('vlrm-oracle-liq-ada').innerText = "Pool cruzado en revisión (No indexado)";
+                document.getElementById('vlrm-oracle-liq-ada').innerText = "Pool cruzado en revisión";
 
             } catch (error) {
                 console.error("Error DEX:", error);
-                document.getElementById('vlrm-price-ada').innerText = "Error de red";
+                document.getElementById('vlrm-price-ada').innerText = "Error leyendo datos";
                 document.getElementById('arbitrage-action').innerText = error.message;
             }
         }
@@ -286,7 +292,7 @@
 
             if (spread < 0.5) {
                 spreadEl.style.color = "var(--text-muted)";
-                actionEl.innerHTML = `<span style="color: var(--text-muted);">Sin oportunidad (Fees altos)</span>`;
+                actionEl.innerHTML = `<span style="color: var(--text-muted);">Sin oportunidad (Spread muy bajo)</span>`;
             } else if (priceVyfi > priceMinswap) {
                 spreadEl.style.color = "var(--accent-green)";
                 actionEl.innerHTML = `Comprar en <span class="badge bg-minswap">Minswap</span> ➔ Vender en <span class="badge bg-vyfi">VyFi</span>`;
@@ -301,6 +307,7 @@
             await fetchDexData(adaPriceUsd);
         }
 
+        // Ejecutar código al cargar
         window.onload = initDashboard;
     </script>
 </body>
