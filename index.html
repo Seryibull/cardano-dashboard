@@ -229,89 +229,76 @@
         // 2, 3, 4. OBTENER DATOS DE DEXES (VLRM y ORACLE)
         // ==========================================
         async function fetchDexData() {
-            /* * NOTA IMPORTANTE PARA GITHUB PAGES:
-             * Para obtener datos reales de Minswap y VyFi de forma constante, tienes dos opciones:
-             * Opción A: Usar la API de TapTools (requiere API Key. No la pongas cruda en Github, usa un proxy).
-             * Opción B: Usar las APIs públicas de los DEX, pero pueden tener restricciones de CORS en el navegador.
-             * * Aquí simulo la estructura de los datos que recibirías para que la lógica de arbitraje funcione.
-             * Debes reemplazar este bloque `try` con tus llamadas fetch() reales a la API que elijas.
-             */
             try {
-                // --- REEMPLAZA ESTO CON TUS FETCH REALES ---
-                // Simulación de datos recibidos de una API (ej. TapTools o tu propio backend proxy)
-                const mockData = {
-                    vlrm: { priceAda: 0.045, liquidityAda: 150000 },
-                    vlrmOracle: { liquidityAda: 25000 },
-                    oracleVyfi: { priceAda: 0.85, liquidityAda: 45000 },
-                    oracleMinswap: { priceAda: 0.81, liquidityAda: 60000 }
-                };
-                // -------------------------------------------
+                // 1. OBTENEMOS EL PRECIO DE ADA PRIMERO (Para calcular la liquidez)
+                const adaResponse = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=cardano&vs_currencies=usd');
+                const adaData = await adaResponse.json();
+                const adaPriceUsd = adaData.cardano.usd;
 
-                // Actualizar VLRM/ADA
-                document.getElementById('vlrm-price-ada').innerText = `₳ ${mockData.vlrm.priceAda.toFixed(4)}`;
-                document.getElementById('vlrm-liq-ada').innerText = `₳ ${mockData.vlrm.liquidityAda.toLocaleString()}`;
-
-                // Actualizar VLRM/ORACLE
-                document.getElementById('vlrm-oracle-liq-ada').innerText = `₳ ${mockData.vlrmOracle.liquidityAda.toLocaleString()}`;
-
-                // Actualizar ORACLE/ADA (VyFi y Minswap)
-                document.getElementById('oracle-vyfi-price').innerText = `₳ ${mockData.oracleVyfi.priceAda.toFixed(4)}`;
-                document.getElementById('oracle-vyfi-liq').innerText = `₳ ${mockData.oracleVyfi.liquidityAda.toLocaleString()}`;
+                // 2. LLAMAMOS A TU PROXY GRATUITO
+                const PROXY_URL = 'https://cardano-dex-proxy.seryibull.workers.dev'; // <--- ¡CAMBIA ESTO!
                 
-                document.getElementById('oracle-min-price').innerText = `₳ ${mockData.oracleMinswap.priceAda.toFixed(4)}`;
-                document.getElementById('oracle-min-liq').innerText = `₳ ${mockData.oracleMinswap.liquidityAda.toLocaleString()}`;
+                const response = await fetch(PROXY_URL);
+                const data = await response.json();
 
-                // Calcular y mostrar liquidez total de ORACLE
-                const totalOracleLiq = mockData.oracleVyfi.liquidityAda + mockData.oracleMinswap.liquidityAda;
-                document.getElementById('oracle-total-liq').innerText = `₳ ${totalOracleLiq.toLocaleString()}`;
+                if(data.error) throw new Error(data.error);
 
-                // Lógica de Arbitraje
-                calculateArbitrage(mockData.oracleVyfi.priceAda, mockData.oracleMinswap.priceAda);
+                // --- PROCESAR VLRM ---
+                // Buscamos el pool de VLRM/ADA en Vyfi
+                const vlrmVyfiPool = data.vlrm.find(pool => pool.relationships.dex.data.id === 'vyfi');
+                if (vlrmVyfiPool) {
+                    const priceAda = parseFloat(vlrmVyfiPool.attributes.base_token_price_quote_token);
+                    const liqUsd = parseFloat(vlrmVyfiPool.attributes.reserve_in_usd);
+                    const liqAda = liqUsd / adaPriceUsd; // Convertimos la liquidez de USD a ADA
+
+                    document.getElementById('vlrm-price-ada').innerText = `₳ ${priceAda.toFixed(4)}`;
+                    document.getElementById('vlrm-liq-ada').innerText = `₳ ${Math.round(liqAda).toLocaleString()}`;
+                }
+
+                // --- PROCESAR ORACLE ---
+                // Buscamos los pools de ORACLE en Vyfi y Minswap
+                const oracleVyfiPool = data.oracle.find(pool => pool.relationships.dex.data.id === 'vyfi');
+                const oracleMinPool = data.oracle.find(pool => pool.relationships.dex.data.id === 'minswap');
+
+                let totalOracleLiqAda = 0;
+                let priceVyfi = 0;
+                let priceMin = 0;
+
+                if (oracleVyfiPool) {
+                    priceVyfi = parseFloat(oracleVyfiPool.attributes.base_token_price_quote_token);
+                    const liqUsd = parseFloat(oracleVyfiPool.attributes.reserve_in_usd);
+                    const liqAda = liqUsd / adaPriceUsd;
+                    totalOracleLiqAda += liqAda;
+
+                    document.getElementById('oracle-vyfi-price').innerText = `₳ ${priceVyfi.toFixed(4)}`;
+                    document.getElementById('oracle-vyfi-liq').innerText = `₳ ${Math.round(liqAda).toLocaleString()}`;
+                }
+
+                if (oracleMinPool) {
+                    priceMin = parseFloat(oracleMinPool.attributes.base_token_price_quote_token);
+                    const liqUsd = parseFloat(oracleMinPool.attributes.reserve_in_usd);
+                    const liqAda = liqUsd / adaPriceUsd;
+                    totalOracleLiqAda += liqAda;
+
+                    document.getElementById('oracle-min-price').innerText = `₳ ${priceMin.toFixed(4)}`;
+                    document.getElementById('oracle-min-liq').innerText = `₳ ${Math.round(liqAda).toLocaleString()}`;
+                }
+
+                document.getElementById('oracle-total-liq').innerText = `₳ ${Math.round(totalOracleLiqAda).toLocaleString()}`;
+
+                // --- LÓGICA DE ARBITRAJE ---
+                if (priceVyfi > 0 && priceMin > 0) {
+                    calculateArbitrage(priceVyfi, priceMin);
+                }
+
+                // NOTA: Para VLRM/ORACLE (pool cruzado), GeckoTerminal a veces requiere buscar por la dirección exacta del pool. 
+                // Si la liquidez del pool cruzado no aparece en esta llamada general, mostraremos un aviso.
+                document.getElementById('vlrm-oracle-liq-ada').innerText = "Pool cruzado en revisión";
 
             } catch (error) {
-                console.error("Error obteniendo datos DEX:", error);
+                console.error("Error obteniendo datos del DEX:", error);
+                document.getElementById('vlrm-price-ada').innerText = "Error de red";
             }
-        }
-
-        // ==========================================
-        // LÓGICA DE ARBITRAJE
-        // ==========================================
-        function calculateArbitrage(priceVyfi, priceMinswap) {
-            // Calcular diferencia porcentual (Spread)
-            const highestPrice = Math.max(priceVyfi, priceMinswap);
-            const lowestPrice = Math.min(priceVyfi, priceMinswap);
-            const spread = ((highestPrice - lowestPrice) / lowestPrice) * 100;
-
-            const spreadElement = document.getElementById('arbitrage-spread');
-            const actionElement = document.getElementById('arbitrage-action');
-
-            spreadElement.innerText = `${spread.toFixed(2)}%`;
-
-            // Determinar qué hacer (Comprar barato, vender caro)
-            if (spread < 0.5) { // Si el spread es menor a 0.5%, quizás no valga la pena por las comisiones (fees)
-                spreadElement.style.color = "var(--text-muted)";
-                actionElement.innerHTML = `<span style="color: var(--text-muted);">Sin oportunidad clara (Fees altos)</span>`;
-            } else if (priceVyfi > priceMinswap) {
-                spreadElement.style.color = "var(--accent-green)";
-                actionElement.innerHTML = `Comprar en <span class="badge bg-minswap">Minswap</span> ➔ Vender en <span class="badge bg-vyfi">VyFi</span>`;
-            } else {
-                spreadElement.style.color = "var(--accent-green)";
-                actionElement.innerHTML = `Comprar en <span class="badge bg-vyfi">VyFi</span> ➔ Vender en <span class="badge bg-minswap">Minswap</span>`;
-            }
-        }
-
-        // ==========================================
-        // INICIALIZACIÓN
-        // ==========================================
-        function initDashboard() {
-            fetchAdaPrice();
-            fetchDexData();
-
-            // Configurar actualización automática
-            setInterval(() => {
-                fetchAdaPrice();
-                fetchDexData();
-            }, UPDATE_INTERVAL);
         }
 
         // Arrancar cuando cargue la página
