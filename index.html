@@ -253,23 +253,23 @@
                     document.getElementById('oracle-vyfi-liq').innerText = `₳ ${Math.round(liqAda).toLocaleString()}`;
                 }
 
-                // B) Minswap ORACLE (API Directa hackeada)
+                // B) Minswap ORACLE
                 if (data.minPrice && data.minPrice.length > 0) {
                     priceMin = parseFloat(data.minPrice[0].close);
                     document.getElementById('oracle-min-price').innerText = `₳ ${priceMin.toFixed(6)}`;
                     
-                    // Intento de adivinar la liquidez (TVL)
+                    // Extraer la liquidez más reciente del array (El último objeto de la lista)
                     let liqAda = 0;
-                    if (data.minInfo) {
-                        if (data.minInfo.tvl) liqAda = data.minInfo.tvl; // Si Minswap lo da en ADA
-                        else if (data.minInfo.reserveA) liqAda = data.minInfo.reserveA / 1000000; // Si ADA es el Token A (lovelace)
+                    if (data.minTvl && data.minTvl.length > 0) {
+                        const latestTvlData = data.minTvl[data.minTvl.length - 1]; // Toma el valor más actual
+                        liqAda = parseFloat(latestTvlData.value);
                     }
 
                     if (liqAda > 0) {
                         document.getElementById('oracle-min-liq').innerText = `₳ ${Math.round(liqAda).toLocaleString()}`;
                         totalOracleLiqAda += liqAda;
                     } else {
-                        document.getElementById('oracle-min-liq').innerText = "Requiere JSON";
+                        document.getElementById('oracle-min-liq').innerText = "Error leyendo TVL";
                     }
                 }
 
