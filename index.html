@@ -193,7 +193,6 @@
 <script>
         const PROXY_URL = 'https://cardano-dex-proxy.seryibull.workers.dev';
         
-        // Asset IDs exactos
         const VLRM = "63efb704b7396890e4d9539d030c0e667739043add65c00f96c586c056616c6f72756d";
         const ORACLE = "328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b27393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
 
@@ -226,19 +225,16 @@
                         ? vlrmVyfiPool.tokenB.lpRatio[vlrmVyfiPool.unitsPair].priceRatioAB 
                         : vlrmVyfiPool.tokenA.lpRatio[vlrmVyfiPool.unitsPair].priceRatioBA;
                     
-                    // CORRECCIÓN: El TVL de VyFi ya viene en ADA, no se divide.
                     const liqAda = vlrmVyfiPool.tvl;
-
                     document.getElementById('vlrm-price-ada').innerText = `₳ ${priceAda.toFixed(6)}`;
                     document.getElementById('vlrm-liq-ada').innerText = `₳ ${Math.round(liqAda).toLocaleString()}`;
                 } else {
                     document.getElementById('vlrm-price-ada').innerText = "Pool no creado";
                 }
 
-                // --- 2. PROCESAR VLRM/ORACLE (Pool Cruzado en VyFi Directo) ---
+                // --- 2. PROCESAR VLRM/ORACLE (Pool Cruzado VyFi) ---
                 const crossPool = data.vyfiPools.find(p => p.unitsPair.includes(VLRM) && p.unitsPair.includes(ORACLE));
                 if (crossPool) {
-                    // CORRECCIÓN: El TVL global de la plataforma VyFi está en ADA
                     const liqAda = crossPool.tvl;
                     document.getElementById('vlrm-oracle-liq-ada').innerText = `₳ ${Math.round(liqAda).toLocaleString()}`;
                 } else {
@@ -255,27 +251,55 @@
                         ? oracleVyfiPool.tokenB.lpRatio[oracleVyfiPool.unitsPair].priceRatioAB 
                         : oracleVyfiPool.tokenA.lpRatio[oracleVyfiPool.unitsPair].priceRatioBA;
                     
-                    // CORRECCIÓN TVL
                     const liqAda = oracleVyfiPool.tvl;
                     totalOracleLiqAda += liqAda;
-
                     document.getElementById('oracle-vyfi-price').innerText = `₳ ${priceVyfi.toFixed(6)}`;
                     document.getElementById('oracle-vyfi-liq').innerText = `₳ ${Math.round(liqAda).toLocaleString()}`;
                 } else {
                     document.getElementById('oracle-vyfi-price').innerText = "No listado";
                 }
 
-                // B) Buscar ORACLE en Minswap (Vía GeckoTerminal - Mantiene la división porque está en USD)
+                // B) Buscar ORACLE en Minswap (Filtrado Inteligente de Pool V2)
                 if (data.geckoOracle && data.geckoOracle.length > 0) {
-                    const oracleMinPool = data.geckoOracle.find(p => p.relationships.dex.data.id.toLowerCase().includes('min'));
-                    if (oracleMinPool) {
-                        priceMin = parseFloat(oracleMinPool.attributes.base_token_price_quote_token);
-                        const liqUsd = parseFloat(oracleMinPool.attributes.reserve_in_usd);
-                        const liqAda = liqUsd / adaPriceUsd; // Minswap sí nos lo da en USD
+                    // 1. Agrupar todos los pools de Minswap
+                    const minswapPools = data.geckoOracle.filter(p => p.relationships.dex.data.id.toLowerCase().includes('min'));
+                    
+                    if (minswapPools.length > 0) {
+                        // 2. Quedarnos SÓLO con el pool de mayor liquidez (El V2 activo)
+                        const activeMinPool = minswapPools.reduce((prev, current) => {
+                            const prevLiq = parseFloat(prev.attributes.reserve_in_usd || 0);
+                            const currLiq = parseFloat(current.attributes.reserve_in_usd || 0);
+                            return prevLiq > currLiq ? prev : current;
+                        });
+
+                        // 3. Obtener la liquidez real de ese pool
+                        const liqUsd = parseFloat(activeMinPool.attributes.reserve_in_usd);
+                        const liqAda = liqUsd / adaPriceUsd;
                         totalOracleLiqAda += liqAda;
+
+                        // 4. Calcular el precio blindado (Sabiendo si ORACLE es Base o Quote)
+                        const isOracleBase = activeMinPool.relationships.base_token.data.id.includes(ORACLE);
+                        
+                        // Intentamos obtener el precio directo en ADA
+                        let pNative = isOracleBase 
+                            ? parseFloat(activeMinPool.attributes.base_token_price_native_currency) 
+                            : parseFloat(activeMinPool.attributes.quote_token_price_native_currency);
+
+                        // Si la API no lo da, lo forzamos convirtiendo los dólares del pool a ADA
+                        if (pNative && !isNaN(pNative) && pNative > 0) {
+                            priceMin = pNative;
+                        } else {
+                            let pUsd = isOracleBase 
+                                ? parseFloat(activeMinPool.attributes.base_token_price_usd)
+                                : parseFloat(activeMinPool.attributes.quote_token_price_usd);
+                            priceMin = pUsd / adaPriceUsd;
+                        }
 
                         document.getElementById('oracle-min-price').innerText = `₳ ${priceMin.toFixed(6)}`;
                         document.getElementById('oracle-min-liq').innerText = `₳ ${Math.round(liqAda).toLocaleString()}`;
+                    } else {
+                        document.getElementById('oracle-min-price').innerText = "No listado";
+                        document.getElementById('oracle-min-liq').innerText = "-";
                     }
                 }
 
@@ -290,8 +314,8 @@
 
             } catch (error) {
                 console.error("Error DEX:", error);
-                document.getElementById('vlrm-price-ada').innerText = "Error leyendo datos";
-                document.getElementById('arbitrage-action').innerText = "Fallo de conexión API";
+                document.getElementById('vlrm-price-ada').innerText = "Error de sincronización";
+                document.getElementById('arbitrage-action').innerText = "Reintentando conexión...";
             }
         }
 
@@ -304,10 +328,9 @@
             const actionEl = document.getElementById('arbitrage-action');
             spreadEl.innerText = `${spread.toFixed(2)}%`;
 
-            // Nota: Aquí puedes cambiar el 0.5% por el margen de fee real que quieras considerar
             if (spread < 0.5) {
                 spreadEl.style.color = "var(--text-muted)";
-                actionEl.innerHTML = `<span style="color: var(--text-muted);">Spread bajo (${spread.toFixed(2)}%). Cuidado con los fees.</span>`;
+                actionEl.innerHTML = `<span style="color: var(--text-muted);">Spread muy bajo (${spread.toFixed(2)}%). No cubre fees.</span>`;
             } else if (priceVyfi > priceMinswap) {
                 spreadEl.style.color = "var(--accent-green)";
                 actionEl.innerHTML = `Comprar en <span class="badge bg-minswap">Minswap</span> ➔ Vender en <span class="badge bg-vyfi">VyFi</span>`;
@@ -324,7 +347,7 @@
             setInterval(async () => {
                 const updatedAdaPrice = await fetchAdaPrice();
                 await fetchDexData(updatedAdaPrice);
-            }, 30000); // 30 segundos
+            }, 30000);
         }
 
         window.onload = initDashboard;
