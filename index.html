@@ -155,9 +155,15 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
         
-        /* Vault discrepancy colors */
-        .color-premium { color: var(--neon-red) !important; }
-        .color-discount { color: var(--badge-min-text) !important; } 
+        /* DEX specific colors for Vault Discrepancy */
+        .color-minswap { 
+            color: var(--badge-min-text) !important; 
+            text-shadow: 0 2px 10px rgba(137, 170, 255, 0.3);
+        }
+        .color-vyfi { 
+            color: var(--badge-vyfi-text) !important; 
+            text-shadow: 0 2px 10px rgba(167, 139, 250, 0.3);
+        }
     </style>
 </head>
 <body>
@@ -407,24 +413,34 @@
                         let sign = bestDeviation > 0 ? '+' : '';
                         let displayValue = `${sign}${bestDeviation.toFixed(2)}%`;
                         
+                        // Set text
                         discEl.innerText = displayValue;
                         vaultBannerDiscEl.innerText = displayValue;
 
+                        // Apply intelligent colors based on the target DEX
+                        let dexColorClass = targetDex === "Minswap" ? "color-minswap" : "color-vyfi";
+
                         if (Math.abs(bestDeviation) < 0.5) {
+                            // Neutral colors if spread is too low
                             discEl.className = 'data-value';
                             discEl.style.color = "var(--text-secondary)";
+                            vaultBannerDiscEl.className = 'arbitrage-big-value';
                             vaultBannerDiscEl.style.color = "rgba(255, 255, 255, 0.5)";
                             vaultActionEl.innerHTML = `<span style="color: rgba(255, 255, 255, 0.6); font-size: 0.85rem;">Balanced prices</span>`;
-                        } else if (bestDeviation > 0) {
-                            // Premium -> Recommend Selling on the DEX
-                            discEl.className = 'data-value color-premium';
-                            vaultBannerDiscEl.className = 'arbitrage-big-value color-premium';
-                            vaultActionEl.innerHTML = `Sell on <span class="badge-dark">${targetDex}</span>`;
                         } else {
-                            // Discount -> Recommend Buying on the DEX
-                            discEl.className = 'data-value color-discount';
-                            vaultBannerDiscEl.className = 'arbitrage-big-value color-discount';
-                            vaultActionEl.innerHTML = `Buy on <span class="badge-dark">${targetDex}</span>`;
+                            // Reset any inline styles just in case
+                            discEl.style.color = "";
+                            vaultBannerDiscEl.style.color = "";
+                            
+                            // Apply the specific DEX color
+                            discEl.className = `data-value ${dexColorClass}`;
+                            vaultBannerDiscEl.className = `arbitrage-big-value ${dexColorClass}`;
+
+                            if (bestDeviation > 0) {
+                                vaultActionEl.innerHTML = `Sell on <span class="badge-dark">${targetDex}</span>`;
+                            } else {
+                                vaultActionEl.innerHTML = `Buy on <span class="badge-dark">${targetDex}</span>`;
+                            }
                         }
                     }
                 } else {
@@ -453,12 +469,10 @@
                 actionEl.innerHTML = `<span style="color: rgba(255, 255, 255, 0.6); font-size: 0.85rem;">Low spread. Doesn't cover fees.</span>`;
             } else if (priceVyfi > priceMinswap) {
                 spreadEl.style.color = "#ffffff"; 
-                // Updated Short texts to full names here
                 actionEl.innerHTML = `Buy <span class="badge-dark">Minswap</span> ➔ Sell <span class="badge-dark">VyFi</span>`;
                 suggestedActionText = "Buy on Minswap, Sell on VyFi";
             } else {
                 spreadEl.style.color = "#ffffff";
-                // Updated Short texts to full names here
                 actionEl.innerHTML = `Buy <span class="badge-dark">VyFi</span> ➔ Sell <span class="badge-dark">Minswap</span>`;
                 suggestedActionText = "Buy on VyFi, Sell on Minswap";
             }
