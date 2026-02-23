@@ -91,6 +91,20 @@
             color: var(--text-muted);
             font-style: italic;
         }
+
+        /* Estilo para el botón de alertas */
+        .alert-toggle-box {
+            font-size: 0.8rem;
+            font-weight: normal;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-muted);
+            transition: color 0.3s ease;
+        }
+        .alert-toggle-box:hover { color: var(--text-main); }
+        .alert-toggle-box input { cursor: pointer; }
     </style>
 </head>
 <body>
@@ -122,9 +136,6 @@
             <div class="data-row">
                 <span>Liquidez Total (ADA):</span>
                 <span class="data-value" id="vlrm-liq-ada">-</span>
-            </div>
-            <div style="font-size: 0.7rem; color: var(--text-muted); word-break: break-all; margin-top: 10px;">
-                Asset: 63efb704b7396890e4d9539d030c0e667739043add65c00f96c586c056616c6f72756d
             </div>
         </div>
 
@@ -176,7 +187,12 @@
         </div>
 
         <div class="card arbitrage-section">
-            <div class="card-title" style="border-color: var(--accent-green);">🔥 Oportunidad de Arbitraje (ORACLE)</div>
+            <div class="card-title" style="border-color: var(--accent-green);">
+                🔥 Oportunidad de Arbitraje (ORACLE)
+                <label class="alert-toggle-box">
+                    <input type="checkbox" id="alert-toggle"> 🔔 Alertas (>1.5%)
+                </label>
+            </div>
             <div class="data-row" style="justify-content: space-around; font-size: 1.2rem;">
                 <div style="text-align: center;">
                     <div style="font-size: 0.9rem; color: var(--text-muted);">Diferencia (Spread)</div>
@@ -190,12 +206,44 @@
         </div>
     </div>
 
-<script>
+    <script>
         const PROXY_URL = 'https://cardano-dex-proxy.seryibull.workers.dev';
         
         const VLRM = "63efb704b7396890e4d9539d030c0e667739043add65c00f96c586c056616c6f72756d";
         const ORACLE = "328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b27393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
 
+        // ==========================================
+        // CONFIGURACIÓN DE ALERTAS
+        // ==========================================
+        const SPREAD_THRESHOLD = 15; // El % mínimo para que salte la alarma
+        const ALERT_COOLDOWN = 5 * 60 * 1000; // 5 minutos de silencio entre pitidos
+        let lastAlertTime = 0;
+
+        // Función para generar un sonido tipo "Ding"
+        function playDing() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gainNode = ctx.createGain();
+                
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(880, ctx.currentTime); // Nota A5
+                gainNode.gain.setValueAtTime(0.1, ctx.currentTime); // Volumen suave
+                
+                osc.connect(gainNode);
+                gainNode.connect(ctx.destination);
+                
+                osc.start();
+                gainNode.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.5); // Desvanece en medio segundo
+                osc.stop(ctx.currentTime + 0.5);
+            } catch (e) {
+                console.error("Audio no soportado o bloqueado por el navegador", e);
+            }
+        }
+
+        // ==========================================
+        // LÓGICA DE DATOS
+        // ==========================================
         async function fetchAdaPrice() {
             try {
                 const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=cardano&vs_currencies=usd');
@@ -240,7 +288,6 @@
                 // --- 3. PROCESAR ORACLE/ADA (VyFi vs Minswap) ---
                 let totalOracleLiqAda = 0, priceVyfi = 0, priceMin = 0;
 
-                // A) VyFi ORACLE
                 const oracleVyfiPool = data.vyfiPools.find(p => p.unitsPair.includes('lovelace') && p.unitsPair.includes(ORACLE));
                 if (oracleVyfiPool) {
                     priceVyfi = oracleVyfiPool.tokenA.unit === 'lovelace' 
@@ -253,29 +300,25 @@
                     document.getElementById('oracle-vyfi-liq').innerText = `₳ ${Math.round(liqAda).toLocaleString()}`;
                 }
 
-                // B) Minswap ORACLE
                 if (data.minPrice && data.minPrice.length > 0) {
                     priceMin = parseFloat(data.minPrice[0].close);
                     document.getElementById('oracle-min-price').innerText = `₳ ${priceMin.toFixed(6)}`;
                     
-                    // Extraer la liquidez más reciente del array (El último objeto de la lista)
                     let liqAda = 0;
                     if (data.minTvl && data.minTvl.length > 0) {
-                        const latestTvlData = data.minTvl[data.minTvl.length - 1]; // Toma el valor más actual
+                        const latestTvlData = data.minTvl[data.minTvl.length - 1];
                         liqAda = parseFloat(latestTvlData.value);
                     }
 
                     if (liqAda > 0) {
                         document.getElementById('oracle-min-liq').innerText = `₳ ${Math.round(liqAda).toLocaleString()}`;
                         totalOracleLiqAda += liqAda;
-                    } else {
-                        document.getElementById('oracle-min-liq').innerText = "Error leyendo TVL";
                     }
                 }
 
                 document.getElementById('oracle-total-liq').innerText = `₳ ${Math.round(totalOracleLiqAda).toLocaleString()}`;
 
-                // --- 4. MOTOR DE ARBITRAJE ---
+                // --- 4. MOTOR DE ARBITRAJE Y ALERTAS ---
                 if (priceVyfi > 0 && priceMin > 0) {
                     calculateArbitrage(priceVyfi, priceMin);
                 }
@@ -294,6 +337,7 @@
             const actionEl = document.getElementById('arbitrage-action');
             spreadEl.innerText = `${spread.toFixed(2)}%`;
 
+            // Actualizar interfaz
             if (spread < 0.5) {
                 spreadEl.style.color = "var(--text-muted)";
                 actionEl.innerHTML = `<span style="color: var(--text-muted);">Spread bajo (${spread.toFixed(2)}%). No cubre fees.</span>`;
@@ -303,6 +347,18 @@
             } else {
                 spreadEl.style.color = "var(--accent-green)";
                 actionEl.innerHTML = `Comprar en <span class="badge bg-vyfi">VyFi</span> ➔ Vender en <span class="badge bg-minswap">Minswap</span>`;
+            }
+
+            // --- LÓGICA DE ALERTA SONORA ---
+            if (spread >= SPREAD_THRESHOLD) {
+                const alertToggle = document.getElementById('alert-toggle');
+                const now = Date.now();
+                
+                // Si la casilla está marcada Y han pasado más de 5 mins desde el último pitido
+                if (alertToggle && alertToggle.checked && (now - lastAlertTime > ALERT_COOLDOWN)) {
+                    playDing();
+                    lastAlertTime = now; // Guardamos la hora del pitido
+                }
             }
         }
 
