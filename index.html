@@ -9,7 +9,6 @@
     <style>
         :root {
             /* Base Palette */
-            --bg-main: radial-gradient(circle at top center, #1a1333 0%, #0a0814 100%);
             --card-bg: #120f24;
             --text-primary: #ffffff;
             --text-secondary: #a0a0c0;
@@ -29,13 +28,19 @@
             --badge-min-text: #89aaff; 
         }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg-main);
-            color: var(--text-primary);
-            margin: 0;
-            padding: 20px 20px;
-            min-height: 100vh;
+        body { 
+            font-family: 'Inter', sans-serif; 
+            
+            /* MAGIA AQUI: Degradado oscuro + Tu Imagen de Fondo Oficial */
+            background: linear-gradient(rgba(10, 8, 20, 0.75), rgba(10, 8, 20, 0.95)), url('https://app.l4va.org/assets/banner-bg.webp');
+            background-size: cover;
+            background-position: center top;
+            background-attachment: fixed; /* Hace que el fondo no se mueva al hacer scroll */
+            
+            color: var(--text-primary); 
+            margin: 0; 
+            padding: 20px 20px; 
+            min-height: 100vh; 
         }
 
         header {
@@ -49,75 +54,68 @@
         }
         
         .header-left { display: flex; align-items: center; gap: 15px; }
+        .header-right { display: flex; align-items: center; gap: 15px; }
         .brand-logo { font-size: 2.5rem; filter: drop-shadow(0 0 10px var(--neon-orange)); }
         h1 { margin: 0; font-weight: 800; font-size: 1.8rem; background: var(--gradient-fire); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -1px; }
 
         .settings-btn {
             font-size: 1.5rem; cursor: pointer; background: rgba(255,255,255,0.05); padding: 8px 12px; border-radius: 12px; transition: 0.3s;
+            border: 1px solid rgba(255,255,255,0.1);
         }
-        .settings-btn:hover { background: rgba(255,255,255,0.15); transform: rotate(45deg); }
+        .settings-btn:hover { background: rgba(255,255,255,0.15); transform: rotate(45deg); border-color: var(--neon-orange); }
 
-        .dashboard {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+        /* Web3 Wallet Button */
+        .wallet-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 10px 20px; border-radius: 12px; font-weight: 800; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 8px; }
+        .wallet-btn:hover { background: rgba(255,255,255,0.2); border-color: var(--neon-orange); }
+        .wallet-connected { background: rgba(16, 185, 129, 0.2); border-color: #10b981; color: #10b981; }
 
-        .card {
-            border-radius: 20px; padding: 20px 25px; position: relative; background: var(--card-bg);
-            border: 2px solid transparent; background-image: linear-gradient(var(--card-bg), var(--card-bg)), var(--gradient-fire);
-            background-origin: border-box; background-clip: padding-box, border-box;
-            box-shadow: 0 0 20px rgba(255, 123, 0, 0.15), inset 0 0 20px rgba(255, 123, 0, 0.05);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
+        .dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; max-width: 1200px; margin: 0 auto; }
+        .card { border-radius: 20px; padding: 20px 25px; position: relative; background: var(--card-bg); border: 2px solid transparent; background-image: linear-gradient(var(--card-bg), var(--card-bg)), var(--gradient-fire); background-origin: border-box; background-clip: padding-box, border-box; box-shadow: 0 0 20px rgba(255, 123, 0, 0.15), inset 0 0 20px rgba(255, 123, 0, 0.05); transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .card:hover { transform: translateY(-3px); box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.6), 0 0 25px rgba(255, 123, 0, 0.3); }
 
         .card-title { font-size: 1.05rem; font-weight: 600; margin-bottom: 15px; color: var(--neon-orange); display: flex; justify-content: space-between; align-items: center; }
         .card-title.ada-title { color: var(--ada-color); text-shadow: 0 0 10px rgba(66, 133, 244, 0.3); }
-
         .data-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 0.95rem; }
         .data-label { color: var(--text-secondary); font-weight: 500; }
         .data-value { font-weight: 800; font-size: 1.2rem; color: var(--text-primary); }
-
         .badge { font-size: 0.7rem; padding: 4px 10px; border-radius: 20px; font-weight: 700; text-transform: uppercase; border: 1px solid transparent; }
         .bg-vyfi { background: var(--badge-vyfi-bg); color: var(--badge-vyfi-text); border-color: var(--badge-vyfi-text); }
         .bg-minswap { background: var(--badge-min-bg); color: var(--badge-min-text); border-color: var(--badge-min-text); }
 
-        /* Modified Top Banner to 2x2 Grid */
-        .arbitrage-section { grid-column: 1 / -1; background: var(--gradient-dark-fire) !important; border: none; box-shadow: 0 15px 40px -10px rgba(74, 0, 0, 0.6), inset 0 0 30px rgba(0,0,0,0.2); padding: 20px 25px; }
+        .arbitrage-section { grid-column: 1 / -1; background: var(--gradient-dark-fire) !important; border: none; box-shadow: 0 15px 40px -10px rgba(74, 0, 0, 0.8), inset 0 0 30px rgba(0,0,0,0.4); padding: 20px 25px; }
         .arbitrage-banner-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.15); padding-bottom: 10px; margin-bottom: 15px; }
         .arbitrage-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .arbitrage-box { background: rgba(0, 0, 0, 0.2); padding: 15px 20px; border-radius: 16px; transition: all 0.3s ease; position: relative;}
-
+        .arbitrage-box { background: rgba(0, 0, 0, 0.3); padding: 15px 20px; border-radius: 16px; transition: all 0.3s ease; position: relative; border: 1px solid rgba(255,255,255,0.05);}
         .arbitrage-label { color: rgba(255, 255, 255, 0.7); font-size: 0.75rem; text-transform: uppercase; font-weight: 800; margin-bottom: 3px; }
         .arbitrage-big-value { font-size: 1.6rem; font-weight: 900; color: #ffffff; text-shadow: 0 2px 10px rgba(0,0,0,0.3); transition: all 0.3s ease; }
         .loading { color: inherit; opacity: 0.6; font-style: italic; font-weight: normal; font-size: 0.9rem;}
 
-        .alert-toggle-box { font-size: 0.8rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 8px; color: var(--text-primary); background: rgba(255, 255, 255, 0.1); padding: 6px 12px; border-radius: 20px; }
+        .alert-toggle-box { font-size: 0.8rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 8px; color: var(--text-primary); background: rgba(255, 255, 255, 0.1); padding: 6px 12px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); }
         .alert-toggle-box input { accent-color: var(--neon-orange); transform: scale(1.1); }
-        
         .badge-dark { background: rgba(255,255,255,0.9); color: var(--text-on-fire); font-size: 0.75rem; padding: 4px 8px; border-radius: 20px; font-weight: 800; display: inline-block; margin: 0 2px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); text-decoration: none; transition: 0.2s ease; }
         a.badge-dark:hover { transform: scale(1.08); background: #ffffff; cursor: pointer; }
-        
         .color-minswap { color: var(--badge-min-text) !important; }
         .color-vyfi { color: var(--badge-vyfi-text) !important; }
 
-        /* Simulator Styles */
-        .sim-input { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 5px 10px; border-radius: 8px; width: 70px; font-weight: bold; text-align: center; margin-right: 5px; font-family: 'Inter', sans-serif;}
+        .sim-input { background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 5px 10px; border-radius: 8px; width: 70px; font-weight: bold; text-align: center; margin-right: 5px; font-family: 'Inter', sans-serif;}
         .sim-input:focus { outline: none; border-color: var(--neon-orange); }
         .profit-positive { color: #10b981; text-shadow: 0 0 10px rgba(16, 185, 129, 0.4); }
         .profit-negative { color: var(--neon-red); }
         .optimizer-text { font-size: 0.7rem; color: var(--text-secondary); margin-top: 8px; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 8px;}
 
-        /* Settings Modal */
-        #settings-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center; }
-        .modal-content { background: var(--card-bg); padding: 30px; border-radius: 20px; border: 2px solid var(--neon-orange); width: 320px; }
-        .modal-title { font-size: 1.2rem; font-weight: 800; margin-bottom: 20px; color: white; }
+        /* Modals */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); z-index: 1000; justify-content: center; align-items: center; }
+        .modal-content { background: var(--card-bg); padding: 30px; border-radius: 20px; border: 2px solid var(--neon-orange); width: 320px; box-shadow: 0 10px 40px rgba(0,0,0,0.8); }
+        .modal-title { font-size: 1.2rem; font-weight: 800; margin-bottom: 20px; color: white; display: flex; justify-content: space-between;}
         .setting-row { margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem;}
-        .setting-input { width: 60px; padding: 5px; border-radius: 5px; border: none; background: rgba(255,255,255,0.1); color: white; text-align: center; }
-        .setting-input-text { width: 120px; padding: 5px; border-radius: 5px; border: none; background: rgba(255,255,255,0.1); color: white; }
-        .btn-save { background: var(--gradient-fire); color: white; border: none; padding: 10px; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 15px; }
+        .setting-input { width: 60px; padding: 5px; border-radius: 5px; border: none; background: rgba(255,255,255,0.1); color: white; text-align: center; font-family: 'Inter', sans-serif;}
+        .setting-input-text { width: 120px; padding: 5px; border-radius: 5px; border: none; background: rgba(255,255,255,0.1); color: white; font-family: 'Inter', sans-serif;}
+        .btn-save { background: var(--gradient-fire); color: white; border: none; padding: 10px; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 15px; transition: transform 0.2s;}
+        .btn-save:hover { transform: scale(1.02); }
+        
+        .wallet-option { display: flex; align-items: center; justify-content: space-between; padding: 12px 15px; background: rgba(255,255,255,0.05); border-radius: 12px; margin-bottom: 10px; cursor: pointer; transition: 0.2s; border: 1px solid transparent;}
+        .wallet-option:hover { background: rgba(255,255,255,0.1); border-color: var(--ada-color); }
+        .wallet-icon { width: 30px; height: 30px; border-radius: 5px; }
         
         h3.dex-subtitle { margin: 0 0 10px 0; font-size: 0.9rem; display: inline-block; }
     </style>
@@ -129,12 +127,15 @@
             <div class="brand-logo">🔥</div>
             <h1>L4VA Protocol <span style="color: var(--text-secondary); font-weight: 400;">| Arbitrage Dashboard</span></h1>
         </div>
-        <div class="settings-btn" onclick="openSettings()">⚙️</div>
+        <div class="header-right">
+            <button id="wallet-connect-btn" class="wallet-btn" onclick="openWalletModal()">🔌 Connect Wallet</button>
+            <div class="settings-btn" onclick="openSettings()">⚙️</div>
+        </div>
     </header>
 
-    <div id="settings-modal">
+    <div id="settings-modal" class="modal-overlay">
         <div class="modal-content">
-            <div class="modal-title">⚙️ Preferences & Alerts</div>
+            <div class="modal-title"><span>⚙️ Preferences</span><span style="cursor:pointer;" onclick="closeModals()">✕</span></div>
             <div class="setting-row"><span>Glow Threshold (%)</span><input type="number" id="set-glow" class="setting-input" value="10"></div>
             <div class="setting-row"><span>Alert Threshold (%)</span><input type="number" id="set-alert" class="setting-input" value="15"></div>
             <div class="setting-row"><span>Simulator Base (ADA)</span><input type="number" id="set-sim" class="setting-input" value="1000"></div>
@@ -143,6 +144,15 @@
             <div class="setting-row"><span>Bot Token</span><input type="text" id="set-tg-bot" class="setting-input-text" placeholder="123:ABC..."></div>
             <div class="setting-row"><span>Chat ID</span><input type="text" id="set-tg-chat" class="setting-input-text" placeholder="12345678"></div>
             <button class="btn-save" onclick="saveSettings()">Save Configuration</button>
+        </div>
+    </div>
+
+    <div id="wallet-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-title"><span>🔌 Select Wallet</span><span style="cursor:pointer;" onclick="closeModals()">✕</span></div>
+            <div id="wallet-list">
+                <div style="text-align:center; color: var(--text-secondary); font-size: 0.9rem;">Scanning for CIP-30 wallets...</div>
+            </div>
         </div>
     </div>
 
@@ -185,7 +195,7 @@
                     </div>
                 </div>
 
-                <div class="arbitrage-box" style="border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; justify-content: center;">
+                <div class="arbitrage-box">
                     <div class="arbitrage-label" style="color: #10b981; margin-bottom: 8px;">Net Profit Simulator ORACLE / ADA</div>
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <div>
@@ -200,7 +210,7 @@
                     <div id="optimizer-result" class="optimizer-text">💡 <b>Auto-Optimizer:</b> Calculating...</div>
                 </div>
 
-                <div class="arbitrage-box" style="border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; justify-content: center;">
+                <div class="arbitrage-box">
                     <div class="arbitrage-label" style="color: var(--badge-vyfi-text); margin-bottom: 8px;">NET PROFIT SIMULATOR TRIANGULAR</div>
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <div>
@@ -240,7 +250,7 @@
 
         <div class="card" style="grid-column: 1 / -1;">
             <div class="card-title">Triangular Arbitrage (Cross-Pair) 🔺</div>
-            <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05);">
                 <div style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6;">
                     Route A: <span style="color:white; font-weight: bold;">ADA ➔ VLRM ➔ ORACLE ➔ ADA</span><br>
                     Route B: <span style="color:white; font-weight: bold;">ADA ➔ ORACLE ➔ VLRM ➔ ADA</span><br>
@@ -293,8 +303,6 @@
         let conf = JSON.parse(localStorage.getItem('l4va_config')) || { glow: 10, alert: 15, sim: 1000, tgBot: "", tgChat: "" };
         let lastAlertTime = 0;
         let chartInstance = null;
-        
-        // AÑADIDO: La constante del temporizador que faltaba (5 minutos en milisegundos)
         const ALERT_COOLDOWN = 5 * 60 * 1000;
         
         // Exact AMM Pool States
@@ -305,19 +313,15 @@
             crossVO: { resVlrm: 0, resOracle: 0 }
         };
 
+        let connectedWalletAPI = null;
+
         // Init config on load
         document.getElementById('sim-ada-input').value = conf.sim;
         document.getElementById('sim-tri-input').value = conf.sim;
         document.getElementById('alert-label').innerText = conf.alert;
 
-        function openSettings() {
-            document.getElementById('set-glow').value = conf.glow;
-            document.getElementById('set-alert').value = conf.alert;
-            document.getElementById('set-sim').value = document.getElementById('sim-ada-input').value;
-            document.getElementById('set-tg-bot').value = conf.tgBot || "";
-            document.getElementById('set-tg-chat').value = conf.tgChat || "";
-            document.getElementById('settings-modal').style.display = 'flex';
-        }
+        function closeModals() { document.getElementById('settings-modal').style.display = 'none'; document.getElementById('wallet-modal').style.display = 'none'; }
+        function openSettings() { document.getElementById('set-glow').value = conf.glow; document.getElementById('set-alert').value = conf.alert; document.getElementById('set-sim').value = document.getElementById('sim-ada-input').value; document.getElementById('set-tg-bot').value = conf.tgBot || ""; document.getElementById('set-tg-chat').value = conf.tgChat || ""; document.getElementById('settings-modal').style.display = 'flex'; }
         function saveSettings() {
             conf.glow = parseFloat(document.getElementById('set-glow').value);
             conf.alert = parseFloat(document.getElementById('set-alert').value);
@@ -328,8 +332,48 @@
             document.getElementById('sim-ada-input').value = conf.sim;
             document.getElementById('sim-tri-input').value = conf.sim;
             document.getElementById('alert-label').innerText = conf.alert;
-            document.getElementById('settings-modal').style.display = 'none';
+            closeModals();
             recalculateSimulators();
+        }
+
+        function openWalletModal() {
+            if(connectedWalletAPI) return; 
+            const listEl = document.getElementById('wallet-list');
+            listEl.innerHTML = '';
+            
+            if (window.cardano) {
+                const wallets = Object.keys(window.cardano).filter(key => typeof window.cardano[key] === 'object' && window.cardano[key].name);
+                if(wallets.length === 0) {
+                    listEl.innerHTML = '<div style="color:var(--neon-red); text-align:center;">No Cardano wallets detected in browser.</div>';
+                } else {
+                    wallets.forEach(walletKey => {
+                        const w = window.cardano[walletKey];
+                        const div = document.createElement('div');
+                        div.className = 'wallet-option';
+                        div.innerHTML = `<span><img src="${w.icon}" class="wallet-icon" style="vertical-align:middle; margin-right:10px;"> <b>${w.name}</b></span> <span>→</span>`;
+                        div.onclick = () => connectSpecificWallet(walletKey);
+                        listEl.appendChild(div);
+                    });
+                }
+            } else {
+                listEl.innerHTML = '<div style="color:var(--neon-red); text-align:center;">No Cardano wallets detected. Install Nami, Eternl, etc.</div>';
+            }
+            document.getElementById('wallet-modal').style.display = 'flex';
+        }
+
+        async function connectSpecificWallet(walletKey) {
+            try {
+                const btn = document.getElementById('wallet-connect-btn');
+                btn.innerText = "Connecting...";
+                connectedWalletAPI = await window.cardano[walletKey].enable();
+                btn.innerHTML = `🟢 Connected (${window.cardano[walletKey].name})`;
+                btn.className = "wallet-btn wallet-connected";
+                closeModals();
+            } catch (err) {
+                console.error("Wallet connection failed:", err);
+                document.getElementById('wallet-connect-btn').innerText = "🔌 Connect Wallet";
+                alert("Connection rejected or failed.");
+            }
         }
 
         async function sendTelegramAlert(message) {
@@ -707,7 +751,6 @@
                     if (spread >= conf.alert) {
                         const alertToggle = document.getElementById('alert-toggle');
                         const now = Date.now();
-                        // Alarma protegida con ALERT_COOLDOWN (ahora sí definido globalmente)
                         if (alertToggle && alertToggle.checked && (now - lastAlertTime > ALERT_COOLDOWN)) {
                             playDing();
                             if (Notification.permission === "granted") {
