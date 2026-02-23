@@ -7,24 +7,20 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* Paleta de Colores Base */
+            /* Paleta Base */
             --bg-main: radial-gradient(circle at top center, #1a1333 0%, #0a0814 100%);
             --card-bg: #120f24;
             --text-primary: #ffffff;
             --text-secondary: #a0a0c0;
             
-            /* Color del texto sobre el fondo de fuego (Berenjena oscuro) */
-            --text-on-fire: #150f26; 
-            
-            /* Colores Neón (para bordes finos) */
+            /* Colores Neón (para bordes de tarjetas pequeñas) */
             --neon-orange: #ff7b00;
             --neon-red: #ff0f5b;
-            --gradient-fire-border: linear-gradient(135deg, var(--neon-orange), var(--neon-red));
-            
-            /* NUEVO: Degradado suavizado para el fondo del banner principal */
-            /* Usamos tonos más cálidos y profundos, menos saturados que el neón puro */
-            --soft-fire-bg: radial-gradient(circle at center, rgb(255, 160, 80) 0%, rgb(200, 60, 90) 100%);
+            --gradient-fire: linear-gradient(135deg, var(--neon-orange), var(--neon-red));
 
+            /* NUEVO: Gradiente oscuro para el banner principal (Brasas profundas) */
+            --gradient-dark-fire: linear-gradient(135deg, #5e2a00 0%, #8a121c 60%, #4a0042 100%);
+            
             /* Badges */
             --badge-vyfi-bg: rgba(139, 92, 246, 0.15);
             --badge-vyfi-text: #a78bfa;
@@ -60,8 +56,7 @@
             margin: 0;
             font-weight: 800;
             font-size: 1.8rem;
-            /* El título sigue usando el degradado brillante */
-            background: var(--gradient-fire-border);
+            background: var(--gradient-fire);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             letter-spacing: -1px;
@@ -82,17 +77,16 @@
             background: var(--card-bg);
             box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
             border: 2px solid transparent;
-            /* Los bordes de las tarjetas normales siguen siendo brillantes */
-            background-image: linear-gradient(var(--card-bg), var(--card-bg)), var(--gradient-fire-border);
+            background-image: linear-gradient(var(--card-bg), var(--card-bg)), var(--gradient-fire);
             background-origin: border-box;
             background-clip: padding-box, border-box;
-            box-shadow: 0 0 20px rgba(255, 123, 0, 0.1), inset 0 0 20px rgba(255, 123, 0, 0.05);
+            box-shadow: 0 0 20px rgba(255, 123, 0, 0.15), inset 0 0 20px rgba(255, 123, 0, 0.05);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 15px 40px -10px rgba(0, 0, 0, 0.6), 0 0 30px rgba(255, 123, 0, 0.2);
+            box-shadow: 0 15px 40px -10px rgba(0, 0, 0, 0.6), 0 0 30px rgba(255, 123, 0, 0.3);
         }
 
         .card-title {
@@ -138,21 +132,20 @@
         .bg-vyfi { background: var(--badge-vyfi-bg); color: var(--badge-vyfi-text); border-color: var(--badge-vyfi-text); }
         .bg-minswap { background: var(--badge-min-bg); color: var(--badge-min-text); border-color: var(--badge-min-text); }
 
-        /* --- BANNER PRINCIPAL DE ARBITRAJE (Modificado) --- */
+        /* --- BANNER PRINCIPAL DE ARBITRAJE (OSCURECIDO) --- */
         .arbitrage-section {
             grid-column: 1 / -1;
-            /* Usamos el nuevo fondo suavizado */
-            background: var(--soft-fire-bg) !important;
+            background: var(--gradient-dark-fire) !important; /* Usamos el nuevo gradiente oscuro */
             border: none;
-            /* Sombra más suave y menos intensa */
-            box-shadow: 0 15px 40px -10px rgba(200, 60, 90, 0.4);
+            /* Sombra mucho más sutil y oscura */
+            box-shadow: 0 15px 40px -10px rgba(74, 0, 0, 0.6), inset 0 0 30px rgba(0,0,0,0.2);
             padding: 30px;
-            color: var(--text-on-fire); 
+            color: var(--text-primary); /* Volvemos al texto blanco para contraste */
         }
 
         .arbitrage-section .card-title {
-            color: var(--text-on-fire);
-            border-bottom: 1px solid rgba(21, 15, 38, 0.15); 
+            color: var(--text-primary);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15); /* Línea blanca translúcida */
             padding-bottom: 15px;
             margin-bottom: 25px;
         }
@@ -166,12 +159,12 @@
         .arbitrage-big-value {
             font-size: 3rem;
             font-weight: 900;
-            color: var(--text-on-fire);
-            text-shadow: none;
+            color: #ffffff;
+            text-shadow: 0 2px 15px rgba(0,0,0,0.3); /* Sombra suave para despegarlo del fondo */
         }
 
         .arbitrage-label {
-            color: rgba(21, 15, 38, 0.75);
+            color: rgba(255, 255, 255, 0.7); /* Blanco translúcido */
             font-size: 1rem;
             text-transform: uppercase;
             font-weight: 800;
@@ -181,7 +174,7 @@
 
         .loading { color: inherit; opacity: 0.6; font-style: italic; font-weight: normal; font-size: 1rem;}
 
-        /* Checkbox oscuro para el banner */
+        /* Checkbox para el banner (ahora claro sobre fondo oscuro) */
         .alert-toggle-box {
             font-size: 0.9rem;
             font-weight: 800;
@@ -189,28 +182,28 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            color: var(--text-on-fire);
-            background: rgba(21, 15, 38, 0.1); 
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.1); 
             padding: 8px 15px;
             border-radius: 20px;
             transition: all 0.3s;
         }
-        .alert-toggle-box:hover { background: rgba(21, 15, 38, 0.2); }
-        .alert-toggle-box input { accent-color: var(--text-on-fire); transform: scale(1.2); }
+        .alert-toggle-box:hover { background: rgba(255, 255, 255, 0.2); }
+        .alert-toggle-box input { accent-color: var(--neon-orange); transform: scale(1.2); }
         
         h3.dex-subtitle { margin: 0 0 15px 0; font-size: 1rem; display: inline-block; }
 
-        /* Badge inverso especial */
+        /* Badge para dentro del banner */
         .badge-dark {
-            background: var(--text-on-fire);
-            /* El texto del badge ahora usa un naranja más suave para combinar con el fondo */
-            color: rgb(255, 180, 100);
+            background: rgba(255,255,255,0.9);
+            color: #8a121c; /* Color vino oscuro para el texto del badge */
             font-size: 0.8rem;
             padding: 5px 12px;
             border-radius: 20px;
             font-weight: 800;
             display: inline-block;
             margin: 0 4px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
     </style>
 </head>
@@ -235,9 +228,9 @@
                     <div class="arbitrage-label">Spread Actual</div>
                     <div class="arbitrage-big-value" id="arbitrage-spread">-%</div>
                 </div>
-                <div style="text-align: center; border-left: 2px solid rgba(21, 15, 38, 0.15); padding-left: 40px;">
+                <div style="text-align: center; border-left: 2px solid rgba(255, 255, 255, 0.15); padding-left: 40px;">
                     <div class="arbitrage-label">Acción Sugerida</div>
-                    <div class="data-value" id="arbitrage-action" style="color: var(--text-on-fire); font-size: 1.3rem;">
+                    <div class="data-value" id="arbitrage-action" style="color: white; font-size: 1.3rem;">
                         <span class="loading">Analizando mercado...</span>
                     </div>
                 </div>
@@ -423,15 +416,16 @@
 
             let accionSugeridaTexto = "";
             
+            // Volvemos a usar colores claros para el texto sobre fondo oscuro
             if (spread < 0.5) {
-                spreadEl.style.color = "rgba(21, 15, 38, 0.5)"; 
-                actionEl.innerHTML = `<span style="color: rgba(21, 15, 38, 0.6); font-size: 1.1rem;">Spread bajo. No cubre fees.</span>`;
+                spreadEl.style.color = "rgba(255, 255, 255, 0.5)"; 
+                actionEl.innerHTML = `<span style="color: rgba(255, 255, 255, 0.6); font-size: 1.1rem;">Spread bajo. No cubre fees.</span>`;
             } else if (priceVyfi > priceMinswap) {
-                spreadEl.style.color = "var(--text-on-fire)"; 
+                spreadEl.style.color = "#ffffff"; 
                 actionEl.innerHTML = `Comprar en <span class="badge-dark">Minswap</span> ➔ Vender en <span class="badge-dark">VyFi</span>`;
                 accionSugeridaTexto = "Compra en Minswap, Vende en VyFi";
             } else {
-                spreadEl.style.color = "var(--text-on-fire)";
+                spreadEl.style.color = "#ffffff";
                 actionEl.innerHTML = `Comprar en <span class="badge-dark">VyFi</span> ➔ Vender en <span class="badge-dark">Minswap</span>`;
                 accionSugeridaTexto = "Compra en VyFi, Vende en Minswap";
             }
