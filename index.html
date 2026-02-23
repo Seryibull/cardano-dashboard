@@ -136,10 +136,20 @@
             background: rgba(0, 0, 0, 0.2);
             padding: 15px 20px;
             border-radius: 16px;
+            transition: all 0.3s ease;
         }
 
         .arbitrage-label { color: rgba(255, 255, 255, 0.7); font-size: 0.75rem; text-transform: uppercase; font-weight: 800; margin-bottom: 3px; }
-        .arbitrage-big-value { font-size: 1.8rem; font-weight: 900; color: #ffffff; text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+        
+        /* Default style for big values, will be modified dynamically via JS */
+        .arbitrage-big-value { 
+            font-size: 1.8rem; 
+            font-weight: 900; 
+            color: #ffffff; 
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3); 
+            transition: all 0.3s ease;
+        }
+        
         .loading { color: inherit; opacity: 0.6; font-style: italic; font-weight: normal; font-size: 0.9rem;}
 
         .alert-toggle-box {
@@ -158,11 +168,11 @@
         /* DEX specific colors for Vault Discrepancy */
         .color-minswap { 
             color: var(--badge-min-text) !important; 
-            text-shadow: 0 2px 10px rgba(137, 170, 255, 0.3);
+            text-shadow: 0 0 15px rgba(137, 170, 255, 0.4);
         }
         .color-vyfi { 
             color: var(--badge-vyfi-text) !important; 
-            text-shadow: 0 2px 10px rgba(167, 139, 250, 0.3);
+            text-shadow: 0 0 15px rgba(167, 139, 250, 0.4);
         }
     </style>
 </head>
@@ -426,13 +436,15 @@
                             discEl.style.color = "var(--text-secondary)";
                             vaultBannerDiscEl.className = 'arbitrage-big-value';
                             vaultBannerDiscEl.style.color = "rgba(255, 255, 255, 0.5)";
+                            vaultBannerDiscEl.style.textShadow = "0 2px 10px rgba(0,0,0,0.3)";
                             vaultActionEl.innerHTML = `<span style="color: rgba(255, 255, 255, 0.6); font-size: 0.85rem;">Balanced prices</span>`;
                         } else {
-                            // Reset any inline styles just in case
+                            // Reset inline styles
                             discEl.style.color = "";
                             vaultBannerDiscEl.style.color = "";
+                            vaultBannerDiscEl.style.textShadow = "";
                             
-                            // Apply the specific DEX color
+                            // Apply the specific DEX color class
                             discEl.className = `data-value ${dexColorClass}`;
                             vaultBannerDiscEl.className = `arbitrage-big-value ${dexColorClass}`;
 
@@ -465,14 +477,20 @@
             let suggestedActionText = "";
             
             if (spread < 0.5) {
+                // Remove the glow and dim the text when spread is low
                 spreadEl.style.color = "rgba(255, 255, 255, 0.5)"; 
+                spreadEl.style.textShadow = "0 2px 10px rgba(0,0,0,0.3)"; 
                 actionEl.innerHTML = `<span style="color: rgba(255, 255, 255, 0.6); font-size: 0.85rem;">Low spread. Doesn't cover fees.</span>`;
             } else if (priceVyfi > priceMinswap) {
+                // Add soft white glow while keeping main color white
                 spreadEl.style.color = "#ffffff"; 
+                spreadEl.style.textShadow = "0 0 15px rgba(255, 255, 255, 0.6)"; 
                 actionEl.innerHTML = `Buy <span class="badge-dark">Minswap</span> ➔ Sell <span class="badge-dark">VyFi</span>`;
                 suggestedActionText = "Buy on Minswap, Sell on VyFi";
             } else {
+                // Add soft white glow while keeping main color white
                 spreadEl.style.color = "#ffffff";
+                spreadEl.style.textShadow = "0 0 15px rgba(255, 255, 255, 0.6)"; 
                 actionEl.innerHTML = `Buy <span class="badge-dark">VyFi</span> ➔ Sell <span class="badge-dark">Minswap</span>`;
                 suggestedActionText = "Buy on VyFi, Sell on Minswap";
             }
