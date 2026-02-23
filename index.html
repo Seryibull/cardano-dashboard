@@ -430,7 +430,6 @@
                     bestProfit = testNet;
                     optimalInvest = i;
                 } else if (testNet < bestProfit && testNet > 0) {
-                    // Profit curve is going down due to slippage. Stop searching.
                     break;
                 }
             }
@@ -474,10 +473,15 @@
                 const crossPool = data.vyfiPools.find(p => p.unitsPair.includes(VLRM) && p.unitsPair.includes(ORACLE));
                 if (crossPool) {
                     document.getElementById('vlrm-oracle-liq-ada').innerText = `₳ ${Math.round(crossPool.tvl).toLocaleString()}`; 
-                    priceOracleVlrm = crossPool.tokenA.unit.includes(VLRM) ? crossPool.tokenB.lpRatio[crossPool.unitsPair].priceRatioBA : crossPool.tokenA.lpRatio[crossPool.unitsPair].priceRatioAB;
+                    // CORRECTED MATH: Extract VLRM per ORACLE correctly
+                    if (crossPool.tokenA.unit.includes(VLRM)) {
+                        priceOracleVlrm = crossPool.tokenB.lpRatio[crossPool.unitsPair].priceRatioAB;
+                    } else {
+                        priceOracleVlrm = crossPool.tokenA.lpRatio[crossPool.unitsPair].priceRatioBA;
+                    }
                 }
 
-                // 3. ORACLE / DEX (Extacting Deep Liquidity Reserves)
+                // 3. ORACLE / DEX
                 let totalOracleLiqAda = 0, priceVyfi = 0, priceMin = 0;
                 let vyfiTvLAda = 0, minTvlAda = 0;
                 
@@ -513,9 +517,8 @@
                     reserveTok: priceMin > 0 ? (minTvlAda / 2) / priceMin : 0
                 };
 
-                // TRIANGULAR ARBITRAGE CALCULATION (Spot Prices)
+                // TRIANGULAR ARBITRAGE CALCULATION (Corrected)
                 if (priceVlrmAda > 0 && priceOracleVlrm > 0 && priceVyfi > 0) {
-                    // Theoretical cost of 1 ORACLE via VLRM route
                     let routeA_Cost = priceOracleVlrm * priceVlrmAda; 
                     let bestDirectMarketPrice = Math.max(priceVyfi, priceMin);
                     
@@ -610,7 +613,7 @@
                         const now = Date.now();
                         if (alertToggle && alertToggle.checked && (now - lastAlertTime > ALERT_COOLDOWN)) {
                             playDing();
-                            if (Notification.permission === "granted") new Notification("🚨 L4VA Arbitrage Detected!", { body: `Spread: ${spread.toFixed(2)}%\n${suggestedActionText}` });
+                            if (Notification.permission === "granted") new Notification("🚨 Arbitrage!", { body: `Spread: ${spread.toFixed(2)}%\n${suggestedActionText}` });
                             
                             // Send Telegram Notification
                             sendTelegramAlert(`🚨 <b>L4VA Arbitrage Detected!</b>\n\n📈 DEX Spread: <b>${spread.toFixed(2)}%</b>\n💡 Route: ${suggestedActionText}\n\n<i>Check dashboard for real-time net profit.</i>`);
@@ -620,7 +623,7 @@
                     }
                 }
 
-                // Finally update the chart and the simulator with fresh data
+                // Update charts and sim
                 updateChart(spread, bestDeviation);
                 recalculateSimulator();
 
