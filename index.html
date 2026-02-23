@@ -12,13 +12,12 @@
             --card-bg: #120f24;
             --text-primary: #ffffff;
             --text-secondary: #a0a0c0;
+            --text-on-fire: #150f26; 
             
-            /* Colores Neón (para bordes de tarjetas pequeñas) */
+            /* Colores Fuego */
             --neon-orange: #ff7b00;
             --neon-red: #ff0f5b;
             --gradient-fire: linear-gradient(135deg, var(--neon-orange), var(--neon-red));
-
-            /* NUEVO: Gradiente oscuro para el banner principal (Brasas profundas) */
             --gradient-dark-fire: linear-gradient(135deg, #5e2a00 0%, #8a121c 60%, #4a0042 100%);
             
             /* Badges */
@@ -47,15 +46,10 @@
             margin-right: auto;
         }
 
-        .brand-logo {
-            font-size: 2.5rem;
-            filter: drop-shadow(0 0 10px var(--neon-orange));
-        }
+        .brand-logo { font-size: 2.5rem; filter: drop-shadow(0 0 10px var(--neon-orange)); }
 
         h1 {
-            margin: 0;
-            font-weight: 800;
-            font-size: 1.8rem;
+            margin: 0; font-weight: 800; font-size: 1.8rem;
             background: var(--gradient-fire);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -64,7 +58,7 @@
 
         .dashboard {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 25px;
             max-width: 1200px;
             margin: 0 auto;
@@ -75,7 +69,6 @@
             padding: 25px;
             position: relative;
             background: var(--card-bg);
-            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
             border: 2px solid transparent;
             background-image: linear-gradient(var(--card-bg), var(--card-bg)), var(--gradient-fire);
             background-origin: border-box;
@@ -90,121 +83,58 @@
         }
 
         .card-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 20px;
+            font-size: 1.1rem; font-weight: 600; margin-bottom: 20px;
             color: var(--neon-orange);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            letter-spacing: 0.5px;
+            display: flex; justify-content: space-between; align-items: center;
         }
 
         .data-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-            font-size: 0.95rem;
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 12px; font-size: 0.95rem;
         }
 
-        .data-label {
-            color: var(--text-secondary);
-            font-weight: 500;
-        }
-
-        .data-value {
-            font-weight: 800;
-            font-size: 1.25rem;
-            color: var(--text-primary);
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
-        }
+        .data-label { color: var(--text-secondary); font-weight: 500; }
+        .data-value { font-weight: 800; font-size: 1.25rem; color: var(--text-primary); }
 
         .badge {
-            font-size: 0.7rem;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            border: 1px solid transparent;
+            font-size: 0.7rem; padding: 4px 10px; border-radius: 20px;
+            font-weight: 700; text-transform: uppercase; border: 1px solid transparent;
         }
         .bg-vyfi { background: var(--badge-vyfi-bg); color: var(--badge-vyfi-text); border-color: var(--badge-vyfi-text); }
         .bg-minswap { background: var(--badge-min-bg); color: var(--badge-min-text); border-color: var(--badge-min-text); }
 
-        /* --- BANNER PRINCIPAL DE ARBITRAJE (OSCURECIDO) --- */
         .arbitrage-section {
             grid-column: 1 / -1;
-            background: var(--gradient-dark-fire) !important; /* Usamos el nuevo gradiente oscuro */
+            background: var(--gradient-dark-fire) !important; 
             border: none;
-            /* Sombra mucho más sutil y oscura */
             box-shadow: 0 15px 40px -10px rgba(74, 0, 0, 0.6), inset 0 0 30px rgba(0,0,0,0.2);
             padding: 30px;
-            color: var(--text-primary); /* Volvemos al texto blanco para contraste */
         }
 
         .arbitrage-section .card-title {
-            color: var(--text-primary);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.15); /* Línea blanca translúcida */
-            padding-bottom: 15px;
-            margin-bottom: 25px;
+            color: var(--text-primary); border-bottom: 1px solid rgba(255, 255, 255, 0.15); 
+            padding-bottom: 15px; margin-bottom: 25px;
         }
         
-        .arbitrage-data-container {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-        }
-
-        .arbitrage-big-value {
-            font-size: 3rem;
-            font-weight: 900;
-            color: #ffffff;
-            text-shadow: 0 2px 15px rgba(0,0,0,0.3); /* Sombra suave para despegarlo del fondo */
-        }
-
-        .arbitrage-label {
-            color: rgba(255, 255, 255, 0.7); /* Blanco translúcido */
-            font-size: 1rem;
-            text-transform: uppercase;
-            font-weight: 800;
-            letter-spacing: 1px;
-            margin-bottom: 5px;
-        }
-
+        .arbitrage-data-container { display: flex; justify-content: space-around; align-items: center; }
+        .arbitrage-big-value { font-size: 3rem; font-weight: 900; color: #ffffff; text-shadow: 0 2px 15px rgba(0,0,0,0.3); }
+        .arbitrage-label { color: rgba(255, 255, 255, 0.7); font-size: 1rem; text-transform: uppercase; font-weight: 800; margin-bottom: 5px; }
         .loading { color: inherit; opacity: 0.6; font-style: italic; font-weight: normal; font-size: 1rem;}
 
-        /* Checkbox para el banner (ahora claro sobre fondo oscuro) */
         .alert-toggle-box {
-            font-size: 0.9rem;
-            font-weight: 800;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: var(--text-primary);
-            background: rgba(255, 255, 255, 0.1); 
-            padding: 8px 15px;
-            border-radius: 20px;
-            transition: all 0.3s;
+            font-size: 0.9rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 8px;
+            color: var(--text-primary); background: rgba(255, 255, 255, 0.1); padding: 8px 15px; border-radius: 20px;
         }
-        .alert-toggle-box:hover { background: rgba(255, 255, 255, 0.2); }
         .alert-toggle-box input { accent-color: var(--neon-orange); transform: scale(1.2); }
-        
         h3.dex-subtitle { margin: 0 0 15px 0; font-size: 1rem; display: inline-block; }
-
-        /* Badge para dentro del banner */
         .badge-dark {
-            background: rgba(255,255,255,0.9);
-            color: #8a121c; /* Color vino oscuro para el texto del badge */
-            font-size: 0.8rem;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-weight: 800;
-            display: inline-block;
-            margin: 0 4px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            background: rgba(255,255,255,0.9); color: #8a121c; font-size: 0.8rem;
+            padding: 5px 12px; border-radius: 20px; font-weight: 800; display: inline-block; margin: 0 4px;
         }
+        
+        /* Modificador de colores para el spread del Vault */
+        .color-premium { color: var(--neon-red); }
+        .color-discount { color: #10b981; } /* Verde para el descuento */
     </style>
 </head>
 <body>
@@ -218,7 +148,7 @@
         
         <div class="card arbitrage-section">
             <div class="card-title">
-                <div>⚡ Oportunidad de Arbitraje (ORACLE)</div>
+                <div>⚡ Oportunidad de Arbitraje DEX (ORACLE)</div>
                 <label class="alert-toggle-box">
                     <input type="checkbox" id="alert-toggle"> 🔔 Alertas Push (>15%)
                 </label>
@@ -244,7 +174,7 @@
                 <span class="data-value" id="ada-price-usd"><span class="loading">Cargando...</span></span>
             </div>
             <div class="data-row" style="margin-top: 20px;">
-                 <span class="data-label" style="font-size: 0.8rem;">Última actualización:</span>
+                 <span class="data-label" style="font-size: 0.8rem;">Actualización:</span>
                  <span class="data-value" style="font-size: 0.8rem;" id="ada-time">-</span>
             </div>
         </div>
@@ -270,17 +200,32 @@
                 <span class="badge bg-vyfi">VyFi</span>
             </div>
             <div class="data-row">
-                <span class="data-label">TVL (Pool Cruzado):</span>
-                <span class="data-value" id="vlrm-oracle-liq-ada"><span class="loading">Esperando datos...</span></span>
+                <span class="data-label">TVL (Cruzado):</span>
+                <span class="data-value" id="vlrm-oracle-liq-ada"><span class="loading">Esperando...</span></span>
             </div>
-            <div style="margin-top: 15px; font-size: 0.85rem; color: var(--text-secondary);">
-                *Liquidez directa entre tokens L4VA sin pasar por ADA.
+            <div style="margin-top: 15px; font-size: 0.8rem; color: var(--text-secondary);">
+                *Liquidez directa entre tokens sin ADA.
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title" style="color: #fcd34d;">Relics Vault TVL 🏛️</div>
+            <div class="data-row">
+                <span class="data-label">Valor Total (ADA):</span>
+                <span class="data-value" id="vault-tvl"><span class="loading">Calculando...</span></span>
+            </div>
+            <div class="data-row">
+                <span class="data-label">Precio Justo (1M Sup):</span>
+                <span class="data-value" id="vault-fair-price">-</span>
+            </div>
+            <div class="data-row" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1);">
+                <span class="data-label" style="color: white;">Discrepancia DEX:</span>
+                <span class="data-value" id="vault-discrepancy" style="font-size: 1.4rem;">-</span>
             </div>
         </div>
 
         <div class="card" style="grid-column: 1 / -1;">
             <div class="card-title" style="margin-bottom: 30px;">Comparativa ORACLE / ADA (Multi-DEX) ⚖️</div>
-            
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px;">
                 <div>
                     <h3 class="dex-subtitle"><span class="badge bg-vyfi" style="font-size: 0.9rem;">VyFi DEX</span></h3>
@@ -318,6 +263,7 @@
         const PROXY_URL = 'https://cardano-dex-proxy.seryibull.workers.dev';
         const VLRM = "63efb704b7396890e4d9539d030c0e667739043add65c00f96c586c056616c6f72756d";
         const ORACLE = "328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b27393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
+        const ORACLE_TOTAL_SUPPLY = 1000000;
 
         const SPREAD_THRESHOLD = 15; 
         const ALERT_COOLDOWN = 5 * 60 * 1000; 
@@ -334,17 +280,12 @@
                 const ctx = new (window.AudioContext || window.webkitAudioContext)();
                 const osc = ctx.createOscillator();
                 const gainNode = ctx.createGain();
-                osc.type = 'sine'; 
-                osc.frequency.setValueAtTime(880, ctx.currentTime);
+                osc.type = 'sine'; osc.frequency.setValueAtTime(880, ctx.currentTime);
                 gainNode.gain.setValueAtTime(0.1, ctx.currentTime);
-                osc.connect(gainNode); 
-                gainNode.connect(ctx.destination);
-                osc.start(); 
-                gainNode.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.5);
+                osc.connect(gainNode); gainNode.connect(ctx.destination);
+                osc.start(); gainNode.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.5);
                 osc.stop(ctx.currentTime + 0.5);
-            } catch (e) { 
-                console.error("Audio error", e); 
-            }
+            } catch (e) {}
         }
 
         async function fetchAdaPrice() {
@@ -354,9 +295,7 @@
                 document.getElementById('ada-price-usd').innerText = `$${data.cardano.usd.toFixed(4)}`;
                 document.getElementById('ada-time').innerText = new Date().toLocaleTimeString();
                 return data.cardano.usd;
-            } catch (error) { 
-                return null; 
-            }
+            } catch (error) { return null; }
         }
 
         async function fetchDexData(adaPriceUsd) {
@@ -366,19 +305,19 @@
                 const data = await response.json();
                 if (data.error) throw new Error(data.error);
 
+                // 1 y 2. VLRM
                 const vlrmVyfiPool = data.vyfiPools.find(p => p.unitsPair.includes('lovelace') && p.unitsPair.includes(VLRM));
                 if (vlrmVyfiPool) {
-                    const priceAda = vlrmVyfiPool.tokenA.unit === 'lovelace' ? vlrmVyfiPool.tokenB.lpRatio[vlrmVyfiPool.unitsPair].priceRatioAB : vlrmVyfiPool.tokenA.lpRatio[vlrmVyfiPool.unitsPair].priceRatioBA;
-                    document.getElementById('vlrm-price-ada').innerText = `₳ ${priceAda.toFixed(6)}`;
+                    const p = vlrmVyfiPool.tokenA.unit === 'lovelace' ? vlrmVyfiPool.tokenB.lpRatio[vlrmVyfiPool.unitsPair].priceRatioAB : vlrmVyfiPool.tokenA.lpRatio[vlrmVyfiPool.unitsPair].priceRatioBA;
+                    document.getElementById('vlrm-price-ada').innerText = `₳ ${p.toFixed(6)}`;
                     document.getElementById('vlrm-liq-ada').innerText = `₳ ${Math.round(vlrmVyfiPool.tvl).toLocaleString()}`;
                 }
-
                 const crossPool = data.vyfiPools.find(p => p.unitsPair.includes(VLRM) && p.unitsPair.includes(ORACLE));
-                if (crossPool) { 
-                    document.getElementById('vlrm-oracle-liq-ada').innerText = `₳ ${Math.round(crossPool.tvl).toLocaleString()}`; 
-                }
+                if (crossPool) document.getElementById('vlrm-oracle-liq-ada').innerText = `₳ ${Math.round(crossPool.tvl).toLocaleString()}`; 
 
+                // 3. ORACLE / DEX
                 let totalOracleLiqAda = 0, priceVyfi = 0, priceMin = 0;
+                
                 const oracleVyfiPool = data.vyfiPools.find(p => p.unitsPair.includes('lovelace') && p.unitsPair.includes(ORACLE));
                 if (oracleVyfiPool) {
                     priceVyfi = oracleVyfiPool.tokenA.unit === 'lovelace' ? oracleVyfiPool.tokenB.lpRatio[oracleVyfiPool.unitsPair].priceRatioAB : oracleVyfiPool.tokenA.lpRatio[oracleVyfiPool.unitsPair].priceRatioBA;
@@ -398,11 +337,31 @@
                 }
                 document.getElementById('oracle-total-liq').innerText = `₳ ${Math.round(totalOracleLiqAda).toLocaleString()}`;
 
+                // 4. VAULT TVL Y DISCREPANCIA
+                if (data.vaultTvl) {
+                    const vaultTvl = data.vaultTvl;
+                    const fairPrice = vaultTvl / ORACLE_TOTAL_SUPPLY;
+                    
+                    document.getElementById('vault-tvl').innerText = `₳ ${Math.round(vaultTvl).toLocaleString()}`;
+                    document.getElementById('vault-fair-price').innerText = `₳ ${fairPrice.toFixed(6)}`;
+
+                    // Calculamos la discrepancia tomando Minswap como mercado de referencia
+                    if (priceMin > 0) {
+                        const discrepancy = ((priceMin - fairPrice) / fairPrice) * 100;
+                        const discEl = document.getElementById('vault-discrepancy');
+                        
+                        discEl.innerText = `${discrepancy > 0 ? '+' : ''}${discrepancy.toFixed(2)}%`;
+                        // Si es Premium (token más caro que el Vault) se pone rojo/naranja. Si es descuento, verde.
+                        discEl.className = discrepancy > 0 ? 'data-value color-premium' : 'data-value color-discount';
+                    }
+                } else {
+                    document.getElementById('vault-tvl').innerText = "Revisar API";
+                }
+
+                // 5. MOTOR ARBITRAJE ENTRE DEX
                 if (priceVyfi > 0 && priceMin > 0) calculateArbitrage(priceVyfi, priceMin);
 
-            } catch (error) { 
-                console.error("Error DEX:", error); 
-            }
+            } catch (error) { console.error("Error general:", error); }
         }
 
         function calculateArbitrage(priceVyfi, priceMinswap) {
@@ -416,7 +375,6 @@
 
             let accionSugeridaTexto = "";
             
-            // Volvemos a usar colores claros para el texto sobre fondo oscuro
             if (spread < 0.5) {
                 spreadEl.style.color = "rgba(255, 255, 255, 0.5)"; 
                 actionEl.innerHTML = `<span style="color: rgba(255, 255, 255, 0.6); font-size: 1.1rem;">Spread bajo. No cubre fees.</span>`;
