@@ -84,11 +84,11 @@
         .bg-vyfi { background: var(--badge-vyfi-bg); color: var(--badge-vyfi-text); border-color: var(--badge-vyfi-text); }
         .bg-minswap { background: var(--badge-min-bg); color: var(--badge-min-text); border-color: var(--badge-min-text); }
 
-        /* Modified Top Banner */
+        /* Modified Top Banner to 2x2 Grid */
         .arbitrage-section { grid-column: 1 / -1; background: var(--gradient-dark-fire) !important; border: none; box-shadow: 0 15px 40px -10px rgba(74, 0, 0, 0.6), inset 0 0 30px rgba(0,0,0,0.2); padding: 20px 25px; }
         .arbitrage-banner-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.15); padding-bottom: 10px; margin-bottom: 15px; }
-        .arbitrage-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
-        .arbitrage-box { background: rgba(0, 0, 0, 0.2); padding: 15px; border-radius: 16px; transition: all 0.3s ease; position: relative;}
+        .arbitrage-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .arbitrage-box { background: rgba(0, 0, 0, 0.2); padding: 15px 20px; border-radius: 16px; transition: all 0.3s ease; position: relative;}
 
         .arbitrage-label { color: rgba(255, 255, 255, 0.7); font-size: 0.75rem; text-transform: uppercase; font-weight: 800; margin-bottom: 3px; }
         .arbitrage-big-value { font-size: 1.6rem; font-weight: 900; color: #ffffff; text-shadow: 0 2px 10px rgba(0,0,0,0.3); transition: all 0.3s ease; }
@@ -96,7 +96,6 @@
 
         .alert-toggle-box { font-size: 0.8rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 8px; color: var(--text-primary); background: rgba(255, 255, 255, 0.1); padding: 6px 12px; border-radius: 20px; }
         .alert-toggle-box input { accent-color: var(--neon-orange); transform: scale(1.1); }
-        h3.dex-subtitle { margin: 0 0 10px 0; font-size: 0.9rem; display: inline-block; }
         
         .badge-dark { background: rgba(255,255,255,0.9); color: var(--text-on-fire); font-size: 0.75rem; padding: 4px 8px; border-radius: 20px; font-weight: 800; display: inline-block; margin: 0 2px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); text-decoration: none; transition: 0.2s ease; }
         a.badge-dark:hover { transform: scale(1.08); background: #ffffff; cursor: pointer; }
@@ -119,6 +118,8 @@
         .setting-input { width: 60px; padding: 5px; border-radius: 5px; border: none; background: rgba(255,255,255,0.1); color: white; text-align: center; }
         .setting-input-text { width: 120px; padding: 5px; border-radius: 5px; border: none; background: rgba(255,255,255,0.1); color: white; }
         .btn-save { background: var(--gradient-fire); color: white; border: none; padding: 10px; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 15px; }
+        
+        h3.dex-subtitle { margin: 0 0 10px 0; font-size: 0.9rem; display: inline-block; }
     </style>
 </head>
 <body>
@@ -148,13 +149,14 @@
     <div class="dashboard">
         <div class="card arbitrage-section">
             <div class="arbitrage-banner-header">
-                <div style="font-size: 1.1rem; font-weight: 800; color: white;">⚡ Active Opportunities & Net Profit</div>
+                <div style="font-size: 1.1rem; font-weight: 800; color: white;">⚡ Active Opportunities & Intelligence</div>
                 <label class="alert-toggle-box">
                     <input type="checkbox" id="alert-toggle"> 🔔 Alerts (<span id="alert-label">15</span>%)
                 </label>
             </div>
             
             <div class="arbitrage-grid">
+                
                 <div class="arbitrage-box">
                     <div class="arbitrage-label" style="color: var(--neon-orange); margin-bottom: 8px;">DEX Arbitrage (ORACLE)</div>
                     <div style="display: flex; justify-content: space-between;">
@@ -188,15 +190,31 @@
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <div>
                             <div class="arbitrage-label">Investment</div>
-                            <input type="number" id="sim-ada-input" class="sim-input" value="1000" onkeyup="recalculateSimulator()" onchange="recalculateSimulator()"> <span style="font-size: 0.7rem; font-weight: bold;">ADA</span>
+                            <input type="number" id="sim-ada-input" class="sim-input" value="1000" onkeyup="recalculateSimulators()" onchange="recalculateSimulators()"> <span style="font-size: 0.7rem; font-weight: bold;">ADA</span>
                         </div>
                         <div style="text-align: right;">
-                            <div class="arbitrage-label">Net Return (Fees Deducted)</div>
+                            <div class="arbitrage-label">Net Return (2 Hops)</div>
                             <div class="arbitrage-big-value" id="sim-profit" style="font-size: 1.3rem;">- ADA</div>
                         </div>
                     </div>
-                    <div id="optimizer-result" class="optimizer-text">💡 <b>Auto-Optimizer:</b> Calculating sweet spot...</div>
+                    <div id="optimizer-result" class="optimizer-text">💡 <b>Auto-Optimizer:</b> Calculating...</div>
                 </div>
+
+                <div class="arbitrage-box" style="border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; justify-content: center;">
+                    <div class="arbitrage-label" style="color: var(--badge-vyfi-text); margin-bottom: 8px;">NET PROFIT SIMULATOR TRIANGULAR</div>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <div class="arbitrage-label">Investment</div>
+                            <input type="number" id="sim-tri-input" class="sim-input" value="1000" onkeyup="recalculateSimulators()" onchange="recalculateSimulators()"> <span style="font-size: 0.7rem; font-weight: bold;">ADA</span>
+                        </div>
+                        <div style="text-align: right;">
+                            <div class="arbitrage-label">Net Return (3 Hops)</div>
+                            <div class="arbitrage-big-value" id="sim-tri-profit" style="font-size: 1.3rem;">- ADA</div>
+                        </div>
+                    </div>
+                    <div id="tri-optimizer-result" class="optimizer-text">💡 <b>Auto-Optimizer:</b> Calculating...</div>
+                </div>
+
             </div>
         </div>
 
@@ -218,21 +236,6 @@
             <div class="card-title" style="color: #fcd34d;">Relics Vault TVL 🏛️</div>
             <div class="data-row"><span class="data-label">Total Value (ADA):</span><span class="data-value" id="vault-tvl"><span class="loading">Calculating...</span></span></div>
             <div class="data-row"><span class="data-label">Fair price:</span><span class="data-value" id="vault-fair-price">-</span></div>
-        </div>
-
-        <div class="card" style="grid-column: 1 / -1;">
-            <div class="card-title">Triangular Arbitrage (Cross-Pair) 🔺</div>
-            <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 16px;">
-                <div style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6;">
-                    Route A: <span style="color:white; font-weight: bold;">ADA ➔ VLRM ➔ ORACLE ➔ ADA</span><br>
-                    Route B: <span style="color:white; font-weight: bold;">ADA ➔ ORACLE ➔ VLRM ➔ ADA</span><br>
-                    <span style="font-size: 0.75rem; font-style: italic;">*Theoretical spot calculation. Check liquidity before execution.</span>
-                </div>
-                <div style="text-align: right;">
-                    <div class="arbitrage-label">Estimated Discrepancy</div>
-                    <div class="arbitrage-big-value" id="tri-arb-spread" style="font-size: 1.5rem;"><span class="loading">Scanning...</span></div>
-                </div>
-            </div>
         </div>
 
         <div class="card" style="grid-column: 1 / -1;">
@@ -272,7 +275,6 @@
         const VYFI_LINK = "https://app.vyfi.io/dex?tokenA=lovelace&tokenB=328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b27393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
         const MINSWAP_LINK = "https://minswap.org/swap?cA=&tA=&cB=328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b2&tB=7393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
 
-        // Global State & Settings
         let conf = JSON.parse(localStorage.getItem('l4va_config')) || { glow: 10, alert: 15, sim: 1000, tgBot: "", tgChat: "" };
         let lastAlertTime = 0;
         let chartInstance = null;
@@ -280,14 +282,16 @@
         // Exact AMM Pool States
         let currentPools = {
             vyfi: { price: 0, reserveAda: 0, reserveTok: 0 },
-            minswap: { price: 0, reserveAda: 0, reserveTok: 0 }
+            minswap: { price: 0, reserveAda: 0, reserveTok: 0 },
+            vlrmAda: { resAda: 0, resTok: 0 },
+            crossVO: { resVlrm: 0, resOracle: 0 }
         };
 
         // Init config on load
         document.getElementById('sim-ada-input').value = conf.sim;
+        document.getElementById('sim-tri-input').value = conf.sim;
         document.getElementById('alert-label').innerText = conf.alert;
 
-        // Settings Modal functions
         function openSettings() {
             document.getElementById('set-glow').value = conf.glow;
             document.getElementById('set-alert').value = conf.alert;
@@ -296,6 +300,7 @@
             document.getElementById('set-tg-chat').value = conf.tgChat || "";
             document.getElementById('settings-modal').style.display = 'flex';
         }
+        
         function saveSettings() {
             conf.glow = parseFloat(document.getElementById('set-glow').value);
             conf.alert = parseFloat(document.getElementById('set-alert').value);
@@ -304,25 +309,20 @@
             conf.tgChat = document.getElementById('set-tg-chat').value.trim();
             localStorage.setItem('l4va_config', JSON.stringify(conf));
             document.getElementById('sim-ada-input').value = conf.sim;
+            document.getElementById('sim-tri-input').value = conf.sim;
             document.getElementById('alert-label').innerText = conf.alert;
             document.getElementById('settings-modal').style.display = 'none';
-            recalculateSimulator();
+            recalculateSimulators();
         }
 
-        // TELEGRAM ALERT FUNCTION
         async function sendTelegramAlert(message) {
             if (!conf.tgBot || !conf.tgChat) return;
             const url = `https://api.telegram.org/bot${conf.tgBot}/sendMessage`;
             try {
-                await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ chat_id: conf.tgChat, text: message, parse_mode: 'HTML' })
-                });
+                await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ chat_id: conf.tgChat, text: message, parse_mode: 'HTML' }) });
             } catch (e) { console.error("Telegram API Error", e); }
         }
 
-        // Chart.js
         function initChart() {
             const ctx = document.getElementById('arbitrageChart').getContext('2d');
             chartInstance = new Chart(ctx, {
@@ -360,33 +360,31 @@
         }
 
         // --- CONSTANT PRODUCT AMM MATH ---
-        function getTokensOut(deltaAda, reserveAda, reserveTok) {
+        function getAmmOut(amountIn, reserveIn, reserveOut) {
+            if(reserveIn <= 0 || reserveOut <= 0 || amountIn <= 0) return 0;
             const feeMultiplier = 0.997; // 0.3% Pool Fee
-            const deltaAdaWithFee = deltaAda * feeMultiplier;
-            return (reserveTok * deltaAdaWithFee) / (reserveAda + deltaAdaWithFee);
+            const amountInWithFee = amountIn * feeMultiplier;
+            return (reserveOut * amountInWithFee) / (reserveIn + amountInWithFee);
         }
 
-        function getAdaOut(deltaTok, reserveAda, reserveTok) {
-            const feeMultiplier = 0.997; 
-            const deltaTokWithFee = deltaTok * feeMultiplier;
-            return (reserveAda * deltaTokWithFee) / (reserveTok + deltaTokWithFee);
+        // --- CENTRAL SIMULATOR TRIGGER ---
+        function recalculateSimulators() {
+            recalculateDexSimulator();
+            recalculateTriSimulator();
         }
 
-        // --- SIMULATOR & AUTO-OPTIMIZER ENGINE ---
-        function recalculateSimulator() {
+        // --- 1. NORMAL DEX SIMULATOR (2 HOPS) ---
+        function recalculateDexSimulator() {
             const investAda = parseFloat(document.getElementById('sim-ada-input').value) || 0;
             const simEl = document.getElementById('sim-profit');
             const optEl = document.getElementById('optimizer-result');
             
             if(currentPools.vyfi.price <= 0 || currentPools.minswap.price <= 0) {
-                simEl.innerText = "0.00 ADA";
-                return;
+                simEl.innerText = "0.00 ADA"; return;
             }
             
-            const networkFee = 0.20; // x2 transactions
-            const minFixed = 0.70;
-            const vyfiFixed = 1.90;
-
+            const networkFee = 0.20; 
+            const minFixed = 0.70; const vyfiFixed = 1.90;
             let poolBuy, poolSell, fixedFeeBuy, fixedFeeSell;
 
             if (currentPools.minswap.price < currentPools.vyfi.price) {
@@ -397,48 +395,119 @@
                 fixedFeeBuy = vyfiFixed; fixedFeeSell = minFixed;
             }
 
-            // 1. Calculate Single Run based on User Input
+            // Normal Calc
             let netProfit = 0;
             let swapAdaAmount = investAda - fixedFeeBuy - networkFee;
             if (swapAdaAmount > 0) {
-                let tokensReceived = getTokensOut(swapAdaAmount, poolBuy.reserveAda, poolBuy.reserveTok);
-                let adaGrossReceived = getAdaOut(tokensReceived, poolSell.reserveAda, poolSell.reserveTok);
+                let tokensReceived = getAmmOut(swapAdaAmount, poolBuy.reserveAda, poolBuy.reserveTok);
+                let adaGrossReceived = getAmmOut(tokensReceived, poolSell.reserveTok, poolSell.reserveAda);
                 netProfit = (adaGrossReceived - fixedFeeSell - networkFee) - investAda;
             }
             
-            let sign = netProfit > 0 ? "+" : "";
             if (swapAdaAmount <= 0) {
-                simEl.innerText = "Insufficient ADA"; simEl.className = "arbitrage-big-value profit-negative";
+                simEl.innerText = "Insufficient"; simEl.className = "arbitrage-big-value profit-negative";
             } else {
+                let sign = netProfit > 0 ? "+" : "";
                 simEl.innerText = `${sign}${netProfit.toFixed(2)} ADA`;
                 simEl.className = netProfit > 0 ? "arbitrage-big-value profit-positive" : "arbitrage-big-value profit-negative";
             }
 
-            // 2. RUN AUTO-OPTIMIZER (Iterate steps of 10 ADA)
-            let bestProfit = -Infinity;
-            let optimalInvest = 0;
-            
+            // Auto Optimizer
+            let bestProfit = -Infinity; let optimalInvest = 0;
             for(let i = 10; i <= 5000; i += 10) {
                 let testSwapAmount = i - fixedFeeBuy - networkFee;
                 if(testSwapAmount <= 0) continue;
-                
-                let testTokens = getTokensOut(testSwapAmount, poolBuy.reserveAda, poolBuy.reserveTok);
-                let testAdaGross = getAdaOut(testTokens, poolSell.reserveAda, poolSell.reserveTok);
+                let testTokens = getAmmOut(testSwapAmount, poolBuy.reserveAda, poolBuy.reserveTok);
+                let testAdaGross = getAmmOut(testTokens, poolSell.reserveTok, poolSell.reserveAda);
                 let testNet = (testAdaGross - fixedFeeSell - networkFee) - i;
                 
-                if (testNet > bestProfit) {
-                    bestProfit = testNet;
-                    optimalInvest = i;
-                } else if (testNet < bestProfit && testNet > 0) {
-                    break;
-                }
+                if (testNet > bestProfit) { bestProfit = testNet; optimalInvest = i; } 
+                else if (testNet < bestProfit && testNet > 0) break;
             }
 
             if (bestProfit > 0) {
                 optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> Max profit <b>+${bestProfit.toFixed(2)} ADA</b> (Invest <b>${optimalInvest} ADA</b>)`;
                 optEl.style.color = '#10b981';
             } else {
-                optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> No profitable route available due to slippage/fees.`;
+                optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> No profitable route (fees > spread).`;
+                optEl.style.color = 'var(--text-secondary)';
+            }
+        }
+
+        // --- 2. TRIANGULAR SIMULATOR (3 HOPS) ---
+        function calcTriNet(investAda) {
+            if(investAda <= 0) return -Infinity;
+            let pVA = currentPools.vlrmAda; 
+            let pVO = currentPools.crossVO; 
+            let pOVy = currentPools.vyfi; 
+            let pOMin = currentPools.minswap; 
+
+            if(pVA.resAda <= 0 || pVO.resVlrm <= 0) return -Infinity;
+
+            const netF = 0.2; 
+            const fVy = 1.9 + netF; // 2.1 total per hop on VyFi
+            const fMin = 0.7 + netF; // 0.9 total per hop on Minswap
+
+            // PATH A: ADA -> VLRM (Vyfi) -> ORACLE (Vyfi) -> ADA (Vyfi or Min)
+            let outA = -Infinity;
+            let adaAfterLeg1A = investAda - fVy;
+            if(adaAfterLeg1A > 0) {
+                let vlrmOut = getAmmOut(adaAfterLeg1A, pVA.resAda, pVA.resTok);
+                let oracleOut = getAmmOut(vlrmOut, pVO.resVlrm, pVO.resOracle);
+                
+                let adaEndVy = getAmmOut(oracleOut, pOVy.reserveTok, pOVy.reserveAda) - fVy - fVy; // Deducting fixed fee for Leg 2 and 3
+                let adaEndMin = getAmmOut(oracleOut, pOMin.reserveTok, pOMin.reserveAda) - fVy - fMin; 
+                outA = Math.max(adaEndVy, adaEndMin);
+            }
+
+            // PATH B: ADA -> ORACLE (Vyfi or Min) -> VLRM (Vyfi) -> ADA (Vyfi)
+            let outB = -Infinity;
+            let adaAfterLeg1B_Vy = investAda - fVy;
+            let adaAfterLeg1B_Min = investAda - fMin;
+            
+            if(adaAfterLeg1B_Vy > 0 || adaAfterLeg1B_Min > 0) {
+                let oracleOutVy = getAmmOut(adaAfterLeg1B_Vy, pOVy.reserveAda, pOVy.reserveTok);
+                let vlrmOutVy = getAmmOut(oracleOutVy, pVO.resOracle, pVO.resVlrm);
+                let finalVyVy = getAmmOut(vlrmOutVy, pVA.resTok, pVA.resAda) - fVy - fVy;
+
+                let oracleOutMin = getAmmOut(adaAfterLeg1B_Min, pOMin.reserveAda, pOMin.reserveTok);
+                let vlrmOutMin = getAmmOut(oracleOutMin, pVO.resOracle, pVO.resVlrm);
+                let finalMinVy = getAmmOut(vlrmOutMin, pVA.resTok, pVA.resAda) - fVy - fVy;
+
+                outB = Math.max(finalVyVy, finalMinVy);
+            }
+
+            return Math.max(outA, outB) - investAda; 
+        }
+
+        function recalculateTriSimulator() {
+            const investAda = parseFloat(document.getElementById('sim-tri-input').value) || 0;
+            const simEl = document.getElementById('sim-tri-profit');
+            const optEl = document.getElementById('tri-optimizer-result');
+            
+            let netProfit = calcTriNet(investAda);
+
+            if(investAda <= 0 || netProfit === -Infinity) {
+                simEl.innerText = "Insufficient"; simEl.className = "arbitrage-big-value profit-negative";
+            } else {
+                let sign = netProfit > 0 ? "+" : "";
+                simEl.innerText = `${sign}${netProfit.toFixed(2)} ADA`;
+                simEl.className = netProfit > 0 ? "arbitrage-big-value profit-positive" : "arbitrage-big-value profit-negative";
+            }
+
+            // Auto Optimizer (Triangular)
+            let bestProfit = -Infinity; let optimalInvest = 0;
+            for(let i = 10; i <= 5000; i += 10) {
+                let testNet = calcTriNet(i);
+                if (testNet > bestProfit) { bestProfit = testNet; optimalInvest = i; } 
+                else if (testNet < bestProfit && testNet > 0) break;
+            }
+
+            if (bestProfit > 0) {
+                optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> Max profit <b>+${bestProfit.toFixed(2)} ADA</b> (Invest <b>${optimalInvest} ADA</b>)`;
+                optEl.style.color = '#10b981';
+            } else {
+                optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> No profitable route (fees > spread).`;
                 optEl.style.color = 'var(--text-secondary)';
             }
         }
@@ -460,28 +529,28 @@
                 const data = await response.json();
                 if (data.error) throw new Error(data.error);
 
-                // 1 & 2. VLRM
-                let priceVlrmAda = 0;
+                // 1. VLRM/ADA
+                let priceVlrmAda = 0; let vlrmVyfiAdaReserve = 0; let vlrmVyfiTokReserve = 0;
                 const vlrmVyfiPool = data.vyfiPools.find(p => p.unitsPair.includes('lovelace') && p.unitsPair.includes(VLRM));
                 if (vlrmVyfiPool) {
                     priceVlrmAda = vlrmVyfiPool.tokenA.unit === 'lovelace' ? vlrmVyfiPool.tokenB.lpRatio[vlrmVyfiPool.unitsPair].priceRatioAB : vlrmVyfiPool.tokenA.lpRatio[vlrmVyfiPool.unitsPair].priceRatioBA;
                     document.getElementById('vlrm-price-ada').innerText = `₳ ${priceVlrmAda.toFixed(6)}`;
                     document.getElementById('vlrm-liq-ada').innerText = `₳ ${Math.round(vlrmVyfiPool.tvl).toLocaleString()}`;
+                    vlrmVyfiAdaReserve = vlrmVyfiPool.tvl / 2;
+                    vlrmVyfiTokReserve = vlrmVyfiAdaReserve / priceVlrmAda;
                 }
                 
-                let priceOracleVlrm = 0;
+                // 2. VLRM/ORACLE
+                let crossVlrmReserve = 0; let crossOracleReserve = 0;
                 const crossPool = data.vyfiPools.find(p => p.unitsPair.includes(VLRM) && p.unitsPair.includes(ORACLE));
                 if (crossPool) {
                     document.getElementById('vlrm-oracle-liq-ada').innerText = `₳ ${Math.round(crossPool.tvl).toLocaleString()}`; 
-                    // CORRECTED MATH: Extract VLRM per ORACLE correctly
-                    if (crossPool.tokenA.unit.includes(VLRM)) {
-                        priceOracleVlrm = crossPool.tokenB.lpRatio[crossPool.unitsPair].priceRatioAB;
-                    } else {
-                        priceOracleVlrm = crossPool.tokenA.lpRatio[crossPool.unitsPair].priceRatioBA;
-                    }
+                    let priceOracleVlrm = crossPool.tokenA.unit.includes(VLRM) ? crossPool.tokenB.lpRatio[crossPool.unitsPair].priceRatioAB : crossPool.tokenA.lpRatio[crossPool.unitsPair].priceRatioBA;
+                    crossVlrmReserve = (crossPool.tvl / 2) / priceVlrmAda; // Derived from TVL ADA equivalent
+                    crossOracleReserve = crossVlrmReserve / priceOracleVlrm;
                 }
 
-                // 3. ORACLE / DEX
+                // 3. ORACLE/ADA
                 let totalOracleLiqAda = 0, priceVyfi = 0, priceMin = 0;
                 let vyfiTvLAda = 0, minTvlAda = 0;
                 
@@ -505,37 +574,13 @@
                 }
                 document.getElementById('oracle-total-liq').innerText = `₳ ${Math.round(totalOracleLiqAda).toLocaleString()}`;
 
-                // STORE EXACT AMM RESERVES
-                currentPools.vyfi = {
-                    price: priceVyfi,
-                    reserveAda: priceVyfi > 0 ? (vyfiTvLAda / 2) : 0,
-                    reserveTok: priceVyfi > 0 ? (vyfiTvLAda / 2) / priceVyfi : 0
-                };
-                currentPools.minswap = {
-                    price: priceMin,
-                    reserveAda: priceMin > 0 ? (minTvlAda / 2) : 0,
-                    reserveTok: priceMin > 0 ? (minTvlAda / 2) / priceMin : 0
-                };
+                // STORE EXACT AMM RESERVES GLOBALLY
+                currentPools.vyfi = { price: priceVyfi, reserveAda: priceVyfi > 0 ? (vyfiTvLAda / 2) : 0, reserveTok: priceVyfi > 0 ? (vyfiTvLAda / 2) / priceVyfi : 0 };
+                currentPools.minswap = { price: priceMin, reserveAda: priceMin > 0 ? (minTvlAda / 2) : 0, reserveTok: priceMin > 0 ? (minTvlAda / 2) / priceMin : 0 };
+                currentPools.vlrmAda = { resAda: vlrmVyfiAdaReserve, resTok: vlrmVyfiTokReserve };
+                currentPools.crossVO = { resVlrm: crossVlrmReserve, resOracle: crossOracleReserve };
 
-                // TRIANGULAR ARBITRAGE CALCULATION (Corrected)
-                if (priceVlrmAda > 0 && priceOracleVlrm > 0 && priceVyfi > 0) {
-                    let routeA_Cost = priceOracleVlrm * priceVlrmAda; 
-                    let bestDirectMarketPrice = Math.max(priceVyfi, priceMin);
-                    
-                    let triArbDiff = ((bestDirectMarketPrice - routeA_Cost) / routeA_Cost) * 100;
-                    
-                    const triEl = document.getElementById('tri-arb-spread');
-                    if(Math.abs(triArbDiff) < 0.5) {
-                        triEl.innerText = "Balanced";
-                        triEl.style.color = "var(--text-secondary)";
-                    } else {
-                        let sign = triArbDiff > 0 ? '+' : '';
-                        triEl.innerText = `${sign}${triArbDiff.toFixed(2)}%`;
-                        triEl.style.color = triArbDiff > 0 ? "#10b981" : "var(--neon-red)";
-                    }
-                }
-
-                // 4. VAULT TVL & DISCREPANCY ARBITRAGE
+                // 4. VAULT TVL
                 let bestDeviation = 0;
                 if (data.vaultTvl && data.vaultTvl > 0) {
                     const fairPrice = data.vaultTvl / ORACLE_TOTAL_SUPPLY;
@@ -579,7 +624,7 @@
                     }
                 }
 
-                // 5. DEX ARBITRAGE ENGINE
+                // 5. DEX ARBITRAGE
                 let spread = 0;
                 if (priceVyfi > 0 && priceMin > 0) {
                     const highestPrice = Math.max(priceVyfi, priceMin);
@@ -613,19 +658,16 @@
                         const now = Date.now();
                         if (alertToggle && alertToggle.checked && (now - lastAlertTime > ALERT_COOLDOWN)) {
                             playDing();
-                            if (Notification.permission === "granted") new Notification("🚨 Arbitrage!", { body: `Spread: ${spread.toFixed(2)}%\n${suggestedActionText}` });
-                            
-                            // Send Telegram Notification
+                            if (Notification.permission === "granted") new Notification("🚨 L4VA Arbitrage!", { body: `Spread: ${spread.toFixed(2)}%\n${suggestedActionText}` });
                             sendTelegramAlert(`🚨 <b>L4VA Arbitrage Detected!</b>\n\n📈 DEX Spread: <b>${spread.toFixed(2)}%</b>\n💡 Route: ${suggestedActionText}\n\n<i>Check dashboard for real-time net profit.</i>`);
-                            
                             lastAlertTime = now;
                         }
                     }
                 }
 
-                // Update charts and sim
+                // Trigger UI Updates
                 updateChart(spread, bestDeviation);
-                recalculateSimulator();
+                recalculateSimulators();
 
             } catch (error) { console.error("General error:", error); }
         }
