@@ -307,7 +307,7 @@
         </div>
     </div>
 
-    <script>
+<script>
         const PROXY_URL = 'https://cardano-dex-proxy.seryibull.workers.dev';
         const VLRM = "63efb704b7396890e4d9539d030c0e667739043add65c00f96c586c056616c6f72756d";
         const ORACLE = "328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b27393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
@@ -328,12 +328,17 @@
                 const ctx = new (window.AudioContext || window.webkitAudioContext)();
                 const osc = ctx.createOscillator();
                 const gainNode = ctx.createGain();
-                osc.type = 'sine'; osc.frequency.setValueAtTime(880, ctx.currentTime);
+                osc.type = 'sine'; 
+                osc.frequency.setValueAtTime(880, ctx.currentTime);
                 gainNode.gain.setValueAtTime(0.1, ctx.currentTime);
-                osc.connect(gainNode); gainNode.connect(ctx.destination);
-                osc.start(); gainNode.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.5);
+                osc.connect(gainNode); 
+                gainNode.connect(ctx.destination);
+                osc.start(); 
+                gainNode.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.5);
                 osc.stop(ctx.currentTime + 0.5);
-            } catch (e) console.error("Audio error", e);
+            } catch (e) { 
+                console.error("Audio error", e); 
+            }
         }
 
         // LÓGICA DE DATOS
@@ -344,7 +349,9 @@
                 document.getElementById('ada-price-usd').innerText = `$${data.cardano.usd.toFixed(4)}`;
                 document.getElementById('ada-time').innerText = new Date().toLocaleTimeString();
                 return data.cardano.usd;
-            } catch (error) return null;
+            } catch (error) { 
+                return null; 
+            }
         }
 
         async function fetchDexData(adaPriceUsd) {
@@ -364,7 +371,9 @@
 
                 // 2. VLRM/ORACLE
                 const crossPool = data.vyfiPools.find(p => p.unitsPair.includes(VLRM) && p.unitsPair.includes(ORACLE));
-                if (crossPool) { document.getElementById('vlrm-oracle-liq-ada').innerText = `₳ ${Math.round(crossPool.tvl).toLocaleString()}`; }
+                if (crossPool) { 
+                    document.getElementById('vlrm-oracle-liq-ada').innerText = `₳ ${Math.round(crossPool.tvl).toLocaleString()}`; 
+                }
 
                 // 3. ORACLE/ADA
                 let totalOracleLiqAda = 0, priceVyfi = 0, priceMin = 0;
@@ -375,6 +384,7 @@
                     document.getElementById('oracle-vyfi-price').innerText = `₳ ${priceVyfi.toFixed(6)}`;
                     document.getElementById('oracle-vyfi-liq').innerText = `₳ ${Math.round(oracleVyfiPool.tvl).toLocaleString()}`;
                 }
+                
                 if (data.minPrice && data.minPrice.length > 0) {
                     priceMin = parseFloat(data.minPrice[0].close);
                     document.getElementById('oracle-min-price').innerText = `₳ ${priceMin.toFixed(6)}`;
@@ -389,7 +399,9 @@
                 // 4. MOTOR
                 if (priceVyfi > 0 && priceMin > 0) calculateArbitrage(priceVyfi, priceMin);
 
-            } catch (error) console.error("Error DEX:", error);
+            } catch (error) { 
+                console.error("Error DEX:", error); 
+            }
         }
 
         function calculateArbitrage(priceVyfi, priceMinswap) {
@@ -403,7 +415,7 @@
 
             let accionSugeridaTexto = "";
             if (spread < 0.5) {
-                actionEl.innerHTML = `<span style="color: rgba(255,255,255,0.5);">Spread bajo. No cubre fees.</span>`;
+                actionEl.innerHTML = `<span style="color: rgba(255,255,255,0.5); font-size: 1rem;">Spread bajo. No cubre fees.</span>`;
             } else if (priceVyfi > priceMinswap) {
                 actionEl.innerHTML = `Comprar en <span class="badge bg-minswap">Minswap</span> ➔ Vender en <span class="badge bg-vyfi">VyFi</span>`;
                 accionSugeridaTexto = "Compra en Minswap, Vende en VyFi";
