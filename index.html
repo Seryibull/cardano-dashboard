@@ -8,10 +8,11 @@
     <style>
         :root {
             /* Paleta de Colores L4VA */
-            --bg-main: radial-gradient(circle at top center, #1a1333 0%, #0a0814 100%); /* Fondo oscuro profundo */
-            --card-bg: #120f24; /* Color base de las tarjetas */
+            --bg-main: radial-gradient(circle at top center, #1a1333 0%, #0a0814 100%);
+            --card-bg: #120f24;
             --text-primary: #ffffff;
             --text-secondary: #a0a0c0;
+            --dark-purple: #0a0814; /* Lila super oscuro para contrastes */
             
             /* Colores del Fuego/Neón */
             --neon-orange: #ff7b00;
@@ -46,7 +47,6 @@
 
         .brand-logo {
             font-size: 2.5rem;
-            /* Usamos un emoji como placeholder del logo de fuego */
             filter: drop-shadow(0 0 10px var(--neon-orange));
         }
 
@@ -68,21 +68,16 @@
             margin: 0 auto;
         }
 
-        /* --- ESTILO DE TARJETAS CON BORDE NEÓN GLOW --- */
         .card {
             border-radius: 24px;
             padding: 25px;
             position: relative;
             background: var(--card-bg);
             box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
-            
-            /* El truco del borde degradado brillante */
-            border: 2px solid transparent; /* Espacio transparente para el borde */
+            border: 2px solid transparent;
             background-image: linear-gradient(var(--card-bg), var(--card-bg)), var(--gradient-fire);
             background-origin: border-box;
             background-clip: padding-box, border-box;
-            
-            /* Sombra exterior para el efecto "bloom" (resplandor) */
             box-shadow: 0 0 20px rgba(255, 123, 0, 0.15), inset 0 0 20px rgba(255, 123, 0, 0.05);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
@@ -138,17 +133,17 @@
         /* --- BANNER PRINCIPAL DE ARBITRAJE --- */
         .arbitrage-section {
             grid-column: 1 / -1;
-            /* Fondo completo degradado para el banner principal */
             background: var(--gradient-fire) !important;
             border: none;
             box-shadow: 0 10px 40px -5px rgba(255, 94, 0, 0.5);
             padding: 30px;
+            color: var(--dark-purple); /* Forzamos el color oscuro base */
         }
 
         .arbitrage-section .card-title {
-            color: white;
+            color: var(--dark-purple);
             font-size: 1.5rem;
-            border-bottom: 1px solid rgba(255,255,255,0.2);
+            border-bottom: 1px solid rgba(10, 8, 20, 0.15); /* Línea divisoria oscura */
             padding-bottom: 15px;
             margin-bottom: 25px;
         }
@@ -162,44 +157,51 @@
         .arbitrage-big-value {
             font-size: 3rem;
             font-weight: 900;
-            color: white;
-            text-shadow: 0 2px 20px rgba(255,255,255,0.4);
+            color: var(--dark-purple);
+            text-shadow: none; /* Quitamos el brillo blanco para máxima nitidez */
         }
 
         .arbitrage-label {
-            color: rgba(255,255,255,0.8);
+            color: rgba(10, 8, 20, 0.7); /* Morado oscuro con un poco de transparencia */
             font-size: 1rem;
             text-transform: uppercase;
+            font-weight: 800;
             letter-spacing: 1px;
             margin-bottom: 5px;
         }
 
-        .loading { color: var(--text-secondary); font-style: italic; font-weight: normal; font-size: 1rem;}
+        .loading { color: inherit; opacity: 0.6; font-style: italic; font-weight: normal; font-size: 1rem;}
 
-        /* Checkbox personalizado */
+        /* Checkbox oscuro para el banner */
         .alert-toggle-box {
             font-size: 0.9rem;
-            font-weight: 600;
+            font-weight: 800;
             cursor: pointer;
             display: flex;
             align-items: center;
             gap: 8px;
-            color: rgba(255,255,255,0.9);
-            background: rgba(0,0,0,0.2);
+            color: var(--dark-purple);
+            background: rgba(10, 8, 20, 0.1);
             padding: 8px 15px;
             border-radius: 20px;
             transition: all 0.3s;
         }
-        .alert-toggle-box:hover { background: rgba(0,0,0,0.4); }
-        .alert-toggle-box input { accent-color: var(--neon-orange); transform: scale(1.2); }
+        .alert-toggle-box:hover { background: rgba(10, 8, 20, 0.2); }
+        .alert-toggle-box input { accent-color: var(--dark-purple); transform: scale(1.2); }
         
-        /* Sub-titulos en tarjetas multi-dex */
-        h3.dex-subtitle {
-            margin: 0 0 15px 0;
-            font-size: 1rem;
-            display: inline-block;
-        }
+        h3.dex-subtitle { margin: 0 0 15px 0; font-size: 1rem; display: inline-block; }
 
+        /* Badge inverso especial para usar DENTRO del recuadro naranja */
+        .badge-dark {
+            background: var(--dark-purple);
+            color: var(--neon-orange);
+            font-size: 0.8rem;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: 800;
+            display: inline-block;
+            margin: 0 4px;
+        }
     </style>
 </head>
 <body>
@@ -215,7 +217,7 @@
             <div class="card-title">
                 <div>⚡ Oportunidad de Arbitraje (ORACLE)</div>
                 <label class="alert-toggle-box">
-                    <input type="checkbox" id="alert-toggle"> 🔔 Alertas Push/Sonido (>15%)
+                    <input type="checkbox" id="alert-toggle"> 🔔 Alertas Push (>15%)
                 </label>
             </div>
             <div class="arbitrage-data-container">
@@ -223,9 +225,11 @@
                     <div class="arbitrage-label">Spread Actual</div>
                     <div class="arbitrage-big-value" id="arbitrage-spread">-%</div>
                 </div>
-                <div style="text-align: center; border-left: 2px solid rgba(255,255,255,0.2); padding-left: 40px;">
+                <div style="text-align: center; border-left: 2px solid rgba(10, 8, 20, 0.15); padding-left: 40px;">
                     <div class="arbitrage-label">Acción Sugerida</div>
-                    <div class="data-value" id="arbitrage-action" style="color: white; font-size: 1.3rem;"><span class="loading">Analizando mercado...</span></div>
+                    <div class="data-value" id="arbitrage-action" style="color: var(--dark-purple); font-size: 1.3rem;">
+                        <span class="loading">Analizando mercado...</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -307,13 +311,12 @@
         </div>
     </div>
 
-<script>
+    <script>
         const PROXY_URL = 'https://cardano-dex-proxy.seryibull.workers.dev';
         const VLRM = "63efb704b7396890e4d9539d030c0e667739043add65c00f96c586c056616c6f72756d";
         const ORACLE = "328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b27393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
 
-        // CONFIGURACIÓN DE ALERTAS
-        const SPREAD_THRESHOLD = 15; // % para activar alerta
+        const SPREAD_THRESHOLD = 15; 
         const ALERT_COOLDOWN = 5 * 60 * 1000; 
         let lastAlertTime = 0;
 
@@ -341,7 +344,6 @@
             }
         }
 
-        // LÓGICA DE DATOS
         async function fetchAdaPrice() {
             try {
                 const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=cardano&vs_currencies=usd');
@@ -361,7 +363,6 @@
                 const data = await response.json();
                 if (data.error) throw new Error(data.error);
 
-                // 1. VLRM/ADA
                 const vlrmVyfiPool = data.vyfiPools.find(p => p.unitsPair.includes('lovelace') && p.unitsPair.includes(VLRM));
                 if (vlrmVyfiPool) {
                     const priceAda = vlrmVyfiPool.tokenA.unit === 'lovelace' ? vlrmVyfiPool.tokenB.lpRatio[vlrmVyfiPool.unitsPair].priceRatioAB : vlrmVyfiPool.tokenA.lpRatio[vlrmVyfiPool.unitsPair].priceRatioBA;
@@ -369,13 +370,11 @@
                     document.getElementById('vlrm-liq-ada').innerText = `₳ ${Math.round(vlrmVyfiPool.tvl).toLocaleString()}`;
                 }
 
-                // 2. VLRM/ORACLE
                 const crossPool = data.vyfiPools.find(p => p.unitsPair.includes(VLRM) && p.unitsPair.includes(ORACLE));
                 if (crossPool) { 
                     document.getElementById('vlrm-oracle-liq-ada').innerText = `₳ ${Math.round(crossPool.tvl).toLocaleString()}`; 
                 }
 
-                // 3. ORACLE/ADA
                 let totalOracleLiqAda = 0, priceVyfi = 0, priceMin = 0;
                 const oracleVyfiPool = data.vyfiPools.find(p => p.unitsPair.includes('lovelace') && p.unitsPair.includes(ORACLE));
                 if (oracleVyfiPool) {
@@ -396,7 +395,6 @@
                 }
                 document.getElementById('oracle-total-liq').innerText = `₳ ${Math.round(totalOracleLiqAda).toLocaleString()}`;
 
-                // 4. MOTOR
                 if (priceVyfi > 0 && priceMin > 0) calculateArbitrage(priceVyfi, priceMin);
 
             } catch (error) { 
@@ -414,13 +412,18 @@
             spreadEl.innerText = `${spread.toFixed(2)}%`;
 
             let accionSugeridaTexto = "";
+            
+            // Lógica actualizada para mantener los colores oscuros dinámicamente
             if (spread < 0.5) {
-                actionEl.innerHTML = `<span style="color: rgba(255,255,255,0.5); font-size: 1rem;">Spread bajo. No cubre fees.</span>`;
+                spreadEl.style.color = "rgba(10, 8, 20, 0.5)"; // Morado oscuro transparente
+                actionEl.innerHTML = `<span style="color: rgba(10, 8, 20, 0.6); font-size: 1.1rem;">Spread bajo. No cubre fees.</span>`;
             } else if (priceVyfi > priceMinswap) {
-                actionEl.innerHTML = `Comprar en <span class="badge bg-minswap">Minswap</span> ➔ Vender en <span class="badge bg-vyfi">VyFi</span>`;
+                spreadEl.style.color = "var(--dark-purple)"; // Morado oscuro sólido
+                actionEl.innerHTML = `Comprar en <span class="badge-dark">Minswap</span> ➔ Vender en <span class="badge-dark">VyFi</span>`;
                 accionSugeridaTexto = "Compra en Minswap, Vende en VyFi";
             } else {
-                actionEl.innerHTML = `Comprar en <span class="badge bg-vyfi">VyFi</span> ➔ Vender en <span class="badge bg-minswap">Minswap</span>`;
+                spreadEl.style.color = "var(--dark-purple)";
+                actionEl.innerHTML = `Comprar en <span class="badge-dark">VyFi</span> ➔ Vender en <span class="badge-dark">Minswap</span>`;
                 accionSugeridaTexto = "Compra en VyFi, Vende en Minswap";
             }
 
