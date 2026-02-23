@@ -7,20 +7,24 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* Paleta de Colores L4VA */
+            /* Paleta de Colores Base */
             --bg-main: radial-gradient(circle at top center, #1a1333 0%, #0a0814 100%);
             --card-bg: #120f24;
             --text-primary: #ffffff;
             --text-secondary: #a0a0c0;
             
-            /* COLOR AJUSTADO: Lila oscuro (Berenjena profundo) para contraste perfecto */
+            /* Color del texto sobre el fondo de fuego (Berenjena oscuro) */
             --text-on-fire: #150f26; 
             
-            /* Colores del Fuego/Neón */
+            /* Colores Neón (para bordes finos) */
             --neon-orange: #ff7b00;
             --neon-red: #ff0f5b;
-            --gradient-fire: linear-gradient(135deg, var(--neon-orange), var(--neon-red));
+            --gradient-fire-border: linear-gradient(135deg, var(--neon-orange), var(--neon-red));
             
+            /* NUEVO: Degradado suavizado para el fondo del banner principal */
+            /* Usamos tonos más cálidos y profundos, menos saturados que el neón puro */
+            --soft-fire-bg: radial-gradient(circle at center, rgb(255, 160, 80) 0%, rgb(200, 60, 90) 100%);
+
             /* Badges */
             --badge-vyfi-bg: rgba(139, 92, 246, 0.15);
             --badge-vyfi-text: #a78bfa;
@@ -56,7 +60,8 @@
             margin: 0;
             font-weight: 800;
             font-size: 1.8rem;
-            background: var(--gradient-fire);
+            /* El título sigue usando el degradado brillante */
+            background: var(--gradient-fire-border);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             letter-spacing: -1px;
@@ -77,16 +82,17 @@
             background: var(--card-bg);
             box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
             border: 2px solid transparent;
-            background-image: linear-gradient(var(--card-bg), var(--card-bg)), var(--gradient-fire);
+            /* Los bordes de las tarjetas normales siguen siendo brillantes */
+            background-image: linear-gradient(var(--card-bg), var(--card-bg)), var(--gradient-fire-border);
             background-origin: border-box;
             background-clip: padding-box, border-box;
-            box-shadow: 0 0 20px rgba(255, 123, 0, 0.15), inset 0 0 20px rgba(255, 123, 0, 0.05);
+            box-shadow: 0 0 20px rgba(255, 123, 0, 0.1), inset 0 0 20px rgba(255, 123, 0, 0.05);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 15px 40px -10px rgba(0, 0, 0, 0.6), 0 0 30px rgba(255, 123, 0, 0.3);
+            box-shadow: 0 15px 40px -10px rgba(0, 0, 0, 0.6), 0 0 30px rgba(255, 123, 0, 0.2);
         }
 
         .card-title {
@@ -132,12 +138,14 @@
         .bg-vyfi { background: var(--badge-vyfi-bg); color: var(--badge-vyfi-text); border-color: var(--badge-vyfi-text); }
         .bg-minswap { background: var(--badge-min-bg); color: var(--badge-min-text); border-color: var(--badge-min-text); }
 
-        /* --- BANNER PRINCIPAL DE ARBITRAJE --- */
+        /* --- BANNER PRINCIPAL DE ARBITRAJE (Modificado) --- */
         .arbitrage-section {
             grid-column: 1 / -1;
-            background: var(--gradient-fire) !important;
+            /* Usamos el nuevo fondo suavizado */
+            background: var(--soft-fire-bg) !important;
             border: none;
-            box-shadow: 0 10px 40px -5px rgba(255, 94, 0, 0.5);
+            /* Sombra más suave y menos intensa */
+            box-shadow: 0 15px 40px -10px rgba(200, 60, 90, 0.4);
             padding: 30px;
             color: var(--text-on-fire); 
         }
@@ -195,7 +203,8 @@
         /* Badge inverso especial */
         .badge-dark {
             background: var(--text-on-fire);
-            color: var(--neon-orange);
+            /* El texto del badge ahora usa un naranja más suave para combinar con el fondo */
+            color: rgb(255, 180, 100);
             font-size: 0.8rem;
             padding: 5px 12px;
             border-radius: 20px;
