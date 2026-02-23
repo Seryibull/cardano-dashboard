@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,24 +7,29 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* Paleta Base */
+            /* Base Palette */
             --bg-main: radial-gradient(circle at top center, #1a1333 0%, #0a0814 100%);
             --card-bg: #120f24;
             --text-primary: #ffffff;
             --text-secondary: #a0a0c0;
             --text-on-fire: #150f26; 
             
-            /* Colores Fuego */
+            /* Fire Colors */
             --neon-orange: #ff7b00;
             --neon-red: #ff0f5b;
             --gradient-fire: linear-gradient(135deg, var(--neon-orange), var(--neon-red));
             --gradient-dark-fire: linear-gradient(135deg, #5e2a00 0%, #8a121c 60%, #4a0042 100%);
             
+            /* Custom Brand Colors */
+            --ada-color: #4285f4; /* New Cardano Blue */
+
             /* Badges */
             --badge-vyfi-bg: rgba(139, 92, 246, 0.15);
             --badge-vyfi-text: #a78bfa;
-            --badge-min-bg: rgba(245, 158, 11, 0.15);
-            --badge-min-text: #fcd34d;
+            
+            /* New Minswap Blue Palette */
+            --badge-min-bg: rgba(137, 170, 255, 0.15); 
+            --badge-min-text: #89aaff; 
         }
 
         body {
@@ -88,6 +93,12 @@
             display: flex; justify-content: space-between; align-items: center;
         }
 
+        /* Specific title color for Cardano */
+        .card-title.ada-title {
+            color: var(--ada-color);
+            text-shadow: 0 0 10px rgba(66, 133, 244, 0.3);
+        }
+
         .data-row {
             display: flex; justify-content: space-between; align-items: center;
             margin-bottom: 12px; font-size: 0.95rem;
@@ -127,15 +138,16 @@
         }
         .alert-toggle-box input { accent-color: var(--neon-orange); transform: scale(1.2); }
         h3.dex-subtitle { margin: 0 0 15px 0; font-size: 1rem; display: inline-block; }
+        
         .badge-dark {
             background: rgba(255,255,255,0.9); color: #8a121c; font-size: 0.8rem;
             padding: 5px 12px; border-radius: 20px; font-weight: 800; display: inline-block; margin: 0 4px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
         
-        /* Colores para el spread del Vault */
+        /* Vault discrepancy colors */
         .color-premium { color: var(--neon-red); }
-        .color-discount { color: #10b981; } /* Verde para el descuento */
+        .color-discount { color: #10b981; } 
     </style>
 </head>
 <body>
@@ -149,33 +161,33 @@
         
         <div class="card arbitrage-section">
             <div class="card-title">
-                <div>⚡ Oportunidad de Arbitraje DEX (ORACLE)</div>
+                <div>⚡ DEX Arbitrage Opportunity (ORACLE)</div>
                 <label class="alert-toggle-box">
-                    <input type="checkbox" id="alert-toggle"> 🔔 Alertas Push (>15%)
+                    <input type="checkbox" id="alert-toggle"> 🔔 Push Alerts (>15%)
                 </label>
             </div>
             <div class="arbitrage-data-container">
                 <div style="text-align: center;">
-                    <div class="arbitrage-label">Spread Actual</div>
+                    <div class="arbitrage-label">Current Spread</div>
                     <div class="arbitrage-big-value" id="arbitrage-spread">-%</div>
                 </div>
                 <div style="text-align: center; border-left: 2px solid rgba(255, 255, 255, 0.15); padding-left: 40px;">
-                    <div class="arbitrage-label">Acción Sugerida</div>
+                    <div class="arbitrage-label">Suggested Action</div>
                     <div class="data-value" id="arbitrage-action" style="color: white; font-size: 1.3rem;">
-                        <span class="loading">Analizando mercado...</span>
+                        <span class="loading">Analyzing market...</span>
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="card">
-            <div class="card-title">Cardano (ADA) 💎</div>
+            <div class="card-title ada-title">Cardano (ADA) 💎</div>
             <div class="data-row">
-                <span class="data-label">Precio USD:</span>
-                <span class="data-value" id="ada-price-usd"><span class="loading">Cargando...</span></span>
+                <span class="data-label">Price USD:</span>
+                <span class="data-value" id="ada-price-usd"><span class="loading">Loading...</span></span>
             </div>
             <div class="data-row" style="margin-top: 20px;">
-                 <span class="data-label" style="font-size: 0.8rem;">Actualización:</span>
+                 <span class="data-label" style="font-size: 0.8rem;">Last Updated:</span>
                  <span class="data-value" style="font-size: 0.8rem;" id="ada-time">-</span>
             </div>
         </div>
@@ -186,8 +198,8 @@
                 <span class="badge bg-vyfi">VyFi</span>
             </div>
             <div class="data-row">
-                <span class="data-label">Precio:</span>
-                <span class="data-value" id="vlrm-price-ada"><span class="loading">Conectando...</span></span>
+                <span class="data-label">Price:</span>
+                <span class="data-value" id="vlrm-price-ada"><span class="loading">Connecting...</span></span>
             </div>
             <div class="data-row">
                 <span class="data-label">TVL (Pool):</span>
@@ -201,41 +213,41 @@
                 <span class="badge bg-vyfi">VyFi</span>
             </div>
             <div class="data-row">
-                <span class="data-label">TVL (Cruzado):</span>
-                <span class="data-value" id="vlrm-oracle-liq-ada"><span class="loading">Esperando...</span></span>
+                <span class="data-label">TVL (Cross-pool):</span>
+                <span class="data-value" id="vlrm-oracle-liq-ada"><span class="loading">Waiting...</span></span>
             </div>
             <div style="margin-top: 15px; font-size: 0.8rem; color: var(--text-secondary);">
-                *Liquidez directa entre tokens sin ADA.
+                *Direct liquidity between tokens without ADA.
             </div>
         </div>
 
         <div class="card">
             <div class="card-title" style="color: #fcd34d;">Relics Vault TVL 🏛️</div>
             <div class="data-row">
-                <span class="data-label">Valor Total (ADA):</span>
-                <span class="data-value" id="vault-tvl"><span class="loading">Calculando...</span></span>
+                <span class="data-label">Total Value (ADA):</span>
+                <span class="data-value" id="vault-tvl"><span class="loading">Calculating...</span></span>
             </div>
             <div class="data-row">
-                <span class="data-label">Precio Justo (1M Sup):</span>
+                <span class="data-label">Fair Price (1M Sup):</span>
                 <span class="data-value" id="vault-fair-price">-</span>
             </div>
             <div class="data-row" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1);">
-                <span class="data-label" style="color: white;">Discrepancia DEX:</span>
+                <span class="data-label" style="color: white;">DEX Discrepancy:</span>
                 <span class="data-value" id="vault-discrepancy" style="font-size: 1.4rem;">-</span>
             </div>
         </div>
 
         <div class="card" style="grid-column: 1 / -1;">
-            <div class="card-title" style="margin-bottom: 30px;">Comparativa ORACLE / ADA (Multi-DEX) ⚖️</div>
+            <div class="card-title" style="margin-bottom: 30px;">ORACLE / ADA Comparison (Multi-DEX) ⚖️</div>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px;">
                 <div>
                     <h3 class="dex-subtitle"><span class="badge bg-vyfi" style="font-size: 0.9rem;">VyFi DEX</span></h3>
                     <div class="data-row">
-                        <span class="data-label">Precio:</span>
+                        <span class="data-label">Price:</span>
                         <span class="data-value" id="oracle-vyfi-price">-</span>
                     </div>
                     <div class="data-row">
-                        <span class="data-label">Liquidez:</span>
+                        <span class="data-label">Liquidity:</span>
                         <span class="data-value" id="oracle-vyfi-liq">-</span>
                     </div>
                 </div>
@@ -243,17 +255,17 @@
                 <div style="border-left: 2px solid rgba(255,255,255,0.1); padding-left: 30px;">
                     <h3 class="dex-subtitle"><span class="badge bg-minswap" style="font-size: 0.9rem;">Minswap V2</span></h3>
                     <div class="data-row">
-                        <span class="data-label">Precio:</span>
+                        <span class="data-label">Price:</span>
                         <span class="data-value" id="oracle-min-price">-</span>
                     </div>
                     <div class="data-row">
-                        <span class="data-label">Liquidez:</span>
+                        <span class="data-label">Liquidity:</span>
                         <span class="data-value" id="oracle-min-liq">-</span>
                     </div>
                 </div>
 
                 <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 16px;">
-                    <h3 class="dex-subtitle" style="color: var(--text-primary);">Liquidez Total Combinada</h3>
+                    <h3 class="dex-subtitle" style="color: var(--text-primary);">Total Combined Liquidity</h3>
                     <div class="data-value" style="font-size: 1.8rem; color: var(--neon-orange);" id="oracle-total-liq">-</div>
                 </div>
             </div>
@@ -306,7 +318,7 @@
                 const data = await response.json();
                 if (data.error) throw new Error(data.error);
 
-                // 1 y 2. VLRM
+                // 1 & 2. VLRM
                 const vlrmVyfiPool = data.vyfiPools.find(p => p.unitsPair.includes('lovelace') && p.unitsPair.includes(VLRM));
                 if (vlrmVyfiPool) {
                     const p = vlrmVyfiPool.tokenA.unit === 'lovelace' ? vlrmVyfiPool.tokenB.lpRatio[vlrmVyfiPool.unitsPair].priceRatioAB : vlrmVyfiPool.tokenA.lpRatio[vlrmVyfiPool.unitsPair].priceRatioBA;
@@ -338,7 +350,7 @@
                 }
                 document.getElementById('oracle-total-liq').innerText = `₳ ${Math.round(totalOracleLiqAda).toLocaleString()}`;
 
-                // 4. VAULT TVL Y DISCREPANCIA (Actualizado)
+                // 4. VAULT TVL & DISCREPANCY
                 if (data.vaultTvl && data.vaultTvl > 0) {
                     const vaultTvl = data.vaultTvl;
                     const fairPrice = vaultTvl / ORACLE_TOTAL_SUPPLY;
@@ -354,14 +366,14 @@
                         discEl.className = discrepancy > 0 ? 'data-value color-premium' : 'data-value color-discount';
                     }
                 } else {
-                    document.getElementById('vault-tvl').innerText = "Bloqueado por API";
-                    if(data.vaultError) console.error("Detalle del error de L4VA:", data.vaultError);
+                    document.getElementById('vault-tvl').innerText = "Blocked by API";
+                    if(data.vaultError) console.error("L4VA error detail:", data.vaultError);
                 }
 
-                // 5. MOTOR ARBITRAJE ENTRE DEX
+                // 5. DEX ARBITRAGE ENGINE
                 if (priceVyfi > 0 && priceMin > 0) calculateArbitrage(priceVyfi, priceMin);
 
-            } catch (error) { console.error("Error general:", error); }
+            } catch (error) { console.error("General error:", error); }
         }
 
         function calculateArbitrage(priceVyfi, priceMinswap) {
@@ -373,19 +385,19 @@
             const actionEl = document.getElementById('arbitrage-action');
             spreadEl.innerText = `${spread.toFixed(2)}%`;
 
-            let accionSugeridaTexto = "";
+            let suggestedActionText = "";
             
             if (spread < 0.5) {
                 spreadEl.style.color = "rgba(255, 255, 255, 0.5)"; 
-                actionEl.innerHTML = `<span style="color: rgba(255, 255, 255, 0.6); font-size: 1.1rem;">Spread bajo. No cubre fees.</span>`;
+                actionEl.innerHTML = `<span style="color: rgba(255, 255, 255, 0.6); font-size: 1.1rem;">Low spread. Does not cover fees.</span>`;
             } else if (priceVyfi > priceMinswap) {
                 spreadEl.style.color = "#ffffff"; 
-                actionEl.innerHTML = `Comprar en <span class="badge-dark">Minswap</span> ➔ Vender en <span class="badge-dark">VyFi</span>`;
-                accionSugeridaTexto = "Compra en Minswap, Vende en VyFi";
+                actionEl.innerHTML = `Buy on <span class="badge-dark">Minswap</span> ➔ Sell on <span class="badge-dark">VyFi</span>`;
+                suggestedActionText = "Buy on Minswap, Sell on VyFi";
             } else {
                 spreadEl.style.color = "#ffffff";
-                actionEl.innerHTML = `Comprar en <span class="badge-dark">VyFi</span> ➔ Vender en <span class="badge-dark">Minswap</span>`;
-                accionSugeridaTexto = "Compra en VyFi, Vende en Minswap";
+                actionEl.innerHTML = `Buy on <span class="badge-dark">VyFi</span> ➔ Sell on <span class="badge-dark">Minswap</span>`;
+                suggestedActionText = "Buy on VyFi, Sell on Minswap";
             }
 
             if (spread >= SPREAD_THRESHOLD) {
@@ -394,8 +406,8 @@
                 if (alertToggle && alertToggle.checked && (now - lastAlertTime > ALERT_COOLDOWN)) {
                     playDing();
                     if (Notification.permission === "granted") {
-                        new Notification("🚨 ¡Arbitraje L4VA Detectado!", {
-                            body: `Spread: ${spread.toFixed(2)}%\n${accionSugeridaTexto}`,
+                        new Notification("🚨 L4VA Arbitrage Detected!", {
+                            body: `Spread: ${spread.toFixed(2)}%\n${suggestedActionText}`,
                             icon: "https://cryptologos.cc/logos/cardano-ada-logo.png"
                         });
                     }
