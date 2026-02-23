@@ -21,13 +21,11 @@
             --gradient-dark-fire: linear-gradient(135deg, #5e2a00 0%, #8a121c 60%, #4a0042 100%);
             
             /* Custom Brand Colors */
-            --ada-color: #4285f4; /* New Cardano Blue */
+            --ada-color: #4285f4;
 
             /* Badges */
             --badge-vyfi-bg: rgba(139, 92, 246, 0.15);
             --badge-vyfi-text: #a78bfa;
-            
-            /* New Minswap Blue Palette */
             --badge-min-bg: rgba(137, 170, 255, 0.15); 
             --badge-min-text: #89aaff; 
         }
@@ -45,7 +43,7 @@
             display: flex;
             align-items: center;
             gap: 15px;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
             max-width: 1200px;
             margin-left: auto;
             margin-right: auto;
@@ -64,14 +62,14 @@
         .dashboard {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
+            gap: 20px;
             max-width: 1200px;
             margin: 0 auto;
         }
 
         .card {
-            border-radius: 24px;
-            padding: 25px;
+            border-radius: 20px;
+            padding: 20px 25px;
             position: relative;
             background: var(--card-bg);
             border: 2px solid transparent;
@@ -83,17 +81,16 @@
         }
 
         .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px -10px rgba(0, 0, 0, 0.6), 0 0 30px rgba(255, 123, 0, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.6), 0 0 25px rgba(255, 123, 0, 0.3);
         }
 
         .card-title {
-            font-size: 1.1rem; font-weight: 600; margin-bottom: 20px;
+            font-size: 1.05rem; font-weight: 600; margin-bottom: 15px;
             color: var(--neon-orange);
             display: flex; justify-content: space-between; align-items: center;
         }
 
-        /* Specific title color for Cardano */
         .card-title.ada-title {
             color: var(--ada-color);
             text-shadow: 0 0 10px rgba(66, 133, 244, 0.3);
@@ -101,11 +98,11 @@
 
         .data-row {
             display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 12px; font-size: 0.95rem;
+            margin-bottom: 10px; font-size: 0.95rem;
         }
 
         .data-label { color: var(--text-secondary); font-weight: 500; }
-        .data-value { font-weight: 800; font-size: 1.25rem; color: var(--text-primary); }
+        .data-value { font-weight: 800; font-size: 1.2rem; color: var(--text-primary); }
 
         .badge {
             font-size: 0.7rem; padding: 4px 10px; border-radius: 20px;
@@ -114,40 +111,53 @@
         .bg-vyfi { background: var(--badge-vyfi-bg); color: var(--badge-vyfi-text); border-color: var(--badge-vyfi-text); }
         .bg-minswap { background: var(--badge-min-bg); color: var(--badge-min-text); border-color: var(--badge-min-text); }
 
+        /* Modified Top Banner */
         .arbitrage-section {
             grid-column: 1 / -1;
             background: var(--gradient-dark-fire) !important; 
             border: none;
             box-shadow: 0 15px 40px -10px rgba(74, 0, 0, 0.6), inset 0 0 30px rgba(0,0,0,0.2);
-            padding: 30px;
+            padding: 20px 25px;
         }
 
-        .arbitrage-section .card-title {
-            color: var(--text-primary); border-bottom: 1px solid rgba(255, 255, 255, 0.15); 
-            padding-bottom: 15px; margin-bottom: 25px;
+        .arbitrage-banner-header {
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15); 
+            padding-bottom: 10px; margin-bottom: 15px;
         }
-        
-        .arbitrage-data-container { display: flex; justify-content: space-around; align-items: center; }
-        .arbitrage-big-value { font-size: 3rem; font-weight: 900; color: #ffffff; text-shadow: 0 2px 15px rgba(0,0,0,0.3); }
-        .arbitrage-label { color: rgba(255, 255, 255, 0.7); font-size: 1rem; text-transform: uppercase; font-weight: 800; margin-bottom: 5px; }
-        .loading { color: inherit; opacity: 0.6; font-style: italic; font-weight: normal; font-size: 1rem;}
+
+        .arbitrage-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .arbitrage-box {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 15px 20px;
+            border-radius: 16px;
+        }
+
+        .arbitrage-label { color: rgba(255, 255, 255, 0.7); font-size: 0.75rem; text-transform: uppercase; font-weight: 800; margin-bottom: 3px; }
+        .arbitrage-big-value { font-size: 1.8rem; font-weight: 900; color: #ffffff; text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+        .loading { color: inherit; opacity: 0.6; font-style: italic; font-weight: normal; font-size: 0.9rem;}
 
         .alert-toggle-box {
-            font-size: 0.9rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 8px;
-            color: var(--text-primary); background: rgba(255, 255, 255, 0.1); padding: 8px 15px; border-radius: 20px;
+            font-size: 0.8rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 8px;
+            color: var(--text-primary); background: rgba(255, 255, 255, 0.1); padding: 6px 12px; border-radius: 20px;
         }
-        .alert-toggle-box input { accent-color: var(--neon-orange); transform: scale(1.2); }
-        h3.dex-subtitle { margin: 0 0 15px 0; font-size: 1rem; display: inline-block; }
+        .alert-toggle-box input { accent-color: var(--neon-orange); transform: scale(1.1); }
+        h3.dex-subtitle { margin: 0 0 10px 0; font-size: 0.9rem; display: inline-block; }
         
         .badge-dark {
-            background: rgba(255,255,255,0.9); color: #8a121c; font-size: 0.8rem;
-            padding: 5px 12px; border-radius: 20px; font-weight: 800; display: inline-block; margin: 0 4px;
+            background: rgba(255,255,255,0.9); color: var(--text-on-fire); font-size: 0.8rem;
+            padding: 4px 10px; border-radius: 20px; font-weight: 800; display: inline-block; margin: 0 2px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
         
         /* Vault discrepancy colors */
-        .color-premium { color: var(--neon-red); }
-        .color-discount { color: #10b981; } 
+        .color-premium { color: var(--neon-red) !important; }
+        .color-discount { color: var(--badge-min-text) !important; } /* Using a cool blue/green for buy signals */
     </style>
 </head>
 <body>
@@ -160,21 +170,39 @@
     <div class="dashboard">
         
         <div class="card arbitrage-section">
-            <div class="card-title">
-                <div>⚡ DEX Arbitrage Opportunity (ORACLE)</div>
+            <div class="arbitrage-banner-header">
+                <div style="font-size: 1.1rem; font-weight: 800; color: white;">⚡ Active Opportunities</div>
                 <label class="alert-toggle-box">
-                    <input type="checkbox" id="alert-toggle"> 🔔 Push Alerts (>15%)
+                    <input type="checkbox" id="alert-toggle"> 🔔 Alerts (>15%)
                 </label>
             </div>
-            <div class="arbitrage-data-container">
-                <div style="text-align: center;">
-                    <div class="arbitrage-label">Current Spread</div>
-                    <div class="arbitrage-big-value" id="arbitrage-spread">-%</div>
+            
+            <div class="arbitrage-grid">
+                <div class="arbitrage-box">
+                    <div class="arbitrage-label" style="color: var(--neon-orange); margin-bottom: 10px; font-size: 0.85rem;">DEX Arbitrage (ORACLE)</div>
+                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                        <div>
+                            <div class="arbitrage-label">Spread</div>
+                            <div class="arbitrage-big-value" id="arbitrage-spread">-%</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div class="arbitrage-label">Action</div>
+                            <div id="arbitrage-action" style="font-size: 0.95rem; color: white;"><span class="loading">Analyzing...</span></div>
+                        </div>
+                    </div>
                 </div>
-                <div style="text-align: center; border-left: 2px solid rgba(255, 255, 255, 0.15); padding-left: 40px;">
-                    <div class="arbitrage-label">Suggested Action</div>
-                    <div class="data-value" id="arbitrage-action" style="color: white; font-size: 1.3rem;">
-                        <span class="loading">Analyzing market...</span>
+
+                <div class="arbitrage-box">
+                    <div class="arbitrage-label" style="color: #fcd34d; margin-bottom: 10px; font-size: 0.85rem;">Relics Vault arbitrage opportunity (ORACLE)</div>
+                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                        <div>
+                            <div class="arbitrage-label">Discrepancy</div>
+                            <div class="arbitrage-big-value" id="vault-banner-discrepancy">-%</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div class="arbitrage-label">Action</div>
+                            <div id="vault-arbitrage-action" style="font-size: 0.95rem; color: white;"><span class="loading">Analyzing...</span></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -186,9 +214,9 @@
                 <span class="data-label">Price USD:</span>
                 <span class="data-value" id="ada-price-usd"><span class="loading">Loading...</span></span>
             </div>
-            <div class="data-row" style="margin-top: 20px;">
-                 <span class="data-label" style="font-size: 0.8rem;">Last Updated:</span>
-                 <span class="data-value" style="font-size: 0.8rem;" id="ada-time">-</span>
+            <div class="data-row" style="margin-top: 15px;">
+                 <span class="data-label" style="font-size: 0.75rem;">Last Updated:</span>
+                 <span class="data-value" style="font-size: 0.75rem;" id="ada-time">-</span>
             </div>
         </div>
 
@@ -216,10 +244,7 @@
                 <span class="data-label">TVL (Cross-pool):</span>
                 <span class="data-value" id="vlrm-oracle-liq-ada"><span class="loading">Waiting...</span></span>
             </div>
-            <div style="margin-top: 15px; font-size: 0.8rem; color: var(--text-secondary);">
-                *Direct liquidity between tokens without ADA.
             </div>
-        </div>
 
         <div class="card">
             <div class="card-title" style="color: #fcd34d;">Relics Vault TVL 🏛️</div>
@@ -228,20 +253,20 @@
                 <span class="data-value" id="vault-tvl"><span class="loading">Calculating...</span></span>
             </div>
             <div class="data-row">
-                <span class="data-label">Fair Price (1M Sup):</span>
+                <span class="data-label">Fair price:</span>
                 <span class="data-value" id="vault-fair-price">-</span>
             </div>
             <div class="data-row" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1);">
                 <span class="data-label" style="color: white;">DEX Discrepancy:</span>
-                <span class="data-value" id="vault-discrepancy" style="font-size: 1.4rem;">-</span>
+                <span class="data-value" id="vault-discrepancy" style="font-size: 1.3rem;">-</span>
             </div>
         </div>
 
         <div class="card" style="grid-column: 1 / -1;">
-            <div class="card-title" style="margin-bottom: 30px;">ORACLE / ADA Comparison (Multi-DEX) ⚖️</div>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px;">
+            <div class="card-title" style="margin-bottom: 20px;">ORACLE / ADA Comparison (Multi-DEX) ⚖️</div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
                 <div>
-                    <h3 class="dex-subtitle"><span class="badge bg-vyfi" style="font-size: 0.9rem;">VyFi DEX</span></h3>
+                    <h3 class="dex-subtitle"><span class="badge bg-vyfi">VyFi DEX</span></h3>
                     <div class="data-row">
                         <span class="data-label">Price:</span>
                         <span class="data-value" id="oracle-vyfi-price">-</span>
@@ -252,8 +277,8 @@
                     </div>
                 </div>
 
-                <div style="border-left: 2px solid rgba(255,255,255,0.1); padding-left: 30px;">
-                    <h3 class="dex-subtitle"><span class="badge bg-minswap" style="font-size: 0.9rem;">Minswap V2</span></h3>
+                <div style="border-left: 2px solid rgba(255,255,255,0.1); padding-left: 20px;">
+                    <h3 class="dex-subtitle"><span class="badge bg-minswap">Minswap V2</span></h3>
                     <div class="data-row">
                         <span class="data-label">Price:</span>
                         <span class="data-value" id="oracle-min-price">-</span>
@@ -264,9 +289,9 @@
                     </div>
                 </div>
 
-                <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 16px;">
+                <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 16px;">
                     <h3 class="dex-subtitle" style="color: var(--text-primary);">Total Combined Liquidity</h3>
-                    <div class="data-value" style="font-size: 1.8rem; color: var(--neon-orange);" id="oracle-total-liq">-</div>
+                    <div class="data-value" style="font-size: 1.5rem; color: var(--neon-orange);" id="oracle-total-liq">-</div>
                 </div>
             </div>
         </div>
@@ -350,7 +375,7 @@
                 }
                 document.getElementById('oracle-total-liq').innerText = `₳ ${Math.round(totalOracleLiqAda).toLocaleString()}`;
 
-                // 4. VAULT TVL & DISCREPANCY
+                // 4. VAULT TVL & DISCREPANCY ARBITRAGE
                 if (data.vaultTvl && data.vaultTvl > 0) {
                     const vaultTvl = data.vaultTvl;
                     const fairPrice = vaultTvl / ORACLE_TOTAL_SUPPLY;
@@ -358,16 +383,52 @@
                     document.getElementById('vault-tvl').innerText = `₳ ${Math.round(vaultTvl).toLocaleString()}`;
                     document.getElementById('vault-fair-price').innerText = `₳ ${fairPrice.toFixed(6)}`;
 
-                    if (priceMin > 0) {
-                        const discrepancy = ((priceMin - fairPrice) / fairPrice) * 100;
+                    // Find the best DEX to interact with regarding the Vault
+                    let validPrices = [];
+                    if (priceVyfi > 0) validPrices.push({ dex: "VyFi", price: priceVyfi });
+                    if (priceMin > 0) validPrices.push({ dex: "Minswap", price: priceMin });
+
+                    if (validPrices.length > 0) {
+                        let bestDeviation = 0;
+                        let targetDex = "";
+
+                        validPrices.forEach(p => {
+                            let deviation = ((p.price - fairPrice) / fairPrice) * 100;
+                            if (Math.abs(deviation) > Math.abs(bestDeviation)) {
+                                bestDeviation = deviation;
+                                targetDex = p.dex;
+                            }
+                        });
+
                         const discEl = document.getElementById('vault-discrepancy');
+                        const vaultBannerDiscEl = document.getElementById('vault-banner-discrepancy');
+                        const vaultActionEl = document.getElementById('vault-arbitrage-action');
                         
-                        discEl.innerText = `${discrepancy > 0 ? '+' : ''}${discrepancy.toFixed(2)}%`;
-                        discEl.className = discrepancy > 0 ? 'data-value color-premium' : 'data-value color-discount';
+                        let sign = bestDeviation > 0 ? '+' : '';
+                        let displayValue = `${sign}${bestDeviation.toFixed(2)}%`;
+                        
+                        discEl.innerText = displayValue;
+                        vaultBannerDiscEl.innerText = displayValue;
+
+                        if (Math.abs(bestDeviation) < 0.5) {
+                            discEl.className = 'data-value';
+                            discEl.style.color = "var(--text-secondary)";
+                            vaultBannerDiscEl.style.color = "rgba(255, 255, 255, 0.5)";
+                            vaultActionEl.innerHTML = `<span style="color: rgba(255, 255, 255, 0.6); font-size: 0.85rem;">Balanced prices</span>`;
+                        } else if (bestDeviation > 0) {
+                            // Premium -> Recommend Selling on the DEX
+                            discEl.className = 'data-value color-premium';
+                            vaultBannerDiscEl.className = 'arbitrage-big-value color-premium';
+                            vaultActionEl.innerHTML = `Sell on <span class="badge-dark">${targetDex}</span>`;
+                        } else {
+                            // Discount -> Recommend Buying on the DEX
+                            discEl.className = 'data-value color-discount';
+                            vaultBannerDiscEl.className = 'arbitrage-big-value color-discount';
+                            vaultActionEl.innerHTML = `Buy on <span class="badge-dark">${targetDex}</span>`;
+                        }
                     }
                 } else {
                     document.getElementById('vault-tvl').innerText = "Blocked by API";
-                    if(data.vaultError) console.error("L4VA error detail:", data.vaultError);
                 }
 
                 // 5. DEX ARBITRAGE ENGINE
@@ -389,14 +450,14 @@
             
             if (spread < 0.5) {
                 spreadEl.style.color = "rgba(255, 255, 255, 0.5)"; 
-                actionEl.innerHTML = `<span style="color: rgba(255, 255, 255, 0.6); font-size: 1.1rem;">Low spread. Does not cover fees.</span>`;
+                actionEl.innerHTML = `<span style="color: rgba(255, 255, 255, 0.6); font-size: 0.85rem;">Low spread. Doesn't cover fees.</span>`;
             } else if (priceVyfi > priceMinswap) {
                 spreadEl.style.color = "#ffffff"; 
-                actionEl.innerHTML = `Buy on <span class="badge-dark">Minswap</span> ➔ Sell on <span class="badge-dark">VyFi</span>`;
+                actionEl.innerHTML = `Buy <span class="badge-dark">Min</span> ➔ Sell <span class="badge-dark">Vy</span>`;
                 suggestedActionText = "Buy on Minswap, Sell on VyFi";
             } else {
                 spreadEl.style.color = "#ffffff";
-                actionEl.innerHTML = `Buy on <span class="badge-dark">VyFi</span> ➔ Sell on <span class="badge-dark">Minswap</span>`;
+                actionEl.innerHTML = `Buy <span class="badge-dark">Vy</span> ➔ Sell <span class="badge-dark">Min</span>`;
                 suggestedActionText = "Buy on VyFi, Sell on Minswap";
             }
 
