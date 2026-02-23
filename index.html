@@ -158,10 +158,19 @@
         .alert-toggle-box input { accent-color: var(--neon-orange); transform: scale(1.1); }
         h3.dex-subtitle { margin: 0 0 10px 0; font-size: 0.9rem; display: inline-block; }
         
+        /* Action buttons in banner */
         .badge-dark {
             background: rgba(255,255,255,0.9); color: var(--text-on-fire); font-size: 0.8rem;
             padding: 4px 10px; border-radius: 20px; font-weight: 800; display: inline-block; margin: 0 2px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            text-decoration: none;
+            transition: transform 0.2s ease, background 0.2s ease;
+        }
+        
+        a.badge-dark:hover {
+            transform: scale(1.08);
+            background: #ffffff;
+            cursor: pointer;
         }
         
         /* DEX specific colors ONLY (the glow is handled by JavaScript now) */
@@ -196,7 +205,9 @@
                         </div>
                         <div style="text-align: right;">
                             <div class="arbitrage-label">Action</div>
-                            <div id="arbitrage-action" style="font-size: 0.95rem; color: white;"><span class="loading">Analyzing...</span></div>
+                            <div id="arbitrage-action" style="font-size: 0.95rem; color: white; display: flex; align-items: center; gap: 4px;">
+                                <span class="loading">Analyzing...</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -210,7 +221,9 @@
                         </div>
                         <div style="text-align: right;">
                             <div class="arbitrage-label">Action</div>
-                            <div id="vault-arbitrage-action" style="font-size: 0.95rem; color: white;"><span class="loading">Analyzing...</span></div>
+                            <div id="vault-arbitrage-action" style="font-size: 0.95rem; color: white;">
+                                <span class="loading">Analyzing...</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -312,8 +325,12 @@
         const ORACLE = "328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b27393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
         const ORACLE_TOTAL_SUPPLY = 1000000;
 
+        // Trade Action Links
+        const VYFI_LINK = "https://app.vyfi.io/dex?tokenA=lovelace&tokenB=328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b27393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
+        const MINSWAP_LINK = "https://minswap.org/swap?cA=&tA=&cB=328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b2&tB=7393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
+
         const SPREAD_THRESHOLD = 15; 
-        const GLOW_THRESHOLD = 10; // Threshold to activate the neon glow effect
+        const GLOW_THRESHOLD = 10; 
         const ALERT_COOLDOWN = 5 * 60 * 1000; 
         let lastAlertTime = 0;
 
@@ -421,6 +438,9 @@
                         discEl.innerText = displayValue;
                         vaultBannerDiscEl.innerText = displayValue;
 
+                        // Identify the proper link for the button
+                        let targetLink = targetDex === "Minswap" ? MINSWAP_LINK : VYFI_LINK;
+
                         // Apply intelligent colors based on the target DEX
                         let dexColorClass = targetDex === "Minswap" ? "color-minswap" : "color-vyfi";
 
@@ -451,9 +471,9 @@
                             }
 
                             if (bestDeviation > 0) {
-                                vaultActionEl.innerHTML = `Sell on <span class="badge-dark">${targetDex}</span>`;
+                                vaultActionEl.innerHTML = `Sell on <a href="${targetLink}" target="_blank" class="badge-dark">${targetDex}</a>`;
                             } else {
-                                vaultActionEl.innerHTML = `Buy on <span class="badge-dark">${targetDex}</span>`;
+                                vaultActionEl.innerHTML = `Buy on <a href="${targetLink}" target="_blank" class="badge-dark">${targetDex}</a>`;
                             }
                         }
                     }
@@ -496,10 +516,10 @@
                 }
 
                 if (priceVyfi > priceMinswap) {
-                    actionEl.innerHTML = `Buy <span class="badge-dark">Minswap</span> ➔ Sell <span class="badge-dark">VyFi</span>`;
+                    actionEl.innerHTML = `Buy <a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Minswap</a> ➔ Sell <a href="${VYFI_LINK}" target="_blank" class="badge-dark">VyFi</a>`;
                     suggestedActionText = "Buy on Minswap, Sell on VyFi";
                 } else {
-                    actionEl.innerHTML = `Buy <span class="badge-dark">VyFi</span> ➔ Sell <span class="badge-dark">Minswap</span>`;
+                    actionEl.innerHTML = `Buy <a href="${VYFI_LINK}" target="_blank" class="badge-dark">VyFi</a> ➔ Sell <a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Minswap</a>`;
                     suggestedActionText = "Buy on VyFi, Sell on Minswap";
                 }
             }
