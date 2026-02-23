@@ -259,7 +259,7 @@
         </div>
     </div>
 
-    <script>
+<script>
         const PROXY_URL = 'https://cardano-dex-proxy.seryibull.workers.dev';
         const VLRM = "63efb704b7396890e4d9539d030c0e667739043add65c00f96c586c056616c6f72756d";
         const ORACLE = "328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b27393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
@@ -338,24 +338,23 @@
                 document.getElementById('oracle-total-liq').innerText = `₳ ${Math.round(totalOracleLiqAda).toLocaleString()}`;
 
                 // 4. VAULT TVL Y DISCREPANCIA
-                if (data.vaultTvl) {
+                if (data.vaultTvl && data.vaultTvl > 0) {
                     const vaultTvl = data.vaultTvl;
                     const fairPrice = vaultTvl / ORACLE_TOTAL_SUPPLY;
                     
                     document.getElementById('vault-tvl').innerText = `₳ ${Math.round(vaultTvl).toLocaleString()}`;
                     document.getElementById('vault-fair-price').innerText = `₳ ${fairPrice.toFixed(6)}`;
 
-                    // Calculamos la discrepancia tomando Minswap como mercado de referencia
                     if (priceMin > 0) {
                         const discrepancy = ((priceMin - fairPrice) / fairPrice) * 100;
                         const discEl = document.getElementById('vault-discrepancy');
                         
                         discEl.innerText = `${discrepancy > 0 ? '+' : ''}${discrepancy.toFixed(2)}%`;
-                        // Si es Premium (token más caro que el Vault) se pone rojo/naranja. Si es descuento, verde.
                         discEl.className = discrepancy > 0 ? 'data-value color-premium' : 'data-value color-discount';
                     }
                 } else {
-                    document.getElementById('vault-tvl').innerText = "Revisar API";
+                    document.getElementById('vault-tvl').innerText = "Bloqueado por API";
+                    if(data.vaultError) console.error("Detalle del error de L4VA:", data.vaultError);
                 }
 
                 // 5. MOTOR ARBITRAJE ENTRE DEX
