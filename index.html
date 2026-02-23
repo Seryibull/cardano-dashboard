@@ -141,7 +141,6 @@
 
         .arbitrage-label { color: rgba(255, 255, 255, 0.7); font-size: 0.75rem; text-transform: uppercase; font-weight: 800; margin-bottom: 3px; }
         
-        /* Default style for big values, will be modified dynamically via JS */
         .arbitrage-big-value { 
             font-size: 1.8rem; 
             font-weight: 900; 
@@ -165,15 +164,9 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
         
-        /* DEX specific colors for Vault Discrepancy */
-        .color-minswap { 
-            color: var(--badge-min-text) !important; 
-            text-shadow: 0 0 15px rgba(137, 170, 255, 0.4);
-        }
-        .color-vyfi { 
-            color: var(--badge-vyfi-text) !important; 
-            text-shadow: 0 0 15px rgba(167, 139, 250, 0.4);
-        }
+        /* DEX specific colors ONLY (the glow is handled by JavaScript now) */
+        .color-minswap { color: var(--badge-min-text) !important; }
+        .color-vyfi { color: var(--badge-vyfi-text) !important; }
     </style>
 </head>
 <body>
@@ -320,6 +313,7 @@
         const ORACLE_TOTAL_SUPPLY = 1000000;
 
         const SPREAD_THRESHOLD = 15; 
+        const GLOW_THRESHOLD = 10; // Threshold to activate the neon glow effect
         const ALERT_COOLDOWN = 5 * 60 * 1000; 
         let lastAlertTime = 0;
 
@@ -431,7 +425,7 @@
                         let dexColorClass = targetDex === "Minswap" ? "color-minswap" : "color-vyfi";
 
                         if (Math.abs(bestDeviation) < 0.5) {
-                            // Neutral colors if spread is too low
+                            // Neutral styles if spread is too low
                             discEl.className = 'data-value';
                             discEl.style.color = "var(--text-secondary)";
                             vaultBannerDiscEl.className = 'arbitrage-big-value';
@@ -439,14 +433,22 @@
                             vaultBannerDiscEl.style.textShadow = "0 2px 10px rgba(0,0,0,0.3)";
                             vaultActionEl.innerHTML = `<span style="color: rgba(255, 255, 255, 0.6); font-size: 0.85rem;">Balanced prices</span>`;
                         } else {
-                            // Reset inline styles
+                            // Reset any inline styles first
                             discEl.style.color = "";
                             vaultBannerDiscEl.style.color = "";
-                            vaultBannerDiscEl.style.textShadow = "";
                             
                             // Apply the specific DEX color class
                             discEl.className = `data-value ${dexColorClass}`;
                             vaultBannerDiscEl.className = `arbitrage-big-value ${dexColorClass}`;
+
+                            // Dynamic Glow logic (>10%)
+                            if (Math.abs(bestDeviation) >= GLOW_THRESHOLD) {
+                                let glowColor = targetDex === "Minswap" ? "rgba(137, 170, 255, 0.6)" : "rgba(167, 139, 250, 0.6)";
+                                vaultBannerDiscEl.style.textShadow = `0 0 15px ${glowColor}`;
+                            } else {
+                                // Default subtle shadow when between 0.5% and 10%
+                                vaultBannerDiscEl.style.textShadow = "0 2px 10px rgba(0,0,0,0.3)";
+                            }
 
                             if (bestDeviation > 0) {
                                 vaultActionEl.innerHTML = `Sell on <span class="badge-dark">${targetDex}</span>`;
@@ -477,22 +479,29 @@
             let suggestedActionText = "";
             
             if (spread < 0.5) {
-                // Remove the glow and dim the text when spread is low
+                // Dimmed styling
                 spreadEl.style.color = "rgba(255, 255, 255, 0.5)"; 
                 spreadEl.style.textShadow = "0 2px 10px rgba(0,0,0,0.3)"; 
                 actionEl.innerHTML = `<span style="color: rgba(255, 255, 255, 0.6); font-size: 0.85rem;">Low spread. Doesn't cover fees.</span>`;
-            } else if (priceVyfi > priceMinswap) {
-                // Add soft white glow while keeping main color white
-                spreadEl.style.color = "#ffffff"; 
-                spreadEl.style.textShadow = "0 0 15px rgba(255, 255, 255, 0.6)"; 
-                actionEl.innerHTML = `Buy <span class="badge-dark">Minswap</span> ➔ Sell <span class="badge-dark">VyFi</span>`;
-                suggestedActionText = "Buy on Minswap, Sell on VyFi";
             } else {
-                // Add soft white glow while keeping main color white
-                spreadEl.style.color = "#ffffff";
-                spreadEl.style.textShadow = "0 0 15px rgba(255, 255, 255, 0.6)"; 
-                actionEl.innerHTML = `Buy <span class="badge-dark">VyFi</span> ➔ Sell <span class="badge-dark">Minswap</span>`;
-                suggestedActionText = "Buy on VyFi, Sell on Minswap";
+                // Active solid white color
+                spreadEl.style.color = "#ffffff"; 
+
+                // Dynamic Glow logic (>10%)
+                if (spread >= GLOW_THRESHOLD) {
+                    spreadEl.style.textShadow = "0 0 15px rgba(255, 255, 255, 0.7)"; 
+                } else {
+                    // Default subtle shadow when between 0.5% and 10%
+                    spreadEl.style.textShadow = "0 2px 10px rgba(0,0,0,0.3)"; 
+                }
+
+                if (priceVyfi > priceMinswap) {
+                    actionEl.innerHTML = `Buy <span class="badge-dark">Minswap</span> ➔ Sell <span class="badge-dark">VyFi</span>`;
+                    suggestedActionText = "Buy on Minswap, Sell on VyFi";
+                } else {
+                    actionEl.innerHTML = `Buy <span class="badge-dark">VyFi</span> ➔ Sell <span class="badge-dark">Minswap</span>`;
+                    suggestedActionText = "Buy on VyFi, Sell on Minswap";
+                }
             }
 
             if (spread >= SPREAD_THRESHOLD) {
