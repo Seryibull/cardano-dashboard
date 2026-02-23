@@ -190,7 +190,7 @@
             <div class="card-title" style="border-color: var(--accent-green);">
                 🔥 Oportunidad de Arbitraje (ORACLE)
                 <label class="alert-toggle-box">
-                    <input type="checkbox" id="alert-toggle"> 🔔 Alertas (>1.5%)
+                    <input type="checkbox" id="alert-toggle"> 🔔 Alertas (>15%)
                 </label>
             </div>
             <div class="data-row" style="justify-content: space-around; font-size: 1.2rem;">
@@ -215,11 +215,22 @@
         // ==========================================
         // CONFIGURACIÓN DE ALERTAS
         // ==========================================
-        const SPREAD_THRESHOLD = 15; // El % mínimo para que salte la alarma
-        const ALERT_COOLDOWN = 5 * 60 * 1000; // 5 minutos de silencio entre pitidos
+        const SPREAD_THRESHOLD = 15; // Tu nuevo límite
+        const ALERT_COOLDOWN = 5 * 60 * 1000; // 5 minutos de silencio
         let lastAlertTime = 0;
 
-        // Función para generar un sonido tipo "Ding"
+        // Pedir permiso al navegador para notificaciones Push cuando activas la casilla
+        document.getElementById('alert-toggle').addEventListener('change', function() {
+            if (this.checked && Notification.permission !== "granted") {
+                Notification.requestPermission().then(permission => {
+                    if (permission === "granted") {
+                        console.log("Notificaciones Push activadas.");
+                    }
+                });
+            }
+        });
+
+        // Función del sonido
         function playDing() {
             try {
                 const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -227,17 +238,17 @@
                 const gainNode = ctx.createGain();
                 
                 osc.type = 'sine';
-                osc.frequency.setValueAtTime(880, ctx.currentTime); // Nota A5
-                gainNode.gain.setValueAtTime(0.1, ctx.currentTime); // Volumen suave
+                osc.frequency.setValueAtTime(880, ctx.currentTime);
+                gainNode.gain.setValueAtTime(0.1, ctx.currentTime);
                 
                 osc.connect(gainNode);
                 gainNode.connect(ctx.destination);
                 
                 osc.start();
-                gainNode.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.5); // Desvanece en medio segundo
+                gainNode.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.5);
                 osc.stop(ctx.currentTime + 0.5);
             } catch (e) {
-                console.error("Audio no soportado o bloqueado por el navegador", e);
+                console.error("Audio no soportado", e);
             }
         }
 
@@ -252,7 +263,6 @@
                 document.getElementById('ada-time').innerText = new Date().toLocaleTimeString();
                 return data.cardano.usd;
             } catch (error) {
-                console.error("Error precio ADA:", error);
                 return null;
             }
         }
@@ -266,26 +276,23 @@
 
                 if (data.error) throw new Error(data.error);
 
-                // --- 1. PROCESAR VLRM/ADA (VyFi) ---
+                // 1. VLRM/ADA
                 const vlrmVyfiPool = data.vyfiPools.find(p => p.unitsPair.includes('lovelace') && p.unitsPair.includes(VLRM));
                 if (vlrmVyfiPool) {
                     const priceAda = vlrmVyfiPool.tokenA.unit === 'lovelace' 
                         ? vlrmVyfiPool.tokenB.lpRatio[vlrmVyfiPool.unitsPair].priceRatioAB 
                         : vlrmVyfiPool.tokenA.lpRatio[vlrmVyfiPool.unitsPair].priceRatioBA;
-                    
-                    const liqAda = vlrmVyfiPool.tvl;
                     document.getElementById('vlrm-price-ada').innerText = `₳ ${priceAda.toFixed(6)}`;
-                    document.getElementById('vlrm-liq-ada').innerText = `₳ ${Math.round(liqAda).toLocaleString()}`;
+                    document.getElementById('vlrm-liq-ada').innerText = `₳ ${Math.round(vlrmVyfiPool.tvl).toLocaleString()}`;
                 }
 
-                // --- 2. PROCESAR VLRM/ORACLE (VyFi) ---
+                // 2. VLRM/ORACLE
                 const crossPool = data.vyfiPools.find(p => p.unitsPair.includes(VLRM) && p.unitsPair.includes(ORACLE));
                 if (crossPool) {
-                    const liqAda = crossPool.tvl;
-                    document.getElementById('vlrm-oracle-liq-ada').innerText = `₳ ${Math.round(liqAda).toLocaleString()}`;
+                    document.getElementById('vlrm-oracle-liq-ada').innerText = `₳ ${Math.round(crossPool.tvl).toLocaleString()}`;
                 }
 
-                // --- 3. PROCESAR ORACLE/ADA (VyFi vs Minswap) ---
+                // 3. ORACLE/ADA
                 let totalOracleLiqAda = 0, priceVyfi = 0, priceMin = 0;
 
                 const oracleVyfiPool = data.vyfiPools.find(p => p.unitsPair.includes('lovelace') && p.unitsPair.includes(ORACLE));
@@ -293,32 +300,25 @@
                     priceVyfi = oracleVyfiPool.tokenA.unit === 'lovelace' 
                         ? oracleVyfiPool.tokenB.lpRatio[oracleVyfiPool.unitsPair].priceRatioAB 
                         : oracleVyfiPool.tokenA.lpRatio[oracleVyfiPool.unitsPair].priceRatioBA;
-                    
-                    const liqAda = oracleVyfiPool.tvl;
-                    totalOracleLiqAda += liqAda;
+                    totalOracleLiqAda += oracleVyfiPool.tvl;
                     document.getElementById('oracle-vyfi-price').innerText = `₳ ${priceVyfi.toFixed(6)}`;
-                    document.getElementById('oracle-vyfi-liq').innerText = `₳ ${Math.round(liqAda).toLocaleString()}`;
+                    document.getElementById('oracle-vyfi-liq').innerText = `₳ ${Math.round(oracleVyfiPool.tvl).toLocaleString()}`;
                 }
 
                 if (data.minPrice && data.minPrice.length > 0) {
                     priceMin = parseFloat(data.minPrice[0].close);
                     document.getElementById('oracle-min-price').innerText = `₳ ${priceMin.toFixed(6)}`;
                     
-                    let liqAda = 0;
                     if (data.minTvl && data.minTvl.length > 0) {
-                        const latestTvlData = data.minTvl[data.minTvl.length - 1];
-                        liqAda = parseFloat(latestTvlData.value);
-                    }
-
-                    if (liqAda > 0) {
-                        document.getElementById('oracle-min-liq').innerText = `₳ ${Math.round(liqAda).toLocaleString()}`;
+                        const liqAda = parseFloat(data.minTvl[data.minTvl.length - 1].value);
                         totalOracleLiqAda += liqAda;
+                        document.getElementById('oracle-min-liq').innerText = `₳ ${Math.round(liqAda).toLocaleString()}`;
                     }
                 }
 
                 document.getElementById('oracle-total-liq').innerText = `₳ ${Math.round(totalOracleLiqAda).toLocaleString()}`;
 
-                // --- 4. MOTOR DE ARBITRAJE Y ALERTAS ---
+                // 4. MOTOR
                 if (priceVyfi > 0 && priceMin > 0) {
                     calculateArbitrage(priceVyfi, priceMin);
                 }
@@ -337,27 +337,39 @@
             const actionEl = document.getElementById('arbitrage-action');
             spreadEl.innerText = `${spread.toFixed(2)}%`;
 
-            // Actualizar interfaz
+            let accionSugeridaTexto = "";
+
             if (spread < 0.5) {
                 spreadEl.style.color = "var(--text-muted)";
                 actionEl.innerHTML = `<span style="color: var(--text-muted);">Spread bajo (${spread.toFixed(2)}%). No cubre fees.</span>`;
             } else if (priceVyfi > priceMinswap) {
                 spreadEl.style.color = "var(--accent-green)";
                 actionEl.innerHTML = `Comprar en <span class="badge bg-minswap">Minswap</span> ➔ Vender en <span class="badge bg-vyfi">VyFi</span>`;
+                accionSugeridaTexto = "Compra en Minswap, Vende en VyFi";
             } else {
                 spreadEl.style.color = "var(--accent-green)";
                 actionEl.innerHTML = `Comprar en <span class="badge bg-vyfi">VyFi</span> ➔ Vender en <span class="badge bg-minswap">Minswap</span>`;
+                accionSugeridaTexto = "Compra en VyFi, Vende en Minswap";
             }
 
-            // --- LÓGICA DE ALERTA SONORA ---
+            // --- LÓGICA DE ALERTA PUSH Y SONORA ---
             if (spread >= SPREAD_THRESHOLD) {
                 const alertToggle = document.getElementById('alert-toggle');
                 const now = Date.now();
                 
-                // Si la casilla está marcada Y han pasado más de 5 mins desde el último pitido
                 if (alertToggle && alertToggle.checked && (now - lastAlertTime > ALERT_COOLDOWN)) {
+                    // 1. Suena el pitido
                     playDing();
-                    lastAlertTime = now; // Guardamos la hora del pitido
+
+                    // 2. Lanza la notificación Push
+                    if (Notification.permission === "granted") {
+                        new Notification("🚨 ¡Arbitraje de ORACLE!", {
+                            body: `Spread alcanzado: ${spread.toFixed(2)}%\n${accionSugeridaTexto}`,
+                            icon: "https://cryptologos.cc/logos/cardano-ada-logo.png" // Iconito de Cardano
+                        });
+                    }
+
+                    lastAlertTime = now;
                 }
             }
         }
