@@ -130,9 +130,10 @@
         .badge-dark {
             background: rgba(255,255,255,0.9); color: #8a121c; font-size: 0.8rem;
             padding: 5px 12px; border-radius: 20px; font-weight: 800; display: inline-block; margin: 0 4px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
         
-        /* Modificador de colores para el spread del Vault */
+        /* Colores para el spread del Vault */
         .color-premium { color: var(--neon-red); }
         .color-discount { color: #10b981; } /* Verde para el descuento */
     </style>
@@ -259,7 +260,7 @@
         </div>
     </div>
 
-<script>
+    <script>
         const PROXY_URL = 'https://cardano-dex-proxy.seryibull.workers.dev';
         const VLRM = "63efb704b7396890e4d9539d030c0e667739043add65c00f96c586c056616c6f72756d";
         const ORACLE = "328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b27393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
@@ -337,7 +338,7 @@
                 }
                 document.getElementById('oracle-total-liq').innerText = `₳ ${Math.round(totalOracleLiqAda).toLocaleString()}`;
 
-                // 4. VAULT TVL Y DISCREPANCIA
+                // 4. VAULT TVL Y DISCREPANCIA (Actualizado)
                 if (data.vaultTvl && data.vaultTvl > 0) {
                     const vaultTvl = data.vaultTvl;
                     const fairPrice = vaultTvl / ORACLE_TOTAL_SUPPLY;
