@@ -13,8 +13,8 @@
             --text-primary: #ffffff;
             --text-secondary: #a0a0c0;
             
-            /* NUEVO COLOR: Lila más claro para el texto sobre fondo naranja */
-            --text-on-fire: #2e244b; 
+            /* COLOR AJUSTADO: Lila oscuro (Berenjena profundo) para contraste perfecto */
+            --text-on-fire: #150f26; 
             
             /* Colores del Fuego/Neón */
             --neon-orange: #ff7b00;
@@ -139,12 +139,12 @@
             border: none;
             box-shadow: 0 10px 40px -5px rgba(255, 94, 0, 0.5);
             padding: 30px;
-            color: var(--text-on-fire); /* Usamos el nuevo lila más claro */
+            color: var(--text-on-fire); 
         }
 
         .arbitrage-section .card-title {
             color: var(--text-on-fire);
-            border-bottom: 1px solid rgba(46, 36, 75, 0.2); /* Línea divisoria ajustada al nuevo color */
+            border-bottom: 1px solid rgba(21, 15, 38, 0.15); 
             padding-bottom: 15px;
             margin-bottom: 25px;
         }
@@ -163,7 +163,7 @@
         }
 
         .arbitrage-label {
-            color: rgba(46, 36, 75, 0.7); /* Lila más claro con transparencia */
+            color: rgba(21, 15, 38, 0.75);
             font-size: 1rem;
             text-transform: uppercase;
             font-weight: 800;
@@ -182,17 +182,17 @@
             align-items: center;
             gap: 8px;
             color: var(--text-on-fire);
-            background: rgba(46, 36, 75, 0.15); /* Fondo ajustado al nuevo color */
+            background: rgba(21, 15, 38, 0.1); 
             padding: 8px 15px;
             border-radius: 20px;
             transition: all 0.3s;
         }
-        .alert-toggle-box:hover { background: rgba(46, 36, 75, 0.25); }
+        .alert-toggle-box:hover { background: rgba(21, 15, 38, 0.2); }
         .alert-toggle-box input { accent-color: var(--text-on-fire); transform: scale(1.2); }
         
         h3.dex-subtitle { margin: 0 0 15px 0; font-size: 1rem; display: inline-block; }
 
-        /* Badge inverso especial con el nuevo color */
+        /* Badge inverso especial */
         .badge-dark {
             background: var(--text-on-fire);
             color: var(--neon-orange);
@@ -226,7 +226,7 @@
                     <div class="arbitrage-label">Spread Actual</div>
                     <div class="arbitrage-big-value" id="arbitrage-spread">-%</div>
                 </div>
-                <div style="text-align: center; border-left: 2px solid rgba(46, 36, 75, 0.2); padding-left: 40px;">
+                <div style="text-align: center; border-left: 2px solid rgba(21, 15, 38, 0.15); padding-left: 40px;">
                     <div class="arbitrage-label">Acción Sugerida</div>
                     <div class="data-value" id="arbitrage-action" style="color: var(--text-on-fire); font-size: 1.3rem;">
                         <span class="loading">Analizando mercado...</span>
@@ -414,10 +414,9 @@
 
             let accionSugeridaTexto = "";
             
-            // Actualizamos los colores dinámicos al nuevo tono lila claro
             if (spread < 0.5) {
-                spreadEl.style.color = "rgba(46, 36, 75, 0.5)"; 
-                actionEl.innerHTML = `<span style="color: rgba(46, 36, 75, 0.6); font-size: 1.1rem;">Spread bajo. No cubre fees.</span>`;
+                spreadEl.style.color = "rgba(21, 15, 38, 0.5)"; 
+                actionEl.innerHTML = `<span style="color: rgba(21, 15, 38, 0.6); font-size: 1.1rem;">Spread bajo. No cubre fees.</span>`;
             } else if (priceVyfi > priceMinswap) {
                 spreadEl.style.color = "var(--text-on-fire)"; 
                 actionEl.innerHTML = `Comprar en <span class="badge-dark">Minswap</span> ➔ Vender en <span class="badge-dark">VyFi</span>`;
