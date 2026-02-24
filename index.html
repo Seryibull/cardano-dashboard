@@ -15,19 +15,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* Base Palette */
             --card-bg: #120f24;
             --text-primary: #ffffff;
             --text-secondary: #a0a0c0;
             --text-on-fire: #150f26; 
-            
-            /* Fire Colors */
             --neon-orange: #ff7b00;
             --neon-red: #ff0f5b;
             --gradient-fire: linear-gradient(135deg, var(--neon-orange), var(--neon-red));
             --gradient-dark-fire: linear-gradient(135deg, #5e2a00 0%, #8a121c 60%, #4a0042 100%);
-            
-            /* Custom Brand Colors */
             --ada-color: #4285f4;
             --badge-vyfi-bg: rgba(139, 92, 246, 0.15);
             --badge-vyfi-text: #a78bfa;
@@ -47,7 +42,7 @@
             min-height: 100vh; 
         }
 
-        header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px; max-width: 1200px; margin-left: auto; margin-right: auto; }
+        header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px; max-width: 1200px; margin-left: auto; margin-right: auto; flex-wrap: wrap; gap: 15px;}
         .header-left { display: flex; align-items: center; gap: 15px; }
         .header-right { display: flex; align-items: center; gap: 15px; }
         .brand-logo { font-size: 2.5rem; filter: drop-shadow(0 0 10px var(--neon-orange)); }
@@ -73,8 +68,14 @@
         .bg-minswap { background: var(--badge-min-bg); color: var(--badge-min-text); border-color: var(--badge-min-text); }
 
         .arbitrage-section { grid-column: 1 / -1; background: var(--gradient-dark-fire) !important; border: none; box-shadow: 0 15px 40px -10px rgba(74, 0, 0, 0.8), inset 0 0 30px rgba(0,0,0,0.4); padding: 20px 25px; }
-        .arbitrage-banner-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.15); padding-bottom: 10px; margin-bottom: 15px; }
-        .arbitrage-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .arbitrage-banner-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.15); padding-bottom: 10px; margin-bottom: 15px; }
+        
+        /* CORRECCIÓN GRID MÓVIL: 1 columna por defecto, 2 en PC */
+        .arbitrage-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
+        @media (min-width: 900px) {
+            .arbitrage-grid { grid-template-columns: 1fr 1fr; }
+        }
+
         .arbitrage-box { background: rgba(0, 0, 0, 0.3); padding: 15px 20px; border-radius: 16px; transition: all 0.3s ease; position: relative; border: 1px solid rgba(255,255,255,0.05);}
         .arbitrage-label { color: rgba(255, 255, 255, 0.7); font-size: 0.75rem; text-transform: uppercase; font-weight: 800; margin-bottom: 3px; }
         .arbitrage-big-value { font-size: 1.6rem; font-weight: 900; color: #ffffff; text-shadow: 0 2px 10px rgba(0,0,0,0.3); transition: all 0.3s ease; }
@@ -93,8 +94,8 @@
         .usd-profit { font-size: 0.9rem; color: rgba(255,255,255,0.6); font-weight: 600; text-shadow: none; display: block; text-align: right;}
 
         /* Modals */
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); z-index: 1000; justify-content: center; align-items: center; }
-        .modal-content { background: var(--card-bg); padding: 25px; border-radius: 20px; border: 2px solid var(--neon-orange); width: 340px; box-shadow: 0 10px 40px rgba(0,0,0,0.8); max-height: 90vh; overflow-y: auto;}
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); z-index: 1000; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box;}
+        .modal-content { background: var(--card-bg); padding: 25px; border-radius: 20px; border: 2px solid var(--neon-orange); width: 100%; max-width: 340px; box-shadow: 0 10px 40px rgba(0,0,0,0.8); max-height: 90vh; overflow-y: auto;}
         .modal-title { font-size: 1.2rem; font-weight: 800; margin-bottom: 15px; color: white; display: flex; justify-content: space-between;}
         .setting-section-title { font-size: 0.75rem; color: var(--neon-orange); margin: 15px 0 10px 0; font-weight: bold; letter-spacing: 1px;}
         .setting-row { margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem;}
@@ -114,7 +115,6 @@
             .merged-right-col { border-left: 1px solid rgba(255,255,255,0.1); padding-left: 30px; }
         }
 
-        /* Log Styles */
         .log-entry { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.85rem; align-items: center;}
         .log-time { color: var(--text-secondary); font-size: 0.75rem; width: 80px;}
         .log-spread { font-weight: bold; width: 70px; text-align: left; }
@@ -126,7 +126,7 @@
     <header>
         <div class="header-left">
             <div class="brand-logo">🔥</div>
-            <h1>L4VA Protocol <span style="color: var(--text-secondary); font-weight: 400;">| Arbitrage Dashboard</span></h1>
+            <h1>L4VA Protocol <span style="color: var(--text-secondary); font-weight: 400;">| Arbitrage</span></h1>
         </div>
         <div class="header-right">
             <div class="settings-btn" onclick="openSettings()">⚙️</div>
@@ -267,7 +267,7 @@
                             <div style="height: 40px; margin-top: 10px;"><canvas id="spark-oracle-min"></canvas></div>
                         </div>
                     </div>
-                    <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 16px; margin-top: 20px; display: flex; justify-content: space-between; align-items: center;">
+                    <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 16px; margin-top: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
                         <h3 class="dex-subtitle" style="color: var(--text-primary); margin:0;">Total Combined Liquidity</h3>
                         <div class="data-value" style="font-size: 1.5rem; color: var(--neon-orange);" id="oracle-total-liq">-</div>
                     </div>
@@ -319,17 +319,15 @@
         const VYFI_LINK = "https://app.vyfi.io/dex?tokenA=lovelace&tokenB=328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b27393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
         const MINSWAP_LINK = "https://minswap.org/swap?cA=&tA=&cB=328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b2&tB=7393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
 
-        // Global State & Settings Config
         let defaultConf = { glow: 10, alert: 15, sim: 1000, tgBot: "", tgChat: "", feeNet: 0.2, feeMin: 0.7, feeVyfi: 1.9 };
         let conf = JSON.parse(localStorage.getItem('l4va_config')) || defaultConf;
-        // Fix backwards compatibility if fee keys are missing
         if(conf.feeNet === undefined) { conf.feeNet = 0.2; conf.feeMin = 0.7; conf.feeVyfi = 1.9; }
 
         let lastAlertTime = 0;
         let chartInstance = null;
         let sparkInstances = {}; 
         const ALERT_COOLDOWN = 5 * 60 * 1000;
-        let currentAdaUsd = 0; // Guardar precio global USD
+        let currentAdaUsd = 0; 
         
         let currentPools = {
             vyfi: { price: 0, reserveAda: 0, reserveTok: 0 },
@@ -338,7 +336,6 @@
             crossVO: { resVlrm: 0, resOracle: 0 }
         };
 
-        // Initialize Settings Panel Data
         document.getElementById('sim-ada-input').value = conf.sim;
         document.getElementById('sim-tri-input').value = conf.sim;
         document.getElementById('alert-label').innerText = conf.alert;
@@ -373,7 +370,6 @@
             recalculateSimulators();
         }
 
-        // --- Log System ---
         function addToLog(spread, routeText, color = "#ffffff") {
             const logEl = document.getElementById('opp-log');
             if(logEl.innerText.includes("Waiting")) logEl.innerHTML = '';
@@ -443,13 +439,11 @@
 
         function recalculateSimulators() { recalculateDexSimulator(); recalculateTriSimulator(); }
 
-        // --- SIM 1: DEX NORMAL ---
         function recalculateDexSimulator() {
             const investAda = parseFloat(document.getElementById('sim-ada-input').value) || 0;
             const simEl = document.getElementById('sim-profit'); const optEl = document.getElementById('optimizer-result');
             if(currentPools.vyfi.price <= 0 || currentPools.minswap.price <= 0) { simEl.innerText = "0.00 ADA"; return; }
             
-            // Usando fees dinámicas de la config
             const networkFee = conf.feeNet; const minFixed = conf.feeMin; const vyfiFixed = conf.feeVyfi;
             let poolBuy, poolSell, fixedFeeBuy, fixedFeeSell;
 
@@ -485,13 +479,11 @@
             else { optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> No profitable route (fees > spread).`; optEl.style.color = 'var(--text-secondary)'; }
         }
 
-        // --- SIM 2: TRIANGULAR ---
         function calcTriNetDetails(investAda) {
             if(investAda <= 0) return { netProfit: -Infinity, route: null };
             let pVA = currentPools.vlrmAda; let pVO = currentPools.crossVO; let pOVy = currentPools.vyfi; let pOMin = currentPools.minswap; 
             if(pVA.resAda <= 0 || pVO.resVlrm <= 0) return { netProfit: -Infinity, route: null };
 
-            // Usando fees dinámicas de la config
             const netF = conf.feeNet; const fVy = conf.feeVyfi + netF; const fMin = conf.feeMin + netF; 
 
             let outA = -Infinity; let adaAfterLeg1A = investAda - fVy;
@@ -535,15 +527,11 @@
                 simEl.className = netProfit > 0 ? "arbitrage-big-value profit-positive" : "arbitrage-big-value profit-negative"; 
             }
 
-            // Auto Optimizer (Triangular)
             let bestProfit = -Infinity; let optimalInvest = 0; let optimalRoute = null; let bestPercent = 0;
             for(let i = 10; i <= 5000; i += 10) {
                 let testData = calcTriNetDetails(i);
                 if (testData.netProfit > bestProfit) { 
-                    bestProfit = testData.netProfit; 
-                    optimalInvest = i; 
-                    optimalRoute = testData.route;
-                    bestPercent = (testData.netProfit / i) * 100;
+                    bestProfit = testData.netProfit; optimalInvest = i; optimalRoute = testData.route; bestPercent = (testData.netProfit / i) * 100;
                 } else if (testData.netProfit < bestProfit && testData.netProfit > 0) break;
             }
 
@@ -555,17 +543,13 @@
             if (bestProfit > 0) { 
                 optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> Max profit <b>+${bestProfit.toFixed(2)} ADA</b> (Invest <b>${optimalInvest} ADA</b>)`; 
                 optEl.style.color = '#10b981'; 
-                
-                triEl.innerText = `+${bestPercent.toFixed(2)}%`;
-                triEl.style.color = "#10b981";
+                triEl.innerText = `+${bestPercent.toFixed(2)}%`; triEl.style.color = "#10b981";
                 if (optimalRoute === 'A') rA.className = "route-active";
                 if (optimalRoute === 'B') rB.className = "route-active";
-
             } else { 
                 optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> No profitable route (fees > spread).`; 
                 optEl.style.color = 'var(--text-secondary)'; 
-                triEl.innerText = "0.00%";
-                triEl.style.color = "var(--text-secondary)";
+                triEl.innerText = "0.00%"; triEl.style.color = "var(--text-secondary)";
             }
         }
 
@@ -573,7 +557,7 @@
             try {
                 const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=cardano&vs_currencies=usd');
                 const data = await response.json();
-                currentAdaUsd = data.cardano.usd; // Guardado Global
+                currentAdaUsd = data.cardano.usd; 
                 document.getElementById('ada-price-usd').innerText = `$${currentAdaUsd.toFixed(4)}`;
                 document.getElementById('ada-time').innerText = new Date().toLocaleTimeString();
                 return currentAdaUsd;
@@ -650,12 +634,12 @@
                             vaultActionEl.innerHTML = `<span style="color: rgba(255, 255, 255, 0.6);">Balanced</span>`;
                         } else {
                             if (bestDeviation > 0) {
-                                vaultBannerDiscEl.style.color = "#10b981"; // Verde
+                                vaultBannerDiscEl.style.color = "#10b981"; 
                                 if (Math.abs(bestDeviation) >= conf.glow) vaultBannerDiscEl.style.textShadow = `0 0 15px rgba(16, 185, 129, 0.6)`; 
                                 else vaultBannerDiscEl.style.textShadow = "0 2px 10px rgba(0,0,0,0.3)";
                                 vaultActionEl.innerHTML = `Sell <a href="${targetLink}" target="_blank" class="badge-dark">${targetDex}</a>`; 
                             } else {
-                                vaultBannerDiscEl.style.color = "var(--neon-red)"; // Rojo
+                                vaultBannerDiscEl.style.color = "var(--neon-red)"; 
                                 if (Math.abs(bestDeviation) >= conf.glow) vaultBannerDiscEl.style.textShadow = `0 0 15px rgba(255, 15, 91, 0.6)`; 
                                 else vaultBannerDiscEl.style.textShadow = "0 2px 10px rgba(0,0,0,0.3)";
                                 vaultActionEl.innerHTML = `Buy <a href="${targetLink}" target="_blank" class="badge-dark">${targetDex}</a>`; 
@@ -679,14 +663,12 @@
                         else { actionEl.innerHTML = `Buy <a href="${VYFI_LINK}" target="_blank" class="badge-dark">VyFi</a> ➔ Sell <a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Min</a>`; suggestedActionText = "Buy VyFi, Sell Minswap"; }
                     }
 
-                    // Alert & Log Trigger
                     if (spread >= conf.alert) {
                         const alertToggle = document.getElementById('alert-toggle'); const now = Date.now();
                         if (alertToggle && alertToggle.checked && (now - lastAlertTime > ALERT_COOLDOWN)) {
                             playDing(); if (Notification.permission === "granted") { new Notification("🚨 L4VA Arbitrage Detected!", { body: `Spread: ${spread.toFixed(2)}%\n${suggestedActionText}` }); }
                             sendTelegramAlert(`🚨 <b>L4VA Arbitrage Detected!</b>\n\n📈 DEX Spread: <b>${spread.toFixed(2)}%</b>\n💡 Route: ${suggestedActionText}\n\n<i>Check dashboard for real-time net profit.</i>`);
                             
-                            // Guardar en el Historial (Log)
                             addToLog(spread, suggestedActionText, "#ffffff");
                             
                             lastAlertTime = now;
@@ -697,13 +679,15 @@
                 updateMainChart(spread, bestDeviation);
                 recalculateSimulators();
 
-                // Lógica independiente de log para el Triangular (Si es brutalmente alto)
-                let triDataOpt = calcTriNetDetails(100); // Test rápido con 100 ada
-                if (triDataOpt.netProfit > 0) {
-                   let pct = (triDataOpt.netProfit / 100) * 100;
-                   if(pct >= conf.alert && (Date.now() - lastAlertTime > 60000)) { // 1 min buffer visual
-                       addToLog(pct, triDataOpt.route === 'A' ? "Triangular Route A" : "Triangular Route B", "#10b981");
-                   }
+                // Lógica de Log separada para el Triangular (si da un beneficio real > % alerta)
+                let bestTriProfit = -Infinity; let optimalTriInvest = 0; let bestTriPercent = 0; let triRoute = null;
+                for(let i = 10; i <= 5000; i += 10) {
+                    let testData = calcTriNetDetails(i);
+                    if (testData.netProfit > bestTriProfit) { bestTriProfit = testData.netProfit; optimalTriInvest = i; bestTriPercent = (testData.netProfit / i) * 100; triRoute = testData.route; } else if (testData.netProfit < bestTriProfit && testData.netProfit > 0) break;
+                }
+                
+                if (bestTriProfit > 0 && bestTriPercent >= conf.alert && (Date.now() - lastAlertTime > 60000)) { 
+                    addToLog(bestTriPercent, triRoute === 'A' ? "Triangular Route A" : "Triangular Route B", "#10b981");
                 }
 
             } catch (error) { console.error("General error:", error); }
