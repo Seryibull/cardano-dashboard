@@ -31,11 +31,11 @@
         body { 
             font-family: 'Inter', sans-serif; 
             
-            /* MAGIA AQUI: Degradado oscuro + Tu Imagen de Fondo Oficial */
-            background: linear-gradient(rgba(10, 8, 20, 0.75), rgba(10, 8, 20, 0.95)), url('https://app.l4va.org/assets/banner-bg.webp');
+            /* Fondo ajustado: Menos oscuro para que el arte destaque más */
+            background: linear-gradient(rgba(10, 8, 20, 0.4), rgba(10, 8, 20, 0.75)), url('https://app.l4va.org/assets/banner-bg.webp');
             background-size: cover;
             background-position: center top;
-            background-attachment: fixed; /* Hace que el fondo no se mueva al hacer scroll */
+            background-attachment: fixed;
             
             color: var(--text-primary); 
             margin: 0; 
@@ -64,18 +64,13 @@
         }
         .settings-btn:hover { background: rgba(255,255,255,0.15); transform: rotate(45deg); border-color: var(--neon-orange); }
 
-        /* Web3 Wallet Button */
-        .wallet-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 10px 20px; border-radius: 12px; font-weight: 800; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 8px; }
-        .wallet-btn:hover { background: rgba(255,255,255,0.2); border-color: var(--neon-orange); }
-        .wallet-connected { background: rgba(16, 185, 129, 0.2); border-color: #10b981; color: #10b981; }
-
-        .dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; max-width: 1200px; margin: 0 auto; }
-        .card { border-radius: 20px; padding: 20px 25px; position: relative; background: var(--card-bg); border: 2px solid transparent; background-image: linear-gradient(var(--card-bg), var(--card-bg)), var(--gradient-fire); background-origin: border-box; background-clip: padding-box, border-box; box-shadow: 0 0 20px rgba(255, 123, 0, 0.15), inset 0 0 20px rgba(255, 123, 0, 0.05); transition: transform 0.3s ease, box-shadow 0.3s ease; }
-        .card:hover { transform: translateY(-3px); box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.6), 0 0 25px rgba(255, 123, 0, 0.3); }
+        .dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 20px; max-width: 1200px; margin: 0 auto; }
+        .card { border-radius: 20px; padding: 20px 25px; position: relative; background: rgba(18, 15, 36, 0.85); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .card:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 123, 0, 0.15); border-color: rgba(255, 123, 0, 0.3); }
 
         .card-title { font-size: 1.05rem; font-weight: 600; margin-bottom: 15px; color: var(--neon-orange); display: flex; justify-content: space-between; align-items: center; }
         .card-title.ada-title { color: var(--ada-color); text-shadow: 0 0 10px rgba(66, 133, 244, 0.3); }
-        .data-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 0.95rem; }
+        .data-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 0.95rem; }
         .data-label { color: var(--text-secondary); font-weight: 500; }
         .data-value { font-weight: 800; font-size: 1.2rem; color: var(--text-primary); }
         .badge { font-size: 0.7rem; padding: 4px 10px; border-radius: 20px; font-weight: 700; text-transform: uppercase; border: 1px solid transparent; }
@@ -113,11 +108,11 @@
         .btn-save { background: var(--gradient-fire); color: white; border: none; padding: 10px; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 15px; transition: transform 0.2s;}
         .btn-save:hover { transform: scale(1.02); }
         
-        .wallet-option { display: flex; align-items: center; justify-content: space-between; padding: 12px 15px; background: rgba(255,255,255,0.05); border-radius: 12px; margin-bottom: 10px; cursor: pointer; transition: 0.2s; border: 1px solid transparent;}
-        .wallet-option:hover { background: rgba(255,255,255,0.1); border-color: var(--ada-color); }
-        .wallet-icon { width: 30px; height: 30px; border-radius: 5px; }
-        
         h3.dex-subtitle { margin: 0 0 10px 0; font-size: 0.9rem; display: inline-block; }
+        
+        /* Rutas Activas Triangulares */
+        .route-active { background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); padding: 6px 10px; border-radius: 8px; color: #10b981; }
+        .route-inactive { background: transparent; border: 1px solid transparent; padding: 6px 10px; opacity: 0.5; color: var(--text-secondary); }
     </style>
 </head>
 <body>
@@ -128,14 +123,13 @@
             <h1>L4VA Protocol <span style="color: var(--text-secondary); font-weight: 400;">| Arbitrage Dashboard</span></h1>
         </div>
         <div class="header-right">
-            <button id="wallet-connect-btn" class="wallet-btn" onclick="openWalletModal()">🔌 Connect Wallet</button>
             <div class="settings-btn" onclick="openSettings()">⚙️</div>
         </div>
     </header>
 
     <div id="settings-modal" class="modal-overlay">
         <div class="modal-content">
-            <div class="modal-title"><span>⚙️ Preferences</span><span style="cursor:pointer;" onclick="closeModals()">✕</span></div>
+            <div class="modal-title"><span>⚙️ Preferences & Alerts</span><span style="cursor:pointer;" onclick="closeModals()">✕</span></div>
             <div class="setting-row"><span>Glow Threshold (%)</span><input type="number" id="set-glow" class="setting-input" value="10"></div>
             <div class="setting-row"><span>Alert Threshold (%)</span><input type="number" id="set-alert" class="setting-input" value="15"></div>
             <div class="setting-row"><span>Simulator Base (ADA)</span><input type="number" id="set-sim" class="setting-input" value="1000"></div>
@@ -144,15 +138,6 @@
             <div class="setting-row"><span>Bot Token</span><input type="text" id="set-tg-bot" class="setting-input-text" placeholder="123:ABC..."></div>
             <div class="setting-row"><span>Chat ID</span><input type="text" id="set-tg-chat" class="setting-input-text" placeholder="12345678"></div>
             <button class="btn-save" onclick="saveSettings()">Save Configuration</button>
-        </div>
-    </div>
-
-    <div id="wallet-modal" class="modal-overlay">
-        <div class="modal-content">
-            <div class="modal-title"><span>🔌 Select Wallet</span><span style="cursor:pointer;" onclick="closeModals()">✕</span></div>
-            <div id="wallet-list">
-                <div style="text-align:center; color: var(--text-secondary); font-size: 0.9rem;">Scanning for CIP-30 wallets...</div>
-            </div>
         </div>
     </div>
 
@@ -166,7 +151,6 @@
             </div>
             
             <div class="arbitrage-grid">
-                
                 <div class="arbitrage-box">
                     <div class="arbitrage-label" style="color: var(--neon-orange); margin-bottom: 8px;">DEX Arbitrage (ORACLE)</div>
                     <div style="display: flex; justify-content: space-between;">
@@ -195,7 +179,7 @@
                     </div>
                 </div>
 
-                <div class="arbitrage-box">
+                <div class="arbitrage-box" style="border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; justify-content: center;">
                     <div class="arbitrage-label" style="color: #10b981; margin-bottom: 8px;">Net Profit Simulator ORACLE / ADA</div>
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <div>
@@ -210,7 +194,7 @@
                     <div id="optimizer-result" class="optimizer-text">💡 <b>Auto-Optimizer:</b> Calculating...</div>
                 </div>
 
-                <div class="arbitrage-box">
+                <div class="arbitrage-box" style="border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; justify-content: center;">
                     <div class="arbitrage-label" style="color: var(--badge-vyfi-text); margin-bottom: 8px;">NET PROFIT SIMULATOR TRIANGULAR</div>
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <div>
@@ -224,7 +208,6 @@
                     </div>
                     <div id="tri-optimizer-result" class="optimizer-text">💡 <b>Auto-Optimizer:</b> Calculating...</div>
                 </div>
-
             </div>
         </div>
 
@@ -234,29 +217,35 @@
             <div class="data-row" style="margin-top: 15px;"><span class="data-label" style="font-size: 0.75rem;">Last Updated:</span><span class="data-value" style="font-size: 0.75rem;" id="ada-time">-</span></div>
         </div>
         <div class="card">
-            <div class="card-title">VLRM / ADA <span class="badge bg-vyfi">VyFi</span></div>
-            <div class="data-row"><span class="data-label">Price:</span><span class="data-value" id="vlrm-price-ada"><span class="loading">Connecting...</span></span></div>
-            <div class="data-row"><span class="data-label">TVL (Pool):</span><span class="data-value" id="vlrm-liq-ada">-</span></div>
-        </div>
-        <div class="card">
-            <div class="card-title">VLRM / ORACLE <span class="badge bg-vyfi">VyFi</span></div>
-            <div class="data-row"><span class="data-label">TVL (Cross-pool):</span><span class="data-value" id="vlrm-oracle-liq-ada"><span class="loading">Waiting...</span></span></div>
-        </div>
-        <div class="card">
             <div class="card-title" style="color: #fcd34d;">Relics Vault TVL 🏛️</div>
             <div class="data-row"><span class="data-label">Total Value (ADA):</span><span class="data-value" id="vault-tvl"><span class="loading">Calculating...</span></span></div>
             <div class="data-row"><span class="data-label">Fair price:</span><span class="data-value" id="vault-fair-price">-</span></div>
         </div>
 
+        <div class="card">
+            <div class="card-title">VLRM / ADA <span class="badge bg-vyfi">VyFi</span></div>
+            <div class="data-row"><span class="data-label">Price:</span><span class="data-value" id="vlrm-price-ada"><span class="loading">Connecting...</span></span></div>
+            <div class="data-row"><span class="data-label">TVL (Pool):</span><span class="data-value" id="vlrm-liq-ada">-</span></div>
+            <div style="height: 40px; margin-top: 15px;"><canvas id="spark-vlrm-ada"></canvas></div>
+        </div>
+        <div class="card">
+            <div class="card-title">VLRM / ORACLE <span class="badge bg-vyfi">VyFi</span></div>
+            <div class="data-row"><span class="data-label">TVL (Cross-pool):</span><span class="data-value" id="vlrm-oracle-liq-ada"><span class="loading">Waiting...</span></span></div>
+            <div style="height: 40px; margin-top: 35px;"><canvas id="spark-vlrm-oracle"></canvas></div>
+        </div>
+
         <div class="card" style="grid-column: 1 / -1;">
             <div class="card-title">Triangular Arbitrage (Cross-Pair) 🔺</div>
             <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05);">
-                <div style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6;">
-                    Route A: <span style="color:white; font-weight: bold;">ADA ➔ VLRM ➔ ORACLE ➔ ADA</span><br>
-                    Route B: <span style="color:white; font-weight: bold;">ADA ➔ ORACLE ➔ VLRM ➔ ADA</span><br>
-                    <span style="font-size: 0.75rem; font-style: italic;">*Theoretical spot calculation. Check liquidity before execution.</span>
+                <div style="font-size: 0.85rem; line-height: 1.8; width: 65%;">
+                    <div id="route-a-container" class="route-inactive">
+                        Route A: <span style="font-weight: bold;">Buy VLRM ➔ Swap for ORACLE ➔ Sell ORACLE</span>
+                    </div>
+                    <div id="route-b-container" class="route-inactive" style="margin-top: 5px;">
+                        Route B: <span style="font-weight: bold;">Buy ORACLE ➔ Swap for VLRM ➔ Sell VLRM</span>
+                    </div>
                 </div>
-                <div style="text-align: right;">
+                <div style="text-align: right; width: 30%;">
                     <div class="arbitrage-label">Estimated Discrepancy</div>
                     <div class="arbitrage-big-value" id="tri-arb-spread" style="font-size: 1.5rem;"><span class="loading">Scanning...</span></div>
                 </div>
@@ -270,13 +259,15 @@
                     <h3 class="dex-subtitle"><span class="badge bg-vyfi">VYFI</span></h3>
                     <div class="data-row"><span class="data-label">Price:</span><span class="data-value" id="oracle-vyfi-price">-</span></div>
                     <div class="data-row"><span class="data-label">Liquidity:</span><span class="data-value" id="oracle-vyfi-liq">-</span></div>
+                    <div style="height: 40px; margin-top: 10px;"><canvas id="spark-oracle-vyfi"></canvas></div>
                 </div>
-                <div style="border-left: 2px solid rgba(255,255,255,0.1); padding-left: 20px;">
+                <div style="border-left: 2px solid rgba(255,255,255,0.05); padding-left: 20px;">
                     <h3 class="dex-subtitle"><span class="badge bg-minswap">MINSWAP</span></h3>
                     <div class="data-row"><span class="data-label">Price:</span><span class="data-value" id="oracle-min-price">-</span></div>
                     <div class="data-row"><span class="data-label">Liquidity:</span><span class="data-value" id="oracle-min-liq">-</span></div>
+                    <div style="height: 40px; margin-top: 10px;"><canvas id="spark-oracle-min"></canvas></div>
                 </div>
-                <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 16px;">
+                <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 16px; display: flex; flex-direction: column; justify-content: center;">
                     <h3 class="dex-subtitle" style="color: var(--text-primary);">Total Combined Liquidity</h3>
                     <div class="data-value" style="font-size: 1.5rem; color: var(--neon-orange);" id="oracle-total-liq">-</div>
                 </div>
@@ -303,9 +294,9 @@
         let conf = JSON.parse(localStorage.getItem('l4va_config')) || { glow: 10, alert: 15, sim: 1000, tgBot: "", tgChat: "" };
         let lastAlertTime = 0;
         let chartInstance = null;
+        let sparkInstances = {}; // Guarda los 4 mini gráficos
         const ALERT_COOLDOWN = 5 * 60 * 1000;
         
-        // Exact AMM Pool States
         let currentPools = {
             vyfi: { price: 0, reserveAda: 0, reserveTok: 0 },
             minswap: { price: 0, reserveAda: 0, reserveTok: 0 },
@@ -313,14 +304,12 @@
             crossVO: { resVlrm: 0, resOracle: 0 }
         };
 
-        let connectedWalletAPI = null;
-
-        // Init config on load
+        // UI Initialization
         document.getElementById('sim-ada-input').value = conf.sim;
         document.getElementById('sim-tri-input').value = conf.sim;
         document.getElementById('alert-label').innerText = conf.alert;
 
-        function closeModals() { document.getElementById('settings-modal').style.display = 'none'; document.getElementById('wallet-modal').style.display = 'none'; }
+        function closeModals() { document.getElementById('settings-modal').style.display = 'none'; }
         function openSettings() { document.getElementById('set-glow').value = conf.glow; document.getElementById('set-alert').value = conf.alert; document.getElementById('set-sim').value = document.getElementById('sim-ada-input').value; document.getElementById('set-tg-bot').value = conf.tgBot || ""; document.getElementById('set-tg-chat').value = conf.tgChat || ""; document.getElementById('settings-modal').style.display = 'flex'; }
         function saveSettings() {
             conf.glow = parseFloat(document.getElementById('set-glow').value);
@@ -336,59 +325,13 @@
             recalculateSimulators();
         }
 
-        function openWalletModal() {
-            if(connectedWalletAPI) return; 
-            const listEl = document.getElementById('wallet-list');
-            listEl.innerHTML = '';
-            
-            if (window.cardano) {
-                const wallets = Object.keys(window.cardano).filter(key => typeof window.cardano[key] === 'object' && window.cardano[key].name);
-                if(wallets.length === 0) {
-                    listEl.innerHTML = '<div style="color:var(--neon-red); text-align:center;">No Cardano wallets detected in browser.</div>';
-                } else {
-                    wallets.forEach(walletKey => {
-                        const w = window.cardano[walletKey];
-                        const div = document.createElement('div');
-                        div.className = 'wallet-option';
-                        div.innerHTML = `<span><img src="${w.icon}" class="wallet-icon" style="vertical-align:middle; margin-right:10px;"> <b>${w.name}</b></span> <span>→</span>`;
-                        div.onclick = () => connectSpecificWallet(walletKey);
-                        listEl.appendChild(div);
-                    });
-                }
-            } else {
-                listEl.innerHTML = '<div style="color:var(--neon-red); text-align:center;">No Cardano wallets detected. Install Nami, Eternl, etc.</div>';
-            }
-            document.getElementById('wallet-modal').style.display = 'flex';
-        }
-
-        async function connectSpecificWallet(walletKey) {
-            try {
-                const btn = document.getElementById('wallet-connect-btn');
-                btn.innerText = "Connecting...";
-                connectedWalletAPI = await window.cardano[walletKey].enable();
-                btn.innerHTML = `🟢 Connected (${window.cardano[walletKey].name})`;
-                btn.className = "wallet-btn wallet-connected";
-                closeModals();
-            } catch (err) {
-                console.error("Wallet connection failed:", err);
-                document.getElementById('wallet-connect-btn').innerText = "🔌 Connect Wallet";
-                alert("Connection rejected or failed.");
-            }
-        }
-
         async function sendTelegramAlert(message) {
             if (!conf.tgBot || !conf.tgChat) return;
-            const url = `https://api.telegram.org/bot${conf.tgBot}/sendMessage`;
-            try {
-                await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ chat_id: conf.tgChat, text: message, parse_mode: 'HTML' })
-                });
-            } catch (e) { console.error("Telegram API Error", e); }
+            try { await fetch(`https://api.telegram.org/bot${conf.tgBot}/sendMessage`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ chat_id: conf.tgChat, text: message, parse_mode: 'HTML' }) }); } catch (e) {}
         }
 
-        function initChart() {
+        function initCharts() {
+            // Main Chart
             const ctx = document.getElementById('arbitrageChart').getContext('2d');
             chartInstance = new Chart(ctx, {
                 type: 'line',
@@ -396,32 +339,40 @@
                     { label: 'DEX Spread %', data: [], borderColor: '#ff7b00', tension: 0.4, borderWidth: 2, pointRadius: 0 },
                     { label: 'Vault Discrepancy %', data: [], borderColor: '#fcd34d', tension: 0.4, borderWidth: 2, pointRadius: 0 }
                 ]},
-                options: {
-                    responsive: true, maintainAspectRatio: false,
-                    scales: { x: { display: false }, y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#a0a0c0' } } },
-                    plugins: { legend: { display: true, labels: { color: '#ffffff', boxWidth: 10 } } }
-                }
+                options: { responsive: true, maintainAspectRatio: false, scales: { x: { display: false }, y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#a0a0c0' } } }, plugins: { legend: { display: true, labels: { color: '#ffffff', boxWidth: 10 } } } }
             });
+
+            // 4 Mini Sparklines
+            const sparkOptions = { responsive: true, maintainAspectRatio: false, scales: { x: { display: false }, y: { display: false } }, plugins: { legend: { display: false }, tooltip: { enabled: false } }, layout: { padding: 0 } };
+            const createSpark = (id, color) => new Chart(document.getElementById(id).getContext('2d'), { type: 'line', data: { labels: Array(20).fill(''), datasets: [{ data: Array(20).fill(null), borderColor: color, borderWidth: 2, tension: 0.4, pointRadius: 0, fill: true, backgroundColor: color.replace('1)', '0.1)') }] }, options: sparkOptions });
+
+            sparkInstances.vlrmAda = createSpark('spark-vlrm-ada', 'rgba(167, 139, 250, 1)'); // Vyfi Lila
+            sparkInstances.vlrmOracle = createSpark('spark-vlrm-oracle', 'rgba(167, 139, 250, 1)'); // Vyfi Lila
+            sparkInstances.oracleVyfi = createSpark('spark-oracle-vyfi', 'rgba(167, 139, 250, 1)'); // Vyfi Lila
+            sparkInstances.oracleMin = createSpark('spark-oracle-min', 'rgba(137, 170, 255, 1)'); // Minswap Azul
         }
         
-        function updateChart(spread, discrepancy) {
+        function updateSparklines(vAdaTvl, vOraTvl, oVyfiTvl, oMinTvl) {
+            const pushData = (chart, val) => {
+                let dataArr = chart.data.datasets[0].data;
+                if(dataArr[0] === null) { chart.data.datasets[0].data = Array(20).fill(val); } 
+                else { dataArr.shift(); dataArr.push(val); }
+                chart.update();
+            };
+            pushData(sparkInstances.vlrmAda, vAdaTvl);
+            pushData(sparkInstances.vlrmOracle, vOraTvl);
+            pushData(sparkInstances.oracleVyfi, oVyfiTvl);
+            pushData(sparkInstances.oracleMin, oMinTvl);
+        }
+
+        function updateMainChart(spread, discrepancy) {
             const now = new Date().toLocaleTimeString();
             if(chartInstance.data.labels.length > 20) { chartInstance.data.labels.shift(); chartInstance.data.datasets.forEach(d => d.data.shift()); }
-            chartInstance.data.labels.push(now);
-            chartInstance.data.datasets[0].data.push(spread);
-            chartInstance.data.datasets[1].data.push(discrepancy);
-            chartInstance.update();
+            chartInstance.data.labels.push(now); chartInstance.data.datasets[0].data.push(spread); chartInstance.data.datasets[1].data.push(discrepancy); chartInstance.update();
         }
 
         function playDing() {
-            try {
-                const ctx = new (window.AudioContext || window.webkitAudioContext)();
-                const osc = ctx.createOscillator(); const gainNode = ctx.createGain();
-                osc.type = 'sine'; osc.frequency.setValueAtTime(880, ctx.currentTime);
-                gainNode.gain.setValueAtTime(0.1, ctx.currentTime);
-                osc.connect(gainNode); gainNode.connect(ctx.destination);
-                osc.start(); gainNode.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.5); osc.stop(ctx.currentTime + 0.5);
-            } catch (e) {}
+            try { const ctx = new (window.AudioContext || window.webkitAudioContext)(); const osc = ctx.createOscillator(); const gainNode = ctx.createGain(); osc.type = 'sine'; osc.frequency.setValueAtTime(880, ctx.currentTime); gainNode.gain.setValueAtTime(0.1, ctx.currentTime); osc.connect(gainNode); gainNode.connect(ctx.destination); osc.start(); gainNode.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.5); osc.stop(ctx.currentTime + 0.5); } catch (e) {}
         }
 
         function getAmmOut(amountIn, reserveIn, reserveOut) {
@@ -431,93 +382,51 @@
             return (reserveOut * amountInWithFee) / (reserveIn + amountInWithFee);
         }
 
-        function recalculateSimulators() {
-            recalculateDexSimulator();
-            recalculateTriSimulator();
-        }
+        function recalculateSimulators() { recalculateDexSimulator(); recalculateTriSimulator(); }
 
         function recalculateDexSimulator() {
             const investAda = parseFloat(document.getElementById('sim-ada-input').value) || 0;
-            const simEl = document.getElementById('sim-profit');
-            const optEl = document.getElementById('optimizer-result');
+            const simEl = document.getElementById('sim-profit'); const optEl = document.getElementById('optimizer-result');
+            if(currentPools.vyfi.price <= 0 || currentPools.minswap.price <= 0) { simEl.innerText = "0.00 ADA"; return; }
             
-            if(currentPools.vyfi.price <= 0 || currentPools.minswap.price <= 0) {
-                simEl.innerText = "0.00 ADA";
-                return;
-            }
-            
-            const networkFee = 0.20; 
-            const minFixed = 0.70;
-            const vyfiFixed = 1.90;
-
+            const networkFee = 0.20; const minFixed = 0.70; const vyfiFixed = 1.90;
             let poolBuy, poolSell, fixedFeeBuy, fixedFeeSell;
 
-            if (currentPools.minswap.price < currentPools.vyfi.price) {
-                poolBuy = currentPools.minswap; poolSell = currentPools.vyfi;
-                fixedFeeBuy = minFixed; fixedFeeSell = vyfiFixed;
-            } else {
-                poolBuy = currentPools.vyfi; poolSell = currentPools.minswap;
-                fixedFeeBuy = vyfiFixed; fixedFeeSell = minFixed;
-            }
+            if (currentPools.minswap.price < currentPools.vyfi.price) { poolBuy = currentPools.minswap; poolSell = currentPools.vyfi; fixedFeeBuy = minFixed; fixedFeeSell = vyfiFixed; } 
+            else { poolBuy = currentPools.vyfi; poolSell = currentPools.minswap; fixedFeeBuy = vyfiFixed; fixedFeeSell = minFixed; }
 
-            let netProfit = 0;
-            let swapAdaAmount = investAda - fixedFeeBuy - networkFee;
+            let netProfit = 0; let swapAdaAmount = investAda - fixedFeeBuy - networkFee;
             if (swapAdaAmount > 0) {
                 let tokensReceived = getAmmOut(swapAdaAmount, poolBuy.reserveAda, poolBuy.reserveTok);
                 let adaGrossReceived = getAmmOut(tokensReceived, poolSell.reserveTok, poolSell.reserveAda);
                 netProfit = (adaGrossReceived - fixedFeeSell - networkFee) - investAda;
             }
             
-            let sign = netProfit > 0 ? "+" : "";
-            if (swapAdaAmount <= 0) {
-                simEl.innerText = "Insufficient ADA"; simEl.className = "arbitrage-big-value profit-negative";
-            } else {
-                simEl.innerText = `${sign}${netProfit.toFixed(2)} ADA`;
-                simEl.className = netProfit > 0 ? "arbitrage-big-value profit-positive" : "arbitrage-big-value profit-negative";
-            }
+            if (swapAdaAmount <= 0) { simEl.innerText = "Insufficient ADA"; simEl.className = "arbitrage-big-value profit-negative"; } 
+            else { let sign = netProfit > 0 ? "+" : ""; simEl.innerText = `${sign}${netProfit.toFixed(2)} ADA`; simEl.className = netProfit > 0 ? "arbitrage-big-value profit-positive" : "arbitrage-big-value profit-negative"; }
 
-            let bestProfit = -Infinity;
-            let optimalInvest = 0;
+            let bestProfit = -Infinity; let optimalInvest = 0;
             for(let i = 10; i <= 5000; i += 10) {
                 let testSwapAmount = i - fixedFeeBuy - networkFee;
                 if(testSwapAmount <= 0) continue;
-                
                 let testTokens = getAmmOut(testSwapAmount, poolBuy.reserveAda, poolBuy.reserveTok);
                 let testAdaGross = getAmmOut(testTokens, poolSell.reserveTok, poolSell.reserveAda);
                 let testNet = (testAdaGross - fixedFeeSell - networkFee) - i;
-                
-                if (testNet > bestProfit) {
-                    bestProfit = testNet;
-                    optimalInvest = i;
-                } else if (testNet < bestProfit && testNet > 0) {
-                    break;
-                }
+                if (testNet > bestProfit) { bestProfit = testNet; optimalInvest = i; } else if (testNet < bestProfit && testNet > 0) break;
             }
 
-            if (bestProfit > 0) {
-                optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> Max profit <b>+${bestProfit.toFixed(2)} ADA</b> (Invest <b>${optimalInvest} ADA</b>)`;
-                optEl.style.color = '#10b981';
-            } else {
-                optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> No profitable route (fees > spread).`;
-                optEl.style.color = 'var(--text-secondary)';
-            }
+            if (bestProfit > 0) { optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> Max profit <b>+${bestProfit.toFixed(2)} ADA</b> (Invest <b>${optimalInvest} ADA</b>)`; optEl.style.color = '#10b981'; } 
+            else { optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> No profitable route (fees > spread).`; optEl.style.color = 'var(--text-secondary)'; }
         }
 
         function calcTriNet(investAda) {
             if(investAda <= 0) return -Infinity;
-            let pVA = currentPools.vlrmAda; 
-            let pVO = currentPools.crossVO; 
-            let pOVy = currentPools.vyfi; 
-            let pOMin = currentPools.minswap; 
-
+            let pVA = currentPools.vlrmAda; let pVO = currentPools.crossVO; let pOVy = currentPools.vyfi; let pOMin = currentPools.minswap; 
             if(pVA.resAda <= 0 || pVO.resVlrm <= 0) return -Infinity;
 
-            const netF = 0.2; 
-            const fVy = 1.9 + netF; 
-            const fMin = 0.7 + netF; 
+            const netF = 0.2; const fVy = 1.9 + netF; const fMin = 0.7 + netF; 
 
-            let outA = -Infinity;
-            let adaAfterLeg1A = investAda - fVy;
+            let outA = -Infinity; let adaAfterLeg1A = investAda - fVy;
             if(adaAfterLeg1A > 0) {
                 let vlrmOut = getAmmOut(adaAfterLeg1A, pVA.resAda, pVA.resTok);
                 let oracleOut = getAmmOut(vlrmOut, pVO.resVlrm, pVO.resOracle);
@@ -526,59 +435,34 @@
                 outA = Math.max(adaEndVy, adaEndMin);
             }
 
-            let outB = -Infinity;
-            let adaAfterLeg1B_Vy = investAda - fVy;
-            let adaAfterLeg1B_Min = investAda - fMin;
-            
+            let outB = -Infinity; let adaAfterLeg1B_Vy = investAda - fVy; let adaAfterLeg1B_Min = investAda - fMin;
             if(adaAfterLeg1B_Vy > 0 || adaAfterLeg1B_Min > 0) {
                 let oracleOutVy = getAmmOut(adaAfterLeg1B_Vy, pOVy.reserveAda, pOVy.reserveTok);
                 let vlrmOutVy = getAmmOut(oracleOutVy, pVO.resOracle, pVO.resVlrm);
                 let finalVyVy = getAmmOut(vlrmOutVy, pVA.resTok, pVA.resAda) - fVy - fVy;
-
                 let oracleOutMin = getAmmOut(adaAfterLeg1B_Min, pOMin.reserveAda, pOMin.reserveTok);
                 let vlrmOutMin = getAmmOut(oracleOutMin, pVO.resOracle, pVO.resVlrm);
                 let finalMinVy = getAmmOut(vlrmOutMin, pVA.resTok, pVA.resAda) - fVy - fVy;
-
                 outB = Math.max(finalVyVy, finalMinVy);
             }
-
             return Math.max(outA, outB) - investAda; 
         }
 
         function recalculateTriSimulator() {
             const investAda = parseFloat(document.getElementById('sim-tri-input').value) || 0;
-            const simEl = document.getElementById('sim-tri-profit');
-            const optEl = document.getElementById('tri-optimizer-result');
-            
+            const simEl = document.getElementById('sim-tri-profit'); const optEl = document.getElementById('tri-optimizer-result');
             let netProfit = calcTriNet(investAda);
 
-            if(investAda <= 0 || netProfit === -Infinity) {
-                simEl.innerText = "Insufficient"; simEl.className = "arbitrage-big-value profit-negative";
-            } else {
-                let sign = netProfit > 0 ? "+" : "";
-                simEl.innerText = `${sign}${netProfit.toFixed(2)} ADA`;
-                simEl.className = netProfit > 0 ? "arbitrage-big-value profit-positive" : "arbitrage-big-value profit-negative";
-            }
+            if(investAda <= 0 || netProfit === -Infinity) { simEl.innerText = "Insufficient"; simEl.className = "arbitrage-big-value profit-negative"; } 
+            else { let sign = netProfit > 0 ? "+" : ""; simEl.innerText = `${sign}${netProfit.toFixed(2)} ADA`; simEl.className = netProfit > 0 ? "arbitrage-big-value profit-positive" : "arbitrage-big-value profit-negative"; }
 
-            let bestProfit = -Infinity;
-            let optimalInvest = 0;
+            let bestProfit = -Infinity; let optimalInvest = 0;
             for(let i = 10; i <= 5000; i += 10) {
                 let testNet = calcTriNet(i);
-                if (testNet > bestProfit) {
-                    bestProfit = testNet;
-                    optimalInvest = i;
-                } else if (testNet < bestProfit && testNet > 0) {
-                    break;
-                }
+                if (testNet > bestProfit) { bestProfit = testNet; optimalInvest = i; } else if (testNet < bestProfit && testNet > 0) break;
             }
-
-            if (bestProfit > 0) {
-                optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> Max profit <b>+${bestProfit.toFixed(2)} ADA</b> (Invest <b>${optimalInvest} ADA</b>)`;
-                optEl.style.color = '#10b981';
-            } else {
-                optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> No profitable route (fees > spread).`;
-                optEl.style.color = 'var(--text-secondary)';
-            }
+            if (bestProfit > 0) { optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> Max profit <b>+${bestProfit.toFixed(2)} ADA</b> (Invest <b>${optimalInvest} ADA</b>)`; optEl.style.color = '#10b981'; } 
+            else { optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> No profitable route (fees > spread).`; optEl.style.color = 'var(--text-secondary)'; }
         }
 
         async function fetchAdaPrice() {
@@ -598,178 +482,131 @@
                 const data = await response.json();
                 if (data.error) throw new Error(data.error);
 
-                let priceVlrmAda = 0;
-                let vlrmVyfiAdaReserve = 0;
-                let vlrmVyfiTokReserve = 0;
+                let priceVlrmAda = 0; let vlrmVyfiAdaReserve = 0; let vlrmVyfiTokReserve = 0; let vlrmAdaTvl = 0;
                 const vlrmVyfiPool = data.vyfiPools.find(p => p.unitsPair.includes('lovelace') && p.unitsPair.includes(VLRM));
                 if (vlrmVyfiPool) {
                     priceVlrmAda = vlrmVyfiPool.tokenA.unit === 'lovelace' ? vlrmVyfiPool.tokenB.lpRatio[vlrmVyfiPool.unitsPair].priceRatioAB : vlrmVyfiPool.tokenA.lpRatio[vlrmVyfiPool.unitsPair].priceRatioBA;
-                    document.getElementById('vlrm-price-ada').innerText = `₳ ${priceVlrmAda.toFixed(6)}`;
-                    document.getElementById('vlrm-liq-ada').innerText = `₳ ${Math.round(vlrmVyfiPool.tvl).toLocaleString()}`;
-                    vlrmVyfiAdaReserve = vlrmVyfiPool.tvl / 2;
-                    vlrmVyfiTokReserve = vlrmVyfiAdaReserve / priceVlrmAda;
+                    vlrmAdaTvl = vlrmVyfiPool.tvl;
+                    document.getElementById('vlrm-price-ada').innerText = `₳ ${priceVlrmAda.toFixed(6)}`; document.getElementById('vlrm-liq-ada').innerText = `₳ ${Math.round(vlrmAdaTvl).toLocaleString()}`;
+                    vlrmVyfiAdaReserve = vlrmAdaTvl / 2; vlrmVyfiTokReserve = vlrmVyfiAdaReserve / priceVlrmAda;
                 }
                 
-                let crossVlrmReserve = 0;
-                let crossOracleReserve = 0;
+                let crossVlrmReserve = 0; let crossOracleReserve = 0; let crossTvl = 0;
                 const crossPool = data.vyfiPools.find(p => p.unitsPair.includes(VLRM) && p.unitsPair.includes(ORACLE));
                 if (crossPool) {
-                    document.getElementById('vlrm-oracle-liq-ada').innerText = `₳ ${Math.round(crossPool.tvl).toLocaleString()}`; 
+                    crossTvl = crossPool.tvl;
+                    document.getElementById('vlrm-oracle-liq-ada').innerText = `₳ ${Math.round(crossTvl).toLocaleString()}`; 
                     let priceOracleVlrm = crossPool.tokenA.unit.includes(VLRM) ? crossPool.tokenB.lpRatio[crossPool.unitsPair].priceRatioAB : crossPool.tokenA.lpRatio[crossPool.unitsPair].priceRatioBA;
-                    crossVlrmReserve = (crossPool.tvl / 2) / priceVlrmAda;
-                    crossOracleReserve = crossVlrmReserve / priceOracleVlrm;
+                    crossVlrmReserve = (crossTvl / 2) / priceVlrmAda; crossOracleReserve = crossVlrmReserve / priceOracleVlrm;
                 }
 
-                let totalOracleLiqAda = 0, priceVyfi = 0, priceMin = 0;
-                let vyfiTvLAda = 0, minTvlAda = 0;
-                
+                let totalOracleLiqAda = 0, priceVyfi = 0, priceMin = 0; let vyfiTvLAda = 0, minTvlAda = 0;
                 const oracleVyfiPool = data.vyfiPools.find(p => p.unitsPair.includes('lovelace') && p.unitsPair.includes(ORACLE));
                 if (oracleVyfiPool) {
                     priceVyfi = oracleVyfiPool.tokenA.unit === 'lovelace' ? oracleVyfiPool.tokenB.lpRatio[oracleVyfiPool.unitsPair].priceRatioAB : oracleVyfiPool.tokenA.lpRatio[oracleVyfiPool.unitsPair].priceRatioBA;
-                    vyfiTvLAda = oracleVyfiPool.tvl;
-                    totalOracleLiqAda += vyfiTvLAda;
-                    document.getElementById('oracle-vyfi-price').innerText = `₳ ${priceVyfi.toFixed(6)}`;
-                    document.getElementById('oracle-vyfi-liq').innerText = `₳ ${Math.round(vyfiTvLAda).toLocaleString()}`;
+                    vyfiTvLAda = oracleVyfiPool.tvl; totalOracleLiqAda += vyfiTvLAda;
+                    document.getElementById('oracle-vyfi-price').innerText = `₳ ${priceVyfi.toFixed(6)}`; document.getElementById('oracle-vyfi-liq').innerText = `₳ ${Math.round(vyfiTvLAda).toLocaleString()}`;
                 }
                 
                 if (data.minPrice && data.minPrice.length > 0) {
-                    priceMin = parseFloat(data.minPrice[0].close);
-                    document.getElementById('oracle-min-price').innerText = `₳ ${priceMin.toFixed(6)}`;
-                    if (data.minTvl && data.minTvl.length > 0) {
-                        minTvlAda = parseFloat(data.minTvl[data.minTvl.length - 1].value);
-                        totalOracleLiqAda += minTvlAda;
-                        document.getElementById('oracle-min-liq').innerText = `₳ ${Math.round(minTvlAda).toLocaleString()}`;
-                    }
+                    priceMin = parseFloat(data.minPrice[0].close); document.getElementById('oracle-min-price').innerText = `₳ ${priceMin.toFixed(6)}`;
+                    if (data.minTvl && data.minTvl.length > 0) { minTvlAda = parseFloat(data.minTvl[data.minTvl.length - 1].value); totalOracleLiqAda += minTvlAda; document.getElementById('oracle-min-liq').innerText = `₳ ${Math.round(minTvlAda).toLocaleString()}`; }
                 }
                 document.getElementById('oracle-total-liq').innerText = `₳ ${Math.round(totalOracleLiqAda).toLocaleString()}`;
 
-                currentPools.vyfi = {
-                    price: priceVyfi, reserveAda: priceVyfi > 0 ? (vyfiTvLAda / 2) : 0, reserveTok: priceVyfi > 0 ? (vyfiTvLAda / 2) / priceVyfi : 0
-                };
-                currentPools.minswap = {
-                    price: priceMin, reserveAda: priceMin > 0 ? (minTvlAda / 2) : 0, reserveTok: priceMin > 0 ? (minTvlAda / 2) / priceMin : 0
-                };
-                currentPools.vlrmAda = { resAda: vlrmVyfiAdaReserve, resTok: vlrmVyfiTokReserve };
-                currentPools.crossVO = { resVlrm: crossVlrmReserve, resOracle: crossOracleReserve };
+                // Update Sparklines
+                updateSparklines(vlrmAdaTvl, crossTvl, vyfiTvLAda, minTvlAda);
 
+                currentPools.vyfi = { price: priceVyfi, reserveAda: priceVyfi > 0 ? (vyfiTvLAda / 2) : 0, reserveTok: priceVyfi > 0 ? (vyfiTvLAda / 2) / priceVyfi : 0 };
+                currentPools.minswap = { price: priceMin, reserveAda: priceMin > 0 ? (minTvlAda / 2) : 0, reserveTok: priceMin > 0 ? (minTvlAda / 2) / priceMin : 0 };
+                currentPools.vlrmAda = { resAda: vlrmVyfiAdaReserve, resTok: vlrmVyfiTokReserve }; currentPools.crossVO = { resVlrm: crossVlrmReserve, resOracle: crossOracleReserve };
+
+                // TRIANGULAR HIGHLIGHT LOGIC
                 if (priceVlrmAda > 0 && crossOracleReserve > 0 && priceVyfi > 0) {
                     let routeA_Cost = (crossVlrmReserve / crossOracleReserve) * priceVlrmAda; 
                     let bestDirectMarketPrice = Math.max(priceVyfi, priceMin);
-                    
                     let triArbDiff = ((bestDirectMarketPrice - routeA_Cost) / routeA_Cost) * 100;
                     
                     const triEl = document.getElementById('tri-arb-spread');
+                    const rA = document.getElementById('route-a-container');
+                    const rB = document.getElementById('route-b-container');
+
+                    // Reset
+                    rA.className = "route-inactive"; rB.className = "route-inactive";
+
                     if(Math.abs(triArbDiff) < 0.5) {
-                        triEl.innerText = "Balanced";
-                        triEl.style.color = "var(--text-secondary)";
+                        triEl.innerText = "Balanced"; triEl.style.color = "var(--text-secondary)";
                     } else {
                         let sign = triArbDiff > 0 ? '+' : '';
-                        triEl.innerText = `${sign}${triArbDiff.toFixed(2)}%`;
-                        triEl.style.color = triArbDiff > 0 ? "#10b981" : "var(--neon-red)";
+                        triEl.innerText = `${sign}${Math.abs(triArbDiff).toFixed(2)}%`;
+                        triEl.style.color = "#10b981";
+
+                        // Highlight Winning Route
+                        if (triArbDiff > 0) {
+                            rA.className = "route-active";
+                        } else {
+                            rB.className = "route-active";
+                        }
                     }
                 }
 
                 let bestDeviation = 0;
                 if (data.vaultTvl && data.vaultTvl > 0) {
                     const fairPrice = data.vaultTvl / ORACLE_TOTAL_SUPPLY;
-                    document.getElementById('vault-tvl').innerText = `₳ ${Math.round(data.vaultTvl).toLocaleString()}`;
-                    document.getElementById('vault-fair-price').innerText = `₳ ${fairPrice.toFixed(6)}`;
-
+                    document.getElementById('vault-tvl').innerText = `₳ ${Math.round(data.vaultTvl).toLocaleString()}`; document.getElementById('vault-fair-price').innerText = `₳ ${fairPrice.toFixed(6)}`;
                     let validPrices = [];
-                    if (priceVyfi > 0) validPrices.push({ dex: "VyFi", price: priceVyfi });
-                    if (priceMin > 0) validPrices.push({ dex: "Minswap", price: priceMin });
+                    if (priceVyfi > 0) validPrices.push({ dex: "VyFi", price: priceVyfi }); if (priceMin > 0) validPrices.push({ dex: "Minswap", price: priceMin });
 
                     if (validPrices.length > 0) {
                         let targetDex = "";
-                        validPrices.forEach(p => {
-                            let deviation = ((p.price - fairPrice) / fairPrice) * 100;
-                            if (Math.abs(deviation) > Math.abs(bestDeviation)) { bestDeviation = deviation; targetDex = p.dex; }
-                        });
+                        validPrices.forEach(p => { let deviation = ((p.price - fairPrice) / fairPrice) * 100; if (Math.abs(deviation) > Math.abs(bestDeviation)) { bestDeviation = deviation; targetDex = p.dex; } });
+                        const vaultBannerDiscEl = document.getElementById('vault-banner-discrepancy'); const vaultActionEl = document.getElementById('vault-arbitrage-action');
+                        let sign = bestDeviation > 0 ? '+' : ''; vaultBannerDiscEl.innerText = `${sign}${bestDeviation.toFixed(2)}%`;
 
-                        const vaultBannerDiscEl = document.getElementById('vault-banner-discrepancy');
-                        const vaultActionEl = document.getElementById('vault-arbitrage-action');
-                        let sign = bestDeviation > 0 ? '+' : '';
-                        vaultBannerDiscEl.innerText = `${sign}${bestDeviation.toFixed(2)}%`;
-
-                        let targetLink = targetDex === "Minswap" ? MINSWAP_LINK : VYFI_LINK;
-                        let dexColorClass = targetDex === "Minswap" ? "color-minswap" : "color-vyfi";
-
+                        let targetLink = targetDex === "Minswap" ? MINSWAP_LINK : VYFI_LINK; let dexColorClass = targetDex === "Minswap" ? "color-minswap" : "color-vyfi";
                         if (Math.abs(bestDeviation) < 0.5) {
-                            vaultBannerDiscEl.className = 'arbitrage-big-value';
-                            vaultBannerDiscEl.style.color = "rgba(255, 255, 255, 0.5)";
-                            vaultBannerDiscEl.style.textShadow = "0 2px 10px rgba(0,0,0,0.3)";
-                            vaultActionEl.innerHTML = `<span style="color: rgba(255, 255, 255, 0.6);">Balanced</span>`;
+                            vaultBannerDiscEl.className = 'arbitrage-big-value'; vaultBannerDiscEl.style.color = "rgba(255, 255, 255, 0.5)"; vaultBannerDiscEl.style.textShadow = "0 2px 10px rgba(0,0,0,0.3)"; vaultActionEl.innerHTML = `<span style="color: rgba(255, 255, 255, 0.6);">Balanced</span>`;
                         } else {
                             vaultBannerDiscEl.style.color = ""; vaultBannerDiscEl.className = `arbitrage-big-value ${dexColorClass}`;
-                            if (Math.abs(bestDeviation) >= conf.glow) {
-                                let glowColor = targetDex === "Minswap" ? "rgba(137, 170, 255, 0.6)" : "rgba(167, 139, 250, 0.6)";
-                                vaultBannerDiscEl.style.textShadow = `0 0 15px ${glowColor}`;
-                            } else {
-                                vaultBannerDiscEl.style.textShadow = "0 2px 10px rgba(0,0,0,0.3)";
-                            }
-
-                            if (bestDeviation > 0) {
-                                vaultActionEl.innerHTML = `Sell <a href="${targetLink}" target="_blank" class="badge-dark">${targetDex}</a>`;
-                            } else {
-                                vaultActionEl.innerHTML = `Buy <a href="${targetLink}" target="_blank" class="badge-dark">${targetDex}</a>`;
-                            }
+                            if (Math.abs(bestDeviation) >= conf.glow) { let glowColor = targetDex === "Minswap" ? "rgba(137, 170, 255, 0.6)" : "rgba(167, 139, 250, 0.6)"; vaultBannerDiscEl.style.textShadow = `0 0 15px ${glowColor}`; } else { vaultBannerDiscEl.style.textShadow = "0 2px 10px rgba(0,0,0,0.3)"; }
+                            if (bestDeviation > 0) { vaultActionEl.innerHTML = `Sell <a href="${targetLink}" target="_blank" class="badge-dark">${targetDex}</a>`; } else { vaultActionEl.innerHTML = `Buy <a href="${targetLink}" target="_blank" class="badge-dark">${targetDex}</a>`; }
                         }
                     }
                 }
 
                 let spread = 0;
                 if (priceVyfi > 0 && priceMin > 0) {
-                    const highestPrice = Math.max(priceVyfi, priceMin);
-                    const lowestPrice = Math.min(priceVyfi, priceMin);
-                    spread = ((highestPrice - lowestPrice) / lowestPrice) * 100;
-
-                    const spreadEl = document.getElementById('arbitrage-spread');
-                    const actionEl = document.getElementById('arbitrage-action');
+                    const highestPrice = Math.max(priceVyfi, priceMin); const lowestPrice = Math.min(priceVyfi, priceMin); spread = ((highestPrice - lowestPrice) / lowestPrice) * 100;
+                    const spreadEl = document.getElementById('arbitrage-spread'); const actionEl = document.getElementById('arbitrage-action');
                     spreadEl.innerText = `${spread.toFixed(2)}%`;
-
                     let suggestedActionText = "";
                     if (spread < 0.5) {
-                        spreadEl.style.color = "rgba(255, 255, 255, 0.5)"; spreadEl.style.textShadow = "0 2px 10px rgba(0,0,0,0.3)"; 
-                        actionEl.innerHTML = `<span style="color: rgba(255, 255, 255, 0.6);">Low spread</span>`;
+                        spreadEl.style.color = "rgba(255, 255, 255, 0.5)"; spreadEl.style.textShadow = "0 2px 10px rgba(0,0,0,0.3)"; actionEl.innerHTML = `<span style="color: rgba(255, 255, 255, 0.6);">Low spread</span>`;
                     } else {
                         spreadEl.style.color = "#ffffff"; 
-                        if (spread >= conf.glow) {
-                            spreadEl.style.textShadow = "0 0 15px rgba(255, 255, 255, 0.7)"; 
-                        } else {
-                            spreadEl.style.textShadow = "0 2px 10px rgba(0,0,0,0.3)"; 
-                        }
-
-                        if (priceVyfi > priceMin) {
-                            actionEl.innerHTML = `Buy <a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Min</a> ➔ Sell <a href="${VYFI_LINK}" target="_blank" class="badge-dark">VyFi</a>`;
-                            suggestedActionText = "Buy on Minswap, Sell on VyFi";
-                        } else {
-                            actionEl.innerHTML = `Buy <a href="${VYFI_LINK}" target="_blank" class="badge-dark">VyFi</a> ➔ Sell <a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Min</a>`;
-                            suggestedActionText = "Buy on VyFi, Sell on Minswap";
-                        }
+                        if (spread >= conf.glow) { spreadEl.style.textShadow = "0 0 15px rgba(255, 255, 255, 0.7)"; } else { spreadEl.style.textShadow = "0 2px 10px rgba(0,0,0,0.3)"; }
+                        if (priceVyfi > priceMin) { actionEl.innerHTML = `Buy <a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Min</a> ➔ Sell <a href="${VYFI_LINK}" target="_blank" class="badge-dark">VyFi</a>`; suggestedActionText = "Buy on Minswap, Sell on VyFi"; } 
+                        else { actionEl.innerHTML = `Buy <a href="${VYFI_LINK}" target="_blank" class="badge-dark">VyFi</a> ➔ Sell <a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Min</a>`; suggestedActionText = "Buy on VyFi, Sell on Minswap"; }
                     }
 
                     if (spread >= conf.alert) {
-                        const alertToggle = document.getElementById('alert-toggle');
-                        const now = Date.now();
+                        const alertToggle = document.getElementById('alert-toggle'); const now = Date.now();
                         if (alertToggle && alertToggle.checked && (now - lastAlertTime > ALERT_COOLDOWN)) {
-                            playDing();
-                            if (Notification.permission === "granted") {
-                                new Notification("🚨 L4VA Arbitrage Detected!", { body: `Spread: ${spread.toFixed(2)}%\n${suggestedActionText}` });
-                            }
+                            playDing(); if (Notification.permission === "granted") { new Notification("🚨 L4VA Arbitrage Detected!", { body: `Spread: ${spread.toFixed(2)}%\n${suggestedActionText}` }); }
                             sendTelegramAlert(`🚨 <b>L4VA Arbitrage Detected!</b>\n\n📈 DEX Spread: <b>${spread.toFixed(2)}%</b>\n💡 Route: ${suggestedActionText}\n\n<i>Check dashboard for real-time net profit.</i>`);
                             lastAlertTime = now;
                         }
                     }
                 }
 
-                updateChart(spread, bestDeviation);
+                updateMainChart(spread, bestDeviation);
                 recalculateSimulators();
 
             } catch (error) { console.error("General error:", error); }
         }
 
         async function initDashboard() {
-            initChart();
+            initCharts();
             const adaPriceUsd = await fetchAdaPrice();
             await fetchDexData(adaPriceUsd);
             setInterval(async () => {
