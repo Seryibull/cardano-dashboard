@@ -70,11 +70,8 @@
         .arbitrage-section { grid-column: 1 / -1; background: var(--gradient-dark-fire) !important; border: none; box-shadow: 0 15px 40px -10px rgba(74, 0, 0, 0.8), inset 0 0 30px rgba(0,0,0,0.4); padding: 20px 25px; }
         .arbitrage-banner-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.15); padding-bottom: 10px; margin-bottom: 15px; }
         
-        /* CORRECCIÓN GRID MÓVIL: 1 columna por defecto, 2 en PC */
         .arbitrage-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
-        @media (min-width: 900px) {
-            .arbitrage-grid { grid-template-columns: 1fr 1fr; }
-        }
+        @media (min-width: 900px) { .arbitrage-grid { grid-template-columns: 1fr 1fr; } }
 
         .arbitrage-box { background: rgba(0, 0, 0, 0.3); padding: 15px 20px; border-radius: 16px; transition: all 0.3s ease; position: relative; border: 1px solid rgba(255,255,255,0.05);}
         .arbitrage-label { color: rgba(255, 255, 255, 0.7); font-size: 0.75rem; text-transform: uppercase; font-weight: 800; margin-bottom: 3px; }
@@ -110,10 +107,7 @@
         .route-inactive { background: transparent; border: 1px solid transparent; padding: 6px 10px; opacity: 0.5; color: var(--text-secondary); }
 
         .merged-section-grid { display: grid; grid-template-columns: 1fr; gap: 30px; }
-        @media (min-width: 900px) {
-            .merged-section-grid { grid-template-columns: 55fr 45fr; }
-            .merged-right-col { border-left: 1px solid rgba(255,255,255,0.1); padding-left: 30px; }
-        }
+        @media (min-width: 900px) { .merged-section-grid { grid-template-columns: 55fr 45fr; } .merged-right-col { border-left: 1px solid rgba(255,255,255,0.1); padding-left: 30px; } }
 
         .log-entry { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.85rem; align-items: center;}
         .log-time { color: var(--text-secondary); font-size: 0.75rem; width: 80px;}
@@ -329,6 +323,12 @@
         const ALERT_COOLDOWN = 5 * 60 * 1000;
         let currentAdaUsd = 0; 
         
+        // Memoria Persistente para las Gráficas (24 horas = 2880 puntos)
+        const MAX_CHART_POINTS = 2880;
+        let chartHistory = JSON.parse(localStorage.getItem('l4va_charts')) || {
+            labels: [], spread: [], discrepancy: [], vlrmAda: [], vlrmOracle: [], oracleVyfi: [], oracleMin: [], vault: []
+        };
+        
         let currentPools = {
             vyfi: { price: 0, reserveAda: 0, reserveTok: 0 },
             minswap: { price: 0, reserveAda: 0, reserveTok: 0 },
@@ -342,32 +342,19 @@
 
         function closeModals() { document.getElementById('settings-modal').style.display = 'none'; }
         function openSettings() { 
-            document.getElementById('set-glow').value = conf.glow; 
-            document.getElementById('set-alert').value = conf.alert; 
+            document.getElementById('set-glow').value = conf.glow; document.getElementById('set-alert').value = conf.alert; 
             document.getElementById('set-sim').value = document.getElementById('sim-ada-input').value; 
-            document.getElementById('set-tg-bot').value = conf.tgBot || ""; 
-            document.getElementById('set-tg-chat').value = conf.tgChat || ""; 
-            document.getElementById('set-fee-net').value = conf.feeNet;
-            document.getElementById('set-fee-min').value = conf.feeMin;
-            document.getElementById('set-fee-vyfi').value = conf.feeVyfi;
+            document.getElementById('set-tg-bot').value = conf.tgBot || ""; document.getElementById('set-tg-chat').value = conf.tgChat || ""; 
+            document.getElementById('set-fee-net').value = conf.feeNet; document.getElementById('set-fee-min').value = conf.feeMin; document.getElementById('set-fee-vyfi').value = conf.feeVyfi;
             document.getElementById('settings-modal').style.display = 'flex'; 
         }
         function saveSettings() {
-            conf.glow = parseFloat(document.getElementById('set-glow').value);
-            conf.alert = parseFloat(document.getElementById('set-alert').value);
-            conf.sim = parseFloat(document.getElementById('set-sim').value);
-            conf.tgBot = document.getElementById('set-tg-bot').value.trim();
-            conf.tgChat = document.getElementById('set-tg-chat').value.trim();
-            conf.feeNet = parseFloat(document.getElementById('set-fee-net').value);
-            conf.feeMin = parseFloat(document.getElementById('set-fee-min').value);
-            conf.feeVyfi = parseFloat(document.getElementById('set-fee-vyfi').value);
+            conf.glow = parseFloat(document.getElementById('set-glow').value); conf.alert = parseFloat(document.getElementById('set-alert').value); conf.sim = parseFloat(document.getElementById('set-sim').value);
+            conf.tgBot = document.getElementById('set-tg-bot').value.trim(); conf.tgChat = document.getElementById('set-tg-chat').value.trim();
+            conf.feeNet = parseFloat(document.getElementById('set-fee-net').value); conf.feeMin = parseFloat(document.getElementById('set-fee-min').value); conf.feeVyfi = parseFloat(document.getElementById('set-fee-vyfi').value);
             localStorage.setItem('l4va_config', JSON.stringify(conf));
-            
-            document.getElementById('sim-ada-input').value = conf.sim;
-            document.getElementById('sim-tri-input').value = conf.sim;
-            document.getElementById('alert-label').innerText = conf.alert;
-            closeModals();
-            recalculateSimulators();
+            document.getElementById('sim-ada-input').value = conf.sim; document.getElementById('sim-tri-input').value = conf.sim; document.getElementById('alert-label').innerText = conf.alert;
+            closeModals(); recalculateSimulators();
         }
 
         function addToLog(spread, routeText, color = "#ffffff") {
@@ -376,9 +363,7 @@
             const time = new Date().toLocaleTimeString();
             const div = document.createElement('div');
             div.className = "log-entry";
-            div.innerHTML = `<div class="log-time">${time}</div>
-                             <div class="log-spread" style="color:${color};">+${spread.toFixed(2)}%</div>
-                             <div class="log-route">${routeText}</div>`;
+            div.innerHTML = `<div class="log-time">${time}</div><div class="log-spread" style="color:${color};">+${spread.toFixed(2)}%</div><div class="log-route">${routeText}</div>`;
             logEl.prepend(div);
         }
 
@@ -391,44 +376,53 @@
             const ctx = document.getElementById('arbitrageChart').getContext('2d');
             chartInstance = new Chart(ctx, {
                 type: 'line',
-                data: { labels: [], datasets: [
-                    { label: 'DEX Spread %', data: [], borderColor: '#ff7b00', tension: 0.4, borderWidth: 2, pointRadius: 0 },
-                    { label: 'Vault Discrepancy %', data: [], borderColor: '#fcd34d', tension: 0.4, borderWidth: 2, pointRadius: 0 }
+                data: { labels: chartHistory.labels, datasets: [
+                    { label: 'DEX Spread %', data: chartHistory.spread, borderColor: '#ff7b00', tension: 0.4, borderWidth: 2, pointRadius: 0 },
+                    { label: 'Vault Discrepancy %', data: chartHistory.discrepancy, borderColor: '#fcd34d', tension: 0.4, borderWidth: 2, pointRadius: 0 }
                 ]},
                 options: { responsive: true, maintainAspectRatio: false, scales: { x: { display: false }, y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#a0a0c0' } } }, plugins: { legend: { display: true, labels: { color: '#ffffff', boxWidth: 10 } } } }
             });
 
-            const sparkOptions = { responsive: true, maintainAspectRatio: false, scales: { x: { display: false }, y: { display: false } }, plugins: { legend: { display: false }, tooltip: { enabled: false } }, layout: { padding: 0 } };
-            const createSpark = (id, color) => new Chart(document.getElementById(id).getContext('2d'), { type: 'line', data: { labels: Array(20).fill(''), datasets: [{ data: Array(20).fill(null), borderColor: color, borderWidth: 2, tension: 0.4, pointRadius: 0, fill: true, backgroundColor: color.replace('1)', '0.1)') }] }, options: sparkOptions });
+            const sparkOptions = { responsive: true, maintainAspectRatio: false, scales: { x: { display: false }, y: { display: false } }, plugins: { legend: { display: false }, tooltip: { enabled: false } }, layout: { padding: 0 }, animation: false };
+            const createSpark = (id, color, dataArr) => new Chart(document.getElementById(id).getContext('2d'), { type: 'line', data: { labels: chartHistory.labels, datasets: [{ data: dataArr, borderColor: color, borderWidth: 2, tension: 0.4, pointRadius: 0, fill: true, backgroundColor: color.replace('1)', '0.1)') }] }, options: sparkOptions });
 
-            sparkInstances.vlrmAda = createSpark('spark-vlrm-ada', 'rgba(167, 139, 250, 1)'); 
-            sparkInstances.vlrmOracle = createSpark('spark-vlrm-oracle', 'rgba(167, 139, 250, 1)'); 
-            sparkInstances.oracleVyfi = createSpark('spark-oracle-vyfi', 'rgba(167, 139, 250, 1)'); 
-            sparkInstances.oracleMin = createSpark('spark-oracle-min', 'rgba(137, 170, 255, 1)'); 
-            sparkInstances.vault = createSpark('spark-vault', 'rgba(252, 211, 77, 1)'); 
+            sparkInstances.vlrmAda = createSpark('spark-vlrm-ada', 'rgba(167, 139, 250, 1)', chartHistory.vlrmAda); 
+            sparkInstances.vlrmOracle = createSpark('spark-vlrm-oracle', 'rgba(167, 139, 250, 1)', chartHistory.vlrmOracle); 
+            sparkInstances.oracleVyfi = createSpark('spark-oracle-vyfi', 'rgba(167, 139, 250, 1)', chartHistory.oracleVyfi); 
+            sparkInstances.oracleMin = createSpark('spark-oracle-min', 'rgba(137, 170, 255, 1)', chartHistory.oracleMin); 
+            sparkInstances.vault = createSpark('spark-vault', 'rgba(252, 211, 77, 1)', chartHistory.vault); 
         }
         
         function updateSparklines(vAdaTvl, vOraTvl, oVyfiTvl, oMinTvl, vaultTvl) {
-            const pushData = (chart, val) => {
-                let dataArr = chart.data.datasets[0].data;
-                if(dataArr[0] === null) { chart.data.datasets[0].data = Array(20).fill(val); } 
-                else { dataArr.shift(); dataArr.push(val); }
-                chart.update();
-            };
-            pushData(sparkInstances.vlrmAda, vAdaTvl); pushData(sparkInstances.vlrmOracle, vOraTvl);
-            pushData(sparkInstances.oracleVyfi, oVyfiTvl); pushData(sparkInstances.oracleMin, oMinTvl);
-            pushData(sparkInstances.vault, vaultTvl);
+            chartHistory.vlrmAda.push(vAdaTvl);
+            chartHistory.vlrmOracle.push(vOraTvl);
+            chartHistory.oracleVyfi.push(oVyfiTvl);
+            chartHistory.oracleMin.push(oMinTvl);
+            chartHistory.vault.push(vaultTvl);
+
+            if(chartHistory.vlrmAda.length > MAX_CHART_POINTS) {
+                chartHistory.vlrmAda.shift(); chartHistory.vlrmOracle.shift(); chartHistory.oracleVyfi.shift(); chartHistory.oracleMin.shift(); chartHistory.vault.shift();
+            }
+
+            sparkInstances.vlrmAda.update('none'); sparkInstances.vlrmOracle.update('none'); sparkInstances.oracleVyfi.update('none'); sparkInstances.oracleMin.update('none'); sparkInstances.vault.update('none');
         }
 
         function updateMainChart(spread, discrepancy) {
             const now = new Date().toLocaleTimeString();
-            if(chartInstance.data.labels.length > 20) { chartInstance.data.labels.shift(); chartInstance.data.datasets.forEach(d => d.data.shift()); }
-            chartInstance.data.labels.push(now); chartInstance.data.datasets[0].data.push(spread); chartInstance.data.datasets[1].data.push(discrepancy); chartInstance.update();
+            chartHistory.labels.push(now);
+            chartHistory.spread.push(spread);
+            chartHistory.discrepancy.push(discrepancy);
+            
+            if(chartHistory.labels.length > MAX_CHART_POINTS) {
+                chartHistory.labels.shift(); chartHistory.spread.shift(); chartHistory.discrepancy.shift();
+            }
+            
+            chartInstance.update('none');
+            // Guardamos el mega objeto de historia gráfica
+            localStorage.setItem('l4va_charts', JSON.stringify(chartHistory));
         }
 
-        function playDing() {
-            try { const ctx = new (window.AudioContext || window.webkitAudioContext)(); const osc = ctx.createOscillator(); const gainNode = ctx.createGain(); osc.type = 'sine'; osc.frequency.setValueAtTime(880, ctx.currentTime); gainNode.gain.setValueAtTime(0.1, ctx.currentTime); osc.connect(gainNode); gainNode.connect(ctx.destination); osc.start(); gainNode.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.5); osc.stop(ctx.currentTime + 0.5); } catch (e) {}
-        }
+        function playDing() { try { const ctx = new (window.AudioContext || window.webkitAudioContext)(); const osc = ctx.createOscillator(); const gainNode = ctx.createGain(); osc.type = 'sine'; osc.frequency.setValueAtTime(880, ctx.currentTime); gainNode.gain.setValueAtTime(0.1, ctx.currentTime); osc.connect(gainNode); gainNode.connect(ctx.destination); osc.start(); gainNode.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.5); osc.stop(ctx.currentTime + 0.5); } catch (e) {} }
 
         function getAmmOut(amountIn, reserveIn, reserveOut) {
             if(reserveIn <= 0 || reserveOut <= 0 || amountIn <= 0) return 0;
@@ -606,6 +600,7 @@
                 }
                 document.getElementById('oracle-total-liq').innerText = `₳ ${Math.round(totalOracleLiqAda).toLocaleString()}`;
 
+                // SE ACTUALIZAN LAS GRÁFICAS DE FORMA PERSISTENTE
                 updateSparklines(vlrmAdaTvl, crossTvl, vyfiTvLAda, minTvlAda, vaultTvlData);
 
                 currentPools.vyfi = { price: priceVyfi, reserveAda: priceVyfi > 0 ? (vyfiTvLAda / 2) : 0, reserveTok: priceVyfi > 0 ? (vyfiTvLAda / 2) / priceVyfi : 0 };
@@ -676,10 +671,10 @@
                     }
                 }
 
+                // SE ACTUALIZA LA GRÁFICA PRINCIPAL Y SE GUARDA
                 updateMainChart(spread, bestDeviation);
                 recalculateSimulators();
 
-                // Lógica de Log separada para el Triangular (si da un beneficio real > % alerta)
                 let bestTriProfit = -Infinity; let optimalTriInvest = 0; let bestTriPercent = 0; let triRoute = null;
                 for(let i = 10; i <= 5000; i += 10) {
                     let testData = calcTriNetDetails(i);
