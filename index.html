@@ -291,7 +291,7 @@
         </div>
 
         <div class="card" style="grid-column: 1 / -1; padding: 15px;">
-            <div class="card-title" style="margin-bottom: 10px; font-size: 0.9rem;">Live Trend (Spread & Vault Discrepancy %)</div>
+            <div class="card-title" style="margin-bottom: 10px; font-size: 0.9rem;">Live Trend (Spread & Vault Discrepancy % - Last 24h)</div>
             <div style="height: 200px; width: 100%;">
                 <canvas id="arbitrageChart"></canvas>
             </div>
@@ -323,11 +323,9 @@
         const ALERT_COOLDOWN = 5 * 60 * 1000;
         let currentAdaUsd = 0; 
         
-        // Memoria Persistente para las Gráficas (24 horas = 2880 puntos)
+        // Memoria Persistente para las Gráficas (24 horas EXACTAS = 2880 puntos de 30seg)
         const MAX_CHART_POINTS = 2880;
-        let chartHistory = JSON.parse(localStorage.getItem('l4va_charts')) || {
-            labels: [], spread: [], discrepancy: [], vlrmAda: [], vlrmOracle: [], oracleVyfi: [], oracleMin: [], vault: []
-        };
+        let chartHistory = { labels: [], spread: [], discrepancy: [], vlrmAda: [], vlrmOracle: [], oracleVyfi: [], oracleMin: [], vault: [] };
         
         let currentPools = {
             vyfi: { price: 0, reserveAda: 0, reserveTok: 0 },
@@ -377,14 +375,21 @@
             chartInstance = new Chart(ctx, {
                 type: 'line',
                 data: { labels: chartHistory.labels, datasets: [
-                    { label: 'DEX Spread %', data: chartHistory.spread, borderColor: '#ff7b00', tension: 0.4, borderWidth: 2, pointRadius: 0 },
-                    { label: 'Vault Discrepancy %', data: chartHistory.discrepancy, borderColor: '#fcd34d', tension: 0.4, borderWidth: 2, pointRadius: 0 }
+                    { label: 'DEX Spread %', data: chartHistory.spread, borderColor: '#ff7b00', tension: 0.4, borderWidth: 2, pointRadius: 0, spanGaps: true },
+                    { label: 'Vault Discrepancy %', data: chartHistory.discrepancy, borderColor: '#fcd34d', tension: 0.4, borderWidth: 2, pointRadius: 0, spanGaps: true }
                 ]},
-                options: { responsive: true, maintainAspectRatio: false, scales: { x: { display: false }, y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#a0a0c0' } } }, plugins: { legend: { display: true, labels: { color: '#ffffff', boxWidth: 10 } } } }
+                options: { 
+                    responsive: true, maintainAspectRatio: false, 
+                    scales: { 
+                        x: { display: true, grid: { display: false }, ticks: { color: '#a0a0c0', maxTicksLimit: 8, maxRotation: 0 } }, 
+                        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#a0a0c0' } } 
+                    }, 
+                    plugins: { legend: { display: true, labels: { color: '#ffffff', boxWidth: 10 } } } 
+                }
             });
 
             const sparkOptions = { responsive: true, maintainAspectRatio: false, scales: { x: { display: false }, y: { display: false } }, plugins: { legend: { display: false }, tooltip: { enabled: false } }, layout: { padding: 0 }, animation: false };
-            const createSpark = (id, color, dataArr) => new Chart(document.getElementById(id).getContext('2d'), { type: 'line', data: { labels: chartHistory.labels, datasets: [{ data: dataArr, borderColor: color, borderWidth: 2, tension: 0.4, pointRadius: 0, fill: true, backgroundColor: color.replace('1)', '0.1)') }] }, options: sparkOptions });
+            const createSpark = (id, color, dataArr) => new Chart(document.getElementById(id).getContext('2d'), { type: 'line', data: { labels: chartHistory.labels, datasets: [{ data: dataArr, borderColor: color, borderWidth: 2, tension: 0.4, pointRadius: 0, fill: true, backgroundColor: color.replace('1)', '0.1)'), spanGaps: true }] }, options: sparkOptions });
 
             sparkInstances.vlrmAda = createSpark('spark-vlrm-ada', 'rgba(167, 139, 250, 1)', chartHistory.vlrmAda); 
             sparkInstances.vlrmOracle = createSpark('spark-vlrm-oracle', 'rgba(167, 139, 250, 1)', chartHistory.vlrmOracle); 
@@ -408,7 +413,7 @@
         }
 
         function updateMainChart(spread, discrepancy) {
-            const now = new Date().toLocaleTimeString();
+            const now = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
             chartHistory.labels.push(now);
             chartHistory.spread.push(spread);
             chartHistory.discrepancy.push(discrepancy);
@@ -418,8 +423,6 @@
             }
             
             chartInstance.update('none');
-            // Guardamos el mega objeto de historia gráfica
-            localStorage.setItem('l4va_charts', JSON.stringify(chartHistory));
         }
 
         function playDing() { try { const ctx = new (window.AudioContext || window.webkitAudioContext)(); const osc = ctx.createOscillator(); const gainNode = ctx.createGain(); osc.type = 'sine'; osc.frequency.setValueAtTime(880, ctx.currentTime); gainNode.gain.setValueAtTime(0.1, ctx.currentTime); osc.connect(gainNode); gainNode.connect(ctx.destination); osc.start(); gainNode.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.5); osc.stop(ctx.currentTime + 0.5); } catch (e) {} }
@@ -547,6 +550,69 @@
             }
         }
 
+        // --- SISTEMA INTERPOLACIÓN DE DATOS HISTÓRICOS 24H ---
+        async function fetchHistoryFromCloudflare() {
+            try {
+                const res = await fetch(PROXY_URL + '?data=history');
+                const cloudHistory = await res.json();
+                
+                if (cloudHistory && cloudHistory.labels && cloudHistory.labels.length > 0) {
+                    let expandedHistory = { labels: [], spread: [], discrepancy: [], vlrmAda: [], vlrmOracle: [], oracleVyfi: [], oracleMin: [], vault: [] };
+                    
+                    // 1. Interpolación Matemática: 1 punto de DB (15 mins) = 30 puntos en la UI (30 segs)
+                    for (let i = 0; i < cloudHistory.labels.length; i++) {
+                        for(let j=0; j<30; j++) {
+                            expandedHistory.labels.push(j === 0 ? cloudHistory.labels[i] : ''); // Solo ponemos texto en el primer punto
+                            expandedHistory.spread.push(cloudHistory.spread[i]);
+                            expandedHistory.discrepancy.push(cloudHistory.discrepancy[i]);
+                            expandedHistory.vlrmAda.push(cloudHistory.vlrmAda[i]);
+                            expandedHistory.vlrmOracle.push(cloudHistory.vlrmOracle[i]);
+                            expandedHistory.oracleVyfi.push(cloudHistory.oracleVyfi[i]);
+                            expandedHistory.oracleMin.push(cloudHistory.oracleMin[i]);
+                            expandedHistory.vault.push(cloudHistory.vault[i]);
+                        }
+                    }
+
+                    // 2. Padding (Relleno): Aseguramos la anchura estricta de 24h (2880 puntos)
+                    const missingPoints = MAX_CHART_POINTS - expandedHistory.labels.length;
+                    if (missingPoints > 0) {
+                        const nullArray = Array(missingPoints).fill(null);
+                        const emptyLabels = Array(missingPoints).fill('');
+                        expandedHistory.labels = [...emptyLabels, ...expandedHistory.labels];
+                        expandedHistory.spread = [...nullArray, ...expandedHistory.spread];
+                        expandedHistory.discrepancy = [...nullArray, ...expandedHistory.discrepancy];
+                        expandedHistory.vlrmAda = [...nullArray, ...expandedHistory.vlrmAda];
+                        expandedHistory.vlrmOracle = [...nullArray, ...expandedHistory.vlrmOracle];
+                        expandedHistory.oracleVyfi = [...nullArray, ...expandedHistory.oracleVyfi];
+                        expandedHistory.oracleMin = [...nullArray, ...expandedHistory.oracleMin];
+                        expandedHistory.vault = [...nullArray, ...expandedHistory.vault];
+                    }
+
+                    // 3. Recortamos si por algún motivo hay más de 24h
+                    if (expandedHistory.labels.length > MAX_CHART_POINTS) {
+                        const diff = expandedHistory.labels.length - MAX_CHART_POINTS;
+                        Object.keys(expandedHistory).forEach(key => { expandedHistory[key] = expandedHistory[key].slice(diff); });
+                    }
+
+                    chartHistory = expandedHistory;
+                    
+                    // Inyectar datos re-calculados a las gráficas
+                    chartInstance.data.labels = chartHistory.labels;
+                    chartInstance.data.datasets[0].data = chartHistory.spread;
+                    chartInstance.data.datasets[1].data = chartHistory.discrepancy;
+                    chartInstance.update('none');
+
+                    sparkInstances.vlrmAda.data.labels = chartHistory.labels; sparkInstances.vlrmAda.data.datasets[0].data = chartHistory.vlrmAda; sparkInstances.vlrmAda.update('none');
+                    sparkInstances.vlrmOracle.data.labels = chartHistory.labels; sparkInstances.vlrmOracle.data.datasets[0].data = chartHistory.vlrmOracle; sparkInstances.vlrmOracle.update('none');
+                    sparkInstances.oracleVyfi.data.labels = chartHistory.labels; sparkInstances.oracleVyfi.data.datasets[0].data = chartHistory.oracleVyfi; sparkInstances.oracleVyfi.update('none');
+                    sparkInstances.oracleMin.data.labels = chartHistory.labels; sparkInstances.oracleMin.data.datasets[0].data = chartHistory.oracleMin; sparkInstances.oracleMin.update('none');
+                    sparkInstances.vault.data.labels = chartHistory.labels; sparkInstances.vault.data.datasets[0].data = chartHistory.vault; sparkInstances.vault.update('none');
+                }
+            } catch (e) {
+                console.error("Error loading historical data:", e);
+            }
+        }
+
         async function fetchAdaPrice() {
             try {
                 const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=cardano&vs_currencies=usd');
@@ -600,7 +666,6 @@
                 }
                 document.getElementById('oracle-total-liq').innerText = `₳ ${Math.round(totalOracleLiqAda).toLocaleString()}`;
 
-                // SE ACTUALIZAN LAS GRÁFICAS DE FORMA PERSISTENTE
                 updateSparklines(vlrmAdaTvl, crossTvl, vyfiTvLAda, minTvlAda, vaultTvlData);
 
                 currentPools.vyfi = { price: priceVyfi, reserveAda: priceVyfi > 0 ? (vyfiTvLAda / 2) : 0, reserveTok: priceVyfi > 0 ? (vyfiTvLAda / 2) / priceVyfi : 0 };
@@ -671,7 +736,6 @@
                     }
                 }
 
-                // SE ACTUALIZA LA GRÁFICA PRINCIPAL Y SE GUARDA
                 updateMainChart(spread, bestDeviation);
                 recalculateSimulators();
 
@@ -688,62 +752,21 @@
             } catch (error) { console.error("General error:", error); }
         }
 
-        async function fetchHistoryFromCloudflare() {
-            try {
-                // Le pedimos a Cloudflare el historial usando el parámetro ?data=history
-                const res = await fetch(PROXY_URL + '?data=history');
-                const cloudHistory = await res.json();
-                
-                // Si la BD tiene datos, sobreescribimos nuestra memoria local
-                if (cloudHistory && cloudHistory.labels && cloudHistory.labels.length > 0) {
-                    chartHistory = cloudHistory;
-                    
-                    // Actualizamos las gráficas con el golpe histórico
-                    chartInstance.data.labels = chartHistory.labels;
-                    chartInstance.data.datasets[0].data = chartHistory.spread;
-                    chartInstance.data.datasets[1].data = chartHistory.discrepancy;
-                    chartInstance.update();
-
-                    sparkInstances.vlrmAda.data.labels = chartHistory.labels;
-                    sparkInstances.vlrmAda.data.datasets[0].data = chartHistory.vlrmAda;
-                    sparkInstances.vlrmAda.update();
-
-                    sparkInstances.vlrmOracle.data.labels = chartHistory.labels;
-                    sparkInstances.vlrmOracle.data.datasets[0].data = chartHistory.vlrmOracle;
-                    sparkInstances.vlrmOracle.update();
-
-                    sparkInstances.oracleVyfi.data.labels = chartHistory.labels;
-                    sparkInstances.oracleVyfi.data.datasets[0].data = chartHistory.oracleVyfi;
-                    sparkInstances.oracleVyfi.update();
-
-                    sparkInstances.oracleMin.data.labels = chartHistory.labels;
-                    sparkInstances.oracleMin.data.datasets[0].data = chartHistory.oracleMin;
-                    sparkInstances.oracleMin.update();
-
-                    sparkInstances.vault.data.labels = chartHistory.labels;
-                    sparkInstances.vault.data.datasets[0].data = chartHistory.vault;
-                    sparkInstances.vault.update();
-                }
-            } catch (e) {
-                console.error("Error loading historical data:", e);
-            }
-        }
-
         async function initDashboard() {
             initCharts();
             
-            // 1. Descargamos las 24 horas pasadas desde Cloudflare
+            // PRIMERO: Descargar el historial y expandirlo
             await fetchHistoryFromCloudflare();
 
-            // 2. Cargamos el precio actual y empezamos a operar en vivo
+            // SEGUNDO: Arrancar el radar en vivo
             const adaPriceUsd = await fetchAdaPrice();
             await fetchDexData(adaPriceUsd);
-            
             setInterval(async () => {
                 const updatedAdaPrice = await fetchAdaPrice();
                 await fetchDexData(updatedAdaPrice);
             }, 30000);
         }
-        window.onload = initDashboard;    </script>
+        window.onload = initDashboard;
+    </script>
 </body>
 </html>
