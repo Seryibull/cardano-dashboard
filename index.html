@@ -3,6 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0a0814">
+    <link rel="apple-touch-icon" href="https://cryptologos.cc/logos/cardano-ada-logo.png">
+    <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22L4VA%20Arbitrage%22%2C%22short_name%22%3A%22L4VA%20Arb%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23120f24%22%2C%22theme_color%22%3A%22%23ff7b00%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22https%3A%2F%2Fcryptologos.cc%2Flogos%2Fcardano-ada-logo.png%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fpng%22%7D%5D%7D">
+
     <title>L4VA Protocol | Arbitrage Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
@@ -40,32 +47,19 @@
             min-height: 100vh; 
         }
 
-        header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 25px;
-            max-width: 1200px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        
+        header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px; max-width: 1200px; margin-left: auto; margin-right: auto; }
         .header-left { display: flex; align-items: center; gap: 15px; }
         .header-right { display: flex; align-items: center; gap: 15px; }
         .brand-logo { font-size: 2.5rem; filter: drop-shadow(0 0 10px var(--neon-orange)); }
         h1 { margin: 0; font-weight: 800; font-size: 1.8rem; background: var(--gradient-fire); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -1px; }
 
-        .settings-btn {
-            font-size: 1.5rem; cursor: pointer; background: rgba(255,255,255,0.05); padding: 8px 12px; border-radius: 12px; transition: 0.3s;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
+        .settings-btn { font-size: 1.5rem; cursor: pointer; background: rgba(255,255,255,0.05); padding: 8px 12px; border-radius: 12px; transition: 0.3s; border: 1px solid rgba(255,255,255,0.1); }
         .settings-btn:hover { background: rgba(255,255,255,0.15); transform: rotate(45deg); border-color: var(--neon-orange); }
 
         .dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 20px; max-width: 1200px; margin: 0 auto; }
         .card { border-radius: 20px; padding: 20px 25px; position: relative; background: rgba(18, 15, 36, 0.85); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); transition: transform 0.3s ease, box-shadow 0.3s ease; }
         .card:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 123, 0, 0.15); border-color: rgba(255, 123, 0, 0.3); }
 
-        /* Tarjeta ADA Resaltada */
         .card-ada { background: rgba(35, 40, 65, 0.85); border-color: rgba(66, 133, 244, 0.2); }
         .card-ada:hover { border-color: rgba(66, 133, 244, 0.5); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(66, 133, 244, 0.2); }
 
@@ -91,46 +85,40 @@
         .badge-dark { background: rgba(255,255,255,0.9); color: var(--text-on-fire); font-size: 0.75rem; padding: 4px 8px; border-radius: 20px; font-weight: 800; display: inline-block; margin: 0 2px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); text-decoration: none; transition: 0.2s ease; }
         a.badge-dark:hover { transform: scale(1.08); background: #ffffff; cursor: pointer; }
         
-        .color-minswap { color: var(--badge-min-text) !important; }
-        .color-vyfi { color: var(--badge-vyfi-text) !important; }
-
         .sim-input { background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 5px 10px; border-radius: 8px; width: 70px; font-weight: bold; text-align: center; margin-right: 5px; font-family: 'Inter', sans-serif;}
         .sim-input:focus { outline: none; border-color: var(--neon-orange); }
         .profit-positive { color: #10b981; text-shadow: 0 0 10px rgba(16, 185, 129, 0.4); }
         .profit-negative { color: var(--neon-red); }
         .optimizer-text { font-size: 0.7rem; color: var(--text-secondary); margin-top: 8px; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 8px;}
+        .usd-profit { font-size: 0.9rem; color: rgba(255,255,255,0.6); font-weight: 600; text-shadow: none; display: block; text-align: right;}
 
         /* Modals */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); z-index: 1000; justify-content: center; align-items: center; }
-        .modal-content { background: var(--card-bg); padding: 30px; border-radius: 20px; border: 2px solid var(--neon-orange); width: 320px; box-shadow: 0 10px 40px rgba(0,0,0,0.8); }
-        .modal-title { font-size: 1.2rem; font-weight: 800; margin-bottom: 20px; color: white; display: flex; justify-content: space-between;}
-        .setting-row { margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem;}
+        .modal-content { background: var(--card-bg); padding: 25px; border-radius: 20px; border: 2px solid var(--neon-orange); width: 340px; box-shadow: 0 10px 40px rgba(0,0,0,0.8); max-height: 90vh; overflow-y: auto;}
+        .modal-title { font-size: 1.2rem; font-weight: 800; margin-bottom: 15px; color: white; display: flex; justify-content: space-between;}
+        .setting-section-title { font-size: 0.75rem; color: var(--neon-orange); margin: 15px 0 10px 0; font-weight: bold; letter-spacing: 1px;}
+        .setting-row { margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem;}
         .setting-input { width: 60px; padding: 5px; border-radius: 5px; border: none; background: rgba(255,255,255,0.1); color: white; text-align: center; font-family: 'Inter', sans-serif;}
-        .setting-input-text { width: 120px; padding: 5px; border-radius: 5px; border: none; background: rgba(255,255,255,0.1); color: white; font-family: 'Inter', sans-serif;}
-        .btn-save { background: var(--gradient-fire); color: white; border: none; padding: 10px; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 15px; transition: transform 0.2s;}
+        .setting-input-text { width: 130px; padding: 5px; border-radius: 5px; border: none; background: rgba(255,255,255,0.1); color: white; font-family: 'Inter', sans-serif;}
+        .btn-save { background: var(--gradient-fire); color: white; border: none; padding: 12px; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 15px; transition: transform 0.2s;}
         .btn-save:hover { transform: scale(1.02); }
         
         h3.dex-subtitle { margin: 0 0 10px 0; font-size: 0.9rem; display: inline-block; }
         
-        /* Rutas Activas Triangulares */
         .route-active { background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); padding: 6px 10px; border-radius: 8px; color: #10b981; }
         .route-inactive { background: transparent; border: 1px solid transparent; padding: 6px 10px; opacity: 0.5; color: var(--text-secondary); }
 
-        /* Estructura Fusionada Inteligente 55/45 */
-        .merged-section-grid {
-            display: grid;
-            grid-template-columns: 1fr; /* Móvil: una columna */
-            gap: 30px;
-        }
+        .merged-section-grid { display: grid; grid-template-columns: 1fr; gap: 30px; }
         @media (min-width: 900px) {
-            .merged-section-grid {
-                grid-template-columns: 55fr 45fr; /* PC: 55% izquierda, 45% derecha */
-            }
-            .merged-right-col {
-                border-left: 1px solid rgba(255,255,255,0.1); 
-                padding-left: 30px;
-            }
+            .merged-section-grid { grid-template-columns: 55fr 45fr; }
+            .merged-right-col { border-left: 1px solid rgba(255,255,255,0.1); padding-left: 30px; }
         }
+
+        /* Log Styles */
+        .log-entry { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.85rem; align-items: center;}
+        .log-time { color: var(--text-secondary); font-size: 0.75rem; width: 80px;}
+        .log-spread { font-weight: bold; width: 70px; text-align: left; }
+        .log-route { flex-grow: 1; text-align: right; color: rgba(255,255,255,0.8);}
     </style>
 </head>
 <body>
@@ -147,15 +135,23 @@
 
     <div id="settings-modal" class="modal-overlay">
         <div class="modal-content">
-            <div class="modal-title"><span>⚙️ Preferences & Alerts</span><span style="cursor:pointer;" onclick="closeModals()">✕</span></div>
-            <div class="setting-row"><span>Glow Threshold (%)</span><input type="number" id="set-glow" class="setting-input" value="10"></div>
-            <div class="setting-row"><span>Alert Threshold (%)</span><input type="number" id="set-alert" class="setting-input" value="15"></div>
-            <div class="setting-row"><span>Simulator Base (ADA)</span><input type="number" id="set-sim" class="setting-input" value="1000"></div>
-            <div style="border-top: 1px solid rgba(255,255,255,0.1); margin: 15px 0;"></div>
-            <div style="font-size: 0.8rem; color: var(--neon-orange); margin-bottom: 10px;">Telegram Bot (Optional)</div>
+            <div class="modal-title"><span>⚙️ Preferences</span><span style="cursor:pointer;" onclick="closeModals()">✕</span></div>
+            
+            <div class="setting-section-title">THRESHOLDS & SIMULATOR</div>
+            <div class="setting-row"><span>Glow Threshold (%)</span><input type="number" id="set-glow" class="setting-input"></div>
+            <div class="setting-row"><span>Alert Threshold (%)</span><input type="number" id="set-alert" class="setting-input"></div>
+            <div class="setting-row"><span>Simulator Base (ADA)</span><input type="number" id="set-sim" class="setting-input"></div>
+            
+            <div class="setting-section-title">DEX FEES (ADA)</div>
+            <div class="setting-row"><span>Network (Tx) Fee</span><input type="number" step="0.1" id="set-fee-net" class="setting-input"></div>
+            <div class="setting-row"><span>Minswap Batcher</span><input type="number" step="0.1" id="set-fee-min" class="setting-input"></div>
+            <div class="setting-row"><span>VyFi Batcher</span><input type="number" step="0.1" id="set-fee-vyfi" class="setting-input"></div>
+
+            <div class="setting-section-title">TELEGRAM ALERTS (Optional)</div>
             <div class="setting-row"><span>Bot Token</span><input type="text" id="set-tg-bot" class="setting-input-text" placeholder="123:ABC..."></div>
             <div class="setting-row"><span>Chat ID</span><input type="text" id="set-tg-chat" class="setting-input-text" placeholder="12345678"></div>
-            <button class="btn-save" onclick="saveSettings()">Save Configuration</button>
+            
+            <button class="btn-save" onclick="saveSettings()">Save & Apply</button>
         </div>
     </div>
 
@@ -199,12 +195,12 @@
 
                 <div class="arbitrage-box" style="border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; justify-content: center;">
                     <div class="arbitrage-label" style="color: var(--neon-orange); margin-bottom: 8px;">Net Profit Simulator ORACLE / ADA</div>
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
                         <div>
-                            <div class="arbitrage-label">Investment</div>
+                            <div class="arbitrage-label" style="margin-bottom:5px;">Investment</div>
                             <input type="number" id="sim-ada-input" class="sim-input" value="1000" onkeyup="recalculateSimulators()" onchange="recalculateSimulators()"> <span style="font-size: 0.7rem; font-weight: bold;">ADA</span>
                         </div>
-                        <div style="text-align: right;">
+                        <div style="text-align: right; line-height: 1.1;">
                             <div class="arbitrage-label">Net Return (2 Hops)</div>
                             <div class="arbitrage-big-value" id="sim-profit" style="font-size: 1.3rem;">- ADA</div>
                         </div>
@@ -214,12 +210,12 @@
 
                 <div class="arbitrage-box" style="border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; justify-content: center;">
                     <div class="arbitrage-label" style="color: var(--neon-orange); margin-bottom: 8px;">NET PROFIT SIMULATOR TRIANGULAR</div>
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
                         <div>
-                            <div class="arbitrage-label">Investment</div>
+                            <div class="arbitrage-label" style="margin-bottom:5px;">Investment</div>
                             <input type="number" id="sim-tri-input" class="sim-input" value="1000" onkeyup="recalculateSimulators()" onchange="recalculateSimulators()"> <span style="font-size: 0.7rem; font-weight: bold;">ADA</span>
                         </div>
-                        <div style="text-align: right;">
+                        <div style="text-align: right; line-height: 1.1;">
                             <div class="arbitrage-label">Net Return (3 Hops)</div>
                             <div class="arbitrage-big-value" id="sim-tri-profit" style="font-size: 1.3rem;">- ADA</div>
                         </div>
@@ -280,22 +276,20 @@
                 <div class="merged-right-col">
                     <div class="card-title" style="color: var(--neon-orange); margin-bottom: 20px;">Triangular Arbitrage (Cross-Pair) 🔺</div>
                     <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); height: calc(100% - 60px); display: flex; flex-direction: column; justify-content: center;">
-                        
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                            <div class="arbitrage-label">Optimal Estimated Discrepancy</div>
+                            <div class="arbitrage-label">Optimal Net Discrepancy</div>
                             <div class="arbitrage-big-value" id="tri-arb-spread" style="font-size: 1.8rem;"><span class="loading">Scanning...</span></div>
                         </div>
-
                         <div style="font-size: 0.85rem; line-height: 1.8;">
                             <div id="route-a-container" class="route-inactive">
-                                Route A: <span style="font-weight: bold;">Buy VLRM ➔ Swap for ORACLE ➔ Sell ORACLE</span>
+                                Route A: <span style="font-weight: bold;">Buy VLRM ➔ Swap ORACLE ➔ Sell ORACLE</span>
                             </div>
                             <div id="route-b-container" class="route-inactive" style="margin-top: 8px;">
-                                Route B: <span style="font-weight: bold;">Buy ORACLE ➔ Swap for VLRM ➔ Sell VLRM</span>
+                                Route B: <span style="font-weight: bold;">Buy ORACLE ➔ Swap VLRM ➔ Sell VLRM</span>
                             </div>
                         </div>
                         <div style="font-size: 0.75rem; font-style: italic; color: var(--text-secondary); margin-top: 15px;">
-                            *Percentage is dynamically calculated from Auto-Optimizer's max realistic net profit.
+                            *Percentage dynamically calculated from Auto-Optimizer's max realistic net profit.
                         </div>
                     </div>
                 </div>
@@ -308,6 +302,13 @@
                 <canvas id="arbitrageChart"></canvas>
             </div>
         </div>
+
+        <div class="card" style="grid-column: 1 / -1; padding: 20px 25px;">
+            <div class="card-title" style="margin-bottom: 10px;">Opportunity Log (Daily Hunts) 📖</div>
+            <div id="opp-log" style="max-height: 250px; overflow-y: auto; padding-right: 10px;">
+                <div style="color: var(--text-secondary); text-align: center; padding: 20px; font-style: italic;">Waiting for high-spread opportunities...</div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -315,15 +316,20 @@
         const VLRM = "63efb704b7396890e4d9539d030c0e667739043add65c00f96c586c056616c6f72756d";
         const ORACLE = "328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b27393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
         const ORACLE_TOTAL_SUPPLY = 1000000;
-        
         const VYFI_LINK = "https://app.vyfi.io/dex?tokenA=lovelace&tokenB=328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b27393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
         const MINSWAP_LINK = "https://minswap.org/swap?cA=&tA=&cB=328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b2&tB=7393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
 
-        let conf = JSON.parse(localStorage.getItem('l4va_config')) || { glow: 10, alert: 15, sim: 1000, tgBot: "", tgChat: "" };
+        // Global State & Settings Config
+        let defaultConf = { glow: 10, alert: 15, sim: 1000, tgBot: "", tgChat: "", feeNet: 0.2, feeMin: 0.7, feeVyfi: 1.9 };
+        let conf = JSON.parse(localStorage.getItem('l4va_config')) || defaultConf;
+        // Fix backwards compatibility if fee keys are missing
+        if(conf.feeNet === undefined) { conf.feeNet = 0.2; conf.feeMin = 0.7; conf.feeVyfi = 1.9; }
+
         let lastAlertTime = 0;
         let chartInstance = null;
         let sparkInstances = {}; 
         const ALERT_COOLDOWN = 5 * 60 * 1000;
+        let currentAdaUsd = 0; // Guardar precio global USD
         
         let currentPools = {
             vyfi: { price: 0, reserveAda: 0, reserveTok: 0 },
@@ -332,25 +338,52 @@
             crossVO: { resVlrm: 0, resOracle: 0 }
         };
 
-        // UI Initialization
+        // Initialize Settings Panel Data
         document.getElementById('sim-ada-input').value = conf.sim;
         document.getElementById('sim-tri-input').value = conf.sim;
         document.getElementById('alert-label').innerText = conf.alert;
 
         function closeModals() { document.getElementById('settings-modal').style.display = 'none'; }
-        function openSettings() { document.getElementById('set-glow').value = conf.glow; document.getElementById('set-alert').value = conf.alert; document.getElementById('set-sim').value = document.getElementById('sim-ada-input').value; document.getElementById('set-tg-bot').value = conf.tgBot || ""; document.getElementById('set-tg-chat').value = conf.tgChat || ""; document.getElementById('settings-modal').style.display = 'flex'; }
+        function openSettings() { 
+            document.getElementById('set-glow').value = conf.glow; 
+            document.getElementById('set-alert').value = conf.alert; 
+            document.getElementById('set-sim').value = document.getElementById('sim-ada-input').value; 
+            document.getElementById('set-tg-bot').value = conf.tgBot || ""; 
+            document.getElementById('set-tg-chat').value = conf.tgChat || ""; 
+            document.getElementById('set-fee-net').value = conf.feeNet;
+            document.getElementById('set-fee-min').value = conf.feeMin;
+            document.getElementById('set-fee-vyfi').value = conf.feeVyfi;
+            document.getElementById('settings-modal').style.display = 'flex'; 
+        }
         function saveSettings() {
             conf.glow = parseFloat(document.getElementById('set-glow').value);
             conf.alert = parseFloat(document.getElementById('set-alert').value);
             conf.sim = parseFloat(document.getElementById('set-sim').value);
             conf.tgBot = document.getElementById('set-tg-bot').value.trim();
             conf.tgChat = document.getElementById('set-tg-chat').value.trim();
+            conf.feeNet = parseFloat(document.getElementById('set-fee-net').value);
+            conf.feeMin = parseFloat(document.getElementById('set-fee-min').value);
+            conf.feeVyfi = parseFloat(document.getElementById('set-fee-vyfi').value);
             localStorage.setItem('l4va_config', JSON.stringify(conf));
+            
             document.getElementById('sim-ada-input').value = conf.sim;
             document.getElementById('sim-tri-input').value = conf.sim;
             document.getElementById('alert-label').innerText = conf.alert;
             closeModals();
             recalculateSimulators();
+        }
+
+        // --- Log System ---
+        function addToLog(spread, routeText, color = "#ffffff") {
+            const logEl = document.getElementById('opp-log');
+            if(logEl.innerText.includes("Waiting")) logEl.innerHTML = '';
+            const time = new Date().toLocaleTimeString();
+            const div = document.createElement('div');
+            div.className = "log-entry";
+            div.innerHTML = `<div class="log-time">${time}</div>
+                             <div class="log-spread" style="color:${color};">+${spread.toFixed(2)}%</div>
+                             <div class="log-route">${routeText}</div>`;
+            logEl.prepend(div);
         }
 
         async function sendTelegramAlert(message) {
@@ -386,10 +419,8 @@
                 else { dataArr.shift(); dataArr.push(val); }
                 chart.update();
             };
-            pushData(sparkInstances.vlrmAda, vAdaTvl);
-            pushData(sparkInstances.vlrmOracle, vOraTvl);
-            pushData(sparkInstances.oracleVyfi, oVyfiTvl);
-            pushData(sparkInstances.oracleMin, oMinTvl);
+            pushData(sparkInstances.vlrmAda, vAdaTvl); pushData(sparkInstances.vlrmOracle, vOraTvl);
+            pushData(sparkInstances.oracleVyfi, oVyfiTvl); pushData(sparkInstances.oracleMin, oMinTvl);
             pushData(sparkInstances.vault, vaultTvl);
         }
 
@@ -412,12 +443,14 @@
 
         function recalculateSimulators() { recalculateDexSimulator(); recalculateTriSimulator(); }
 
+        // --- SIM 1: DEX NORMAL ---
         function recalculateDexSimulator() {
             const investAda = parseFloat(document.getElementById('sim-ada-input').value) || 0;
             const simEl = document.getElementById('sim-profit'); const optEl = document.getElementById('optimizer-result');
             if(currentPools.vyfi.price <= 0 || currentPools.minswap.price <= 0) { simEl.innerText = "0.00 ADA"; return; }
             
-            const networkFee = 0.20; const minFixed = 0.70; const vyfiFixed = 1.90;
+            // Usando fees dinámicas de la config
+            const networkFee = conf.feeNet; const minFixed = conf.feeMin; const vyfiFixed = conf.feeVyfi;
             let poolBuy, poolSell, fixedFeeBuy, fixedFeeSell;
 
             if (currentPools.minswap.price < currentPools.vyfi.price) { poolBuy = currentPools.minswap; poolSell = currentPools.vyfi; fixedFeeBuy = minFixed; fixedFeeSell = vyfiFixed; } 
@@ -431,7 +464,12 @@
             }
             
             if (swapAdaAmount <= 0) { simEl.innerText = "Insufficient ADA"; simEl.className = "arbitrage-big-value profit-negative"; } 
-            else { let sign = netProfit > 0 ? "+" : ""; simEl.innerText = `${sign}${netProfit.toFixed(2)} ADA`; simEl.className = netProfit > 0 ? "arbitrage-big-value profit-positive" : "arbitrage-big-value profit-negative"; }
+            else { 
+                let sign = netProfit > 0 ? "+" : ""; 
+                let usdStr = currentAdaUsd > 0 ? `<span class="usd-profit">(~$${(Math.abs(netProfit)*currentAdaUsd).toFixed(2)})</span>` : "";
+                simEl.innerHTML = `${sign}${netProfit.toFixed(2)} ADA ${usdStr}`; 
+                simEl.className = netProfit > 0 ? "arbitrage-big-value profit-positive" : "arbitrage-big-value profit-negative"; 
+            }
 
             let bestProfit = -Infinity; let optimalInvest = 0;
             for(let i = 10; i <= 5000; i += 10) {
@@ -447,13 +485,14 @@
             else { optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> No profitable route (fees > spread).`; optEl.style.color = 'var(--text-secondary)'; }
         }
 
-        // Modificada para retornar también la ruta ganadora
+        // --- SIM 2: TRIANGULAR ---
         function calcTriNetDetails(investAda) {
             if(investAda <= 0) return { netProfit: -Infinity, route: null };
             let pVA = currentPools.vlrmAda; let pVO = currentPools.crossVO; let pOVy = currentPools.vyfi; let pOMin = currentPools.minswap; 
             if(pVA.resAda <= 0 || pVO.resVlrm <= 0) return { netProfit: -Infinity, route: null };
 
-            const netF = 0.2; const fVy = 1.9 + netF; const fMin = 0.7 + netF; 
+            // Usando fees dinámicas de la config
+            const netF = conf.feeNet; const fVy = conf.feeVyfi + netF; const fMin = conf.feeMin + netF; 
 
             let outA = -Infinity; let adaAfterLeg1A = investAda - fVy;
             if(adaAfterLeg1A > 0) {
@@ -490,11 +529,13 @@
             if(investAda <= 0 || netProfit === -Infinity) { 
                 simEl.innerText = "Insufficient"; simEl.className = "arbitrage-big-value profit-negative"; 
             } else { 
-                let sign = netProfit > 0 ? "+" : ""; simEl.innerText = `${sign}${netProfit.toFixed(2)} ADA`; 
+                let sign = netProfit > 0 ? "+" : ""; 
+                let usdStr = currentAdaUsd > 0 ? `<span class="usd-profit">(~$${(Math.abs(netProfit)*currentAdaUsd).toFixed(2)})</span>` : "";
+                simEl.innerHTML = `${sign}${netProfit.toFixed(2)} ADA ${usdStr}`; 
                 simEl.className = netProfit > 0 ? "arbitrage-big-value profit-positive" : "arbitrage-big-value profit-negative"; 
             }
 
-            // Auto Optimizer (Triangular) + Cálculo % Real
+            // Auto Optimizer (Triangular)
             let bestProfit = -Infinity; let optimalInvest = 0; let optimalRoute = null; let bestPercent = 0;
             for(let i = 10; i <= 5000; i += 10) {
                 let testData = calcTriNetDetails(i);
@@ -506,7 +547,6 @@
                 } else if (testData.netProfit < bestProfit && testData.netProfit > 0) break;
             }
 
-            // Actualizar la interfaz del Panel Triangular de la derecha
             const triEl = document.getElementById('tri-arb-spread');
             const rA = document.getElementById('route-a-container');
             const rB = document.getElementById('route-b-container');
@@ -533,9 +573,10 @@
             try {
                 const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=cardano&vs_currencies=usd');
                 const data = await response.json();
-                document.getElementById('ada-price-usd').innerText = `$${data.cardano.usd.toFixed(4)}`;
+                currentAdaUsd = data.cardano.usd; // Guardado Global
+                document.getElementById('ada-price-usd').innerText = `$${currentAdaUsd.toFixed(4)}`;
                 document.getElementById('ada-time').innerText = new Date().toLocaleTimeString();
-                return data.cardano.usd;
+                return currentAdaUsd;
             } catch (error) { return null; }
         }
 
@@ -547,9 +588,7 @@
                 if (data.error) throw new Error(data.error);
 
                 let vaultTvlData = 0;
-                if (data.vaultTvl && data.vaultTvl > 0) {
-                    vaultTvlData = data.vaultTvl;
-                }
+                if (data.vaultTvl && data.vaultTvl > 0) { vaultTvlData = data.vaultTvl; }
 
                 let priceVlrmAda = 0; let vlrmVyfiAdaReserve = 0; let vlrmVyfiTokReserve = 0; let vlrmAdaTvl = 0;
                 const vlrmVyfiPool = data.vyfiPools.find(p => p.unitsPair.includes('lovelace') && p.unitsPair.includes(VLRM));
@@ -583,7 +622,6 @@
                 }
                 document.getElementById('oracle-total-liq').innerText = `₳ ${Math.round(totalOracleLiqAda).toLocaleString()}`;
 
-                // Update ALL 5 Sparklines
                 updateSparklines(vlrmAdaTvl, crossTvl, vyfiTvLAda, minTvlAda, vaultTvlData);
 
                 currentPools.vyfi = { price: priceVyfi, reserveAda: priceVyfi > 0 ? (vyfiTvLAda / 2) : 0, reserveTok: priceVyfi > 0 ? (vyfiTvLAda / 2) / priceVyfi : 0 };
@@ -605,8 +643,7 @@
 
                         let targetLink = targetDex === "Minswap" ? MINSWAP_LINK : VYFI_LINK; 
                         
-                        // Modificación solicitada: Color Verde/Rojo en vez de color de DEX
-                        vaultBannerDiscEl.className = 'arbitrage-big-value'; // Quitamos la clase de DEX
+                        vaultBannerDiscEl.className = 'arbitrage-big-value'; 
                         if (Math.abs(bestDeviation) < 0.5) {
                             vaultBannerDiscEl.style.color = "rgba(255, 255, 255, 0.5)";
                             vaultBannerDiscEl.style.textShadow = "0 2px 10px rgba(0,0,0,0.3)";
@@ -638,24 +675,36 @@
                     } else {
                         spreadEl.style.color = "#ffffff"; 
                         if (spread >= conf.glow) { spreadEl.style.textShadow = "0 0 15px rgba(255, 255, 255, 0.7)"; } else { spreadEl.style.textShadow = "0 2px 10px rgba(0,0,0,0.3)"; }
-                        if (priceVyfi > priceMin) { actionEl.innerHTML = `Buy <a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Min</a> ➔ Sell <a href="${VYFI_LINK}" target="_blank" class="badge-dark">VyFi</a>`; suggestedActionText = "Buy on Minswap, Sell on VyFi"; } 
-                        else { actionEl.innerHTML = `Buy <a href="${VYFI_LINK}" target="_blank" class="badge-dark">VyFi</a> ➔ Sell <a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Min</a>`; suggestedActionText = "Buy on VyFi, Sell on Minswap"; }
+                        if (priceVyfi > priceMin) { actionEl.innerHTML = `Buy <a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Min</a> ➔ Sell <a href="${VYFI_LINK}" target="_blank" class="badge-dark">VyFi</a>`; suggestedActionText = "Buy Minswap, Sell VyFi"; } 
+                        else { actionEl.innerHTML = `Buy <a href="${VYFI_LINK}" target="_blank" class="badge-dark">VyFi</a> ➔ Sell <a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Min</a>`; suggestedActionText = "Buy VyFi, Sell Minswap"; }
                     }
 
+                    // Alert & Log Trigger
                     if (spread >= conf.alert) {
                         const alertToggle = document.getElementById('alert-toggle'); const now = Date.now();
                         if (alertToggle && alertToggle.checked && (now - lastAlertTime > ALERT_COOLDOWN)) {
                             playDing(); if (Notification.permission === "granted") { new Notification("🚨 L4VA Arbitrage Detected!", { body: `Spread: ${spread.toFixed(2)}%\n${suggestedActionText}` }); }
                             sendTelegramAlert(`🚨 <b>L4VA Arbitrage Detected!</b>\n\n📈 DEX Spread: <b>${spread.toFixed(2)}%</b>\n💡 Route: ${suggestedActionText}\n\n<i>Check dashboard for real-time net profit.</i>`);
+                            
+                            // Guardar en el Historial (Log)
+                            addToLog(spread, suggestedActionText, "#ffffff");
+                            
                             lastAlertTime = now;
                         }
                     }
                 }
 
                 updateMainChart(spread, bestDeviation);
-                
-                // Recalculate Simulators AND Updates Triangular UI dynamically
                 recalculateSimulators();
+
+                // Lógica independiente de log para el Triangular (Si es brutalmente alto)
+                let triDataOpt = calcTriNetDetails(100); // Test rápido con 100 ada
+                if (triDataOpt.netProfit > 0) {
+                   let pct = (triDataOpt.netProfit / 100) * 100;
+                   if(pct >= conf.alert && (Date.now() - lastAlertTime > 60000)) { // 1 min buffer visual
+                       addToLog(pct, triDataOpt.route === 'A' ? "Triangular Route A" : "Triangular Route B", "#10b981");
+                   }
+                }
 
             } catch (error) { console.error("General error:", error); }
         }
