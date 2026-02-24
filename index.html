@@ -65,7 +65,7 @@
         .card { border-radius: 20px; padding: 20px 25px; position: relative; background: rgba(18, 15, 36, 0.85); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); transition: transform 0.3s ease, box-shadow 0.3s ease; }
         .card:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 123, 0, 0.15); border-color: rgba(255, 123, 0, 0.3); }
 
-        /* Tarjeta ADA más clara */
+        /* Tarjeta ADA Resaltada */
         .card-ada { background: rgba(35, 40, 65, 0.85); border-color: rgba(66, 133, 244, 0.2); }
         .card-ada:hover { border-color: rgba(66, 133, 244, 0.5); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(66, 133, 244, 0.2); }
 
@@ -90,6 +90,7 @@
         .alert-toggle-box input { accent-color: var(--neon-orange); transform: scale(1.1); }
         .badge-dark { background: rgba(255,255,255,0.9); color: var(--text-on-fire); font-size: 0.75rem; padding: 4px 8px; border-radius: 20px; font-weight: 800; display: inline-block; margin: 0 2px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); text-decoration: none; transition: 0.2s ease; }
         a.badge-dark:hover { transform: scale(1.08); background: #ffffff; cursor: pointer; }
+        
         .color-minswap { color: var(--badge-min-text) !important; }
         .color-vyfi { color: var(--badge-vyfi-text) !important; }
 
@@ -115,7 +116,7 @@
         .route-active { background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); padding: 6px 10px; border-radius: 8px; color: #10b981; }
         .route-inactive { background: transparent; border: 1px solid transparent; padding: 6px 10px; opacity: 0.5; color: var(--text-secondary); }
 
-        /* Estructura Fusionada Inteligente */
+        /* Estructura Fusionada Inteligente 55/45 */
         .merged-section-grid {
             display: grid;
             grid-template-columns: 1fr; /* Móvil: una columna */
@@ -123,7 +124,7 @@
         }
         @media (min-width: 900px) {
             .merged-section-grid {
-                grid-template-columns: 3fr 2fr; /* PC: 60% izquierda, 40% derecha */
+                grid-template-columns: 55fr 45fr; /* PC: 55% izquierda, 45% derecha */
             }
             .merged-right-col {
                 border-left: 1px solid rgba(255,255,255,0.1); 
@@ -169,7 +170,7 @@
             
             <div class="arbitrage-grid">
                 <div class="arbitrage-box">
-                    <div class="arbitrage-label" style="color: var(--neon-orange); margin-bottom: 8px;">DEX Arbitrage (ORACLE)</div>
+                    <div class="arbitrage-label" style="color: var(--ada-color); margin-bottom: 8px;">DEX Arbitrage (ORACLE)</div>
                     <div style="display: flex; justify-content: space-between;">
                         <div>
                             <div class="arbitrage-label">Spread</div>
@@ -197,7 +198,7 @@
                 </div>
 
                 <div class="arbitrage-box" style="border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; justify-content: center;">
-                    <div class="arbitrage-label" style="color: #10b981; margin-bottom: 8px;">Net Profit Simulator ORACLE / ADA</div>
+                    <div class="arbitrage-label" style="color: var(--neon-orange); margin-bottom: 8px;">Net Profit Simulator ORACLE / ADA</div>
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <div>
                             <div class="arbitrage-label">Investment</div>
@@ -212,7 +213,7 @@
                 </div>
 
                 <div class="arbitrage-box" style="border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; justify-content: center;">
-                    <div class="arbitrage-label" style="color: var(--badge-vyfi-text); margin-bottom: 8px;">NET PROFIT SIMULATOR TRIANGULAR</div>
+                    <div class="arbitrage-label" style="color: var(--neon-orange); margin-bottom: 8px;">NET PROFIT SIMULATOR TRIANGULAR</div>
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <div>
                             <div class="arbitrage-label">Investment</div>
@@ -228,7 +229,8 @@
             </div>
         </div>
 
-        <div class="card card-ada"> <div class="card-title ada-title">Cardano (ADA) 💎</div>
+        <div class="card card-ada">
+            <div class="card-title ada-title">Cardano (ADA) 💎</div>
             <div class="data-row"><span class="data-label">Price USD:</span><span class="data-value" id="ada-price-usd"><span class="loading">Loading...</span></span></div>
             <div class="data-row" style="margin-top: 15px;"><span class="data-label" style="font-size: 0.75rem;">Last Updated:</span><span class="data-value" style="font-size: 0.75rem;" id="ada-time">-</span></div>
         </div>
@@ -276,11 +278,11 @@
                 </div>
 
                 <div class="merged-right-col">
-                    <div class="card-title" style="margin-bottom: 20px;">Triangular Arbitrage (Cross-Pair) 🔺</div>
+                    <div class="card-title" style="color: var(--neon-orange); margin-bottom: 20px;">Triangular Arbitrage (Cross-Pair) 🔺</div>
                     <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); height: calc(100% - 60px); display: flex; flex-direction: column; justify-content: center;">
                         
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                            <div class="arbitrage-label">Estimated Discrepancy</div>
+                            <div class="arbitrage-label">Optimal Estimated Discrepancy</div>
                             <div class="arbitrage-big-value" id="tri-arb-spread" style="font-size: 1.8rem;"><span class="loading">Scanning...</span></div>
                         </div>
 
@@ -293,7 +295,7 @@
                             </div>
                         </div>
                         <div style="font-size: 0.75rem; font-style: italic; color: var(--text-secondary); margin-top: 15px;">
-                            *Theoretical spot calculation. Check liquidity before execution.
+                            *Percentage is dynamically calculated from Auto-Optimizer's max realistic net profit.
                         </div>
                     </div>
                 </div>
@@ -357,7 +359,6 @@
         }
 
         function initCharts() {
-            // Main Chart
             const ctx = document.getElementById('arbitrageChart').getContext('2d');
             chartInstance = new Chart(ctx, {
                 type: 'line',
@@ -368,7 +369,6 @@
                 options: { responsive: true, maintainAspectRatio: false, scales: { x: { display: false }, y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#a0a0c0' } } }, plugins: { legend: { display: true, labels: { color: '#ffffff', boxWidth: 10 } } } }
             });
 
-            // 5 Mini Sparklines
             const sparkOptions = { responsive: true, maintainAspectRatio: false, scales: { x: { display: false }, y: { display: false } }, plugins: { legend: { display: false }, tooltip: { enabled: false } }, layout: { padding: 0 } };
             const createSpark = (id, color) => new Chart(document.getElementById(id).getContext('2d'), { type: 'line', data: { labels: Array(20).fill(''), datasets: [{ data: Array(20).fill(null), borderColor: color, borderWidth: 2, tension: 0.4, pointRadius: 0, fill: true, backgroundColor: color.replace('1)', '0.1)') }] }, options: sparkOptions });
 
@@ -376,7 +376,7 @@
             sparkInstances.vlrmOracle = createSpark('spark-vlrm-oracle', 'rgba(167, 139, 250, 1)'); 
             sparkInstances.oracleVyfi = createSpark('spark-oracle-vyfi', 'rgba(167, 139, 250, 1)'); 
             sparkInstances.oracleMin = createSpark('spark-oracle-min', 'rgba(137, 170, 255, 1)'); 
-            sparkInstances.vault = createSpark('spark-vault', 'rgba(252, 211, 77, 1)'); // Dorado para Vault
+            sparkInstances.vault = createSpark('spark-vault', 'rgba(252, 211, 77, 1)'); 
         }
         
         function updateSparklines(vAdaTvl, vOraTvl, oVyfiTvl, oMinTvl, vaultTvl) {
@@ -447,10 +447,11 @@
             else { optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> No profitable route (fees > spread).`; optEl.style.color = 'var(--text-secondary)'; }
         }
 
-        function calcTriNet(investAda) {
-            if(investAda <= 0) return -Infinity;
+        // Modificada para retornar también la ruta ganadora
+        function calcTriNetDetails(investAda) {
+            if(investAda <= 0) return { netProfit: -Infinity, route: null };
             let pVA = currentPools.vlrmAda; let pVO = currentPools.crossVO; let pOVy = currentPools.vyfi; let pOMin = currentPools.minswap; 
-            if(pVA.resAda <= 0 || pVO.resVlrm <= 0) return -Infinity;
+            if(pVA.resAda <= 0 || pVO.resVlrm <= 0) return { netProfit: -Infinity, route: null };
 
             const netF = 0.2; const fVy = 1.9 + netF; const fMin = 0.7 + netF; 
 
@@ -473,24 +474,59 @@
                 let finalMinVy = getAmmOut(vlrmOutMin, pVA.resTok, pVA.resAda) - fVy - fVy;
                 outB = Math.max(finalVyVy, finalMinVy);
             }
-            return Math.max(outA, outB) - investAda; 
+            
+            let bestOut = Math.max(outA, outB);
+            return { netProfit: bestOut - investAda, route: outA > outB ? 'A' : 'B' }; 
         }
 
         function recalculateTriSimulator() {
             const investAda = parseFloat(document.getElementById('sim-tri-input').value) || 0;
-            const simEl = document.getElementById('sim-tri-profit'); const optEl = document.getElementById('tri-optimizer-result');
-            let netProfit = calcTriNet(investAda);
+            const simEl = document.getElementById('sim-tri-profit'); 
+            const optEl = document.getElementById('tri-optimizer-result');
+            
+            let currentData = calcTriNetDetails(investAda);
+            let netProfit = currentData.netProfit;
 
-            if(investAda <= 0 || netProfit === -Infinity) { simEl.innerText = "Insufficient"; simEl.className = "arbitrage-big-value profit-negative"; } 
-            else { let sign = netProfit > 0 ? "+" : ""; simEl.innerText = `${sign}${netProfit.toFixed(2)} ADA`; simEl.className = netProfit > 0 ? "arbitrage-big-value profit-positive" : "arbitrage-big-value profit-negative"; }
-
-            let bestProfit = -Infinity; let optimalInvest = 0;
-            for(let i = 10; i <= 5000; i += 10) {
-                let testNet = calcTriNet(i);
-                if (testNet > bestProfit) { bestProfit = testNet; optimalInvest = i; } else if (testNet < bestProfit && testNet > 0) break;
+            if(investAda <= 0 || netProfit === -Infinity) { 
+                simEl.innerText = "Insufficient"; simEl.className = "arbitrage-big-value profit-negative"; 
+            } else { 
+                let sign = netProfit > 0 ? "+" : ""; simEl.innerText = `${sign}${netProfit.toFixed(2)} ADA`; 
+                simEl.className = netProfit > 0 ? "arbitrage-big-value profit-positive" : "arbitrage-big-value profit-negative"; 
             }
-            if (bestProfit > 0) { optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> Max profit <b>+${bestProfit.toFixed(2)} ADA</b> (Invest <b>${optimalInvest} ADA</b>)`; optEl.style.color = '#10b981'; } 
-            else { optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> No profitable route (fees > spread).`; optEl.style.color = 'var(--text-secondary)'; }
+
+            // Auto Optimizer (Triangular) + Cálculo % Real
+            let bestProfit = -Infinity; let optimalInvest = 0; let optimalRoute = null; let bestPercent = 0;
+            for(let i = 10; i <= 5000; i += 10) {
+                let testData = calcTriNetDetails(i);
+                if (testData.netProfit > bestProfit) { 
+                    bestProfit = testData.netProfit; 
+                    optimalInvest = i; 
+                    optimalRoute = testData.route;
+                    bestPercent = (testData.netProfit / i) * 100;
+                } else if (testData.netProfit < bestProfit && testData.netProfit > 0) break;
+            }
+
+            // Actualizar la interfaz del Panel Triangular de la derecha
+            const triEl = document.getElementById('tri-arb-spread');
+            const rA = document.getElementById('route-a-container');
+            const rB = document.getElementById('route-b-container');
+            rA.className = "route-inactive"; rB.className = "route-inactive";
+
+            if (bestProfit > 0) { 
+                optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> Max profit <b>+${bestProfit.toFixed(2)} ADA</b> (Invest <b>${optimalInvest} ADA</b>)`; 
+                optEl.style.color = '#10b981'; 
+                
+                triEl.innerText = `+${bestPercent.toFixed(2)}%`;
+                triEl.style.color = "#10b981";
+                if (optimalRoute === 'A') rA.className = "route-active";
+                if (optimalRoute === 'B') rB.className = "route-active";
+
+            } else { 
+                optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> No profitable route (fees > spread).`; 
+                optEl.style.color = 'var(--text-secondary)'; 
+                triEl.innerText = "0.00%";
+                triEl.style.color = "var(--text-secondary)";
+            }
         }
 
         async function fetchAdaPrice() {
@@ -554,35 +590,6 @@
                 currentPools.minswap = { price: priceMin, reserveAda: priceMin > 0 ? (minTvlAda / 2) : 0, reserveTok: priceMin > 0 ? (minTvlAda / 2) / priceMin : 0 };
                 currentPools.vlrmAda = { resAda: vlrmVyfiAdaReserve, resTok: vlrmVyfiTokReserve }; currentPools.crossVO = { resVlrm: crossVlrmReserve, resOracle: crossOracleReserve };
 
-                // TRIANGULAR HIGHLIGHT LOGIC
-                if (priceVlrmAda > 0 && crossOracleReserve > 0 && priceVyfi > 0) {
-                    let routeA_Cost = (crossVlrmReserve / crossOracleReserve) * priceVlrmAda; 
-                    let bestDirectMarketPrice = Math.max(priceVyfi, priceMin);
-                    let triArbDiff = ((bestDirectMarketPrice - routeA_Cost) / routeA_Cost) * 100;
-                    
-                    const triEl = document.getElementById('tri-arb-spread');
-                    const rA = document.getElementById('route-a-container');
-                    const rB = document.getElementById('route-b-container');
-
-                    // Reset
-                    rA.className = "route-inactive"; rB.className = "route-inactive";
-
-                    if(Math.abs(triArbDiff) < 0.5) {
-                        triEl.innerText = "Balanced"; triEl.style.color = "var(--text-secondary)";
-                    } else {
-                        let sign = triArbDiff > 0 ? '+' : '';
-                        triEl.innerText = `${sign}${Math.abs(triArbDiff).toFixed(2)}%`;
-                        triEl.style.color = "#10b981";
-
-                        // Highlight Winning Route
-                        if (triArbDiff > 0) {
-                            rA.className = "route-active";
-                        } else {
-                            rB.className = "route-active";
-                        }
-                    }
-                }
-
                 let bestDeviation = 0;
                 if (vaultTvlData > 0) {
                     const fairPrice = vaultTvlData / ORACLE_TOTAL_SUPPLY;
@@ -596,13 +603,26 @@
                         const vaultBannerDiscEl = document.getElementById('vault-banner-discrepancy'); const vaultActionEl = document.getElementById('vault-arbitrage-action');
                         let sign = bestDeviation > 0 ? '+' : ''; vaultBannerDiscEl.innerText = `${sign}${bestDeviation.toFixed(2)}%`;
 
-                        let targetLink = targetDex === "Minswap" ? MINSWAP_LINK : VYFI_LINK; let dexColorClass = targetDex === "Minswap" ? "color-minswap" : "color-vyfi";
+                        let targetLink = targetDex === "Minswap" ? MINSWAP_LINK : VYFI_LINK; 
+                        
+                        // Modificación solicitada: Color Verde/Rojo en vez de color de DEX
+                        vaultBannerDiscEl.className = 'arbitrage-big-value'; // Quitamos la clase de DEX
                         if (Math.abs(bestDeviation) < 0.5) {
-                            vaultBannerDiscEl.className = 'arbitrage-big-value'; vaultBannerDiscEl.style.color = "rgba(255, 255, 255, 0.5)"; vaultBannerDiscEl.style.textShadow = "0 2px 10px rgba(0,0,0,0.3)"; vaultActionEl.innerHTML = `<span style="color: rgba(255, 255, 255, 0.6);">Balanced</span>`;
+                            vaultBannerDiscEl.style.color = "rgba(255, 255, 255, 0.5)";
+                            vaultBannerDiscEl.style.textShadow = "0 2px 10px rgba(0,0,0,0.3)";
+                            vaultActionEl.innerHTML = `<span style="color: rgba(255, 255, 255, 0.6);">Balanced</span>`;
                         } else {
-                            vaultBannerDiscEl.style.color = ""; vaultBannerDiscEl.className = `arbitrage-big-value ${dexColorClass}`;
-                            if (Math.abs(bestDeviation) >= conf.glow) { let glowColor = targetDex === "Minswap" ? "rgba(137, 170, 255, 0.6)" : "rgba(167, 139, 250, 0.6)"; vaultBannerDiscEl.style.textShadow = `0 0 15px ${glowColor}`; } else { vaultBannerDiscEl.style.textShadow = "0 2px 10px rgba(0,0,0,0.3)"; }
-                            if (bestDeviation > 0) { vaultActionEl.innerHTML = `Sell <a href="${targetLink}" target="_blank" class="badge-dark">${targetDex}</a>`; } else { vaultActionEl.innerHTML = `Buy <a href="${targetLink}" target="_blank" class="badge-dark">${targetDex}</a>`; }
+                            if (bestDeviation > 0) {
+                                vaultBannerDiscEl.style.color = "#10b981"; // Verde
+                                if (Math.abs(bestDeviation) >= conf.glow) vaultBannerDiscEl.style.textShadow = `0 0 15px rgba(16, 185, 129, 0.6)`; 
+                                else vaultBannerDiscEl.style.textShadow = "0 2px 10px rgba(0,0,0,0.3)";
+                                vaultActionEl.innerHTML = `Sell <a href="${targetLink}" target="_blank" class="badge-dark">${targetDex}</a>`; 
+                            } else {
+                                vaultBannerDiscEl.style.color = "var(--neon-red)"; // Rojo
+                                if (Math.abs(bestDeviation) >= conf.glow) vaultBannerDiscEl.style.textShadow = `0 0 15px rgba(255, 15, 91, 0.6)`; 
+                                else vaultBannerDiscEl.style.textShadow = "0 2px 10px rgba(0,0,0,0.3)";
+                                vaultActionEl.innerHTML = `Buy <a href="${targetLink}" target="_blank" class="badge-dark">${targetDex}</a>`; 
+                            }
                         }
                     }
                 }
@@ -633,6 +653,8 @@
                 }
 
                 updateMainChart(spread, bestDeviation);
+                
+                // Recalculate Simulators AND Updates Triangular UI dynamically
                 recalculateSimulators();
 
             } catch (error) { console.error("General error:", error); }
