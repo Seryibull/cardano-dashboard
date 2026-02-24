@@ -688,16 +688,62 @@
             } catch (error) { console.error("General error:", error); }
         }
 
+        async function fetchHistoryFromCloudflare() {
+            try {
+                // Le pedimos a Cloudflare el historial usando el parámetro ?data=history
+                const res = await fetch(PROXY_URL + '?data=history');
+                const cloudHistory = await res.json();
+                
+                // Si la BD tiene datos, sobreescribimos nuestra memoria local
+                if (cloudHistory && cloudHistory.labels && cloudHistory.labels.length > 0) {
+                    chartHistory = cloudHistory;
+                    
+                    // Actualizamos las gráficas con el golpe histórico
+                    chartInstance.data.labels = chartHistory.labels;
+                    chartInstance.data.datasets[0].data = chartHistory.spread;
+                    chartInstance.data.datasets[1].data = chartHistory.discrepancy;
+                    chartInstance.update();
+
+                    sparkInstances.vlrmAda.data.labels = chartHistory.labels;
+                    sparkInstances.vlrmAda.data.datasets[0].data = chartHistory.vlrmAda;
+                    sparkInstances.vlrmAda.update();
+
+                    sparkInstances.vlrmOracle.data.labels = chartHistory.labels;
+                    sparkInstances.vlrmOracle.data.datasets[0].data = chartHistory.vlrmOracle;
+                    sparkInstances.vlrmOracle.update();
+
+                    sparkInstances.oracleVyfi.data.labels = chartHistory.labels;
+                    sparkInstances.oracleVyfi.data.datasets[0].data = chartHistory.oracleVyfi;
+                    sparkInstances.oracleVyfi.update();
+
+                    sparkInstances.oracleMin.data.labels = chartHistory.labels;
+                    sparkInstances.oracleMin.data.datasets[0].data = chartHistory.oracleMin;
+                    sparkInstances.oracleMin.update();
+
+                    sparkInstances.vault.data.labels = chartHistory.labels;
+                    sparkInstances.vault.data.datasets[0].data = chartHistory.vault;
+                    sparkInstances.vault.update();
+                }
+            } catch (e) {
+                console.error("Error loading historical data:", e);
+            }
+        }
+
         async function initDashboard() {
             initCharts();
+            
+            // 1. Descargamos las 24 horas pasadas desde Cloudflare
+            await fetchHistoryFromCloudflare();
+
+            // 2. Cargamos el precio actual y empezamos a operar en vivo
             const adaPriceUsd = await fetchAdaPrice();
             await fetchDexData(adaPriceUsd);
+            
             setInterval(async () => {
                 const updatedAdaPrice = await fetchAdaPrice();
                 await fetchDexData(updatedAdaPrice);
             }, 30000);
         }
-        window.onload = initDashboard;
-    </script>
+        window.onload = initDashboard;    </script>
 </body>
 </html>
