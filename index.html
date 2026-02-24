@@ -62,7 +62,11 @@
         .card-title.ada-title { color: var(--ada-color); text-shadow: 0 0 10px rgba(66, 133, 244, 0.3); }
         .data-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 0.95rem; }
         .data-label { color: var(--text-secondary); font-weight: 500; }
-        .data-value { font-weight: 800; font-size: 1.2rem; color: var(--text-primary); }
+        .data-value { font-weight: 800; font-size: 1.2rem; color: var(--text-primary); display: flex; align-items: center; gap: 8px;}
+        
+        /* New Change Badge Styles */
+        .change-badge { font-size: 0.8rem; font-weight: 800; }
+        
         .badge { font-size: 0.7rem; padding: 4px 10px; border-radius: 20px; font-weight: 700; text-transform: uppercase; border: 1px solid transparent; }
         .bg-vyfi { background: var(--badge-vyfi-bg); color: var(--badge-vyfi-text); border-color: var(--badge-vyfi-text); }
         .bg-minswap { background: var(--badge-min-bg); color: var(--badge-min-text); border-color: var(--badge-min-text); }
@@ -131,10 +135,11 @@
         <div class="modal-content">
             <div class="modal-title"><span>⚙️ Preferences</span><span style="cursor:pointer;" onclick="closeModals()">✕</span></div>
             
-            <div class="setting-section-title">THRESHOLDS & SIMULATOR</div>
-            <div class="setting-row"><span>Glow Threshold (%)</span><input type="number" id="set-glow" class="setting-input"></div>
-            <div class="setting-row"><span>Alert Threshold (%)</span><input type="number" id="set-alert" class="setting-input"></div>
+            <div class="setting-section-title">SIMULATOR</div>
             <div class="setting-row"><span>Simulator Base (ADA)</span><input type="number" id="set-sim" class="setting-input"></div>
+            
+            <div class="setting-section-title">THRESHOLDS</div>
+            <div class="setting-row"><span>Alert Threshold (%)</span><input type="number" id="set-alert" class="setting-input"></div>
             
             <div class="setting-section-title">DEX FEES (ADA)</div>
             <div class="setting-row"><span>Network (Tx) Fee</span><input type="number" step="0.1" id="set-fee-net" class="setting-input"></div>
@@ -188,7 +193,7 @@
                 </div>
 
                 <div class="arbitrage-box" style="border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; justify-content: center;">
-                    <div class="arbitrage-label" style="color: var(--neon-orange); margin-bottom: 8px;">Net Profit Simulator ORACLE / ADA</div>
+                    <div class="arbitrage-label" style="color: var(--neon-orange); margin-bottom: 8px;">NET PROFIT SIMULATOR (ORACLE)</div>
                     <div style="display: flex; justify-content: space-between; align-items: flex-start;">
                         <div>
                             <div class="arbitrage-label" style="margin-bottom:5px;">Investment</div>
@@ -221,12 +226,25 @@
 
         <div class="card card-ada">
             <div class="card-title ada-title">Cardano (ADA) 💎</div>
-            <div class="data-row"><span class="data-label">Price USD:</span><span class="data-value" id="ada-price-usd"><span class="loading">Loading...</span></span></div>
+            <div class="data-row">
+                <span class="data-label">Price USD:</span>
+                <span class="data-value" id="ada-price-usd">
+                    <span class="loading">Loading...</span> <span id="ada-change-24h" class="change-badge"></span>
+                </span>
+            </div>
             <div class="data-row" style="margin-top: 15px;"><span class="data-label" style="font-size: 0.75rem;">Last Updated:</span><span class="data-value" style="font-size: 0.75rem;" id="ada-time">-</span></div>
+            <div style="height: 40px; margin-top: 15px;"><canvas id="spark-ada"></canvas></div>
         </div>
+        
         <div class="card">
             <div class="card-title" style="color: #fcd34d;">Relics Vault TVL 🏛️</div>
-            <div class="data-row"><span class="data-label">Total Value (ADA):</span><span class="data-value" id="vault-tvl"><span class="loading">Calculating...</span></span></div>
+            <div class="data-row">
+                <span class="data-label">Total Value (ADA):</span>
+                <span class="data-value">
+                    <span id="vault-tvl"><span class="loading">Calculating...</span></span>
+                    <span id="vault-change-24h" class="change-badge"></span>
+                </span>
+            </div>
             <div class="data-row"><span class="data-label">Fair price:</span><span class="data-value" id="vault-fair-price">-</span></div>
             <div style="height: 40px; margin-top: 15px;"><canvas id="spark-vault"></canvas></div>
         </div>
@@ -234,41 +252,62 @@
         <div class="card">
             <div class="card-title">VLRM / ADA <span class="badge bg-vyfi">VyFi</span></div>
             <div class="data-row"><span class="data-label">Price:</span><span class="data-value" id="vlrm-price-ada"><span class="loading">Connecting...</span></span></div>
-            <div class="data-row"><span class="data-label">TVL (Pool):</span><span class="data-value" id="vlrm-liq-ada">-</span></div>
+            <div class="data-row">
+                <span class="data-label">TVL (Pool):</span>
+                <span class="data-value">
+                    <span id="vlrm-liq-ada">-</span> <span id="vlrm-ada-change-24h" class="change-badge"></span>
+                </span>
+            </div>
             <div style="height: 40px; margin-top: 15px;"><canvas id="spark-vlrm-ada"></canvas></div>
         </div>
         <div class="card">
             <div class="card-title">VLRM / ORACLE <span class="badge bg-vyfi">VyFi</span></div>
-            <div class="data-row"><span class="data-label">TVL (Cross-pool):</span><span class="data-value" id="vlrm-oracle-liq-ada"><span class="loading">Waiting...</span></span></div>
+            <div class="data-row">
+                <span class="data-label">TVL (Cross-pool):</span>
+                <span class="data-value">
+                    <span id="vlrm-oracle-liq-ada"><span class="loading">Waiting...</span></span> <span id="vlrm-oracle-change-24h" class="change-badge"></span>
+                </span>
+            </div>
             <div style="height: 40px; margin-top: 35px;"><canvas id="spark-vlrm-oracle"></canvas></div>
         </div>
 
         <div class="card" style="grid-column: 1 / -1;">
             <div class="merged-section-grid">
                 <div>
-                    <div class="card-title" style="margin-bottom: 20px;">ORACLE / ADA Comparison (Multi-DEX) ⚖️</div>
+                    <div class="card-title" style="margin-bottom: 20px;">ORACLE / ADA ⚖️</div>
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 20px;">
                         <div>
                             <h3 class="dex-subtitle"><span class="badge bg-vyfi">VYFI</span></h3>
                             <div class="data-row"><span class="data-label">Price:</span><span class="data-value" id="oracle-vyfi-price">-</span></div>
-                            <div class="data-row"><span class="data-label">Liquidity:</span><span class="data-value" id="oracle-vyfi-liq">-</span></div>
+                            <div class="data-row">
+                                <span class="data-label">Liquidity:</span>
+                                <span class="data-value"><span id="oracle-vyfi-liq">-</span> <span id="oracle-vyfi-change-24h" class="change-badge"></span></span>
+                            </div>
                             <div style="height: 40px; margin-top: 10px;"><canvas id="spark-oracle-vyfi"></canvas></div>
                         </div>
                         <div style="border-left: 2px solid rgba(255,255,255,0.05); padding-left: 20px;">
                             <h3 class="dex-subtitle"><span class="badge bg-minswap">MINSWAP</span></h3>
                             <div class="data-row"><span class="data-label">Price:</span><span class="data-value" id="oracle-min-price">-</span></div>
-                            <div class="data-row"><span class="data-label">Liquidity:</span><span class="data-value" id="oracle-min-liq">-</span></div>
+                            <div class="data-row">
+                                <span class="data-label">Liquidity:</span>
+                                <span class="data-value"><span id="oracle-min-liq">-</span> <span id="oracle-min-change-24h" class="change-badge"></span></span>
+                            </div>
                             <div style="height: 40px; margin-top: 10px;"><canvas id="spark-oracle-min"></canvas></div>
                         </div>
                     </div>
-                    <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 16px; margin-top: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-                        <h3 class="dex-subtitle" style="color: var(--text-primary); margin:0;">Total Combined Liquidity</h3>
-                        <div class="data-value" style="font-size: 1.5rem; color: var(--neon-orange);" id="oracle-total-liq">-</div>
+                    <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 16px; margin-top: 20px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                            <h3 class="dex-subtitle" style="color: var(--text-primary); margin:0;">Total Combined Liquidity</h3>
+                            <div class="data-value" style="font-size: 1.5rem; color: #ffffff;">
+                                <span id="oracle-total-liq">-</span> <span id="total-liq-change-24h" class="change-badge"></span>
+                            </div>
+                        </div>
+                        <div style="height: 40px; margin-top: 15px;"><canvas id="spark-total-liq"></canvas></div>
                     </div>
                 </div>
 
                 <div class="merged-right-col">
-                    <div class="card-title" style="color: var(--neon-orange); margin-bottom: 20px;">Triangular Arbitrage (Cross-Pair) 🔺</div>
+                    <div class="card-title" style="color: var(--neon-orange); margin-bottom: 20px;">TRIANGULAR ARBITRAGE (VLRM / ORACLE / ADA) 🔺</div>
                     <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); height: calc(100% - 60px); display: flex; flex-direction: column; justify-content: center;">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                             <div class="arbitrage-label">Optimal Net Discrepancy</div>
@@ -313,7 +352,7 @@
         const VYFI_LINK = "https://app.vyfi.io/dex?tokenA=lovelace&tokenB=328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b27393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
         const MINSWAP_LINK = "https://minswap.org/swap?cA=&tA=&cB=328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b2&tB=7393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
 
-        let defaultConf = { glow: 10, alert: 15, sim: 1000, tgBot: "", tgChat: "", feeNet: 0.2, feeMin: 0.7, feeVyfi: 1.9 };
+        let defaultConf = { alert: 15, sim: 1000, tgBot: "", tgChat: "", feeNet: 0.2, feeMin: 0.7, feeVyfi: 1.9 };
         let conf = JSON.parse(localStorage.getItem('l4va_config')) || defaultConf;
         if(conf.feeNet === undefined) { conf.feeNet = 0.2; conf.feeMin = 0.7; conf.feeVyfi = 1.9; }
 
@@ -325,7 +364,7 @@
         
         // Memoria Persistente para las Gráficas (24 horas EXACTAS = 2880 puntos de 30seg)
         const MAX_CHART_POINTS = 2880;
-        let chartHistory = { labels: [], spread: [], discrepancy: [], vlrmAda: [], vlrmOracle: [], oracleVyfi: [], oracleMin: [], vault: [] };
+        let chartHistory = { labels: [], spread: [], discrepancy: [], vlrmAda: [], vlrmOracle: [], oracleVyfi: [], oracleMin: [], vault: [], totalLiq: [] };
         
         let currentPools = {
             vyfi: { price: 0, reserveAda: 0, reserveTok: 0 },
@@ -340,14 +379,14 @@
 
         function closeModals() { document.getElementById('settings-modal').style.display = 'none'; }
         function openSettings() { 
-            document.getElementById('set-glow').value = conf.glow; document.getElementById('set-alert').value = conf.alert; 
+            document.getElementById('set-alert').value = conf.alert; 
             document.getElementById('set-sim').value = document.getElementById('sim-ada-input').value; 
             document.getElementById('set-tg-bot').value = conf.tgBot || ""; document.getElementById('set-tg-chat').value = conf.tgChat || ""; 
             document.getElementById('set-fee-net').value = conf.feeNet; document.getElementById('set-fee-min').value = conf.feeMin; document.getElementById('set-fee-vyfi').value = conf.feeVyfi;
             document.getElementById('settings-modal').style.display = 'flex'; 
         }
         function saveSettings() {
-            conf.glow = parseFloat(document.getElementById('set-glow').value); conf.alert = parseFloat(document.getElementById('set-alert').value); conf.sim = parseFloat(document.getElementById('set-sim').value);
+            conf.alert = parseFloat(document.getElementById('set-alert').value); conf.sim = parseFloat(document.getElementById('set-sim').value);
             conf.tgBot = document.getElementById('set-tg-bot').value.trim(); conf.tgChat = document.getElementById('set-tg-chat').value.trim();
             conf.feeNet = parseFloat(document.getElementById('set-fee-net').value); conf.feeMin = parseFloat(document.getElementById('set-fee-min').value); conf.feeVyfi = parseFloat(document.getElementById('set-fee-vyfi').value);
             localStorage.setItem('l4va_config', JSON.stringify(conf));
@@ -396,6 +435,10 @@
             sparkInstances.oracleVyfi = createSpark('spark-oracle-vyfi', 'rgba(167, 139, 250, 1)', chartHistory.oracleVyfi); 
             sparkInstances.oracleMin = createSpark('spark-oracle-min', 'rgba(137, 170, 255, 1)', chartHistory.oracleMin); 
             sparkInstances.vault = createSpark('spark-vault', 'rgba(252, 211, 77, 1)', chartHistory.vault); 
+            
+            // Nuevas Gráficas
+            sparkInstances.totalLiq = createSpark('spark-total-liq', '#ffffff', chartHistory.totalLiq); 
+            sparkInstances.ada = createSpark('spark-ada', '#4285f4', []); 
         }
         
         function updateSparklines(vAdaTvl, vOraTvl, oVyfiTvl, oMinTvl, vaultTvl) {
@@ -404,12 +447,13 @@
             chartHistory.oracleVyfi.push(oVyfiTvl);
             chartHistory.oracleMin.push(oMinTvl);
             chartHistory.vault.push(vaultTvl);
+            chartHistory.totalLiq.push(oVyfiTvl + oMinTvl);
 
             if(chartHistory.vlrmAda.length > MAX_CHART_POINTS) {
-                chartHistory.vlrmAda.shift(); chartHistory.vlrmOracle.shift(); chartHistory.oracleVyfi.shift(); chartHistory.oracleMin.shift(); chartHistory.vault.shift();
+                chartHistory.vlrmAda.shift(); chartHistory.vlrmOracle.shift(); chartHistory.oracleVyfi.shift(); chartHistory.oracleMin.shift(); chartHistory.vault.shift(); chartHistory.totalLiq.shift();
             }
 
-            sparkInstances.vlrmAda.update('none'); sparkInstances.vlrmOracle.update('none'); sparkInstances.oracleVyfi.update('none'); sparkInstances.oracleMin.update('none'); sparkInstances.vault.update('none');
+            sparkInstances.vlrmAda.update('none'); sparkInstances.vlrmOracle.update('none'); sparkInstances.oracleVyfi.update('none'); sparkInstances.oracleMin.update('none'); sparkInstances.vault.update('none'); sparkInstances.totalLiq.update('none');
         }
 
         function updateMainChart(spread, discrepancy) {
@@ -421,8 +465,22 @@
             if(chartHistory.labels.length > MAX_CHART_POINTS) {
                 chartHistory.labels.shift(); chartHistory.spread.shift(); chartHistory.discrepancy.shift();
             }
-            
             chartInstance.update('none');
+        }
+
+        function calcChangeUI(elementId, historyArray, currentValue) {
+            const el = document.getElementById(elementId);
+            if(!el) return;
+            
+            // Buscar el punto más antiguo (hace 24h) que no sea vacío o 0
+            let oldestValue = historyArray.find(v => v !== null && v > 0);
+            if (!oldestValue) { el.innerText = ""; return; }
+
+            const change = ((currentValue - oldestValue) / oldestValue) * 100;
+            
+            if (Math.abs(change) < 0.01) { el.innerText = "0.00%"; el.style.color = "var(--text-secondary)"; }
+            else if (change > 0) { el.innerText = `+${change.toFixed(2)}%`; el.style.color = "#10b981"; }
+            else { el.innerText = `${change.toFixed(2)}%`; el.style.color = "var(--neon-red)"; }
         }
 
         function playDing() { try { const ctx = new (window.AudioContext || window.webkitAudioContext)(); const osc = ctx.createOscillator(); const gainNode = ctx.createGain(); osc.type = 'sine'; osc.frequency.setValueAtTime(880, ctx.currentTime); gainNode.gain.setValueAtTime(0.1, ctx.currentTime); osc.connect(gainNode); gainNode.connect(ctx.destination); osc.start(); gainNode.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.5); osc.stop(ctx.currentTime + 0.5); } catch (e) {} }
@@ -550,19 +608,17 @@
             }
         }
 
-        // --- SISTEMA INTERPOLACIÓN DE DATOS HISTÓRICOS 24H ---
         async function fetchHistoryFromCloudflare() {
             try {
                 const res = await fetch(PROXY_URL + '?data=history');
                 const cloudHistory = await res.json();
                 
                 if (cloudHistory && cloudHistory.labels && cloudHistory.labels.length > 0) {
-                    let expandedHistory = { labels: [], spread: [], discrepancy: [], vlrmAda: [], vlrmOracle: [], oracleVyfi: [], oracleMin: [], vault: [] };
+                    let expandedHistory = { labels: [], spread: [], discrepancy: [], vlrmAda: [], vlrmOracle: [], oracleVyfi: [], oracleMin: [], vault: [], totalLiq: [] };
                     
-                    // 1. Interpolación Matemática: 1 punto de DB (15 mins) = 30 puntos en la UI (30 segs)
                     for (let i = 0; i < cloudHistory.labels.length; i++) {
                         for(let j=0; j<30; j++) {
-                            expandedHistory.labels.push(j === 0 ? cloudHistory.labels[i] : ''); // Solo ponemos texto en el primer punto
+                            expandedHistory.labels.push(j === 0 ? cloudHistory.labels[i] : '');
                             expandedHistory.spread.push(cloudHistory.spread[i]);
                             expandedHistory.discrepancy.push(cloudHistory.discrepancy[i]);
                             expandedHistory.vlrmAda.push(cloudHistory.vlrmAda[i]);
@@ -570,10 +626,10 @@
                             expandedHistory.oracleVyfi.push(cloudHistory.oracleVyfi[i]);
                             expandedHistory.oracleMin.push(cloudHistory.oracleMin[i]);
                             expandedHistory.vault.push(cloudHistory.vault[i]);
+                            expandedHistory.totalLiq.push((cloudHistory.oracleVyfi[i] || 0) + (cloudHistory.oracleMin[i] || 0));
                         }
                     }
 
-                    // 2. Padding (Relleno): Aseguramos la anchura estricta de 24h (2880 puntos)
                     const missingPoints = MAX_CHART_POINTS - expandedHistory.labels.length;
                     if (missingPoints > 0) {
                         const nullArray = Array(missingPoints).fill(null);
@@ -586,9 +642,9 @@
                         expandedHistory.oracleVyfi = [...nullArray, ...expandedHistory.oracleVyfi];
                         expandedHistory.oracleMin = [...nullArray, ...expandedHistory.oracleMin];
                         expandedHistory.vault = [...nullArray, ...expandedHistory.vault];
+                        expandedHistory.totalLiq = [...nullArray, ...expandedHistory.totalLiq];
                     }
 
-                    // 3. Recortamos si por algún motivo hay más de 24h
                     if (expandedHistory.labels.length > MAX_CHART_POINTS) {
                         const diff = expandedHistory.labels.length - MAX_CHART_POINTS;
                         Object.keys(expandedHistory).forEach(key => { expandedHistory[key] = expandedHistory[key].slice(diff); });
@@ -596,36 +652,50 @@
 
                     chartHistory = expandedHistory;
                     
-                    // Inyectar datos re-calculados a las gráficas
-                    chartInstance.data.labels = chartHistory.labels;
-                    chartInstance.data.datasets[0].data = chartHistory.spread;
-                    chartInstance.data.datasets[1].data = chartHistory.discrepancy;
-                    chartInstance.update('none');
+                    chartInstance.data.labels = chartHistory.labels; chartInstance.data.datasets[0].data = chartHistory.spread; chartInstance.data.datasets[1].data = chartHistory.discrepancy; chartInstance.update('none');
 
                     sparkInstances.vlrmAda.data.labels = chartHistory.labels; sparkInstances.vlrmAda.data.datasets[0].data = chartHistory.vlrmAda; sparkInstances.vlrmAda.update('none');
                     sparkInstances.vlrmOracle.data.labels = chartHistory.labels; sparkInstances.vlrmOracle.data.datasets[0].data = chartHistory.vlrmOracle; sparkInstances.vlrmOracle.update('none');
                     sparkInstances.oracleVyfi.data.labels = chartHistory.labels; sparkInstances.oracleVyfi.data.datasets[0].data = chartHistory.oracleVyfi; sparkInstances.oracleVyfi.update('none');
                     sparkInstances.oracleMin.data.labels = chartHistory.labels; sparkInstances.oracleMin.data.datasets[0].data = chartHistory.oracleMin; sparkInstances.oracleMin.update('none');
                     sparkInstances.vault.data.labels = chartHistory.labels; sparkInstances.vault.data.datasets[0].data = chartHistory.vault; sparkInstances.vault.update('none');
+                    sparkInstances.totalLiq.data.labels = chartHistory.labels; sparkInstances.totalLiq.data.datasets[0].data = chartHistory.totalLiq; sparkInstances.totalLiq.update('none');
                 }
             } catch (e) {
                 console.error("Error loading historical data:", e);
             }
         }
 
-        async function fetchAdaPrice() {
+        async function fetchAdaData() {
             try {
-                const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=cardano&vs_currencies=usd');
+                // Recuperamos las últimas 24h directamente de CoinGecko API para rellenar la gráfica perfecta
+                const response = await fetch('https://api.coingecko.com/api/v3/coins/cardano/market_chart?vs_currency=usd&days=1');
                 const data = await response.json();
-                currentAdaUsd = data.cardano.usd; 
-                document.getElementById('ada-price-usd').innerText = `$${currentAdaUsd.toFixed(4)}`;
+                const prices = data.prices.map(p => p[1]);
+                
+                currentAdaUsd = prices[prices.length - 1]; 
+                const oldestAda = prices[0];
+                const adaChange = ((currentAdaUsd - oldestAda) / oldestAda) * 100;
+
+                const priceEl = document.getElementById('ada-price-usd');
+                priceEl.innerHTML = `$${currentAdaUsd.toFixed(4)} <span id="ada-change-24h" class="change-badge"></span>`;
+                
+                const changeEl = document.getElementById('ada-change-24h');
+                if (adaChange > 0) { changeEl.innerText = `+${adaChange.toFixed(2)}%`; changeEl.style.color = "#10b981"; }
+                else { changeEl.innerText = `${adaChange.toFixed(2)}%`; changeEl.style.color = "var(--neon-red)"; }
+
                 document.getElementById('ada-time').innerText = new Date().toLocaleTimeString();
+
+                // Actualizar gráfica de ADA
+                sparkInstances.ada.data.labels = Array(prices.length).fill('');
+                sparkInstances.ada.data.datasets[0].data = prices;
+                sparkInstances.ada.update('none');
+
                 return currentAdaUsd;
             } catch (error) { return null; }
         }
 
-        async function fetchDexData(adaPriceUsd) {
-            if (!adaPriceUsd) return;
+        async function fetchDexData() {
             try {
                 const response = await fetch(PROXY_URL);
                 const data = await response.json();
@@ -668,6 +738,14 @@
 
                 updateSparklines(vlrmAdaTvl, crossTvl, vyfiTvLAda, minTvlAda, vaultTvlData);
 
+                // Calcular variaciones % 24H UI
+                calcChangeUI('vlrm-ada-change-24h', chartHistory.vlrmAda, vlrmAdaTvl);
+                calcChangeUI('vlrm-oracle-change-24h', chartHistory.vlrmOracle, crossTvl);
+                calcChangeUI('oracle-vyfi-change-24h', chartHistory.oracleVyfi, vyfiTvLAda);
+                calcChangeUI('oracle-min-change-24h', chartHistory.oracleMin, minTvlAda);
+                calcChangeUI('vault-change-24h', chartHistory.vault, vaultTvlData);
+                calcChangeUI('total-liq-change-24h', chartHistory.totalLiq, totalOracleLiqAda);
+
                 currentPools.vyfi = { price: priceVyfi, reserveAda: priceVyfi > 0 ? (vyfiTvLAda / 2) : 0, reserveTok: priceVyfi > 0 ? (vyfiTvLAda / 2) / priceVyfi : 0 };
                 currentPools.minswap = { price: priceMin, reserveAda: priceMin > 0 ? (minTvlAda / 2) : 0, reserveTok: priceMin > 0 ? (minTvlAda / 2) / priceMin : 0 };
                 currentPools.vlrmAda = { resAda: vlrmVyfiAdaReserve, resTok: vlrmVyfiTokReserve }; currentPools.crossVO = { resVlrm: crossVlrmReserve, resOracle: crossOracleReserve };
@@ -690,18 +768,13 @@
                         vaultBannerDiscEl.className = 'arbitrage-big-value'; 
                         if (Math.abs(bestDeviation) < 0.5) {
                             vaultBannerDiscEl.style.color = "rgba(255, 255, 255, 0.5)";
-                            vaultBannerDiscEl.style.textShadow = "0 2px 10px rgba(0,0,0,0.3)";
                             vaultActionEl.innerHTML = `<span style="color: rgba(255, 255, 255, 0.6);">Balanced</span>`;
                         } else {
                             if (bestDeviation > 0) {
                                 vaultBannerDiscEl.style.color = "#10b981"; 
-                                if (Math.abs(bestDeviation) >= conf.glow) vaultBannerDiscEl.style.textShadow = `0 0 15px rgba(16, 185, 129, 0.6)`; 
-                                else vaultBannerDiscEl.style.textShadow = "0 2px 10px rgba(0,0,0,0.3)";
                                 vaultActionEl.innerHTML = `Sell <a href="${targetLink}" target="_blank" class="badge-dark">${targetDex}</a>`; 
                             } else {
                                 vaultBannerDiscEl.style.color = "var(--neon-red)"; 
-                                if (Math.abs(bestDeviation) >= conf.glow) vaultBannerDiscEl.style.textShadow = `0 0 15px rgba(255, 15, 91, 0.6)`; 
-                                else vaultBannerDiscEl.style.textShadow = "0 2px 10px rgba(0,0,0,0.3)";
                                 vaultActionEl.innerHTML = `Buy <a href="${targetLink}" target="_blank" class="badge-dark">${targetDex}</a>`; 
                             }
                         }
@@ -715,10 +788,9 @@
                     spreadEl.innerText = `${spread.toFixed(2)}%`;
                     let suggestedActionText = "";
                     if (spread < 0.5) {
-                        spreadEl.style.color = "rgba(255, 255, 255, 0.5)"; spreadEl.style.textShadow = "0 2px 10px rgba(0,0,0,0.3)"; actionEl.innerHTML = `<span style="color: rgba(255, 255, 255, 0.6);">Low spread</span>`;
+                        spreadEl.style.color = "rgba(255, 255, 255, 0.5)"; actionEl.innerHTML = `<span style="color: rgba(255, 255, 255, 0.6);">Low spread</span>`;
                     } else {
                         spreadEl.style.color = "#ffffff"; 
-                        if (spread >= conf.glow) { spreadEl.style.textShadow = "0 0 15px rgba(255, 255, 255, 0.7)"; } else { spreadEl.style.textShadow = "0 2px 10px rgba(0,0,0,0.3)"; }
                         if (priceVyfi > priceMin) { actionEl.innerHTML = `Buy <a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Min</a> ➔ Sell <a href="${VYFI_LINK}" target="_blank" class="badge-dark">VyFi</a>`; suggestedActionText = "Buy Minswap, Sell VyFi"; } 
                         else { actionEl.innerHTML = `Buy <a href="${VYFI_LINK}" target="_blank" class="badge-dark">VyFi</a> ➔ Sell <a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Min</a>`; suggestedActionText = "Buy VyFi, Sell Minswap"; }
                     }
@@ -728,9 +800,7 @@
                         if (alertToggle && alertToggle.checked && (now - lastAlertTime > ALERT_COOLDOWN)) {
                             playDing(); if (Notification.permission === "granted") { new Notification("🚨 L4VA Arbitrage Detected!", { body: `Spread: ${spread.toFixed(2)}%\n${suggestedActionText}` }); }
                             sendTelegramAlert(`🚨 <b>L4VA Arbitrage Detected!</b>\n\n📈 DEX Spread: <b>${spread.toFixed(2)}%</b>\n💡 Route: ${suggestedActionText}\n\n<i>Check dashboard for real-time net profit.</i>`);
-                            
                             addToLog(spread, suggestedActionText, "#ffffff");
-                            
                             lastAlertTime = now;
                         }
                     }
@@ -755,15 +825,14 @@
         async function initDashboard() {
             initCharts();
             
-            // PRIMERO: Descargar el historial y expandirlo
             await fetchHistoryFromCloudflare();
-
-            // SEGUNDO: Arrancar el radar en vivo
-            const adaPriceUsd = await fetchAdaPrice();
-            await fetchDexData(adaPriceUsd);
+            
+            await fetchAdaData();
+            await fetchDexData();
+            
             setInterval(async () => {
-                const updatedAdaPrice = await fetchAdaPrice();
-                await fetchDexData(updatedAdaPrice);
+                await fetchAdaData();
+                await fetchDexData();
             }, 30000);
         }
         window.onload = initDashboard;
