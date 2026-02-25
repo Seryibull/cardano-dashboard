@@ -57,12 +57,21 @@
         }
         .auth-title { font-size: 1.5rem; font-weight: 800; color: white; margin-bottom: 10px; }
         .auth-subtitle { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 30px; }
+        
+        .auth-input-container { position: relative; width: 100%; margin-bottom: 20px; }
         .auth-input {
-            width: 100%; padding: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2);
+            width: 100%; padding: 15px; padding-right: 65px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2);
             background: rgba(0,0,0,0.5); color: white; font-size: 1.1rem; text-align: center;
-            margin-bottom: 20px; outline: none; font-family: 'Inter', sans-serif; box-sizing: border-box;
+            outline: none; font-family: 'Inter', sans-serif; box-sizing: border-box;
         }
         .auth-input:focus { border-color: var(--neon-orange); box-shadow: 0 0 15px rgba(255, 123, 0, 0.3); }
+        .toggle-password {
+            position: absolute; right: 15px; top: 50%; transform: translateY(-50%);
+            color: var(--neon-orange); font-size: 0.8rem; font-weight: 800; cursor: pointer;
+            opacity: 0.7; transition: 0.3s; letter-spacing: 0.5px;
+        }
+        .toggle-password:hover { opacity: 1; text-shadow: 0 0 10px var(--neon-orange); }
+
         .auth-btn {
             background: var(--gradient-fire); color: white; border: none; padding: 15px;
             width: 100%; border-radius: 12px; font-weight: 800; font-size: 1rem;
@@ -191,7 +200,12 @@
         <div class="auth-box">
             <div class="auth-title">L4VA TERMINAL</div>
             <div class="auth-subtitle">Restricted Access. Authentication Required.</div>
-            <input type="password" id="terminal-passkey" class="auth-input" placeholder="Enter Passkey...">
+            
+            <div class="auth-input-container">
+                <input type="password" id="terminal-passkey" class="auth-input" placeholder="Enter Passkey...">
+                <span class="toggle-password" onclick="togglePasswordVisibility()">SHOW</span>
+            </div>
+
             <button class="auth-btn" onclick="unlockTerminal()">UNLOCK TERMINAL</button>
             <div id="auth-error-msg" class="auth-error"></div>
         </div>
@@ -507,7 +521,7 @@
         document.getElementById('sim-ada-input').value = conf.sim;
         document.getElementById('sim-tri-input').value = conf.sim;
 
-        // 🔒 SISTEMA DE AUTENTICACIÓN
+        // 🔒 FUNCIONES DEL ESCUDO API
         function showAuthScreen(showError = false) {
             document.getElementById('auth-screen').style.display = 'flex';
             document.getElementById('main-dashboard').style.filter = 'blur(10px)';
@@ -518,6 +532,19 @@
             document.getElementById('auth-screen').style.display = 'none';
             document.getElementById('main-dashboard').style.filter = 'none';
         }
+        
+        // Función para mostrar/ocultar contraseña
+        function togglePasswordVisibility() {
+            const input = document.getElementById('terminal-passkey');
+            const toggleBtn = document.querySelector('.toggle-password');
+            if (input.type === 'password') {
+                input.type = 'text';
+                toggleBtn.innerText = 'HIDE';
+            } else {
+                input.type = 'password';
+                toggleBtn.innerText = 'SHOW';
+            }
+        }
 
         async function unlockTerminal() {
             const input = document.getElementById('terminal-passkey').value.trim();
@@ -525,7 +552,6 @@
             userPasskey = input;
             document.getElementById('auth-error-msg').innerText = "Verifying...";
             
-            // Hacemos una prueba rápida al servidor para ver si la clave es correcta
             try {
                 const res = await fetch(PROXY_URL + '?data=history', { headers: { "X-Terminal-Key": userPasskey } });
                 if(res.status === 401) {
@@ -533,7 +559,7 @@
                 } else {
                     localStorage.setItem('l4va_passkey', userPasskey);
                     hideAuthScreen();
-                    startEngine(); // Arrancamos la carga si fue exitosa
+                    startEngine(); 
                 }
             } catch (e) {
                 document.getElementById('auth-error-msg').innerText = "Network Error. Try again.";
@@ -872,7 +898,6 @@
 
         async function fetchHistoryFromCloudflare() {
             try {
-                // 🔒 SE ENVÍA LA CONTRASEÑA EN CADA PETICIÓN
                 const res = await fetch(PROXY_URL + '?data=history', { headers: { "X-Terminal-Key": userPasskey } });
                 if(res.status === 401) { showAuthScreen(); return; }
                 
@@ -966,7 +991,6 @@
 
         async function fetchDexData() {
             try {
-                // 🔒 SE ENVÍA LA CONTRASEÑA EN CADA PETICIÓN
                 const response = await fetch(PROXY_URL, { headers: { "X-Terminal-Key": userPasskey } });
                 if(response.status === 401) { showAuthScreen(); return; }
                 
@@ -1138,7 +1162,6 @@
         }
 
         window.onload = () => {
-            // Si no hay clave, mostramos la pantalla de bloqueo y no arrancamos nada.
             if (!userPasskey) {
                 showAuthScreen();
             } else {
