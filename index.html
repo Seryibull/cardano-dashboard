@@ -79,7 +79,6 @@
         
         .arbitrage-section { grid-column: 1 / -1; background: var(--gradient-dark-fire) !important; border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 15px 40px -10px rgba(74, 0, 0, 0.8), inset 0 0 30px rgba(0,0,0,0.4); padding: 20px 25px; transition: all 0.3s ease;}
         
-        /* Efecto Hover específico para el recuadro principal (Mantiene el difuminado interior) */
         .arbitrage-section:hover {
             transform: translateY(-3px);
             box-shadow: 0 20px 50px -10px rgba(74, 0, 0, 0.9), inset 0 0 30px rgba(0,0,0,0.4), 0 0 25px rgba(255, 123, 0, 0.2);
@@ -87,7 +86,6 @@
         }
 
         .defcon-active { animation: defcon-pulse 1.5s infinite !important; }
-        /* Permite que si está en DEFCON y pasas el ratón, se eleve sin romper la alarma */
         .defcon-active:hover { transform: translateY(-3px) !important; }
 
         .arbitrage-banner-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.15); padding-bottom: 10px; margin-bottom: 15px; }
@@ -121,7 +119,7 @@
         .tri-wrapper { position: relative; width: 100%; max-width: 200px; height: 160px; margin: 15px auto 5px auto; }
         .tri-node { position: absolute; width: 44px; height: 44px; background: rgba(18, 15, 36, 0.9); border: 2px solid rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: bold; color: white; z-index: 2; box-shadow: 0 0 15px rgba(0,0,0,0.8); backdrop-filter: blur(5px);}
         .node-ada { top: 0; left: calc(50% - 22px); border-color: var(--ada-color); color: var(--ada-color);}
-        .node-vlrm { bottom: 0; right: 0; border-color: #a78bfa; color: #a78bfa;}
+        .node-vlrm { bottom: 0; right: 0; border-color: var(--neon-orange); color: var(--neon-orange);}
         .node-oracle { bottom: 0; left: 0; border-color: #fcd34d; color: #fcd34d;}
         
         .tri-svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;}
@@ -133,6 +131,13 @@
             from { stroke-dashoffset: 25; }
             to { stroke-dashoffset: 0; }
         }
+
+        /* ESTILOS NUEVOS DE RUTAS (LEDS) */
+        .route-active { color: #10b981; transition: 0.3s; }
+        .route-active .route-dot { background: #10b981; box-shadow: 0 0 10px #10b981; }
+        .route-inactive { color: var(--text-secondary); opacity: 0.4; transition: 0.3s; }
+        .route-inactive .route-dot { background: rgba(255,255,255,0.2); box-shadow: none; }
+        .route-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex-shrink: 0; transition: all 0.3s ease; }
 
         /* Modals */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); z-index: 1000; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box;}
@@ -147,9 +152,6 @@
         
         h3.dex-subtitle { margin: 0 0 10px 0; font-size: 0.9rem; display: inline-block; }
         
-        .route-active { background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); padding: 6px 10px; border-radius: 8px; color: #10b981; }
-        .route-inactive { background: transparent; border: 1px solid transparent; padding: 6px 10px; opacity: 0.5; color: var(--text-secondary); }
-
         .merged-section-grid { display: grid; grid-template-columns: 1fr; gap: 30px; }
         @media (min-width: 900px) { .merged-section-grid { grid-template-columns: 55fr 45fr; } .merged-right-col { border-left: 1px solid rgba(255,255,255,0.1); padding-left: 30px; } }
 
@@ -345,14 +347,14 @@
                     </div>
                 </div>
                 
-                <div style="margin-top: auto; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.05);">
+                <div style="margin-top: auto; padding-top: 25px; border-top: 1px solid rgba(255,255,255,0.05);">
                     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-                        <h3 class="dex-subtitle" style="color: var(--text-primary); margin:0;">Total Combined Liquidity</h3>
-                        <div class="data-value" style="font-size: 1.5rem; color: #ffffff;">
-                            <span id="oracle-total-liq">-</span> <span id="total-liq-change-24h" class="change-badge"></span>
+                        <h3 class="dex-subtitle" style="color: var(--text-secondary); font-size: 1rem; text-transform: uppercase; margin:0;">Total Combined Liquidity</h3>
+                        <div class="data-value" style="font-size: 2rem; color: #ffffff; text-shadow: 0 2px 10px rgba(0,0,0,0.5);">
+                            <span id="oracle-total-liq">-</span> <span id="total-liq-change-24h" class="change-badge" style="font-size: 1rem;"></span>
                         </div>
                     </div>
-                    <div style="height: 40px; margin-top: 15px;"><canvas id="spark-total-liq"></canvas></div>
+                    <div style="height: 70px; margin-top: 20px;"><canvas id="spark-total-liq"></canvas></div>
                 </div>
             </div>
 
@@ -369,21 +371,25 @@
                     <div class="tri-node node-oracle">ORAC</div>
                 </div>
 
-                <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); flex-grow: 1; display: flex; flex-direction: column; justify-content: center;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                        <div class="arbitrage-label">Optimal Net Discrepancy</div>
-                        <div class="arbitrage-big-value" id="tri-arb-spread" style="font-size: 1.8rem;"><span class="loading">Scanning...</span></div>
+                <div style="margin-top: auto; padding-top: 25px; border-top: 1px solid rgba(255,255,255,0.05);">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px;">
+                        <div class="arbitrage-label" style="margin-bottom: 0;">Optimal Net Discrepancy</div>
+                        <div class="arbitrage-big-value" id="tri-arb-spread" style="font-size: 2.2rem; line-height: 1; text-shadow: 0 0 20px rgba(16, 185, 129, 0.4);"><span class="loading">Scanning...</span></div>
                     </div>
-                    <div style="font-size: 0.85rem; line-height: 1.8;">
-                        <div id="route-a-container" class="route-inactive">
-                            Route A: <span style="font-weight: bold;">Buy VLRM ➔ Swap ORACLE ➔ Sell ORACLE</span>
+                    
+                    <div style="font-size: 0.85rem; line-height: 1.8; display: flex; flex-direction: column; gap: 8px;">
+                        <div id="route-a-container" class="route-inactive" style="display: flex; align-items: center; gap: 8px;">
+                            <div class="route-dot"></div>
+                            <div>Route A: <span style="font-weight: bold; color: white;">Buy VLRM ➔ Swap ORAC ➔ Sell ORAC</span></div>
                         </div>
-                        <div id="route-b-container" class="route-inactive" style="margin-top: 8px;">
-                            Route B: <span style="font-weight: bold;">Buy ORACLE ➔ Swap VLRM ➔ Sell VLRM</span>
+                        <div id="route-b-container" class="route-inactive" style="display: flex; align-items: center; gap: 8px;">
+                            <div class="route-dot"></div>
+                            <div>Route B: <span style="font-weight: bold; color: white;">Buy ORAC ➔ Swap VLRM ➔ Sell VLRM</span></div>
                         </div>
                     </div>
-                    <div style="font-size: 0.75rem; font-style: italic; color: var(--text-secondary); margin-top: 15px;">
-                        *Percentage dynamically calculated from Auto-Optimizer's max realistic net profit.
+                    
+                    <div style="font-size: 0.75rem; font-style: italic; color: var(--text-secondary); margin-top: 20px;">
+                        * Percentage dynamically calculated from Auto-Optimizer's max realistic net profit.
                     </div>
                 </div>
             </div>
@@ -563,7 +569,6 @@
             return (reserveOut * amountInWithFee) / (reserveIn + amountInWithFee);
         }
 
-        // --- SISTEMA UI SLIPPAGE ---
         function updateSlippageUI(elementId, labelId, maxImpact) {
             const bar = document.getElementById(elementId);
             const label = document.getElementById(labelId);
@@ -948,7 +953,6 @@
                     }
                 }
 
-                // CONTROL DEFCON UI
                 const mainBanner = document.getElementById('main-banner');
                 if (spread >= conf.alert || Math.abs(bestDeviation) >= conf.vaultAlert) {
                     mainBanner.classList.add('defcon-active');
