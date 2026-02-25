@@ -82,9 +82,9 @@
         .arbitrage-grid { display: grid; grid-template-columns: 1fr; gap: 20px; position: relative; z-index: 2;}
         @media (min-width: 900px) { .arbitrage-grid { grid-template-columns: 1fr 1fr; } }
 
-        /* Recuadros internos: opacidad elevada (0.85) para oscurecerlos y neutralizar el fuego del fondo */
-        .arbitrage-box { background: rgba(0, 0, 0, 0.85); padding: 20px; border-radius: 18px; transition: all 0.3s ease; position: relative; border: 1px solid rgba(255, 123, 0, 0.15); backdrop-filter: blur(10px); box-shadow: 0 8px 25px rgba(0,0,0,0.5); }
-        .arbitrage-box:hover { border-color: rgba(255, 123, 0, 0.4); background: rgba(0, 0, 0, 0.95); transform: translateY(-2px); }
+        /* RECUADROS INTERNOS: Lila oscuro y 70% de opacidad */
+        .arbitrage-box { background: rgba(35, 15, 55, 0.7); padding: 20px; border-radius: 18px; transition: all 0.3s ease; position: relative; border: 1px solid rgba(255, 123, 0, 0.15); backdrop-filter: blur(10px); box-shadow: 0 8px 25px rgba(0,0,0,0.5); }
+        .arbitrage-box:hover { border-color: rgba(255, 123, 0, 0.4); background: rgba(35, 15, 55, 0.85); transform: translateY(-2px); }
 
         .arbitrage-label { color: rgba(255, 255, 255, 0.75); font-size: 0.75rem; text-transform: uppercase; font-weight: 800; margin-bottom: 5px; letter-spacing: 0.5px;}
         .arbitrage-big-value { font-size: 1.8rem; font-weight: 900; color: #ffffff; text-shadow: 0 2px 10px rgba(0,0,0,0.5); transition: all 0.3s ease; }
@@ -766,7 +766,6 @@
                 optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> Max profit <b>+${bestProfit.toFixed(2)} ADA</b> (Invest <b>${optimalInvest} ADA</b>)`; 
                 optEl.style.color = '#10b981'; 
                 
-                // Color limpio y estático
                 triEl.innerText = `+${bestPercent.toFixed(2)}%`; 
                 triEl.style.color = "#10b981";
                 
@@ -910,7 +909,7 @@
                         oraclePerVlrmUI = crossOracleReserve / crossVlrmReserve;
                     }
                     
-                    document.getElementById('vlrm-oracle-price').innerText = `ORAC ${oraclePerVlrmUI.toFixed(4)}`;
+                    document.getElementById('vlrm-oracle-price').innerText = `${oraclePerVlrmUI.toFixed(4)}`;
                     document.getElementById('vlrm-oracle-liq-ada').innerText = `₳ ${Math.round(crossTvl).toLocaleString()}`; 
                 }
 
