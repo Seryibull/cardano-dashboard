@@ -109,6 +109,9 @@
         .route-active { background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); padding: 6px 10px; border-radius: 8px; color: #10b981; }
         .route-inactive { background: transparent; border: 1px solid transparent; padding: 6px 10px; opacity: 0.5; color: var(--text-secondary); }
 
+        .merged-section-grid { display: grid; grid-template-columns: 1fr; gap: 30px; }
+        @media (min-width: 900px) { .merged-section-grid { grid-template-columns: 55fr 45fr; } .merged-right-col { border-left: 1px solid rgba(255,255,255,0.1); padding-left: 30px; } }
+
         .log-entry { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.85rem; align-items: center;}
         .log-time { color: var(--text-secondary); font-size: 0.75rem; width: 80px;}
         .log-spread { font-weight: bold; width: 70px; text-align: left; }
@@ -291,7 +294,8 @@
                         <div style="height: 40px; margin-top: 10px;"><canvas id="spark-oracle-min"></canvas></div>
                     </div>
                 </div>
-                <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 16px; margin-top: auto;">
+                
+                <div style="margin-top: auto; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.05);">
                     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
                         <h3 class="dex-subtitle" style="color: var(--text-primary); margin:0;">Total Combined Liquidity</h3>
                         <div class="data-value" style="font-size: 1.5rem; color: #ffffff;">
