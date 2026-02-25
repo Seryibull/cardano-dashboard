@@ -24,6 +24,7 @@
             --gradient-fire: linear-gradient(135deg, var(--neon-orange), var(--neon-red));
             --gradient-dark-plasma: radial-gradient(circle at center bottom, #ff5e00 0%, #9e1b00 50%, #2b0400 100%);
             --ada-color: #4285f4;
+            --vault-color: #fcd34d;
             --badge-vyfi-bg: rgba(139, 92, 246, 0.15);
             --badge-vyfi-text: #a78bfa;
             --badge-min-bg: rgba(137, 170, 255, 0.15); 
@@ -46,7 +47,10 @@
         .header-left { display: flex; align-items: center; gap: 15px; }
         .header-right { display: flex; align-items: center; gap: 15px; }
         .brand-logo { font-size: 2.5rem; filter: drop-shadow(0 0 10px var(--neon-orange)); }
-        h1 { margin: 0; font-weight: 800; font-size: 1.8rem; background: var(--gradient-fire); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -1px; }
+        
+        /* Título con V 1.0 */
+        h1 { margin: 0; font-weight: 800; font-size: 1.8rem; background: var(--gradient-fire); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -1px; display: flex; align-items: center;}
+        .version-badge { color: #ffffff; font-size: 0.8rem; font-weight: 600; margin-left: 8px; opacity: 0.8; letter-spacing: 0; -webkit-text-fill-color: #ffffff; }
 
         .settings-btn { font-size: 1.5rem; cursor: pointer; background: rgba(255,255,255,0.05); padding: 8px 12px; border-radius: 12px; transition: 0.3s; border: 1px solid rgba(255,255,255,0.1); }
         .settings-btn:hover { background: rgba(255,255,255,0.15); transform: rotate(45deg); border-color: var(--neon-orange); }
@@ -56,8 +60,13 @@
         .card { border-radius: 20px; padding: 20px 25px; position: relative; background: rgba(18, 15, 36, 0.85); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); transition: transform 0.3s ease, box-shadow 0.3s ease; min-height: 280px; display: flex; flex-direction: column; justify-content: space-between;}
         .card:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 123, 0, 0.15); border-color: rgba(255, 123, 0, 0.3); }
 
+        /* Tarjeta ADA Especial */
         .card-ada { background: rgba(35, 40, 65, 0.85); border-color: rgba(66, 133, 244, 0.2); }
         .card-ada:hover { border-color: rgba(66, 133, 244, 0.5); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(66, 133, 244, 0.2); }
+
+        /* Tarjeta Vault Especial (Tonos Dorados/Amarillos) */
+        .card-vault { background: rgba(45, 35, 15, 0.85); border-color: rgba(252, 211, 77, 0.2); }
+        .card-vault:hover { border-color: rgba(252, 211, 77, 0.5); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(252, 211, 77, 0.2); }
 
         .card-title { font-size: 1.05rem; font-weight: 600; margin-bottom: 15px; color: var(--neon-orange); display: flex; justify-content: space-between; align-items: center; }
         .card-title.ada-title { color: var(--ada-color); text-shadow: 0 0 10px rgba(66, 133, 244, 0.3); }
@@ -82,7 +91,6 @@
         .arbitrage-grid { display: grid; grid-template-columns: 1fr; gap: 20px; position: relative; z-index: 2;}
         @media (min-width: 900px) { .arbitrage-grid { grid-template-columns: 1fr 1fr; } }
 
-        /* RECUADROS INTERNOS: Lila más oscuro y 80% de opacidad */
         .arbitrage-box { background: rgba(20, 5, 35, 0.8); padding: 20px; border-radius: 18px; transition: all 0.3s ease; position: relative; border: 1px solid rgba(255, 123, 0, 0.15); backdrop-filter: blur(10px); box-shadow: 0 8px 25px rgba(0,0,0,0.5); }
         .arbitrage-box:hover { border-color: rgba(255, 123, 0, 0.4); background: rgba(20, 5, 35, 0.95); transform: translateY(-2px); }
 
@@ -114,7 +122,7 @@
         .tri-node { position: absolute; width: 44px; height: 44px; background: rgba(18, 15, 36, 0.9); border: 2px solid rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: bold; color: white; z-index: 2; box-shadow: 0 0 15px rgba(0,0,0,0.8); backdrop-filter: blur(5px);}
         .node-ada { top: 0; left: calc(50% - 22px); border-color: var(--ada-color); color: var(--ada-color);}
         .node-vlrm { bottom: 0; right: 0; border-color: var(--neon-orange); color: var(--neon-orange);}
-        .node-oracle { bottom: 0; left: 0; border-color: #fcd34d; color: #fcd34d;}
+        .node-oracle { bottom: 0; left: 0; border-color: var(--vault-color); color: var(--vault-color);}
         
         .tri-svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;}
         .tri-line-bg { fill: none; stroke: rgba(255,255,255,0.05); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round;}
@@ -148,6 +156,9 @@
         .log-time { color: var(--text-secondary); font-size: 0.75rem; width: 80px;}
         .log-spread { font-weight: bold; width: 70px; text-align: left; }
         .log-route { flex-grow: 1; text-align: right; color: rgba(255,255,255,0.8);}
+        
+        /* Estilo para el disclaimer del pie de página */
+        .footer-disclaimer { grid-column: 1 / -1; text-align: center; color: rgba(255,255,255,0.5); font-size: 0.75rem; padding: 10px 20px; font-style: italic; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -155,7 +166,7 @@
     <header>
         <div class="header-left">
             <div class="brand-logo">🔥</div>
-            <h1>L4VA Protocol <span style="color: var(--text-secondary); font-weight: 400;">| Arbitrage</span></h1>
+            <h1>L4VA Protocol <span style="color: var(--text-secondary); font-weight: 400;">| Arbitrage</span> <span class="version-badge">V 1.0</span></h1>
         </div>
         <div class="header-right">
             <div class="settings-btn" onclick="openSettings()">⚙️</div>
@@ -215,7 +226,7 @@
                 </div>
 
                 <div class="arbitrage-box">
-                    <div class="arbitrage-label" style="color: #fcd34d; margin-bottom: 8px;">VAULT RELICS FAIR PRICE (ORACLE)</div>
+                    <div class="arbitrage-label" style="color: var(--vault-color); margin-bottom: 8px;">VAULT RELICS FAIR PRICE (ORACLE)</div>
                     <div style="display: flex; justify-content: space-between; align-items: flex-end;">
                         <div>
                             <div class="arbitrage-label">Discrepancy</div>
@@ -282,9 +293,9 @@
             <div style="height: 80px; margin-top: 15px;"><canvas id="spark-ada"></canvas></div>
         </div>
         
-        <div class="card">
+        <div class="card card-vault">
             <div>
-                <div class="card-title" style="color: #fcd34d;">Relics Vault TVL (ORACLE) 🏛️</div>
+                <div class="card-title" style="color: var(--vault-color);">Relics Vault TVL (ORACLE) 🏛️</div>
                 <div class="data-row">
                     <span class="data-label">TVL:</span>
                     <span class="data-value">
@@ -307,7 +318,7 @@
             <div style="height: 50px; margin-bottom: 15px;"><canvas id="spark-vlrm-ada-price"></canvas></div>
 
             <div class="data-row" style="margin-top: auto;">
-                <span class="data-label">TVL (Pool):</span>
+                <span class="data-label">Liquidity:</span>
                 <span class="data-value"><span id="vlrm-liq-ada">-</span> <span id="vlrm-ada-change-24h" class="change-badge"></span></span>
             </div>
             <div style="height: 50px;"><canvas id="spark-vlrm-ada"></canvas></div>
@@ -323,7 +334,7 @@
             <div style="height: 50px; margin-bottom: 15px;"><canvas id="spark-vlrm-oracle-price"></canvas></div>
 
             <div class="data-row" style="margin-top: auto;">
-                <span class="data-label">TVL (Pool):</span>
+                <span class="data-label">Liquidity:</span>
                 <span class="data-value"><span id="vlrm-oracle-liq-ada">-</span> <span id="vlrm-oracle-change-24h" class="change-badge"></span></span>
             </div>
             <div style="height: 50px;"><canvas id="spark-vlrm-oracle"></canvas></div>
@@ -413,6 +424,10 @@
             <div id="opp-log" style="max-height: 250px; overflow-y: auto; padding-right: 10px;">
                 <div style="color: var(--text-secondary); text-align: center; padding: 20px; font-style: italic;">Waiting for high-spread opportunities...</div>
             </div>
+        </div>
+
+        <div class="footer-disclaimer">
+            This page is for informational purposes only. Nothing on this website constitutes investment advice. Always do your own research.
         </div>
     </div>
 
