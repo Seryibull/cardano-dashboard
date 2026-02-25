@@ -238,7 +238,7 @@
         <div class="card">
             <div class="card-title" style="color: #fcd34d;">Relics Vault TVL 🏛️</div>
             <div class="data-row">
-                <span class="data-label">Total Value (ADA):</span>
+                <span class="data-label">TVL:</span>
                 <span class="data-value">
                     <span id="vault-tvl"><span class="loading">Calculating...</span></span>
                     <span id="vault-change-24h" class="change-badge"></span>
@@ -262,7 +262,7 @@
         <div class="card">
             <div class="card-title">VLRM / ORACLE <span class="badge bg-vyfi">VyFi</span></div>
             <div class="data-row">
-                <span class="data-label">TVL (Cross-pool):</span>
+                <span class="data-label">TVL:</span>
                 <span class="data-value">
                     <span id="vlrm-oracle-liq-ada"><span class="loading">Waiting...</span></span> <span id="vlrm-oracle-change-24h" class="change-badge"></span>
                 </span>
@@ -329,7 +329,7 @@
         </div>
 
         <div class="card" style="grid-column: 1 / -1; padding: 15px;">
-            <div class="card-title" style="margin-bottom: 10px; font-size: 0.9rem;">Live Trend (Spread & Vault Discrepancy % - Last 24h)</div>
+            <div class="card-title" style="margin-bottom: 10px; font-size: 0.9rem;">Spread & Vault Discrepancy (% last 24h)</div>
             <div style="height: 200px; width: 100%;">
                 <canvas id="arbitrageChart"></canvas>
             </div>
@@ -435,7 +435,6 @@
             sparkInstances.oracleMin = createSpark('spark-oracle-min', 'rgba(137, 170, 255, 1)', chartHistory.oracleMin); 
             sparkInstances.vault = createSpark('spark-vault', 'rgba(252, 211, 77, 1)', chartHistory.vault); 
             
-            // Reemplazo de HEX a RGBA para habilitar la transparencia de fondo
             sparkInstances.totalLiq = createSpark('spark-total-liq', 'rgba(255, 255, 255, 1)', chartHistory.totalLiq); 
             sparkInstances.ada = createSpark('spark-ada', 'rgba(66, 133, 244, 1)', []); 
         }
@@ -786,8 +785,8 @@
                         spreadEl.style.color = "rgba(255, 255, 255, 0.5)"; actionEl.innerHTML = `<span style="color: rgba(255, 255, 255, 0.6);">Low spread</span>`;
                     } else {
                         spreadEl.style.color = "#ffffff"; 
-                        if (priceVyfi > priceMin) { actionEl.innerHTML = `Buy <a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Min</a> ➔ Sell <a href="${VYFI_LINK}" target="_blank" class="badge-dark">VyFi</a>`; suggestedActionText = "Buy Minswap, Sell VyFi"; } 
-                        else { actionEl.innerHTML = `Buy <a href="${VYFI_LINK}" target="_blank" class="badge-dark">VyFi</a> ➔ Sell <a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Min</a>`; suggestedActionText = "Buy VyFi, Sell Minswap"; }
+                        if (priceVyfi > priceMin) { actionEl.innerHTML = `Buy <a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Minswap</a> ➔ Sell <a href="${VYFI_LINK}" target="_blank" class="badge-dark">VyFi</a>`; suggestedActionText = "Buy Minswap, Sell VyFi"; } 
+                        else { actionEl.innerHTML = `Buy <a href="${VYFI_LINK}" target="_blank" class="badge-dark">VyFi</a> ➔ Sell <a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Minswap</a>`; suggestedActionText = "Buy VyFi, Sell Minswap"; }
                     }
 
                     if (spread >= conf.alert) {
