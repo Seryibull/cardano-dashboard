@@ -145,6 +145,10 @@
             <div class="setting-row"><span>Minswap Batcher</span><input type="number" step="0.1" id="set-fee-min" class="setting-input"></div>
             <div class="setting-row"><span>VyFi Batcher</span><input type="number" step="0.1" id="set-fee-vyfi" class="setting-input"></div>
 
+            <div class="setting-section-title">LP FEES (%)</div>
+            <div class="setting-row"><span>Minswap LP Fee</span><input type="number" step="0.1" id="set-lp-min" class="setting-input"></div>
+            <div class="setting-row"><span>VyFi LP Fee</span><input type="number" step="0.1" id="set-lp-vyfi" class="setting-input"></div>
+
             <div class="setting-section-title">TELEGRAM ALERTS (Optional)</div>
             <div class="setting-row"><span>Bot Token</span><input type="text" id="set-tg-bot" class="setting-input-text" placeholder="123:ABC..."></div>
             <div class="setting-row"><span>Chat ID</span><input type="text" id="set-tg-chat" class="setting-input-text" placeholder="12345678"></div>
@@ -352,9 +356,13 @@
         const VYFI_LINK = "https://app.vyfi.io/dex?tokenA=lovelace&tokenB=328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b27393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
         const MINSWAP_LINK = "https://minswap.org/swap?cA=&tA=&cB=328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b2&tB=7393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
 
-        let defaultConf = { alert: 15, sim: 1000, tgBot: "", tgChat: "", feeNet: 0.2, feeMin: 0.7, feeVyfi: 1.9 };
+        // Añadimos lpFeeMin y lpFeeVyfi por defecto al 0.3%
+        let defaultConf = { alert: 15, sim: 1000, tgBot: "", tgChat: "", feeNet: 0.2, feeMin: 0.7, feeVyfi: 1.9, lpFeeMin: 0.3, lpFeeVyfi: 0.3 };
         let conf = JSON.parse(localStorage.getItem('l4va_config')) || defaultConf;
+        
+        // Actualizador automático por si tenías guardada una versión antigua de config en tu navegador
         if(conf.feeNet === undefined) { conf.feeNet = 0.2; conf.feeMin = 0.7; conf.feeVyfi = 1.9; }
+        if(conf.lpFeeMin === undefined) { conf.lpFeeMin = 0.3; conf.lpFeeVyfi = 0.3; }
 
         let lastAlertTime = 0;
         let chartInstance = null;
@@ -377,20 +385,41 @@
         document.getElementById('alert-label').innerText = conf.alert;
 
         function closeModals() { document.getElementById('settings-modal').style.display = 'none'; }
+        
         function openSettings() { 
             document.getElementById('set-alert').value = conf.alert; 
             document.getElementById('set-sim').value = document.getElementById('sim-ada-input').value; 
             document.getElementById('set-tg-bot').value = conf.tgBot || ""; document.getElementById('set-tg-chat').value = conf.tgChat || ""; 
-            document.getElementById('set-fee-net').value = conf.feeNet; document.getElementById('set-fee-min').value = conf.feeMin; document.getElementById('set-fee-vyfi').value = conf.feeVyfi;
+            document.getElementById('set-fee-net').value = conf.feeNet; 
+            document.getElementById('set-fee-min').value = conf.feeMin; 
+            document.getElementById('set-fee-vyfi').value = conf.feeVyfi;
+            
+            // Cargar los nuevos LP Fees en el panel
+            document.getElementById('set-lp-min').value = conf.lpFeeMin;
+            document.getElementById('set-lp-vyfi').value = conf.lpFeeVyfi;
+
             document.getElementById('settings-modal').style.display = 'flex'; 
         }
+        
         function saveSettings() {
-            conf.alert = parseFloat(document.getElementById('set-alert').value); conf.sim = parseFloat(document.getElementById('set-sim').value);
-            conf.tgBot = document.getElementById('set-tg-bot').value.trim(); conf.tgChat = document.getElementById('set-tg-chat').value.trim();
-            conf.feeNet = parseFloat(document.getElementById('set-fee-net').value); conf.feeMin = parseFloat(document.getElementById('set-fee-min').value); conf.feeVyfi = parseFloat(document.getElementById('set-fee-vyfi').value);
+            conf.alert = parseFloat(document.getElementById('set-alert').value); 
+            conf.sim = parseFloat(document.getElementById('set-sim').value);
+            conf.tgBot = document.getElementById('set-tg-bot').value.trim(); 
+            conf.tgChat = document.getElementById('set-tg-chat').value.trim();
+            conf.feeNet = parseFloat(document.getElementById('set-fee-net').value); 
+            conf.feeMin = parseFloat(document.getElementById('set-fee-min').value); 
+            conf.feeVyfi = parseFloat(document.getElementById('set-fee-vyfi').value);
+            
+            // Guardar los nuevos LP Fees
+            conf.lpFeeMin = parseFloat(document.getElementById('set-lp-min').value);
+            conf.lpFeeVyfi = parseFloat(document.getElementById('set-lp-vyfi').value);
+
             localStorage.setItem('l4va_config', JSON.stringify(conf));
-            document.getElementById('sim-ada-input').value = conf.sim; document.getElementById('sim-tri-input').value = conf.sim; document.getElementById('alert-label').innerText = conf.alert;
-            closeModals(); recalculateSimulators();
+            document.getElementById('sim-ada-input').value = conf.sim; 
+            document.getElementById('sim-tri-input').value = conf.sim; 
+            document.getElementById('alert-label').innerText = conf.alert;
+            closeModals(); 
+            recalculateSimulators();
         }
 
         function addToLog(spread, routeText, color = "#ffffff") {
@@ -481,9 +510,10 @@
 
         function playDing() { try { const ctx = new (window.AudioContext || window.webkitAudioContext)(); const osc = ctx.createOscillator(); const gainNode = ctx.createGain(); osc.type = 'sine'; osc.frequency.setValueAtTime(880, ctx.currentTime); gainNode.gain.setValueAtTime(0.1, ctx.currentTime); osc.connect(gainNode); gainNode.connect(ctx.destination); osc.start(); gainNode.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.5); osc.stop(ctx.currentTime + 0.5); } catch (e) {} }
 
-        function getAmmOut(amountIn, reserveIn, reserveOut) {
+        // MATEMÁTICA AMM AHORA CON PORCENTAJE DE COMISIÓN (LP FEE) DINÁMICO
+        function getAmmOut(amountIn, reserveIn, reserveOut, feePct) {
             if(reserveIn <= 0 || reserveOut <= 0 || amountIn <= 0) return 0;
-            const feeMultiplier = 0.997; 
+            const feeMultiplier = 1 - (feePct / 100); 
             const amountInWithFee = amountIn * feeMultiplier;
             return (reserveOut * amountInWithFee) / (reserveIn + amountInWithFee);
         }
@@ -496,15 +526,23 @@
             if(currentPools.vyfi.price <= 0 || currentPools.minswap.price <= 0) { simEl.innerText = "0.00 ADA"; return; }
             
             const networkFee = conf.feeNet; const minFixed = conf.feeMin; const vyfiFixed = conf.feeVyfi;
-            let poolBuy, poolSell, fixedFeeBuy, fixedFeeSell;
+            let poolBuy, poolSell, fixedFeeBuy, fixedFeeSell, lpBuy, lpSell;
 
-            if (currentPools.minswap.price < currentPools.vyfi.price) { poolBuy = currentPools.minswap; poolSell = currentPools.vyfi; fixedFeeBuy = minFixed; fixedFeeSell = vyfiFixed; } 
-            else { poolBuy = currentPools.vyfi; poolSell = currentPools.minswap; fixedFeeBuy = vyfiFixed; fixedFeeSell = minFixed; }
+            if (currentPools.minswap.price < currentPools.vyfi.price) { 
+                poolBuy = currentPools.minswap; poolSell = currentPools.vyfi; 
+                fixedFeeBuy = minFixed; fixedFeeSell = vyfiFixed; 
+                lpBuy = conf.lpFeeMin; lpSell = conf.lpFeeVyfi; // Asignamos LP fee según el DEX
+            } else { 
+                poolBuy = currentPools.vyfi; poolSell = currentPools.minswap; 
+                fixedFeeBuy = vyfiFixed; fixedFeeSell = minFixed; 
+                lpBuy = conf.lpFeeVyfi; lpSell = conf.lpFeeMin;
+            }
 
             let netProfit = 0; let swapAdaAmount = investAda - fixedFeeBuy - networkFee;
             if (swapAdaAmount > 0) {
-                let tokensReceived = getAmmOut(swapAdaAmount, poolBuy.reserveAda, poolBuy.reserveTok);
-                let adaGrossReceived = getAmmOut(tokensReceived, poolSell.reserveTok, poolSell.reserveAda);
+                // Pasamos el LP fee a la función matemática
+                let tokensReceived = getAmmOut(swapAdaAmount, poolBuy.reserveAda, poolBuy.reserveTok, lpBuy);
+                let adaGrossReceived = getAmmOut(tokensReceived, poolSell.reserveTok, poolSell.reserveAda, lpSell);
                 netProfit = (adaGrossReceived - fixedFeeSell - networkFee) - investAda;
             }
             
@@ -520,8 +558,8 @@
             for(let i = 10; i <= 5000; i += 10) {
                 let testSwapAmount = i - fixedFeeBuy - networkFee;
                 if(testSwapAmount <= 0) continue;
-                let testTokens = getAmmOut(testSwapAmount, poolBuy.reserveAda, poolBuy.reserveTok);
-                let testAdaGross = getAmmOut(testTokens, poolSell.reserveTok, poolSell.reserveAda);
+                let testTokens = getAmmOut(testSwapAmount, poolBuy.reserveAda, poolBuy.reserveTok, lpBuy);
+                let testAdaGross = getAmmOut(testTokens, poolSell.reserveTok, poolSell.reserveAda, lpSell);
                 let testNet = (testAdaGross - fixedFeeSell - networkFee) - i;
                 if (testNet > bestProfit) { bestProfit = testNet; optimalInvest = i; } else if (testNet < bestProfit && testNet > 0) break;
             }
@@ -536,24 +574,30 @@
             if(pVA.resAda <= 0 || pVO.resVlrm <= 0) return { netProfit: -Infinity, route: null };
 
             const netF = conf.feeNet; const fVy = conf.feeVyfi + netF; const fMin = conf.feeMin + netF; 
+            
+            // Asignación de LP Fees de Ajustes
+            const lpVy = conf.lpFeeVyfi;
+            const lpMin = conf.lpFeeMin;
 
             let outA = -Infinity; let adaAfterLeg1A = investAda - fVy;
             if(adaAfterLeg1A > 0) {
-                let vlrmOut = getAmmOut(adaAfterLeg1A, pVA.resAda, pVA.resTok);
-                let oracleOut = getAmmOut(vlrmOut, pVO.resVlrm, pVO.resOracle);
-                let adaEndVy = getAmmOut(oracleOut, pOVy.reserveTok, pOVy.reserveAda) - fVy - fVy; 
-                let adaEndMin = getAmmOut(oracleOut, pOMin.reserveTok, pOMin.reserveAda) - fVy - fMin; 
+                let vlrmOut = getAmmOut(adaAfterLeg1A, pVA.resAda, pVA.resTok, lpVy); // Pool en VyFi
+                let oracleOut = getAmmOut(vlrmOut, pVO.resVlrm, pVO.resOracle, lpVy); // Pool cruzado en VyFi
+                let adaEndVy = getAmmOut(oracleOut, pOVy.reserveTok, pOVy.reserveAda, lpVy) - fVy - fVy; // Vender en VyFi
+                let adaEndMin = getAmmOut(oracleOut, pOMin.reserveTok, pOMin.reserveAda, lpMin) - fVy - fMin; // Vender en Minswap
                 outA = Math.max(adaEndVy, adaEndMin);
             }
 
             let outB = -Infinity; let adaAfterLeg1B_Vy = investAda - fVy; let adaAfterLeg1B_Min = investAda - fMin;
             if(adaAfterLeg1B_Vy > 0 || adaAfterLeg1B_Min > 0) {
-                let oracleOutVy = getAmmOut(adaAfterLeg1B_Vy, pOVy.reserveAda, pOVy.reserveTok);
-                let vlrmOutVy = getAmmOut(oracleOutVy, pVO.resOracle, pVO.resVlrm);
-                let finalVyVy = getAmmOut(vlrmOutVy, pVA.resTok, pVA.resAda) - fVy - fVy;
-                let oracleOutMin = getAmmOut(adaAfterLeg1B_Min, pOMin.reserveAda, pOMin.reserveTok);
-                let vlrmOutMin = getAmmOut(oracleOutMin, pVO.resOracle, pVO.resVlrm);
-                let finalMinVy = getAmmOut(vlrmOutMin, pVA.resTok, pVA.resAda) - fVy - fVy;
+                let oracleOutVy = getAmmOut(adaAfterLeg1B_Vy, pOVy.reserveAda, pOVy.reserveTok, lpVy);
+                let vlrmOutVy = getAmmOut(oracleOutVy, pVO.resOracle, pVO.resVlrm, lpVy);
+                let finalVyVy = getAmmOut(vlrmOutVy, pVA.resTok, pVA.resAda, lpVy) - fVy - fVy;
+                
+                let oracleOutMin = getAmmOut(adaAfterLeg1B_Min, pOMin.reserveAda, pOMin.reserveTok, lpMin);
+                let vlrmOutMin = getAmmOut(oracleOutMin, pVO.resOracle, pVO.resVlrm, lpVy);
+                let finalMinVy = getAmmOut(vlrmOutMin, pVA.resTok, pVA.resAda, lpVy) - fVy - fVy;
+                
                 outB = Math.max(finalVyVy, finalMinVy);
             }
             
