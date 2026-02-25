@@ -96,11 +96,18 @@
         .card { border-radius: 20px; padding: 20px 25px; position: relative; background: rgba(18, 15, 36, 0.85); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); transition: transform 0.3s ease, box-shadow 0.3s ease; min-height: 280px; display: flex; flex-direction: column; justify-content: space-between;}
         .card:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 123, 0, 0.15); border-color: rgba(255, 123, 0, 0.3); }
 
+        /* CODIFICACIÓN DE COLORES POR TEMÁTICA */
+        /* Tarjeta ADA Especial (Azul) */
         .card-ada { background: rgba(35, 40, 65, 0.85); border-color: rgba(66, 133, 244, 0.2); }
         .card-ada:hover { border-color: rgba(66, 133, 244, 0.5); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(66, 133, 244, 0.2); }
 
+        /* Tarjeta Vault Especial (Amarillo/Dorado) - Ahora también aplicada a ORACLE/ADA */
         .card-vault { background: rgba(45, 35, 15, 0.85); border-color: rgba(252, 211, 77, 0.2); }
         .card-vault:hover { border-color: rgba(252, 211, 77, 0.5); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(252, 211, 77, 0.2); }
+
+        /* NUEVO: Tarjeta Naranja Especial para VLRM y Triangular */
+        .card-orange { background: rgba(45, 25, 10, 0.85); border-color: rgba(255, 123, 0, 0.2); }
+        .card-orange:hover { border-color: rgba(255, 123, 0, 0.5); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 123, 0, 0.2); }
 
         .card-title { font-size: 1.05rem; font-weight: 600; margin-bottom: 15px; color: var(--neon-orange); display: flex; justify-content: space-between; align-items: center; }
         .card-title.ada-title { color: var(--ada-color); text-shadow: 0 0 10px rgba(66, 133, 244, 0.3); }
@@ -356,7 +363,7 @@
             <div style="height: 80px; margin-top: 15px;"><canvas id="spark-vault"></canvas></div>
         </div>
 
-        <div class="card">
+        <div class="card card-orange">
             <div class="card-title">VLRM / ADA <span class="badge bg-vyfi">VyFi</span></div>
             
             <div class="data-row">
@@ -372,7 +379,7 @@
             <div style="height: 50px;"><canvas id="spark-vlrm-ada"></canvas></div>
         </div>
 
-        <div class="card">
+        <div class="card card-orange">
             <div class="card-title">VLRM / ORACLE <span class="badge bg-vyfi">VyFi</span></div>
             
             <div class="data-row">
@@ -390,7 +397,7 @@
 
         <div style="grid-column: 1 / -1; display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px;">
             
-            <div class="card" style="display: flex; flex-direction: column;">
+            <div class="card card-vault" style="display: flex; flex-direction: column;">
                 <div class="card-title" style="margin-bottom: 20px;">ORACLE / ADA ⚖️</div>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 20px;">
                     <div>
@@ -422,7 +429,7 @@
                 </div>
             </div>
 
-            <div class="card" style="display: flex; flex-direction: column;">
+            <div class="card card-orange" style="display: flex; flex-direction: column;">
                 <div class="card-title" style="color: var(--neon-orange); margin-bottom: 5px;">TRIANGULAR ARBITRAGE (VLRM / ORACLE / ADA) 🔺</div>
                 
                 <div class="tri-wrapper">
@@ -533,7 +540,6 @@
             document.getElementById('main-dashboard').style.filter = 'none';
         }
         
-        // Función para mostrar/ocultar contraseña
         function togglePasswordVisibility() {
             const input = document.getElementById('terminal-passkey');
             const toggleBtn = document.querySelector('.toggle-password');
