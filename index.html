@@ -22,7 +22,8 @@
             --neon-orange: #ff7b00;
             --neon-red: #ff0f5b;
             --gradient-fire: linear-gradient(135deg, var(--neon-orange), var(--neon-red));
-            --gradient-dark-fire: linear-gradient(135deg, #5e2a00 0%, #8a121c 60%, #4a0042 100%);
+            /* Nuevo degradado radial para el fondo principal de fuego */
+            --gradient-dark-plasma: radial-gradient(circle at center bottom, #5e2a00 0%, #4a0e16 50%, #120f24 100%);
             --ada-color: #4285f4;
             --badge-vyfi-bg: rgba(139, 92, 246, 0.15);
             --badge-vyfi-text: #a78bfa;
@@ -70,50 +71,84 @@
         .bg-vyfi { background: var(--badge-vyfi-bg); color: var(--badge-vyfi-text); border-color: var(--badge-vyfi-text); }
         .bg-minswap { background: var(--badge-min-bg); color: var(--badge-min-text); border-color: var(--badge-min-text); }
 
-        /* MODO DEFCON & ARBITRAGE SECTION FIX */
-        @keyframes defcon-pulse {
-            0% { box-shadow: 0 15px 40px -10px rgba(74, 0, 0, 0.8), inset 0 0 30px rgba(0,0,0,0.4), 0 0 0px rgba(255, 15, 91, 0); border-color: rgba(255,255,255,0.05); }
-            50% { box-shadow: 0 15px 40px -10px rgba(74, 0, 0, 0.8), inset 0 0 30px rgba(0,0,0,0.4), 0 0 30px rgba(255, 15, 91, 0.7); border-color: rgba(255, 15, 91, 0.6); }
-            100% { box-shadow: 0 15px 40px -10px rgba(74, 0, 0, 0.8), inset 0 0 30px rgba(0,0,0,0.4), 0 0 0px rgba(255, 15, 91, 0); border-color: rgba(255,255,255,0.05); }
+        /* NUEVO ESTILO: SECCIÓN PRINCIPAL "FUEGO DEFINIDO" */
+        .arbitrage-section { 
+            grid-column: 1 / -1; 
+            /* Usamos el nuevo degradado radial para un núcleo caliente */
+            background: var(--gradient-dark-plasma) !important; 
+            /* Borde naranja sutil para definir el contenedor principal */
+            border: 1px solid rgba(255, 123, 0, 0.25);
+            /* Sombra con un ligero resplandor naranja */
+            box-shadow: 0 15px 40px -10px rgba(0, 0, 0, 0.8), inset 0 0 60px rgba(94, 42, 0, 0.6), 0 0 20px rgba(255, 123, 0, 0.1); 
+            padding: 20px 25px; 
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
-        
-        .arbitrage-section { grid-column: 1 / -1; background: var(--gradient-dark-fire) !important; border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 15px 40px -10px rgba(74, 0, 0, 0.8), inset 0 0 30px rgba(0,0,0,0.4); padding: 20px 25px; transition: all 0.3s ease;}
         
         .arbitrage-section:hover {
             transform: translateY(-3px);
-            box-shadow: 0 20px 50px -10px rgba(74, 0, 0, 0.9), inset 0 0 30px rgba(0,0,0,0.4), 0 0 25px rgba(255, 123, 0, 0.2);
-            border-color: rgba(255, 123, 0, 0.4);
+            box-shadow: 0 25px 50px -10px rgba(0, 0, 0, 0.9), inset 0 0 80px rgba(120, 50, 0, 0.7), 0 0 30px rgba(255, 123, 0, 0.2);
+            border-color: rgba(255, 123, 0, 0.5);
         }
 
-        .defcon-active { animation: defcon-pulse 1.5s infinite !important; }
+        /* MODO DEFCON: Alarma visual */
+        @keyframes defcon-pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 15, 91, 0.4); border-color: rgba(255, 15, 91, 0.5); }
+            70% { box-shadow: 0 0 20px 10px rgba(255, 15, 91, 0); border-color: rgba(255, 15, 91, 0.1); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 15, 91, 0); border-color: rgba(255, 15, 91, 0.5); }
+        }
+        .defcon-active { animation: defcon-pulse 2s infinite !important; background: linear-gradient(135deg, #3a080e 0%, #5e0000 100%) !important; }
         .defcon-active:hover { transform: translateY(-3px) !important; }
 
-        .arbitrage-banner-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.15); padding-bottom: 10px; margin-bottom: 15px; }
+        .arbitrage-banner-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; border-bottom: 1px solid rgba(255, 123, 0, 0.2); padding-bottom: 15px; margin-bottom: 20px; position: relative; z-index: 2;}
         
-        .arbitrage-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
+        .arbitrage-grid { display: grid; grid-template-columns: 1fr; gap: 20px; position: relative; z-index: 2;}
         @media (min-width: 900px) { .arbitrage-grid { grid-template-columns: 1fr 1fr; } }
 
-        .arbitrage-box { background: rgba(0, 0, 0, 0.3); padding: 15px 20px; border-radius: 16px; transition: all 0.3s ease; position: relative; border: 1px solid rgba(255,255,255,0.05);}
-        .arbitrage-label { color: rgba(255, 255, 255, 0.7); font-size: 0.75rem; text-transform: uppercase; font-weight: 800; margin-bottom: 3px; }
-        .arbitrage-big-value { font-size: 1.6rem; font-weight: 900; color: #ffffff; text-shadow: 0 2px 10px rgba(0,0,0,0.3); transition: all 0.3s ease; }
+        /* NUEVO ESTILO: CAJAS INTERNAS (Glassmorphism sobre fuego) */
+        .arbitrage-box { 
+            /* Fondo más oscuro y menos transparente */
+            background: rgba(0, 0, 0, 0.5); 
+            padding: 20px; 
+            border-radius: 18px; 
+            transition: all 0.3s ease; 
+            position: relative; 
+            /* Borde definido con tinte naranja para contraste */
+            border: 1px solid rgba(255, 123, 0, 0.2);
+            /* Efecto cristal ahumado */
+            backdrop-filter: blur(10px);
+            /* Sombra fuerte para separarlos del fondo de fuego */
+            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+        }
+        .arbitrage-box:hover {
+             border-color: rgba(255, 123, 0, 0.6);
+             background: rgba(0, 0, 0, 0.6);
+             transform: translateY(-2px);
+        }
+
+        .arbitrage-label { color: rgba(255, 255, 255, 0.75); font-size: 0.75rem; text-transform: uppercase; font-weight: 800; margin-bottom: 5px; letter-spacing: 0.5px;}
+        .arbitrage-big-value { font-size: 1.8rem; font-weight: 900; color: #ffffff; text-shadow: 0 2px 15px rgba(0,0,0,0.5); transition: all 0.3s ease; }
         .loading { color: inherit; opacity: 0.6; font-style: italic; font-weight: normal; font-size: 0.9rem;}
 
-        .alert-toggle-box { font-size: 0.8rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 8px; color: var(--text-primary); background: rgba(255, 255, 255, 0.1); padding: 6px 12px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); }
-        .alert-toggle-box input { accent-color: var(--neon-orange); transform: scale(1.1); }
-        .badge-dark { background: rgba(255,255,255,0.9); color: var(--text-on-fire); font-size: 0.75rem; padding: 4px 8px; border-radius: 20px; font-weight: 800; display: inline-block; margin: 0 2px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); text-decoration: none; transition: 0.2s ease; }
-        a.badge-dark:hover { transform: scale(1.08); background: #ffffff; cursor: pointer; }
+        .alert-toggle-box { font-size: 0.8rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 8px; color: var(--text-primary); background: rgba(0, 0, 0, 0.4); padding: 8px 16px; border-radius: 30px; border: 1px solid rgba(255, 123, 0, 0.3); transition: 0.3s;}
+        .alert-toggle-box:hover { border-color: var(--neon-orange); background: rgba(255, 123, 0, 0.1); }
+        .alert-toggle-box input { accent-color: var(--neon-orange); transform: scale(1.2); }
         
-        .sim-input { background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 5px 10px; border-radius: 8px; width: 70px; font-weight: bold; text-align: center; margin-right: 5px; font-family: 'Inter', sans-serif;}
-        .sim-input:focus { outline: none; border-color: var(--neon-orange); }
-        .profit-positive { color: #10b981; text-shadow: 0 0 10px rgba(16, 185, 129, 0.4); }
-        .profit-negative { color: var(--neon-red); }
-        .optimizer-text { font-size: 0.7rem; color: var(--text-secondary); margin-top: 8px; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 8px;}
+        .badge-dark { background: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.2); font-size: 0.75rem; padding: 4px 10px; border-radius: 20px; font-weight: 700; display: inline-block; margin: 0 2px; text-decoration: none; transition: 0.2s ease; }
+        a.badge-dark:hover { transform: translateY(-2px); background: var(--neon-orange); border-color: var(--neon-orange); color: var(--text-on-fire); box-shadow: 0 0 15px rgba(255, 123, 0, 0.4);}
+        
+        .sim-input { background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 8px 12px; border-radius: 10px; width: 80px; font-weight: bold; text-align: center; margin-right: 5px; font-family: 'Inter', sans-serif; font-size: 1rem;}
+        .sim-input:focus { outline: none; border-color: var(--neon-orange); box-shadow: 0 0 10px rgba(255, 123, 0, 0.2);}
+        .profit-positive { color: #10b981; text-shadow: 0 0 15px rgba(16, 185, 129, 0.5); }
+        .profit-negative { color: var(--neon-red); text-shadow: 0 0 15px rgba(255, 15, 91, 0.5); }
+        .optimizer-text { font-size: 0.75rem; color: var(--text-secondary); margin-top: 12px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px; font-weight: 600;}
         .usd-profit { font-size: 0.9rem; color: rgba(255,255,255,0.6); font-weight: 600; text-shadow: none; display: block; text-align: right;}
 
         /* BARRAS DE SLIPPAGE */
-        .slippage-container { width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; margin-top: 8px; overflow: hidden; position: relative;}
-        .slippage-bar { height: 100%; width: 0%; border-radius: 3px; transition: all 0.3s ease; }
-        .slippage-label { font-size: 0.65rem; color: var(--text-secondary); text-align: right; margin-top: 4px;}
+        .slippage-container { width: 100%; height: 8px; background: rgba(0,0,0,0.4); border-radius: 4px; margin-top: 10px; overflow: hidden; position: relative; border: 1px solid rgba(255,255,255,0.1);}
+        .slippage-bar { height: 100%; width: 0%; border-radius: 4px; transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); box-shadow: 0 0 10px currentColor;}
+        .slippage-label { font-size: 0.7rem; color: var(--text-secondary); text-align: right; margin-top: 6px; font-weight: 600;}
 
         /* ANIMACIÓN TRIÁNGULO */
         .tri-wrapper { position: relative; width: 100%; max-width: 200px; height: 160px; margin: 15px auto 5px auto; }
@@ -135,7 +170,7 @@
         /* ESTILOS NUEVOS DE RUTAS (LEDS) */
         .route-active { color: #10b981; transition: 0.3s; }
         .route-active .route-dot { background: #10b981; box-shadow: 0 0 10px #10b981; }
-        .route-inactive { color: var(--text-secondary); opacity: 0.4; transition: 0.3s; }
+        .route-inactive { color: var(--text-secondary); opacity: 0.5; transition: 0.3s; }
         .route-inactive .route-dot { background: rgba(255,255,255,0.2); box-shadow: none; }
         .route-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex-shrink: 0; transition: all 0.3s ease; }
 
@@ -204,7 +239,7 @@
     <div class="dashboard">
         <div id="main-banner" class="card arbitrage-section">
             <div class="arbitrage-banner-header">
-                <div style="font-size: 1.1rem; font-weight: 800; color: white;">⚡ Active Opportunities & Intelligence</div>
+                <div style="font-size: 1.1rem; font-weight: 800; color: white; text-shadow: 0 2px 10px rgba(0,0,0,0.5);">⚡ Active Opportunities & Intelligence</div>
                 <label class="alert-toggle-box">
                     <input type="checkbox" id="alert-toggle" checked> 🔔 Alerts ON
                 </label>
@@ -213,13 +248,13 @@
             <div class="arbitrage-grid">
                 <div class="arbitrage-box">
                     <div class="arbitrage-label" style="color: var(--ada-color); margin-bottom: 8px;">DEX Arbitrage (ORACLE)</div>
-                    <div style="display: flex; justify-content: space-between;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-end;">
                         <div>
                             <div class="arbitrage-label">Spread</div>
-                            <div class="arbitrage-big-value" id="arbitrage-spread">-%</div>
+                            <div class="arbitrage-big-value" id="arbitrage-spread" style="line-height: 1;">-%</div>
                         </div>
                         <div style="text-align: right;">
-                            <div class="arbitrage-label">Action</div>
+                            <div class="arbitrage-label" style="margin-bottom: 5px;">Action</div>
                             <div id="arbitrage-action" style="font-size: 0.85rem; color: white;"><span class="loading">Analyzing...</span></div>
                         </div>
                     </div>
@@ -227,28 +262,30 @@
 
                 <div class="arbitrage-box">
                     <div class="arbitrage-label" style="color: #fcd34d; margin-bottom: 8px;">VAULT RELICS FAIR PRICE (ORACLE)</div>
-                    <div style="display: flex; justify-content: space-between;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-end;">
                         <div>
                             <div class="arbitrage-label">Discrepancy</div>
-                            <div class="arbitrage-big-value" id="vault-banner-discrepancy">-%</div>
+                            <div class="arbitrage-big-value" id="vault-banner-discrepancy" style="line-height: 1;">-%</div>
                         </div>
                         <div style="text-align: right;">
-                            <div class="arbitrage-label">Action</div>
+                            <div class="arbitrage-label" style="margin-bottom: 5px;">Action</div>
                             <div id="vault-arbitrage-action" style="font-size: 0.85rem; color: white;"><span class="loading">Analyzing...</span></div>
                         </div>
                     </div>
                 </div>
 
-                <div class="arbitrage-box" style="border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; justify-content: center;">
-                    <div class="arbitrage-label" style="color: var(--neon-orange); margin-bottom: 8px;">NET PROFIT SIMULATOR (ORACLE)</div>
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                <div class="arbitrage-box" style="display: flex; flex-direction: column; justify-content: center;">
+                    <div class="arbitrage-label" style="color: var(--neon-orange); margin-bottom: 12px;">NET PROFIT SIMULATOR (ORACLE)</div>
+                    <div style="display: flex; justify-content: space-between; align-items: flex-end;">
                         <div>
                             <div class="arbitrage-label" style="margin-bottom:5px;">Investment</div>
-                            <input type="number" id="sim-ada-input" class="sim-input" value="1000" onkeyup="recalculateSimulators()" onchange="recalculateSimulators()"> <span style="font-size: 0.7rem; font-weight: bold;">ADA</span>
+                            <div style="display: flex; align-items: center;">
+                                <input type="number" id="sim-ada-input" class="sim-input" value="1000" onkeyup="recalculateSimulators()" onchange="recalculateSimulators()"> <span style="font-size: 0.8rem; font-weight: bold; margin-left: 5px;">ADA</span>
+                            </div>
                         </div>
-                        <div style="text-align: right; line-height: 1.1;">
+                        <div style="text-align: right;">
                             <div class="arbitrage-label">Net Return (2 Hops)</div>
-                            <div class="arbitrage-big-value" id="sim-profit" style="font-size: 1.3rem;">- ADA</div>
+                            <div class="arbitrage-big-value" id="sim-profit" style="font-size: 1.5rem; line-height: 1;">- ADA</div>
                         </div>
                     </div>
                     <div class="slippage-container"><div id="sim-slippage-bar" class="slippage-bar" style="background: #10b981;"></div></div>
@@ -256,16 +293,18 @@
                     <div id="optimizer-result" class="optimizer-text">💡 <b>Auto-Optimizer:</b> Calculating...</div>
                 </div>
 
-                <div class="arbitrage-box" style="border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; justify-content: center;">
-                    <div class="arbitrage-label" style="color: var(--neon-orange); margin-bottom: 8px;">NET PROFIT SIMULATOR TRIANGULAR</div>
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                <div class="arbitrage-box" style="display: flex; flex-direction: column; justify-content: center;">
+                    <div class="arbitrage-label" style="color: var(--neon-orange); margin-bottom: 12px;">NET PROFIT SIMULATOR TRIANGULAR</div>
+                    <div style="display: flex; justify-content: space-between; align-items: flex-end;">
                         <div>
                             <div class="arbitrage-label" style="margin-bottom:5px;">Investment</div>
-                            <input type="number" id="sim-tri-input" class="sim-input" value="1000" onkeyup="recalculateSimulators()" onchange="recalculateSimulators()"> <span style="font-size: 0.7rem; font-weight: bold;">ADA</span>
+                            <div style="display: flex; align-items: center;">
+                                <input type="number" id="sim-tri-input" class="sim-input" value="1000" onkeyup="recalculateSimulators()" onchange="recalculateSimulators()"> <span style="font-size: 0.8rem; font-weight: bold; margin-left: 5px;">ADA</span>
+                            </div>
                         </div>
-                        <div style="text-align: right; line-height: 1.1;">
+                        <div style="text-align: right;">
                             <div class="arbitrage-label">Net Return (3 Hops)</div>
-                            <div class="arbitrage-big-value" id="sim-tri-profit" style="font-size: 1.3rem;">- ADA</div>
+                            <div class="arbitrage-big-value" id="sim-tri-profit" style="font-size: 1.5rem; line-height: 1;">- ADA</div>
                         </div>
                     </div>
                     <div class="slippage-container"><div id="sim-tri-slippage-bar" class="slippage-bar" style="background: #10b981;"></div></div>
@@ -578,9 +617,9 @@
             bar.style.width = `${width}%`;
             label.innerText = `Price Impact: ${maxImpact.toFixed(2)}%`;
 
-            if (maxImpact < 2) { bar.style.background = "#10b981"; label.style.color = "#10b981"; }
-            else if (maxImpact < 5) { bar.style.background = "#fcd34d"; label.style.color = "#fcd34d"; }
-            else { bar.style.background = "var(--neon-red)"; label.style.color = "var(--neon-red)"; }
+            if (maxImpact < 2) { bar.style.background = "#10b981"; label.style.color = "#10b981"; textShadow = "0 0 10px #10b981"; }
+            else if (maxImpact < 5) { bar.style.background = "#fcd34d"; label.style.color = "#fcd34d"; textShadow = "0 0 10px #fcd34d"; }
+            else { bar.style.background = "var(--neon-red)"; label.style.color = "var(--neon-red)"; textShadow = "0 0 10px var(--neon-red)"; }
         }
 
         function recalculateSimulators() { recalculateDexSimulator(); recalculateTriSimulator(); }
