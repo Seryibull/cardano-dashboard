@@ -109,9 +109,6 @@
         .route-active { background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); padding: 6px 10px; border-radius: 8px; color: #10b981; }
         .route-inactive { background: transparent; border: 1px solid transparent; padding: 6px 10px; opacity: 0.5; color: var(--text-secondary); }
 
-        .merged-section-grid { display: grid; grid-template-columns: 1fr; gap: 30px; }
-        @media (min-width: 900px) { .merged-section-grid { grid-template-columns: 55fr 45fr; } .merged-right-col { border-left: 1px solid rgba(255,255,255,0.1); padding-left: 30px; } }
-
         .log-entry { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.85rem; align-items: center;}
         .log-time { color: var(--text-secondary); font-size: 0.75rem; width: 80px;}
         .log-spread { font-weight: bold; width: 70px; text-align: left; }
@@ -178,7 +175,7 @@
                 </div>
 
                 <div class="arbitrage-box">
-                    <div class="arbitrage-label" style="color: #fcd34d; margin-bottom: 8px;">Relics Vault arbitrage opportunity (ORACLE)</div>
+                    <div class="arbitrage-label" style="color: #fcd34d; margin-bottom: 8px;">VAULT RELICS FAIR PRICE (ORACLE)</div>
                     <div style="display: flex; justify-content: space-between;">
                         <div>
                             <div class="arbitrage-label">Discrepancy</div>
@@ -262,7 +259,7 @@
         <div class="card">
             <div class="card-title">VLRM / ORACLE <span class="badge bg-vyfi">VyFi</span></div>
             <div class="data-row">
-                <span class="data-label">TVL:</span>
+                <span class="data-label">TVL (Pool):</span>
                 <span class="data-value">
                     <span id="vlrm-oracle-liq-ada"><span class="loading">Waiting...</span></span> <span id="vlrm-oracle-change-24h" class="change-badge"></span>
                 </span>
@@ -270,62 +267,62 @@
             <div style="height: 40px; margin-top: 35px;"><canvas id="spark-vlrm-oracle"></canvas></div>
         </div>
 
-        <div class="card" style="grid-column: 1 / -1;">
-            <div class="merged-section-grid">
-                <div>
-                    <div class="card-title" style="margin-bottom: 20px;">ORACLE / ADA ⚖️</div>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 20px;">
-                        <div>
-                            <h3 class="dex-subtitle"><span class="badge bg-vyfi">VYFI</span></h3>
-                            <div class="data-row"><span class="data-label">Price:</span><span class="data-value" id="oracle-vyfi-price">-</span></div>
-                            <div class="data-row">
-                                <span class="data-label">Liquidity:</span>
-                                <span class="data-value"><span id="oracle-vyfi-liq">-</span> <span id="oracle-vyfi-change-24h" class="change-badge"></span></span>
-                            </div>
-                            <div style="height: 40px; margin-top: 10px;"><canvas id="spark-oracle-vyfi"></canvas></div>
+        <div style="grid-column: 1 / -1; display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px;">
+            
+            <div class="card" style="display: flex; flex-direction: column;">
+                <div class="card-title" style="margin-bottom: 20px;">ORACLE / ADA ⚖️</div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 20px;">
+                    <div>
+                        <h3 class="dex-subtitle"><span class="badge bg-vyfi">VYFI</span></h3>
+                        <div class="data-row"><span class="data-label">Price:</span><span class="data-value" id="oracle-vyfi-price">-</span></div>
+                        <div class="data-row">
+                            <span class="data-label">Liquidity:</span>
+                            <span class="data-value"><span id="oracle-vyfi-liq">-</span> <span id="oracle-vyfi-change-24h" class="change-badge"></span></span>
                         </div>
-                        <div style="border-left: 2px solid rgba(255,255,255,0.05); padding-left: 20px;">
-                            <h3 class="dex-subtitle"><span class="badge bg-minswap">MINSWAP</span></h3>
-                            <div class="data-row"><span class="data-label">Price:</span><span class="data-value" id="oracle-min-price">-</span></div>
-                            <div class="data-row">
-                                <span class="data-label">Liquidity:</span>
-                                <span class="data-value"><span id="oracle-min-liq">-</span> <span id="oracle-min-change-24h" class="change-badge"></span></span>
-                            </div>
-                            <div style="height: 40px; margin-top: 10px;"><canvas id="spark-oracle-min"></canvas></div>
-                        </div>
+                        <div style="height: 40px; margin-top: 10px;"><canvas id="spark-oracle-vyfi"></canvas></div>
                     </div>
-                    <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 16px; margin-top: 20px;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-                            <h3 class="dex-subtitle" style="color: var(--text-primary); margin:0;">Total Combined Liquidity</h3>
-                            <div class="data-value" style="font-size: 1.5rem; color: #ffffff;">
-                                <span id="oracle-total-liq">-</span> <span id="total-liq-change-24h" class="change-badge"></span>
-                            </div>
+                    <div style="border-left: 2px solid rgba(255,255,255,0.05); padding-left: 20px;">
+                        <h3 class="dex-subtitle"><span class="badge bg-minswap">MINSWAP</span></h3>
+                        <div class="data-row"><span class="data-label">Price:</span><span class="data-value" id="oracle-min-price">-</span></div>
+                        <div class="data-row">
+                            <span class="data-label">Liquidity:</span>
+                            <span class="data-value"><span id="oracle-min-liq">-</span> <span id="oracle-min-change-24h" class="change-badge"></span></span>
                         </div>
-                        <div style="height: 40px; margin-top: 15px;"><canvas id="spark-total-liq"></canvas></div>
+                        <div style="height: 40px; margin-top: 10px;"><canvas id="spark-oracle-min"></canvas></div>
                     </div>
                 </div>
+                <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 16px; margin-top: auto;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                        <h3 class="dex-subtitle" style="color: var(--text-primary); margin:0;">Total Combined Liquidity</h3>
+                        <div class="data-value" style="font-size: 1.5rem; color: #ffffff;">
+                            <span id="oracle-total-liq">-</span> <span id="total-liq-change-24h" class="change-badge"></span>
+                        </div>
+                    </div>
+                    <div style="height: 40px; margin-top: 15px;"><canvas id="spark-total-liq"></canvas></div>
+                </div>
+            </div>
 
-                <div class="merged-right-col">
-                    <div class="card-title" style="color: var(--neon-orange); margin-bottom: 20px;">TRIANGULAR ARBITRAGE (VLRM / ORACLE / ADA) 🔺</div>
-                    <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); height: calc(100% - 60px); display: flex; flex-direction: column; justify-content: center;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                            <div class="arbitrage-label">Optimal Net Discrepancy</div>
-                            <div class="arbitrage-big-value" id="tri-arb-spread" style="font-size: 1.8rem;"><span class="loading">Scanning...</span></div>
+            <div class="card" style="display: flex; flex-direction: column;">
+                <div class="card-title" style="color: var(--neon-orange); margin-bottom: 20px;">TRIANGULAR ARBITRAGE (VLRM / ORACLE / ADA) 🔺</div>
+                <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); flex-grow: 1; display: flex; flex-direction: column; justify-content: center;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <div class="arbitrage-label">Optimal Net Discrepancy</div>
+                        <div class="arbitrage-big-value" id="tri-arb-spread" style="font-size: 1.8rem;"><span class="loading">Scanning...</span></div>
+                    </div>
+                    <div style="font-size: 0.85rem; line-height: 1.8;">
+                        <div id="route-a-container" class="route-inactive">
+                            Route A: <span style="font-weight: bold;">Buy VLRM ➔ Swap ORACLE ➔ Sell ORACLE</span>
                         </div>
-                        <div style="font-size: 0.85rem; line-height: 1.8;">
-                            <div id="route-a-container" class="route-inactive">
-                                Route A: <span style="font-weight: bold;">Buy VLRM ➔ Swap ORACLE ➔ Sell ORACLE</span>
-                            </div>
-                            <div id="route-b-container" class="route-inactive" style="margin-top: 8px;">
-                                Route B: <span style="font-weight: bold;">Buy ORACLE ➔ Swap VLRM ➔ Sell VLRM</span>
-                            </div>
+                        <div id="route-b-container" class="route-inactive" style="margin-top: 8px;">
+                            Route B: <span style="font-weight: bold;">Buy ORACLE ➔ Swap VLRM ➔ Sell VLRM</span>
                         </div>
-                        <div style="font-size: 0.75rem; font-style: italic; color: var(--text-secondary); margin-top: 15px;">
-                            *Percentage dynamically calculated from Auto-Optimizer's max realistic net profit.
-                        </div>
+                    </div>
+                    <div style="font-size: 0.75rem; font-style: italic; color: var(--text-secondary); margin-top: 15px;">
+                        *Percentage dynamically calculated from Auto-Optimizer's max realistic net profit.
                     </div>
                 </div>
             </div>
+
         </div>
 
         <div class="card" style="grid-column: 1 / -1; padding: 15px;">
@@ -361,7 +358,6 @@
         const ALERT_COOLDOWN = 5 * 60 * 1000;
         let currentAdaUsd = 0; 
         
-        // Memoria Persistente para las Gráficas (24 horas EXACTAS = 2880 puntos de 30seg)
         const MAX_CHART_POINTS = 2880;
         let chartHistory = { labels: [], spread: [], discrepancy: [], vlrmAda: [], vlrmOracle: [], oracleVyfi: [], oracleMin: [], vault: [], totalLiq: [] };
         
@@ -434,7 +430,6 @@
             sparkInstances.oracleVyfi = createSpark('spark-oracle-vyfi', 'rgba(167, 139, 250, 1)', chartHistory.oracleVyfi); 
             sparkInstances.oracleMin = createSpark('spark-oracle-min', 'rgba(137, 170, 255, 1)', chartHistory.oracleMin); 
             sparkInstances.vault = createSpark('spark-vault', 'rgba(252, 211, 77, 1)', chartHistory.vault); 
-            
             sparkInstances.totalLiq = createSpark('spark-total-liq', 'rgba(255, 255, 255, 1)', chartHistory.totalLiq); 
             sparkInstances.ada = createSpark('spark-ada', 'rgba(66, 133, 244, 1)', []); 
         }
