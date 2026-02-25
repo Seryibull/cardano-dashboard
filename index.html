@@ -22,8 +22,8 @@
             --neon-orange: #ff7b00;
             --neon-red: #ff0f5b;
             --gradient-fire: linear-gradient(135deg, var(--neon-orange), var(--neon-red));
-            /* Nuevo degradado radial para el fondo principal de fuego */
-            --gradient-dark-plasma: radial-gradient(circle at center bottom, #5e2a00 0%, #4a0e16 50%, #120f24 100%);
+            /* Degradado de fuego mejorado: Más brillo, más contraste y mejor núcleo */
+            --gradient-dark-plasma: radial-gradient(circle at center bottom, #cc4400 0%, #7a0b16 45%, #120f24 100%);
             --ada-color: #4285f4;
             --badge-vyfi-bg: rgba(139, 92, 246, 0.15);
             --badge-vyfi-text: #a78bfa;
@@ -63,69 +63,27 @@
         .card-title.ada-title { color: var(--ada-color); text-shadow: 0 0 10px rgba(66, 133, 244, 0.3); }
         .data-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 0.95rem; }
         .data-label { color: var(--text-secondary); font-weight: 500; }
-        .data-value { font-weight: 800; font-size: 1.2rem; color: var(--text-primary); display: flex; align-items: center; gap: 8px;}
+        .data-value { font-weight: 800; font-size: 1.1rem; color: var(--text-primary); display: flex; align-items: center; gap: 8px;}
         
-        .change-badge { font-size: 0.8rem; font-weight: 800; }
+        .change-badge { font-size: 0.75rem; font-weight: 800; }
         
         .badge { font-size: 0.7rem; padding: 4px 10px; border-radius: 20px; font-weight: 700; text-transform: uppercase; border: 1px solid transparent; }
         .bg-vyfi { background: var(--badge-vyfi-bg); color: var(--badge-vyfi-text); border-color: var(--badge-vyfi-text); }
         .bg-minswap { background: var(--badge-min-bg); color: var(--badge-min-text); border-color: var(--badge-min-text); }
 
-        /* NUEVO ESTILO: SECCIÓN PRINCIPAL "FUEGO DEFINIDO" */
-        .arbitrage-section { 
-            grid-column: 1 / -1; 
-            /* Usamos el nuevo degradado radial para un núcleo caliente */
-            background: var(--gradient-dark-plasma) !important; 
-            /* Borde naranja sutil para definir el contenedor principal */
-            border: 1px solid rgba(255, 123, 0, 0.25);
-            /* Sombra con un ligero resplandor naranja */
-            box-shadow: 0 15px 40px -10px rgba(0, 0, 0, 0.8), inset 0 0 60px rgba(94, 42, 0, 0.6), 0 0 20px rgba(255, 123, 0, 0.1); 
-            padding: 20px 25px; 
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .arbitrage-section:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 25px 50px -10px rgba(0, 0, 0, 0.9), inset 0 0 80px rgba(120, 50, 0, 0.7), 0 0 30px rgba(255, 123, 0, 0.2);
-            border-color: rgba(255, 123, 0, 0.5);
-        }
+        .arbitrage-section { grid-column: 1 / -1; background: var(--gradient-dark-plasma) !important; border: 1px solid rgba(255, 123, 0, 0.25); box-shadow: 0 15px 40px -10px rgba(0, 0, 0, 0.8), inset 0 0 60px rgba(94, 42, 0, 0.6), 0 0 20px rgba(255, 123, 0, 0.1); padding: 20px 25px; transition: all 0.3s ease; position: relative; overflow: hidden;}
+        .arbitrage-section:hover { transform: translateY(-3px); box-shadow: 0 25px 50px -10px rgba(0, 0, 0, 0.9), inset 0 0 80px rgba(120, 50, 0, 0.7), 0 0 30px rgba(255, 123, 0, 0.2); border-color: rgba(255, 123, 0, 0.5); }
 
-        /* MODO DEFCON: Alarma visual */
-        @keyframes defcon-pulse {
-            0% { box-shadow: 0 0 0 0 rgba(255, 15, 91, 0.4); border-color: rgba(255, 15, 91, 0.5); }
-            70% { box-shadow: 0 0 20px 10px rgba(255, 15, 91, 0); border-color: rgba(255, 15, 91, 0.1); }
-            100% { box-shadow: 0 0 0 0 rgba(255, 15, 91, 0); border-color: rgba(255, 15, 91, 0.5); }
-        }
+        @keyframes defcon-pulse { 0% { box-shadow: 0 0 0 0 rgba(255, 15, 91, 0.4); border-color: rgba(255, 15, 91, 0.5); } 70% { box-shadow: 0 0 20px 10px rgba(255, 15, 91, 0); border-color: rgba(255, 15, 91, 0.1); } 100% { box-shadow: 0 0 0 0 rgba(255, 15, 91, 0); border-color: rgba(255, 15, 91, 0.5); } }
         .defcon-active { animation: defcon-pulse 2s infinite !important; background: linear-gradient(135deg, #3a080e 0%, #5e0000 100%) !important; }
         .defcon-active:hover { transform: translateY(-3px) !important; }
 
         .arbitrage-banner-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; border-bottom: 1px solid rgba(255, 123, 0, 0.2); padding-bottom: 15px; margin-bottom: 20px; position: relative; z-index: 2;}
-        
         .arbitrage-grid { display: grid; grid-template-columns: 1fr; gap: 20px; position: relative; z-index: 2;}
         @media (min-width: 900px) { .arbitrage-grid { grid-template-columns: 1fr 1fr; } }
 
-        /* NUEVO ESTILO: CAJAS INTERNAS (Glassmorphism sobre fuego) */
-        .arbitrage-box { 
-            /* Fondo más oscuro y menos transparente */
-            background: rgba(0, 0, 0, 0.5); 
-            padding: 20px; 
-            border-radius: 18px; 
-            transition: all 0.3s ease; 
-            position: relative; 
-            /* Borde definido con tinte naranja para contraste */
-            border: 1px solid rgba(255, 123, 0, 0.2);
-            /* Efecto cristal ahumado */
-            backdrop-filter: blur(10px);
-            /* Sombra fuerte para separarlos del fondo de fuego */
-            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
-        }
-        .arbitrage-box:hover {
-             border-color: rgba(255, 123, 0, 0.6);
-             background: rgba(0, 0, 0, 0.6);
-             transform: translateY(-2px);
-        }
+        .arbitrage-box { background: rgba(0, 0, 0, 0.5); padding: 20px; border-radius: 18px; transition: all 0.3s ease; position: relative; border: 1px solid rgba(255, 123, 0, 0.2); backdrop-filter: blur(10px); box-shadow: 0 8px 25px rgba(0,0,0,0.5); }
+        .arbitrage-box:hover { border-color: rgba(255, 123, 0, 0.6); background: rgba(0, 0, 0, 0.6); transform: translateY(-2px); }
 
         .arbitrage-label { color: rgba(255, 255, 255, 0.75); font-size: 0.75rem; text-transform: uppercase; font-weight: 800; margin-bottom: 5px; letter-spacing: 0.5px;}
         .arbitrage-big-value { font-size: 1.8rem; font-weight: 900; color: #ffffff; text-shadow: 0 2px 15px rgba(0,0,0,0.5); transition: all 0.3s ease; }
@@ -145,12 +103,10 @@
         .optimizer-text { font-size: 0.75rem; color: var(--text-secondary); margin-top: 12px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px; font-weight: 600;}
         .usd-profit { font-size: 0.9rem; color: rgba(255,255,255,0.6); font-weight: 600; text-shadow: none; display: block; text-align: right;}
 
-        /* BARRAS DE SLIPPAGE */
         .slippage-container { width: 100%; height: 8px; background: rgba(0,0,0,0.4); border-radius: 4px; margin-top: 10px; overflow: hidden; position: relative; border: 1px solid rgba(255,255,255,0.1);}
         .slippage-bar { height: 100%; width: 0%; border-radius: 4px; transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); box-shadow: 0 0 10px currentColor;}
         .slippage-label { font-size: 0.7rem; color: var(--text-secondary); text-align: right; margin-top: 6px; font-weight: 600;}
 
-        /* ANIMACIÓN TRIÁNGULO */
         .tri-wrapper { position: relative; width: 100%; max-width: 200px; height: 160px; margin: 15px auto 5px auto; }
         .tri-node { position: absolute; width: 44px; height: 44px; background: rgba(18, 15, 36, 0.9); border: 2px solid rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: bold; color: white; z-index: 2; box-shadow: 0 0 15px rgba(0,0,0,0.8); backdrop-filter: blur(5px);}
         .node-ada { top: 0; left: calc(50% - 22px); border-color: var(--ada-color); color: var(--ada-color);}
@@ -162,19 +118,14 @@
         .tri-line-active { fill: none; stroke: #10b981; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 10 15; animation: dash-flow 1s linear infinite; filter: drop-shadow(0 0 5px #10b981);}
         .route-reverse { animation-direction: reverse; }
         
-        @keyframes dash-flow {
-            from { stroke-dashoffset: 25; }
-            to { stroke-dashoffset: 0; }
-        }
+        @keyframes dash-flow { from { stroke-dashoffset: 25; } to { stroke-dashoffset: 0; } }
 
-        /* ESTILOS NUEVOS DE RUTAS (LEDS) */
         .route-active { color: #10b981; transition: 0.3s; }
         .route-active .route-dot { background: #10b981; box-shadow: 0 0 10px #10b981; }
         .route-inactive { color: var(--text-secondary); opacity: 0.5; transition: 0.3s; }
         .route-inactive .route-dot { background: rgba(255,255,255,0.2); box-shadow: none; }
         .route-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex-shrink: 0; transition: all 0.3s ease; }
 
-        /* Modals */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); z-index: 1000; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box;}
         .modal-content { background: var(--card-bg); padding: 25px; border-radius: 20px; border: 2px solid var(--neon-orange); width: 100%; max-width: 340px; box-shadow: 0 10px 40px rgba(0,0,0,0.8); max-height: 90vh; overflow-y: auto;}
         .modal-title { font-size: 1.2rem; font-weight: 800; margin-bottom: 15px; color: white; display: flex; justify-content: space-between;}
@@ -339,26 +290,36 @@
             <div style="height: 40px; margin-top: 15px;"><canvas id="spark-vault"></canvas></div>
         </div>
 
-        <div class="card">
+        <div class="card" style="display: flex; flex-direction: column;">
             <div class="card-title">VLRM / ADA <span class="badge bg-vyfi">VyFi</span></div>
-            <div class="data-row"><span class="data-label">Price:</span><span class="data-value" id="vlrm-price-ada"><span class="loading">Connecting...</span></span></div>
+            
             <div class="data-row">
-                <span class="data-label">TVL (Pool):</span>
-                <span class="data-value">
-                    <span id="vlrm-liq-ada">-</span> <span id="vlrm-ada-change-24h" class="change-badge"></span>
-                </span>
+                <span class="data-label">Price:</span>
+                <span class="data-value"><span id="vlrm-price-ada"><span class="loading">Connecting...</span></span> <span id="vlrm-price-change-24h" class="change-badge"></span></span>
             </div>
-            <div style="height: 40px; margin-top: 15px;"><canvas id="spark-vlrm-ada"></canvas></div>
+            <div style="height: 35px; margin-bottom: 15px;"><canvas id="spark-vlrm-ada-price"></canvas></div>
+
+            <div class="data-row" style="margin-top: auto;">
+                <span class="data-label">TVL (Pool):</span>
+                <span class="data-value"><span id="vlrm-liq-ada">-</span> <span id="vlrm-ada-change-24h" class="change-badge"></span></span>
+            </div>
+            <div style="height: 35px;"><canvas id="spark-vlrm-ada"></canvas></div>
         </div>
-        <div class="card">
+
+        <div class="card" style="display: flex; flex-direction: column;">
             <div class="card-title">VLRM / ORACLE <span class="badge bg-vyfi">VyFi</span></div>
+            
             <div class="data-row">
-                <span class="data-label">TVL (Pool):</span>
-                <span class="data-value">
-                    <span id="vlrm-oracle-liq-ada"><span class="loading">Waiting...</span></span> <span id="vlrm-oracle-change-24h" class="change-badge"></span>
-                </span>
+                <span class="data-label">Price:</span>
+                <span class="data-value"><span id="vlrm-oracle-price"><span class="loading">Waiting...</span></span> <span id="vlrm-oracle-price-change-24h" class="change-badge"></span></span>
             </div>
-            <div style="height: 40px; margin-top: 35px;"><canvas id="spark-vlrm-oracle"></canvas></div>
+            <div style="height: 35px; margin-bottom: 15px;"><canvas id="spark-vlrm-oracle-price"></canvas></div>
+
+            <div class="data-row" style="margin-top: auto;">
+                <span class="data-label">TVL (Pool):</span>
+                <span class="data-value"><span id="vlrm-oracle-liq-ada">-</span> <span id="vlrm-oracle-change-24h" class="change-badge"></span></span>
+            </div>
+            <div style="height: 35px;"><canvas id="spark-vlrm-oracle"></canvas></div>
         </div>
 
         <div style="grid-column: 1 / -1; display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px;">
@@ -368,21 +329,19 @@
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 20px;">
                     <div>
                         <h3 class="dex-subtitle"><span class="badge bg-vyfi">VYFI</span></h3>
-                        <div class="data-row"><span class="data-label">Price:</span><span class="data-value" id="oracle-vyfi-price">-</span></div>
-                        <div class="data-row">
-                            <span class="data-label">Liquidity:</span>
-                            <span class="data-value"><span id="oracle-vyfi-liq">-</span> <span id="oracle-vyfi-change-24h" class="change-badge"></span></span>
-                        </div>
-                        <div style="height: 40px; margin-top: 10px;"><canvas id="spark-oracle-vyfi"></canvas></div>
+                        <div class="data-row"><span class="data-label">Price:</span><span class="data-value"><span id="oracle-vyfi-price">-</span> <span id="oracle-vyfi-price-change-24h" class="change-badge"></span></span></div>
+                        <div style="height: 30px; margin-bottom: 10px;"><canvas id="spark-oracle-vyfi-price"></canvas></div>
+                        
+                        <div class="data-row"><span class="data-label">Liquidity:</span><span class="data-value"><span id="oracle-vyfi-liq">-</span> <span id="oracle-vyfi-change-24h" class="change-badge"></span></span></div>
+                        <div style="height: 30px;"><canvas id="spark-oracle-vyfi"></canvas></div>
                     </div>
                     <div style="border-left: 2px solid rgba(255,255,255,0.05); padding-left: 20px;">
                         <h3 class="dex-subtitle"><span class="badge bg-minswap">MINSWAP</span></h3>
-                        <div class="data-row"><span class="data-label">Price:</span><span class="data-value" id="oracle-min-price">-</span></div>
-                        <div class="data-row">
-                            <span class="data-label">Liquidity:</span>
-                            <span class="data-value"><span id="oracle-min-liq">-</span> <span id="oracle-min-change-24h" class="change-badge"></span></span>
-                        </div>
-                        <div style="height: 40px; margin-top: 10px;"><canvas id="spark-oracle-min"></canvas></div>
+                        <div class="data-row"><span class="data-label">Price:</span><span class="data-value"><span id="oracle-min-price">-</span> <span id="oracle-min-price-change-24h" class="change-badge"></span></span></div>
+                        <div style="height: 30px; margin-bottom: 10px;"><canvas id="spark-oracle-min-price"></canvas></div>
+                        
+                        <div class="data-row"><span class="data-label">Liquidity:</span><span class="data-value"><span id="oracle-min-liq">-</span> <span id="oracle-min-change-24h" class="change-badge"></span></span></div>
+                        <div style="height: 30px;"><canvas id="spark-oracle-min"></canvas></div>
                     </div>
                 </div>
                 
@@ -473,7 +432,13 @@
         let currentAdaUsd = 0; 
         
         const MAX_CHART_POINTS = 2880;
-        let chartHistory = { labels: [], spread: [], discrepancy: [], vlrmAda: [], vlrmOracle: [], oracleVyfi: [], oracleMin: [], vault: [], totalLiq: [] };
+        
+        // Añadido historial de precios (pVlrmAda, pVlrmOracle, pOracleVyfi, pOracleMin)
+        let chartHistory = { 
+            labels: [], spread: [], discrepancy: [], 
+            vlrmAda: [], vlrmOracle: [], oracleVyfi: [], oracleMin: [], vault: [], totalLiq: [],
+            pVlrmAda: [], pVlrmOracle: [], pOracleVyfi: [], pOracleMin: []
+        };
         
         let currentPools = {
             vyfi: { price: 0, reserveAda: 0, reserveTok: 0 },
@@ -544,7 +509,14 @@
                     responsive: true, maintainAspectRatio: false, 
                     scales: { 
                         x: { display: true, grid: { display: false }, ticks: { color: '#a0a0c0', maxTicksLimit: 8, maxRotation: 0 } }, 
-                        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#a0a0c0' } } 
+                        y: { 
+                            grid: { 
+                                // Línea blanca potente en el valor 0
+                                color: (ctx) => ctx.tick.value === 0 ? 'rgba(255, 255, 255, 0.4)' : 'rgba(255,255,255,0.05)',
+                                lineWidth: (ctx) => ctx.tick.value === 0 ? 2 : 1
+                            }, 
+                            ticks: { color: '#a0a0c0' } 
+                        } 
                     }, 
                     plugins: { legend: { display: true, labels: { color: '#ffffff', boxWidth: 10 } } } 
                 }
@@ -553,6 +525,7 @@
             const sparkOptions = { responsive: true, maintainAspectRatio: false, scales: { x: { display: false }, y: { display: false } }, plugins: { legend: { display: false }, tooltip: { enabled: false } }, layout: { padding: 0 }, animation: false };
             const createSpark = (id, color, dataArr) => new Chart(document.getElementById(id).getContext('2d'), { type: 'line', data: { labels: chartHistory.labels, datasets: [{ data: dataArr, borderColor: color, borderWidth: 2, tension: 0.4, pointRadius: 0, fill: true, backgroundColor: color.replace('1)', '0.1)'), spanGaps: true }] }, options: sparkOptions });
 
+            // TVL Charts
             sparkInstances.vlrmAda = createSpark('spark-vlrm-ada', 'rgba(167, 139, 250, 1)', chartHistory.vlrmAda); 
             sparkInstances.vlrmOracle = createSpark('spark-vlrm-oracle', 'rgba(167, 139, 250, 1)', chartHistory.vlrmOracle); 
             sparkInstances.oracleVyfi = createSpark('spark-oracle-vyfi', 'rgba(167, 139, 250, 1)', chartHistory.oracleVyfi); 
@@ -560,9 +533,15 @@
             sparkInstances.vault = createSpark('spark-vault', 'rgba(252, 211, 77, 1)', chartHistory.vault); 
             sparkInstances.totalLiq = createSpark('spark-total-liq', 'rgba(255, 255, 255, 1)', chartHistory.totalLiq); 
             sparkInstances.ada = createSpark('spark-ada', 'rgba(66, 133, 244, 1)', []); 
+
+            // Price Charts (Nuevas) en color Blanco translúcido para diferenciarlas del TVL
+            sparkInstances.pVlrmAda = createSpark('spark-vlrm-ada-price', 'rgba(255, 255, 255, 1)', chartHistory.pVlrmAda); 
+            sparkInstances.pVlrmOracle = createSpark('spark-vlrm-oracle-price', 'rgba(255, 255, 255, 1)', chartHistory.pVlrmOracle); 
+            sparkInstances.pOracleVyfi = createSpark('spark-oracle-vyfi-price', 'rgba(255, 255, 255, 1)', chartHistory.pOracleVyfi); 
+            sparkInstances.pOracleMin = createSpark('spark-oracle-min-price', 'rgba(255, 255, 255, 1)', chartHistory.pOracleMin); 
         }
         
-        function updateSparklines(vAdaTvl, vOraTvl, oVyfiTvl, oMinTvl, vaultTvl) {
+        function updateSparklines(vAdaTvl, vOraTvl, oVyfiTvl, oMinTvl, vaultTvl, pVAda, pVOra, pOVyfi, pOMin) {
             chartHistory.vlrmAda.push(vAdaTvl);
             chartHistory.vlrmOracle.push(vOraTvl);
             chartHistory.oracleVyfi.push(oVyfiTvl);
@@ -570,11 +549,18 @@
             chartHistory.vault.push(vaultTvl);
             chartHistory.totalLiq.push(oVyfiTvl + oMinTvl);
 
+            chartHistory.pVlrmAda.push(pVAda);
+            chartHistory.pVlrmOracle.push(pVOra);
+            chartHistory.pOracleVyfi.push(pOVyfi);
+            chartHistory.pOracleMin.push(pOMin);
+
             if(chartHistory.vlrmAda.length > MAX_CHART_POINTS) {
                 chartHistory.vlrmAda.shift(); chartHistory.vlrmOracle.shift(); chartHistory.oracleVyfi.shift(); chartHistory.oracleMin.shift(); chartHistory.vault.shift(); chartHistory.totalLiq.shift();
+                chartHistory.pVlrmAda.shift(); chartHistory.pVlrmOracle.shift(); chartHistory.pOracleVyfi.shift(); chartHistory.pOracleMin.shift();
             }
 
             sparkInstances.vlrmAda.update('none'); sparkInstances.vlrmOracle.update('none'); sparkInstances.oracleVyfi.update('none'); sparkInstances.oracleMin.update('none'); sparkInstances.vault.update('none'); sparkInstances.totalLiq.update('none');
+            sparkInstances.pVlrmAda.update('none'); sparkInstances.pVlrmOracle.update('none'); sparkInstances.pOracleVyfi.update('none'); sparkInstances.pOracleMin.update('none');
         }
 
         function updateMainChart(spread, discrepancy) {
@@ -800,7 +786,11 @@
                 const cloudHistory = await res.json();
                 
                 if (cloudHistory && cloudHistory.labels && cloudHistory.labels.length > 0) {
-                    let expandedHistory = { labels: [], spread: [], discrepancy: [], vlrmAda: [], vlrmOracle: [], oracleVyfi: [], oracleMin: [], vault: [], totalLiq: [] };
+                    let expandedHistory = { labels: [], spread: [], discrepancy: [], vlrmAda: [], vlrmOracle: [], oracleVyfi: [], oracleMin: [], vault: [], totalLiq: [], pVlrmAda: [], pVlrmOracle: [], pOracleVyfi: [], pOracleMin: [] };
+                    
+                    // Si el servidor aún no tiene historial de precios (porque acabamos de actualizar el worker), lo llenamos con null para que no de error
+                    let hasPrices = cloudHistory.pVlrmAda && cloudHistory.pVlrmAda.length > 0;
+
                     for (let i = 0; i < cloudHistory.labels.length; i++) {
                         for(let j=0; j<30; j++) {
                             expandedHistory.labels.push(j === 0 ? cloudHistory.labels[i] : '');
@@ -812,6 +802,11 @@
                             expandedHistory.oracleMin.push(cloudHistory.oracleMin[i]);
                             expandedHistory.vault.push(cloudHistory.vault[i]);
                             expandedHistory.totalLiq.push((cloudHistory.oracleVyfi[i] || 0) + (cloudHistory.oracleMin[i] || 0));
+                            
+                            expandedHistory.pVlrmAda.push(hasPrices ? cloudHistory.pVlrmAda[i] : null);
+                            expandedHistory.pVlrmOracle.push(hasPrices ? cloudHistory.pVlrmOracle[i] : null);
+                            expandedHistory.pOracleVyfi.push(hasPrices ? cloudHistory.pOracleVyfi[i] : null);
+                            expandedHistory.pOracleMin.push(hasPrices ? cloudHistory.pOracleMin[i] : null);
                         }
                     }
                     const missingPoints = MAX_CHART_POINTS - expandedHistory.labels.length;
@@ -827,6 +822,10 @@
                         expandedHistory.oracleMin = [...nullArray, ...expandedHistory.oracleMin];
                         expandedHistory.vault = [...nullArray, ...expandedHistory.vault];
                         expandedHistory.totalLiq = [...nullArray, ...expandedHistory.totalLiq];
+                        expandedHistory.pVlrmAda = [...nullArray, ...expandedHistory.pVlrmAda];
+                        expandedHistory.pVlrmOracle = [...nullArray, ...expandedHistory.pVlrmOracle];
+                        expandedHistory.pOracleVyfi = [...nullArray, ...expandedHistory.pOracleVyfi];
+                        expandedHistory.pOracleMin = [...nullArray, ...expandedHistory.pOracleMin];
                     }
                     if (expandedHistory.labels.length > MAX_CHART_POINTS) {
                         const diff = expandedHistory.labels.length - MAX_CHART_POINTS;
@@ -841,6 +840,11 @@
                     sparkInstances.oracleMin.data.labels = chartHistory.labels; sparkInstances.oracleMin.data.datasets[0].data = chartHistory.oracleMin; sparkInstances.oracleMin.update('none');
                     sparkInstances.vault.data.labels = chartHistory.labels; sparkInstances.vault.data.datasets[0].data = chartHistory.vault; sparkInstances.vault.update('none');
                     sparkInstances.totalLiq.data.labels = chartHistory.labels; sparkInstances.totalLiq.data.datasets[0].data = chartHistory.totalLiq; sparkInstances.totalLiq.update('none');
+                    
+                    sparkInstances.pVlrmAda.data.labels = chartHistory.labels; sparkInstances.pVlrmAda.data.datasets[0].data = chartHistory.pVlrmAda; sparkInstances.pVlrmAda.update('none');
+                    sparkInstances.pVlrmOracle.data.labels = chartHistory.labels; sparkInstances.pVlrmOracle.data.datasets[0].data = chartHistory.pVlrmOracle; sparkInstances.pVlrmOracle.update('none');
+                    sparkInstances.pOracleVyfi.data.labels = chartHistory.labels; sparkInstances.pOracleVyfi.data.datasets[0].data = chartHistory.pOracleVyfi; sparkInstances.pOracleVyfi.update('none');
+                    sparkInstances.pOracleMin.data.labels = chartHistory.labels; sparkInstances.pOracleMin.data.datasets[0].data = chartHistory.pOracleMin; sparkInstances.pOracleMin.update('none');
                 }
             } catch (e) { console.error("Error loading history:", e); }
         }
@@ -889,12 +893,13 @@
                     vlrmVyfiAdaReserve = vlrmAdaTvl / 2; vlrmVyfiTokReserve = vlrmVyfiAdaReserve / priceVlrmAda;
                 }
                 
-                let crossVlrmReserve = 0; let crossOracleReserve = 0; let crossTvl = 0;
+                let crossVlrmReserve = 0; let crossOracleReserve = 0; let crossTvl = 0; let priceOracleVlrm = 0;
                 const crossPool = data.vyfiPools.find(p => p.unitsPair.includes(VLRM) && p.unitsPair.includes(ORACLE));
                 if (crossPool) {
                     crossTvl = crossPool.tvl;
+                    priceOracleVlrm = crossPool.tokenA.unit.includes(VLRM) ? crossPool.tokenB.lpRatio[crossPool.unitsPair].priceRatioAB : crossPool.tokenA.lpRatio[crossPool.unitsPair].priceRatioBA;
+                    document.getElementById('vlrm-oracle-price').innerText = `VLRM ${priceOracleVlrm.toFixed(2)}`;
                     document.getElementById('vlrm-oracle-liq-ada').innerText = `₳ ${Math.round(crossTvl).toLocaleString()}`; 
-                    let priceOracleVlrm = crossPool.tokenA.unit.includes(VLRM) ? crossPool.tokenB.lpRatio[crossPool.unitsPair].priceRatioAB : crossPool.tokenA.lpRatio[crossPool.unitsPair].priceRatioBA;
                     crossVlrmReserve = (crossTvl / 2) / priceVlrmAda; crossOracleReserve = crossVlrmReserve / priceOracleVlrm;
                 }
 
@@ -912,7 +917,7 @@
                 }
                 document.getElementById('oracle-total-liq').innerText = `₳ ${Math.round(totalOracleLiqAda).toLocaleString()}`;
 
-                updateSparklines(vlrmAdaTvl, crossTvl, vyfiTvLAda, minTvlAda, vaultTvlData);
+                updateSparklines(vlrmAdaTvl, crossTvl, vyfiTvLAda, minTvlAda, vaultTvlData, priceVlrmAda, priceOracleVlrm, priceVyfi, priceMin);
 
                 calcChangeUI('vlrm-ada-change-24h', chartHistory.vlrmAda, vlrmAdaTvl);
                 calcChangeUI('vlrm-oracle-change-24h', chartHistory.vlrmOracle, crossTvl);
@@ -920,6 +925,12 @@
                 calcChangeUI('oracle-min-change-24h', chartHistory.oracleMin, minTvlAda);
                 calcChangeUI('vault-change-24h', chartHistory.vault, vaultTvlData);
                 calcChangeUI('total-liq-change-24h', chartHistory.totalLiq, totalOracleLiqAda);
+                
+                // Nuevos cálculos de 24h para Precios
+                calcChangeUI('vlrm-price-change-24h', chartHistory.pVlrmAda, priceVlrmAda);
+                calcChangeUI('vlrm-oracle-price-change-24h', chartHistory.pVlrmOracle, priceOracleVlrm);
+                calcChangeUI('oracle-vyfi-price-change-24h', chartHistory.pOracleVyfi, priceVyfi);
+                calcChangeUI('oracle-min-price-change-24h', chartHistory.pOracleMin, priceMin);
 
                 currentPools.vyfi = { price: priceVyfi, reserveAda: priceVyfi > 0 ? (vyfiTvLAda / 2) : 0, reserveTok: priceVyfi > 0 ? (vyfiTvLAda / 2) / priceVyfi : 0 };
                 currentPools.minswap = { price: priceMin, reserveAda: priceMin > 0 ? (minTvlAda / 2) : 0, reserveTok: priceMin > 0 ? (minTvlAda / 2) / priceMin : 0 };
@@ -1017,9 +1028,7 @@
 
         async function initDashboard() {
             initCharts();
-            
             await fetchHistoryFromCloudflare();
-            
             await fetchAdaData();
             await fetchDexData();
             
