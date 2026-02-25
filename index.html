@@ -43,28 +43,53 @@
             min-height: 100vh; 
         }
 
+        /* 🔒 ESTILOS DEL ESCUDO API (PANTALLA DE BLOQUEO) */
+        #auth-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(10, 8, 20, 0.95); backdrop-filter: blur(20px);
+            z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center;
+            transition: opacity 0.5s ease;
+        }
+        .auth-box {
+            background: var(--card-bg); padding: 40px; border-radius: 20px;
+            border: 1px solid var(--neon-orange); box-shadow: 0 0 50px rgba(255, 123, 0, 0.2);
+            text-align: center; max-width: 400px; width: 90%;
+        }
+        .auth-title { font-size: 1.5rem; font-weight: 800; color: white; margin-bottom: 10px; }
+        .auth-subtitle { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 30px; }
+        .auth-input {
+            width: 100%; padding: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(0,0,0,0.5); color: white; font-size: 1.1rem; text-align: center;
+            margin-bottom: 20px; outline: none; font-family: 'Inter', sans-serif; box-sizing: border-box;
+        }
+        .auth-input:focus { border-color: var(--neon-orange); box-shadow: 0 0 15px rgba(255, 123, 0, 0.3); }
+        .auth-btn {
+            background: var(--gradient-fire); color: white; border: none; padding: 15px;
+            width: 100%; border-radius: 12px; font-weight: 800; font-size: 1rem;
+            cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .auth-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(255, 123, 0, 0.4); }
+        .auth-error { color: var(--neon-red); font-size: 0.85rem; margin-top: 15px; height: 20px; font-weight: bold;}
+
         header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px; max-width: 1200px; margin-left: auto; margin-right: auto; flex-wrap: wrap; gap: 15px;}
         .header-left { display: flex; align-items: center; gap: 15px; }
         .header-right { display: flex; align-items: center; gap: 15px; }
         .brand-logo { font-size: 2.5rem; filter: drop-shadow(0 0 10px var(--neon-orange)); }
         
-        /* Título con V 1.0 */
         h1 { margin: 0; font-weight: 800; font-size: 1.8rem; background: var(--gradient-fire); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -1px; display: flex; align-items: center;}
         .version-badge { color: #ffffff; font-size: 0.8rem; font-weight: 600; margin-left: 8px; opacity: 0.8; letter-spacing: 0; -webkit-text-fill-color: #ffffff; }
 
         .settings-btn { font-size: 1.5rem; cursor: pointer; background: rgba(255,255,255,0.05); padding: 8px 12px; border-radius: 12px; transition: 0.3s; border: 1px solid rgba(255,255,255,0.1); }
         .settings-btn:hover { background: rgba(255,255,255,0.15); transform: rotate(45deg); border-color: var(--neon-orange); }
 
-        .dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 20px; max-width: 1200px; margin: 0 auto; }
+        .dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 20px; max-width: 1200px; margin: 0 auto; filter: blur(0px); transition: filter 0.5s ease;}
         
         .card { border-radius: 20px; padding: 20px 25px; position: relative; background: rgba(18, 15, 36, 0.85); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); transition: transform 0.3s ease, box-shadow 0.3s ease; min-height: 280px; display: flex; flex-direction: column; justify-content: space-between;}
         .card:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 123, 0, 0.15); border-color: rgba(255, 123, 0, 0.3); }
 
-        /* Tarjeta ADA Especial */
         .card-ada { background: rgba(35, 40, 65, 0.85); border-color: rgba(66, 133, 244, 0.2); }
         .card-ada:hover { border-color: rgba(66, 133, 244, 0.5); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(66, 133, 244, 0.2); }
 
-        /* Tarjeta Vault Especial (Tonos Dorados/Amarillos) */
         .card-vault { background: rgba(45, 35, 15, 0.85); border-color: rgba(252, 211, 77, 0.2); }
         .card-vault:hover { border-color: rgba(252, 211, 77, 0.5); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(252, 211, 77, 0.2); }
 
@@ -157,11 +182,20 @@
         .log-spread { font-weight: bold; width: 70px; text-align: left; }
         .log-route { flex-grow: 1; text-align: right; color: rgba(255,255,255,0.8);}
         
-        /* Estilo para el disclaimer del pie de página */
-        .footer-disclaimer { grid-column: 1 / -1; text-align: center; color: rgba(255,255,255,0.5); font-size: 0.75rem; padding: 10px 20px; font-style: italic; margin-top: 10px; }
+        .footer-disclaimer { grid-column: 1 / -1; text-align: center; color: rgba(255,255,255,0.4); font-size: 0.75rem; padding: 20px 20px; font-style: italic; margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.05);}
     </style>
 </head>
 <body>
+
+    <div id="auth-screen">
+        <div class="auth-box">
+            <div class="auth-title">L4VA TERMINAL</div>
+            <div class="auth-subtitle">Restricted Access. Authentication Required.</div>
+            <input type="password" id="terminal-passkey" class="auth-input" placeholder="Enter Passkey...">
+            <button class="auth-btn" onclick="unlockTerminal()">UNLOCK TERMINAL</button>
+            <div id="auth-error-msg" class="auth-error"></div>
+        </div>
+    </div>
 
     <header>
         <div class="header-left">
@@ -201,7 +235,7 @@
         </div>
     </div>
 
-    <div class="dashboard">
+    <div class="dashboard" id="main-dashboard">
         <div id="main-banner" class="card arbitrage-section">
             <div class="arbitrage-banner-header">
                 <div style="font-size: 1.1rem; font-weight: 800; color: white; text-shadow: 0 2px 10px rgba(0,0,0,0.5);">⚡ Active Opportunities & Intelligence</div>
@@ -441,6 +475,7 @@
 
         let defaultConf = { alert: 15, vaultAlert: 20, sim: 1000, tgBot: "", tgChat: "", feeNet: 0.2, feeMin: 0.7, feeVyfi: 1.9, lpFeeMin: 0.3, lpFeeVyfi: 0.3 };
         let conf = JSON.parse(localStorage.getItem('l4va_config')) || defaultConf;
+        let userPasskey = localStorage.getItem('l4va_passkey') || "";
         
         if(conf.feeNet === undefined) { conf.feeNet = 0.2; conf.feeMin = 0.7; conf.feeVyfi = 1.9; }
         if(conf.lpFeeMin === undefined) { conf.lpFeeMin = 0.3; conf.lpFeeVyfi = 0.3; }
@@ -452,6 +487,7 @@
         let sparkInstances = {}; 
         const ALERT_COOLDOWN = 5 * 60 * 1000;
         let currentAdaUsd = 0; 
+        let fetchInterval = null;
         
         const MAX_CHART_POINTS = 2880;
         
@@ -470,6 +506,39 @@
 
         document.getElementById('sim-ada-input').value = conf.sim;
         document.getElementById('sim-tri-input').value = conf.sim;
+
+        // 🔒 SISTEMA DE AUTENTICACIÓN
+        function showAuthScreen(showError = false) {
+            document.getElementById('auth-screen').style.display = 'flex';
+            document.getElementById('main-dashboard').style.filter = 'blur(10px)';
+            if(showError) document.getElementById('auth-error-msg').innerText = "❌ Access Denied. Invalid Passkey.";
+        }
+
+        function hideAuthScreen() {
+            document.getElementById('auth-screen').style.display = 'none';
+            document.getElementById('main-dashboard').style.filter = 'none';
+        }
+
+        async function unlockTerminal() {
+            const input = document.getElementById('terminal-passkey').value.trim();
+            if(!input) return;
+            userPasskey = input;
+            document.getElementById('auth-error-msg').innerText = "Verifying...";
+            
+            // Hacemos una prueba rápida al servidor para ver si la clave es correcta
+            try {
+                const res = await fetch(PROXY_URL + '?data=history', { headers: { "X-Terminal-Key": userPasskey } });
+                if(res.status === 401) {
+                    showAuthScreen(true);
+                } else {
+                    localStorage.setItem('l4va_passkey', userPasskey);
+                    hideAuthScreen();
+                    startEngine(); // Arrancamos la carga si fue exitosa
+                }
+            } catch (e) {
+                document.getElementById('auth-error-msg').innerText = "Network Error. Try again.";
+            }
+        }
 
         function closeModals() { document.getElementById('settings-modal').style.display = 'none'; }
         
@@ -803,7 +872,10 @@
 
         async function fetchHistoryFromCloudflare() {
             try {
-                const res = await fetch(PROXY_URL + '?data=history');
+                // 🔒 SE ENVÍA LA CONTRASEÑA EN CADA PETICIÓN
+                const res = await fetch(PROXY_URL + '?data=history', { headers: { "X-Terminal-Key": userPasskey } });
+                if(res.status === 401) { showAuthScreen(); return; }
+                
                 const cloudHistory = await res.json();
                 
                 if (cloudHistory && cloudHistory.labels && cloudHistory.labels.length > 0) {
@@ -894,7 +966,10 @@
 
         async function fetchDexData() {
             try {
-                const response = await fetch(PROXY_URL);
+                // 🔒 SE ENVÍA LA CONTRASEÑA EN CADA PETICIÓN
+                const response = await fetch(PROXY_URL, { headers: { "X-Terminal-Key": userPasskey } });
+                if(response.status === 401) { showAuthScreen(); return; }
+                
                 const data = await response.json();
                 if (data.error) throw new Error(data.error);
 
@@ -1050,18 +1125,26 @@
             } catch (error) { console.error("General error:", error); }
         }
 
-        async function initDashboard() {
+        async function startEngine() {
             initCharts();
             await fetchHistoryFromCloudflare();
             await fetchAdaData();
             await fetchDexData();
             
-            setInterval(async () => {
+            fetchInterval = setInterval(async () => {
                 await fetchAdaData();
                 await fetchDexData();
             }, 30000);
         }
-        window.onload = initDashboard;
+
+        window.onload = () => {
+            // Si no hay clave, mostramos la pantalla de bloqueo y no arrancamos nada.
+            if (!userPasskey) {
+                showAuthScreen();
+            } else {
+                startEngine();
+            }
+        };
     </script>
 </body>
 </html>
