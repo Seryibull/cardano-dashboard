@@ -138,7 +138,8 @@
             <div class="setting-row"><span>Simulator Base (ADA)</span><input type="number" id="set-sim" class="setting-input"></div>
             
             <div class="setting-section-title">THRESHOLDS</div>
-            <div class="setting-row"><span>Alert Threshold (%)</span><input type="number" id="set-alert" class="setting-input"></div>
+            <div class="setting-row"><span>Spread Alert (%)</span><input type="number" id="set-alert" class="setting-input"></div>
+            <div class="setting-row"><span>Vault Alert (%)</span><input type="number" id="set-vault-alert" class="setting-input"></div>
             
             <div class="setting-section-title">DEX FEES (ADA)</div>
             <div class="setting-row"><span>Network (Tx) Fee</span><input type="number" step="0.1" id="set-fee-net" class="setting-input"></div>
@@ -162,7 +163,7 @@
             <div class="arbitrage-banner-header">
                 <div style="font-size: 1.1rem; font-weight: 800; color: white;">⚡ Active Opportunities & Intelligence</div>
                 <label class="alert-toggle-box">
-                    <input type="checkbox" id="alert-toggle" checked> 🔔 Alerts (<span id="alert-label">15</span>%)
+                    <input type="checkbox" id="alert-toggle" checked> 🔔 Alerts ON
                 </label>
             </div>
             
@@ -356,15 +357,15 @@
         const VYFI_LINK = "https://app.vyfi.io/dex?tokenA=lovelace&tokenB=328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b27393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
         const MINSWAP_LINK = "https://minswap.org/swap?cA=&tA=&cB=328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b2&tB=7393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
 
-        // Añadimos lpFeeMin y lpFeeVyfi por defecto al 0.3%
-        let defaultConf = { alert: 15, sim: 1000, tgBot: "", tgChat: "", feeNet: 0.2, feeMin: 0.7, feeVyfi: 1.9, lpFeeMin: 0.3, lpFeeVyfi: 0.3 };
+        let defaultConf = { alert: 15, vaultAlert: 20, sim: 1000, tgBot: "", tgChat: "", feeNet: 0.2, feeMin: 0.7, feeVyfi: 1.9, lpFeeMin: 0.3, lpFeeVyfi: 0.3 };
         let conf = JSON.parse(localStorage.getItem('l4va_config')) || defaultConf;
         
-        // Actualizador automático por si tenías guardada una versión antigua de config en tu navegador
         if(conf.feeNet === undefined) { conf.feeNet = 0.2; conf.feeMin = 0.7; conf.feeVyfi = 1.9; }
         if(conf.lpFeeMin === undefined) { conf.lpFeeMin = 0.3; conf.lpFeeVyfi = 0.3; }
+        if(conf.vaultAlert === undefined) { conf.vaultAlert = 20; }
 
         let lastAlertTime = 0;
+        let lastVaultAlertTime = 0; // Temporizador separado para que el Vault no silencie al DEX
         let chartInstance = null;
         let sparkInstances = {}; 
         const ALERT_COOLDOWN = 5 * 60 * 1000;
@@ -382,19 +383,17 @@
 
         document.getElementById('sim-ada-input').value = conf.sim;
         document.getElementById('sim-tri-input').value = conf.sim;
-        document.getElementById('alert-label').innerText = conf.alert;
 
         function closeModals() { document.getElementById('settings-modal').style.display = 'none'; }
         
         function openSettings() { 
             document.getElementById('set-alert').value = conf.alert; 
+            document.getElementById('set-vault-alert').value = conf.vaultAlert; 
             document.getElementById('set-sim').value = document.getElementById('sim-ada-input').value; 
             document.getElementById('set-tg-bot').value = conf.tgBot || ""; document.getElementById('set-tg-chat').value = conf.tgChat || ""; 
             document.getElementById('set-fee-net').value = conf.feeNet; 
             document.getElementById('set-fee-min').value = conf.feeMin; 
             document.getElementById('set-fee-vyfi').value = conf.feeVyfi;
-            
-            // Cargar los nuevos LP Fees en el panel
             document.getElementById('set-lp-min').value = conf.lpFeeMin;
             document.getElementById('set-lp-vyfi').value = conf.lpFeeVyfi;
 
@@ -403,21 +402,19 @@
         
         function saveSettings() {
             conf.alert = parseFloat(document.getElementById('set-alert').value); 
+            conf.vaultAlert = parseFloat(document.getElementById('set-vault-alert').value); 
             conf.sim = parseFloat(document.getElementById('set-sim').value);
             conf.tgBot = document.getElementById('set-tg-bot').value.trim(); 
             conf.tgChat = document.getElementById('set-tg-chat').value.trim();
             conf.feeNet = parseFloat(document.getElementById('set-fee-net').value); 
             conf.feeMin = parseFloat(document.getElementById('set-fee-min').value); 
             conf.feeVyfi = parseFloat(document.getElementById('set-fee-vyfi').value);
-            
-            // Guardar los nuevos LP Fees
             conf.lpFeeMin = parseFloat(document.getElementById('set-lp-min').value);
             conf.lpFeeVyfi = parseFloat(document.getElementById('set-lp-vyfi').value);
 
             localStorage.setItem('l4va_config', JSON.stringify(conf));
             document.getElementById('sim-ada-input').value = conf.sim; 
             document.getElementById('sim-tri-input').value = conf.sim; 
-            document.getElementById('alert-label').innerText = conf.alert;
             closeModals(); 
             recalculateSimulators();
         }
@@ -510,7 +507,6 @@
 
         function playDing() { try { const ctx = new (window.AudioContext || window.webkitAudioContext)(); const osc = ctx.createOscillator(); const gainNode = ctx.createGain(); osc.type = 'sine'; osc.frequency.setValueAtTime(880, ctx.currentTime); gainNode.gain.setValueAtTime(0.1, ctx.currentTime); osc.connect(gainNode); gainNode.connect(ctx.destination); osc.start(); gainNode.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.5); osc.stop(ctx.currentTime + 0.5); } catch (e) {} }
 
-        // MATEMÁTICA AMM AHORA CON PORCENTAJE DE COMISIÓN (LP FEE) DINÁMICO
         function getAmmOut(amountIn, reserveIn, reserveOut, feePct) {
             if(reserveIn <= 0 || reserveOut <= 0 || amountIn <= 0) return 0;
             const feeMultiplier = 1 - (feePct / 100); 
@@ -531,7 +527,7 @@
             if (currentPools.minswap.price < currentPools.vyfi.price) { 
                 poolBuy = currentPools.minswap; poolSell = currentPools.vyfi; 
                 fixedFeeBuy = minFixed; fixedFeeSell = vyfiFixed; 
-                lpBuy = conf.lpFeeMin; lpSell = conf.lpFeeVyfi; // Asignamos LP fee según el DEX
+                lpBuy = conf.lpFeeMin; lpSell = conf.lpFeeVyfi;
             } else { 
                 poolBuy = currentPools.vyfi; poolSell = currentPools.minswap; 
                 fixedFeeBuy = vyfiFixed; fixedFeeSell = minFixed; 
@@ -540,7 +536,6 @@
 
             let netProfit = 0; let swapAdaAmount = investAda - fixedFeeBuy - networkFee;
             if (swapAdaAmount > 0) {
-                // Pasamos el LP fee a la función matemática
                 let tokensReceived = getAmmOut(swapAdaAmount, poolBuy.reserveAda, poolBuy.reserveTok, lpBuy);
                 let adaGrossReceived = getAmmOut(tokensReceived, poolSell.reserveTok, poolSell.reserveAda, lpSell);
                 netProfit = (adaGrossReceived - fixedFeeSell - networkFee) - investAda;
@@ -574,17 +569,14 @@
             if(pVA.resAda <= 0 || pVO.resVlrm <= 0) return { netProfit: -Infinity, route: null };
 
             const netF = conf.feeNet; const fVy = conf.feeVyfi + netF; const fMin = conf.feeMin + netF; 
-            
-            // Asignación de LP Fees de Ajustes
-            const lpVy = conf.lpFeeVyfi;
-            const lpMin = conf.lpFeeMin;
+            const lpVy = conf.lpFeeVyfi; const lpMin = conf.lpFeeMin;
 
             let outA = -Infinity; let adaAfterLeg1A = investAda - fVy;
             if(adaAfterLeg1A > 0) {
-                let vlrmOut = getAmmOut(adaAfterLeg1A, pVA.resAda, pVA.resTok, lpVy); // Pool en VyFi
-                let oracleOut = getAmmOut(vlrmOut, pVO.resVlrm, pVO.resOracle, lpVy); // Pool cruzado en VyFi
-                let adaEndVy = getAmmOut(oracleOut, pOVy.reserveTok, pOVy.reserveAda, lpVy) - fVy - fVy; // Vender en VyFi
-                let adaEndMin = getAmmOut(oracleOut, pOMin.reserveTok, pOMin.reserveAda, lpMin) - fVy - fMin; // Vender en Minswap
+                let vlrmOut = getAmmOut(adaAfterLeg1A, pVA.resAda, pVA.resTok, lpVy); 
+                let oracleOut = getAmmOut(vlrmOut, pVO.resVlrm, pVO.resOracle, lpVy); 
+                let adaEndVy = getAmmOut(oracleOut, pOVy.reserveTok, pOVy.reserveAda, lpVy) - fVy - fVy; 
+                let adaEndMin = getAmmOut(oracleOut, pOMin.reserveTok, pOMin.reserveAda, lpMin) - fVy - fMin; 
                 outA = Math.max(adaEndVy, adaEndMin);
             }
 
@@ -788,6 +780,8 @@
                 currentPools.vlrmAda = { resAda: vlrmVyfiAdaReserve, resTok: vlrmVyfiTokReserve }; currentPools.crossVO = { resVlrm: crossVlrmReserve, resOracle: crossOracleReserve };
 
                 let bestDeviation = 0;
+                let targetDexForVault = "";
+                
                 if (vaultTvlData > 0) {
                     const fairPrice = vaultTvlData / ORACLE_TOTAL_SUPPLY;
                     document.getElementById('vault-tvl').innerText = `₳ ${Math.round(vaultTvlData).toLocaleString()}`; document.getElementById('vault-fair-price').innerText = `₳ ${fairPrice.toFixed(6)}`;
@@ -795,12 +789,11 @@
                     if (priceVyfi > 0) validPrices.push({ dex: "VyFi", price: priceVyfi }); if (priceMin > 0) validPrices.push({ dex: "Minswap", price: priceMin });
 
                     if (validPrices.length > 0) {
-                        let targetDex = "";
-                        validPrices.forEach(p => { let deviation = ((p.price - fairPrice) / fairPrice) * 100; if (Math.abs(deviation) > Math.abs(bestDeviation)) { bestDeviation = deviation; targetDex = p.dex; } });
+                        validPrices.forEach(p => { let deviation = ((p.price - fairPrice) / fairPrice) * 100; if (Math.abs(deviation) > Math.abs(bestDeviation)) { bestDeviation = deviation; targetDexForVault = p.dex; } });
                         const vaultBannerDiscEl = document.getElementById('vault-banner-discrepancy'); const vaultActionEl = document.getElementById('vault-arbitrage-action');
                         let sign = bestDeviation > 0 ? '+' : ''; vaultBannerDiscEl.innerText = `${sign}${bestDeviation.toFixed(2)}%`;
 
-                        let targetLink = targetDex === "Minswap" ? MINSWAP_LINK : VYFI_LINK; 
+                        let targetLink = targetDexForVault === "Minswap" ? MINSWAP_LINK : VYFI_LINK; 
                         
                         vaultBannerDiscEl.className = 'arbitrage-big-value'; 
                         if (Math.abs(bestDeviation) < 0.5) {
@@ -809,10 +802,22 @@
                         } else {
                             if (bestDeviation > 0) {
                                 vaultBannerDiscEl.style.color = "#10b981"; 
-                                vaultActionEl.innerHTML = `Sell <a href="${targetLink}" target="_blank" class="badge-dark">${targetDex}</a>`; 
+                                vaultActionEl.innerHTML = `Sell <a href="${targetLink}" target="_blank" class="badge-dark">${targetDexForVault}</a>`; 
                             } else {
                                 vaultBannerDiscEl.style.color = "var(--neon-red)"; 
-                                vaultActionEl.innerHTML = `Buy <a href="${targetLink}" target="_blank" class="badge-dark">${targetDex}</a>`; 
+                                vaultActionEl.innerHTML = `Buy <a href="${targetLink}" target="_blank" class="badge-dark">${targetDexForVault}</a>`; 
+                            }
+                        }
+
+                        // NUEVO: SISTEMA DE ALERTA PARA EL VAULT (Activo Front-End)
+                        if (Math.abs(bestDeviation) >= conf.vaultAlert) {
+                            const alertToggle = document.getElementById('alert-toggle'); const now = Date.now();
+                            if (alertToggle && alertToggle.checked && (now - lastVaultAlertTime > ALERT_COOLDOWN)) {
+                                playDing(); 
+                                if (Notification.permission === "granted") { new Notification("🏛️ L4VA Vault Alert!", { body: `Discrepancy: ${bestDeviation.toFixed(2)}%\nAction: ${bestDeviation > 0 ? 'Sell' : 'Buy'} on ${targetDexForVault}` }); }
+                                sendTelegramAlert(`🏛️ <b>L4VA Vault Alert!</b>\n\n⚖️ Fair Price Discrepancy: <b>${bestDeviation > 0 ? '+' : ''}${bestDeviation.toFixed(2)}%</b>\n💡 Action: ${bestDeviation > 0 ? 'Sell' : 'Buy'} on ${targetDexForVault}\n\n<i>Check dashboard for real-time data.</i>`);
+                                addToLog(Math.abs(bestDeviation), `Vault Arb (${bestDeviation > 0 ? 'Sell' : 'Buy'} ${targetDexForVault})`, bestDeviation > 0 ? "#10b981" : "var(--neon-red)");
+                                lastVaultAlertTime = now;
                             }
                         }
                     }
