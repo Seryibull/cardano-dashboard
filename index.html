@@ -22,8 +22,8 @@
             --neon-orange: #ff7b00;
             --neon-red: #ff0f5b;
             --gradient-fire: linear-gradient(135deg, var(--neon-orange), var(--neon-red));
-            /* CAMBIO 1: Degradado puro fuego, eliminando tonos azules/morados del final */
-            --gradient-dark-plasma: radial-gradient(circle at center bottom, #ff6600 0%, #8a1200 45%, #240707 100%);
+            /* DEGRADADO FUEGO PURO: Sin tonos azules/morados */
+            --gradient-dark-plasma: radial-gradient(circle at center bottom, #ff5e00 0%, #9e1b00 50%, #2b0400 100%);
             --ada-color: #4285f4;
             --badge-vyfi-bg: rgba(139, 92, 246, 0.15);
             --badge-vyfi-text: #a78bfa;
@@ -53,8 +53,9 @@
         .settings-btn:hover { background: rgba(255,255,255,0.15); transform: rotate(45deg); border-color: var(--neon-orange); }
 
         .dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 20px; max-width: 1200px; margin: 0 auto; }
-        /* CAMBIO 3: Añadido min-height a las tarjetas para que sean más grandes y uniformes */
-        .card { border-radius: 20px; padding: 20px 25px; position: relative; background: rgba(18, 15, 36, 0.85); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); transition: transform 0.3s ease, box-shadow 0.3s ease; min-height: 250px; display: flex; flex-direction: column; justify-content: space-between; }
+        
+        /* TARJETAS MÁS ALTAS */
+        .card { border-radius: 20px; padding: 20px 25px; position: relative; background: rgba(18, 15, 36, 0.85); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); transition: transform 0.3s ease, box-shadow 0.3s ease; min-height: 280px; display: flex; flex-direction: column; justify-content: space-between;}
         .card:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 123, 0, 0.15); border-color: rgba(255, 123, 0, 0.3); }
 
         .card-ada { background: rgba(35, 40, 65, 0.85); border-color: rgba(66, 133, 244, 0.2); }
@@ -87,7 +88,7 @@
         .arbitrage-box:hover { border-color: rgba(255, 123, 0, 0.6); background: rgba(0, 0, 0, 0.6); transform: translateY(-2px); }
 
         .arbitrage-label { color: rgba(255, 255, 255, 0.75); font-size: 0.75rem; text-transform: uppercase; font-weight: 800; margin-bottom: 5px; letter-spacing: 0.5px;}
-        .arbitrage-big-value { font-size: 1.8rem; font-weight: 900; color: #ffffff; text-shadow: 0 2px 15px rgba(0,0,0,0.5); transition: all 0.3s ease; }
+        .arbitrage-big-value { font-size: 1.8rem; font-weight: 900; color: #ffffff; text-shadow: 0 2px 10px rgba(0,0,0,0.5); transition: all 0.3s ease; }
         .loading { color: inherit; opacity: 0.6; font-style: italic; font-weight: normal; font-size: 0.9rem;}
 
         .alert-toggle-box { font-size: 0.8rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 8px; color: var(--text-primary); background: rgba(0, 0, 0, 0.4); padding: 8px 16px; border-radius: 30px; border: 1px solid rgba(255, 123, 0, 0.3); transition: 0.3s;}
@@ -100,9 +101,9 @@
         .sim-input { background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 8px 12px; border-radius: 10px; width: 80px; font-weight: bold; text-align: center; margin-right: 5px; font-family: 'Inter', sans-serif; font-size: 1rem;}
         .sim-input:focus { outline: none; border-color: var(--neon-orange); box-shadow: 0 0 10px rgba(255, 123, 0, 0.2);}
         
-        /* CAMBIO 2: Eliminado el text-shadow difuminado para que queden nítidos como el resto */
-        .profit-positive { color: #10b981; }
-        .profit-negative { color: var(--neon-red); }
+        /* RESULTADOS NÍTIDOS (Sin difuminado, solo sombra sólida) */
+        .profit-positive { color: #10b981; text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
+        .profit-negative { color: var(--neon-red); text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
         
         .optimizer-text { font-size: 0.75rem; color: var(--text-secondary); margin-top: 12px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px; font-weight: 600;}
         .usd-profit { font-size: 0.9rem; color: rgba(255,255,255,0.6); font-weight: 600; text-shadow: none; display: block; text-align: right;}
@@ -263,7 +264,7 @@
                         </div>
                     </div>
                     <div class="slippage-container"><div id="sim-tri-slippage-bar" class="slippage-bar" style="background: #10b981;"></div></div>
-                    <div id="sim-slippage-label" class="slippage-label">Max Price Impact: 0.00%</div>
+                    <div id="sim-tri-slippage-label" class="slippage-label">Max Price Impact: 0.00%</div>
                     <div id="tri-optimizer-result" class="optimizer-text">💡 <b>Auto-Optimizer:</b> Calculating...</div>
                 </div>
             </div>
@@ -280,7 +281,7 @@
                 </div>
                 <div class="data-row" style="margin-top: 15px;"><span class="data-label" style="font-size: 0.75rem;">Last Updated:</span><span class="data-value" style="font-size: 0.75rem;" id="ada-time">-</span></div>
             </div>
-            <div style="height: 75px; margin-top: 15px;"><canvas id="spark-ada"></canvas></div>
+            <div style="height: 80px; margin-top: 15px;"><canvas id="spark-ada"></canvas></div>
         </div>
         
         <div class="card">
@@ -295,7 +296,7 @@
                 </div>
                 <div class="data-row"><span class="data-label">Fair price:</span><span class="data-value" id="vault-fair-price">-</span></div>
             </div>
-            <div style="height: 75px; margin-top: 15px;"><canvas id="spark-vault"></canvas></div>
+            <div style="height: 80px; margin-top: 15px;"><canvas id="spark-vault"></canvas></div>
         </div>
 
         <div class="card">
@@ -305,13 +306,13 @@
                 <span class="data-label">Price:</span>
                 <span class="data-value"><span id="vlrm-price-ada"><span class="loading">Connecting...</span></span> <span id="vlrm-price-change-24h" class="change-badge"></span></span>
             </div>
-            <div style="height: 55px; margin-bottom: 15px;"><canvas id="spark-vlrm-ada-price"></canvas></div>
+            <div style="height: 50px; margin-bottom: 15px;"><canvas id="spark-vlrm-ada-price"></canvas></div>
 
             <div class="data-row" style="margin-top: auto;">
                 <span class="data-label">TVL (Pool):</span>
                 <span class="data-value"><span id="vlrm-liq-ada">-</span> <span id="vlrm-ada-change-24h" class="change-badge"></span></span>
             </div>
-            <div style="height: 55px;"><canvas id="spark-vlrm-ada"></canvas></div>
+            <div style="height: 50px;"><canvas id="spark-vlrm-ada"></canvas></div>
         </div>
 
         <div class="card">
@@ -321,13 +322,13 @@
                 <span class="data-label">Price:</span>
                 <span class="data-value"><span id="vlrm-oracle-price"><span class="loading">Waiting...</span></span> <span id="vlrm-oracle-price-change-24h" class="change-badge"></span></span>
             </div>
-            <div style="height: 55px; margin-bottom: 15px;"><canvas id="spark-vlrm-oracle-price"></canvas></div>
+            <div style="height: 50px; margin-bottom: 15px;"><canvas id="spark-vlrm-oracle-price"></canvas></div>
 
             <div class="data-row" style="margin-top: auto;">
                 <span class="data-label">TVL (Pool):</span>
                 <span class="data-value"><span id="vlrm-oracle-liq-ada">-</span> <span id="vlrm-oracle-change-24h" class="change-badge"></span></span>
             </div>
-            <div style="height: 55px;"><canvas id="spark-vlrm-oracle"></canvas></div>
+            <div style="height: 50px;"><canvas id="spark-vlrm-oracle"></canvas></div>
         </div>
 
         <div style="grid-column: 1 / -1; display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px;">
@@ -338,18 +339,18 @@
                     <div>
                         <h3 class="dex-subtitle"><span class="badge bg-vyfi">VYFI</span></h3>
                         <div class="data-row"><span class="data-label">Price:</span><span class="data-value"><span id="oracle-vyfi-price">-</span> <span id="oracle-vyfi-price-change-24h" class="change-badge"></span></span></div>
-                        <div style="height: 30px; margin-bottom: 10px;"><canvas id="spark-oracle-vyfi-price"></canvas></div>
+                        <div style="height: 35px; margin-bottom: 10px;"><canvas id="spark-oracle-vyfi-price"></canvas></div>
                         
                         <div class="data-row"><span class="data-label">Liquidity:</span><span class="data-value"><span id="oracle-vyfi-liq">-</span> <span id="oracle-vyfi-change-24h" class="change-badge"></span></span></div>
-                        <div style="height: 30px;"><canvas id="spark-oracle-vyfi"></canvas></div>
+                        <div style="height: 35px;"><canvas id="spark-oracle-vyfi"></canvas></div>
                     </div>
                     <div style="border-left: 2px solid rgba(255,255,255,0.05); padding-left: 20px;">
                         <h3 class="dex-subtitle"><span class="badge bg-minswap">MINSWAP</span></h3>
                         <div class="data-row"><span class="data-label">Price:</span><span class="data-value"><span id="oracle-min-price">-</span> <span id="oracle-min-price-change-24h" class="change-badge"></span></span></div>
-                        <div style="height: 30px; margin-bottom: 10px;"><canvas id="spark-oracle-min-price"></canvas></div>
+                        <div style="height: 35px; margin-bottom: 10px;"><canvas id="spark-oracle-min-price"></canvas></div>
                         
                         <div class="data-row"><span class="data-label">Liquidity:</span><span class="data-value"><span id="oracle-min-liq">-</span> <span id="oracle-min-change-24h" class="change-badge"></span></span></div>
-                        <div style="height: 30px;"><canvas id="spark-oracle-min"></canvas></div>
+                        <div style="height: 35px;"><canvas id="spark-oracle-min"></canvas></div>
                     </div>
                 </div>
                 
@@ -377,7 +378,7 @@
                     <div class="tri-node node-oracle">ORAC</div>
                 </div>
 
-                <div style="margin-top: auto; padding-top: 25px; border-top: 1px solid rgba(255,255,255,0.05);">
+                <div style="margin-top: auto; padding-top: 25px; border-top: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; justify-content: center;">
                     <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px;">
                         <div class="arbitrage-label" style="margin-bottom: 0;">Optimal Net Discrepancy</div>
                         <div class="arbitrage-big-value" id="tri-arb-spread" style="font-size: 2.2rem; line-height: 1; text-shadow: 0 0 20px rgba(16, 185, 129, 0.4);"><span class="loading">Scanning...</span></div>
@@ -728,6 +729,62 @@
             else return { netProfit: outB - investAda, route: 'B', maxImpact: impactB }; 
         }
 
+        function recalculateTriSimulator() {
+            const investAda = parseFloat(document.getElementById('sim-tri-input').value) || 0;
+            const simEl = document.getElementById('sim-tri-profit'); 
+            const optEl = document.getElementById('tri-optimizer-result');
+            
+            let currentData = calcTriNetDetails(investAda);
+            let netProfit = currentData.netProfit;
+
+            updateSlippageUI('sim-tri-slippage-bar', 'sim-tri-slippage-label', currentData.maxImpact);
+
+            if(investAda <= 0 || netProfit === -Infinity) { 
+                simEl.innerText = "Insufficient"; simEl.className = "arbitrage-big-value profit-negative"; 
+            } else { 
+                let sign = netProfit > 0 ? "+" : ""; 
+                let usdStr = currentAdaUsd > 0 ? `<span class="usd-profit">(~$${(Math.abs(netProfit)*currentAdaUsd).toFixed(2)})</span>` : "";
+                simEl.innerHTML = `${sign}${netProfit.toFixed(2)} ADA ${usdStr}`; 
+                simEl.className = netProfit > 0 ? "arbitrage-big-value profit-positive" : "arbitrage-big-value profit-negative"; 
+            }
+
+            let bestProfit = -Infinity; let optimalInvest = 0; let optimalRoute = null; let bestPercent = 0;
+            for(let i = 10; i <= 5000; i += 10) {
+                let testData = calcTriNetDetails(i);
+                if (testData.netProfit > bestProfit) { 
+                    bestProfit = testData.netProfit; optimalInvest = i; optimalRoute = testData.route; bestPercent = (testData.netProfit / i) * 100;
+                } else if (testData.netProfit < bestProfit && testData.netProfit > 0) break;
+            }
+
+            const triEl = document.getElementById('tri-arb-spread');
+            const rA = document.getElementById('route-a-container');
+            const rB = document.getElementById('route-b-container');
+            const triAnim = document.getElementById('tri-anim-path');
+
+            rA.className = "route-inactive"; rB.className = "route-inactive";
+            triAnim.style.display = "none";
+
+            if (bestProfit > 0) { 
+                optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> Max profit <b>+${bestProfit.toFixed(2)} ADA</b> (Invest <b>${optimalInvest} ADA</b>)`; 
+                optEl.style.color = '#10b981'; 
+                triEl.innerText = `+${bestPercent.toFixed(2)}%`; triEl.style.color = "#10b981";
+                
+                triAnim.style.display = "block";
+                if (optimalRoute === 'A') {
+                    rA.className = "route-active";
+                    triAnim.className = "tri-line-active"; 
+                }
+                if (optimalRoute === 'B') {
+                    rB.className = "route-active";
+                    triAnim.className = "tri-line-active route-reverse"; 
+                }
+            } else { 
+                optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> No profitable route (fees > spread).`; 
+                optEl.style.color = 'var(--text-secondary)'; 
+                triEl.innerText = "0.00%"; triEl.style.color = "var(--text-secondary)";
+            }
+        }
+
         async function fetchHistoryFromCloudflare() {
             try {
                 const res = await fetch(PROXY_URL + '?data=history');
@@ -837,14 +894,24 @@
                     vlrmVyfiAdaReserve = vlrmAdaTvl / 2; vlrmVyfiTokReserve = vlrmVyfiAdaReserve / priceVlrmAda;
                 }
                 
-                let crossVlrmReserve = 0; let crossOracleReserve = 0; let crossTvl = 0; let priceOracleVlrm = 0;
+                let crossVlrmReserve = 0; let crossOracleReserve = 0; let crossTvl = 0; 
+                // AISLAMIENTO DE LA MATEMÁTICA: Guardamos el ratio original para el simulador, y creamos otro limpio para la UI
+                let rawCrossRatio = 0; let oraclePerVlrmUI = 0;
                 const crossPool = data.vyfiPools.find(p => p.unitsPair.includes(VLRM) && p.unitsPair.includes(ORACLE));
                 if (crossPool) {
                     crossTvl = crossPool.tvl;
-                    priceOracleVlrm = crossPool.tokenA.unit.includes(VLRM) ? crossPool.tokenB.lpRatio[crossPool.unitsPair].priceRatioAB : crossPool.tokenA.lpRatio[crossPool.unitsPair].priceRatioBA;
-                    document.getElementById('vlrm-oracle-price').innerText = `VLRM ${priceOracleVlrm.toFixed(2)}`;
+                    rawCrossRatio = crossPool.tokenA.unit.includes(VLRM) ? crossPool.tokenB.lpRatio[crossPool.unitsPair].priceRatioAB : crossPool.tokenA.lpRatio[crossPool.unitsPair].priceRatioBA;
+                    
+                    crossVlrmReserve = (crossTvl / 2) / priceVlrmAda; 
+                    crossOracleReserve = crossVlrmReserve / rawCrossRatio; // Esto alimenta el simulador perfectamente
+                    
+                    // Cálculo transparente y explícito para la interfaz de usuario: ¿Cuántos ORACLE me dan por 1 VLRM?
+                    if (crossVlrmReserve > 0) {
+                        oraclePerVlrmUI = crossOracleReserve / crossVlrmReserve;
+                    }
+                    
+                    document.getElementById('vlrm-oracle-price').innerText = `ORAC ${oraclePerVlrmUI.toFixed(4)}`;
                     document.getElementById('vlrm-oracle-liq-ada').innerText = `₳ ${Math.round(crossTvl).toLocaleString()}`; 
-                    crossVlrmReserve = (crossTvl / 2) / priceVlrmAda; crossOracleReserve = crossVlrmReserve / priceOracleVlrm;
                 }
 
                 let totalOracleLiqAda = 0, priceVyfi = 0, priceMin = 0; let vyfiTvLAda = 0, minTvlAda = 0;
@@ -861,7 +928,8 @@
                 }
                 document.getElementById('oracle-total-liq').innerText = `₳ ${Math.round(totalOracleLiqAda).toLocaleString()}`;
 
-                updateSparklines(vlrmAdaTvl, crossTvl, vyfiTvLAda, minTvlAda, vaultTvlData, priceVlrmAda, priceOracleVlrm, priceVyfi, priceMin);
+                // Pasamos a la gráfica el precio limpio que mostramos en la UI
+                updateSparklines(vlrmAdaTvl, crossTvl, vyfiTvLAda, minTvlAda, vaultTvlData, priceVlrmAda, oraclePerVlrmUI, priceVyfi, priceMin);
 
                 calcChangeUI('vlrm-ada-change-24h', chartHistory.vlrmAda, vlrmAdaTvl);
                 calcChangeUI('vlrm-oracle-change-24h', chartHistory.vlrmOracle, crossTvl);
@@ -871,13 +939,14 @@
                 calcChangeUI('total-liq-change-24h', chartHistory.totalLiq, totalOracleLiqAda);
                 
                 calcChangeUI('vlrm-price-change-24h', chartHistory.pVlrmAda, priceVlrmAda);
-                calcChangeUI('vlrm-oracle-price-change-24h', chartHistory.pVlrmOracle, priceOracleVlrm);
+                calcChangeUI('vlrm-oracle-price-change-24h', chartHistory.pVlrmOracle, oraclePerVlrmUI);
                 calcChangeUI('oracle-vyfi-price-change-24h', chartHistory.pOracleVyfi, priceVyfi);
                 calcChangeUI('oracle-min-price-change-24h', chartHistory.pOracleMin, priceMin);
 
                 currentPools.vyfi = { price: priceVyfi, reserveAda: priceVyfi > 0 ? (vyfiTvLAda / 2) : 0, reserveTok: priceVyfi > 0 ? (vyfiTvLAda / 2) / priceVyfi : 0 };
                 currentPools.minswap = { price: priceMin, reserveAda: priceMin > 0 ? (minTvlAda / 2) : 0, reserveTok: priceMin > 0 ? (minTvlAda / 2) / priceMin : 0 };
-                currentPools.vlrmAda = { resAda: vlrmVyfiAdaReserve, resTok: vlrmVyfiTokReserve }; currentPools.crossVO = { resVlrm: crossVlrmReserve, resOracle: crossOracleReserve };
+                currentPools.vlrmAda = { resAda: vlrmVyfiAdaReserve, resTok: vlrmVyfiTokReserve }; 
+                currentPools.crossVO = { resVlrm: crossVlrmReserve, resOracle: crossOracleReserve };
 
                 let bestDeviation = 0; let targetDexForVault = "";
                 
