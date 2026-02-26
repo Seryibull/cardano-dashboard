@@ -144,10 +144,6 @@
         .arbitrage-section { grid-column: 1 / -1; background: var(--gradient-dark-plasma) !important; border: 1px solid rgba(255, 123, 0, 0.25); box-shadow: 0 15px 40px -10px rgba(0, 0, 0, 0.8), inset 0 0 60px rgba(94, 42, 0, 0.6), 0 0 20px rgba(255, 123, 0, 0.1); padding: 20px 25px; transition: all 0.3s ease; position: relative; overflow: hidden; min-height: auto; display: block;}
         .arbitrage-section:hover { transform: translateY(-3px); box-shadow: 0 25px 50px -10px rgba(0, 0, 0, 0.9), inset 0 0 80px rgba(120, 50, 0, 0.7), 0 0 30px rgba(255, 123, 0, 0.2); border-color: rgba(255, 123, 0, 0.5); }
 
-        @keyframes defcon-pulse { 0% { box-shadow: 0 0 0 0 rgba(255, 15, 91, 0.4); border-color: rgba(255, 15, 91, 0.5); } 70% { box-shadow: 0 0 20px 10px rgba(255, 15, 91, 0); border-color: rgba(255, 15, 91, 0.1); } 100% { box-shadow: 0 0 0 0 rgba(255, 15, 91, 0); border-color: rgba(255, 15, 91, 0.5); } }
-        .defcon-active { animation: defcon-pulse 2s infinite !important; background: linear-gradient(135deg, #3a080e 0%, #5e0000 100%) !important; }
-        .defcon-active:hover { transform: translateY(-3px) !important; }
-
         .arbitrage-banner-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; border-bottom: 1px solid rgba(255, 123, 0, 0.2); padding-bottom: 15px; margin-bottom: 20px; position: relative; z-index: 2;}
         .arbitrage-grid { display: grid; grid-template-columns: 1fr; gap: 20px; position: relative; z-index: 2;}
         @media (min-width: 900px) { .arbitrage-grid { grid-template-columns: 1fr 1fr; } }
@@ -1031,7 +1027,7 @@
                         }
                     }
 
-                    // ALGORITMO DE RELLENO INTELIGENTE
+                    // ALGORITMO DE RELLENO INTELIGENTE (Para asegurar que todas las gráficas ocupen el 100% de la caja visual)
                     const missingPoints = MAX_CHART_POINTS - expandedHistory.labels.length;
                     if (missingPoints > 0) {
                         const emptyLabels = Array(missingPoints).fill('');
@@ -1262,13 +1258,6 @@
                     let valueDirect = priceVlrmAda;
                     let valueCross = oraclePerVlrmUI * primaryOraclePrice;
                     voSpread = ((Math.max(valueDirect, valueCross) - Math.min(valueDirect, valueCross)) / Math.min(valueDirect, valueCross)) * 100;
-                }
-
-                const mainBanner = document.getElementById('main-banner');
-                if (spread >= conf.alert || Math.abs(bestDeviation) >= conf.vaultAlert) {
-                    mainBanner.classList.add('defcon-active');
-                } else {
-                    mainBanner.classList.remove('defcon-active');
                 }
 
                 updateMainChart(spread, bestDeviation, voSpread);
