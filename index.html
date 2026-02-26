@@ -81,32 +81,26 @@
 
         header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px; max-width: 1200px; margin-left: auto; margin-right: auto; flex-wrap: wrap; gap: 15px;}
         .header-left { display: flex; align-items: center; gap: 15px; }
-        .header-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap;}
+        .header-right { display: flex; align-items: center; gap: 10px; }
         .brand-logo { font-size: 2.5rem; filter: drop-shadow(0 0 10px var(--neon-orange)); }
         
         h1 { margin: 0; font-weight: 800; font-size: 1.8rem; background: var(--gradient-fire); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -1px; display: flex; align-items: center;}
         .version-badge { color: #ffffff; font-size: 0.8rem; font-weight: 600; margin-left: 8px; opacity: 0.8; letter-spacing: 0; -webkit-text-fill-color: #ffffff; }
-
-        /* Controles de la barra superior */
-        .alert-toggle-box { font-size: 0.8rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 8px; color: var(--text-primary); background: rgba(0, 0, 0, 0.6); padding: 8px 16px; border-radius: 30px; border: 1px solid rgba(255, 123, 0, 0.4); transition: 0.3s; backdrop-filter: blur(5px);}
-        .alert-toggle-box:hover { border-color: var(--neon-orange); background: rgba(255, 123, 0, 0.2); }
-        .alert-toggle-box input { accent-color: var(--neon-orange); transform: scale(1.2); }
 
         .header-btn { font-size: 1.5rem; cursor: pointer; background: rgba(255,255,255,0.05); padding: 8px 12px; border-radius: 12px; transition: 0.3s; border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center;}
         .header-btn:hover { background: rgba(255,255,255,0.15); border-color: var(--neon-orange); }
         .settings-btn:hover { transform: rotate(45deg); }
         .active-edit-btn { background: rgba(255, 123, 0, 0.2) !important; border-color: var(--neon-orange) !important; box-shadow: 0 0 15px rgba(255, 123, 0, 0.5); }
 
+        .alert-toggle-box { font-size: 0.8rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 8px; color: var(--text-primary); background: rgba(0, 0, 0, 0.6); padding: 8px 16px; border-radius: 30px; border: 1px solid rgba(255, 123, 0, 0.4); transition: 0.3s; backdrop-filter: blur(5px);}
+        .alert-toggle-box:hover { border-color: var(--neon-orange); background: rgba(255, 123, 0, 0.2); }
+        .alert-toggle-box input { accent-color: var(--neon-orange); transform: scale(1.2); }
+
         /* GRID CON EFECTO DENSE PARA "TETRIS" */
         .dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); grid-auto-flow: dense; gap: 20px; max-width: 1200px; margin: 0 auto; filter: blur(0px); transition: filter 0.5s ease;}
         
         /* ESTILOS DEL MODO EDICIÓN (Arrastrar y Soltar) */
-        .edit-mode-active .drag-item {
-            cursor: grab !important;
-            outline: 2px dashed var(--neon-orange) !important;
-            outline-offset: 4px;
-            transition: outline 0.3s ease;
-        }
+        .edit-mode-active .drag-item { cursor: grab !important; outline: 2px dashed var(--neon-orange) !important; outline-offset: 4px; transition: outline 0.3s ease; }
         .edit-mode-active .drag-item:hover { background: rgba(255, 123, 0, 0.05); }
         .edit-mode-active .drag-item:active { cursor: grabbing !important; }
         .edit-mode-active canvas, .edit-mode-active input, .edit-mode-active button, .edit-mode-active a, .edit-mode-active label { pointer-events: none !important; }
@@ -154,12 +148,12 @@
         .profit-positive { color: #10b981; text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
         .profit-negative { color: var(--neon-red); text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
         
-        .optimizer-text { font-size: 0.75rem; color: var(--text-secondary); margin-top: 12px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px; font-weight: 600;}
+        .optimizer-text { font-size: 0.75rem; color: var(--text-secondary); padding-top: 10px; font-weight: 600;}
         .usd-profit { font-size: 0.9rem; color: rgba(255,255,255,0.6); font-weight: 600; text-shadow: none; display: block; text-align: right;}
 
-        .slippage-container { width: 100%; height: 8px; background: rgba(0,0,0,0.4); border-radius: 4px; margin-top: 10px; overflow: hidden; position: relative; border: 1px solid rgba(255,255,255,0.1);}
+        .slippage-container { width: 100%; height: 8px; background: rgba(0,0,0,0.4); border-radius: 4px; overflow: hidden; position: relative; border: 1px solid rgba(255,255,255,0.1);}
         .slippage-bar { height: 100%; width: 0%; border-radius: 4px; transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); box-shadow: 0 0 10px currentColor;}
-        .slippage-label { font-size: 0.7rem; color: var(--text-secondary); text-align: right; margin-top: 6px; font-weight: 600;}
+        .slippage-label { font-size: 0.7rem; color: var(--text-secondary); text-align: right; font-weight: 600;}
 
         /* TRIANGULO AMPLIADO Y MEJORADO */
         .tri-wrapper { position: relative; width: 100%; max-width: 250px; height: 200px; margin: 25px auto 25px auto; }
@@ -263,70 +257,88 @@
 
     <div class="dashboard" id="main-dashboard">
         
-        <div class="card card-vault drag-item" data-id="card-arb-dex" style="justify-content: flex-start;">
-            <div class="arbitrage-label" style="color: var(--vault-color); margin-bottom: 25px;">DEX ARBITRAGE (ORACLE / ADA)</div>
-            <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: auto;">
+        <div class="card card-vault drag-item card-wide" data-id="card-arb-dex" style="display: flex; flex-direction: column; justify-content: space-between;">
+            <div class="arbitrage-label" style="color: var(--vault-color); margin-bottom: 15px; font-size: 0.85rem;">DEX ARBITRAGE (ORACLE / ADA)</div>
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto;">
                 <div>
-                    <div class="arbitrage-label">Spread</div>
-                    <div class="arbitrage-big-value" id="arbitrage-spread" style="line-height: 1;">-%</div>
+                    <div class="arbitrage-label" style="margin-bottom: 8px;">Spread</div>
+                    <div class="arbitrage-big-value" id="arbitrage-spread" style="font-size: 2.8rem; line-height: 1;">-%</div>
                 </div>
-                <div style="text-align: right;">
-                    <div class="arbitrage-label" style="margin-bottom: 5px;">Action</div>
-                    <div id="arbitrage-action" style="font-size: 0.85rem; color: white;"><span class="loading">Analyzing...</span></div>
+                <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end; justify-content: center;">
+                    <div class="arbitrage-label" style="margin-bottom: 12px;">Action Route</div>
+                    <div id="arbitrage-action" style="font-size: 1.1rem; color: white; background: rgba(0,0,0,0.4); padding: 12px 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);"><span class="loading">Analyzing...</span></div>
                 </div>
             </div>
         </div>
 
-        <div class="card card-vault drag-item" data-id="card-arb-vault" style="justify-content: flex-start;">
-            <div class="arbitrage-label" style="color: var(--vault-color); margin-bottom: 25px;">VAULT RELICS FAIR PRICE (ORACLE)</div>
-            <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: auto;">
+        <div class="card card-vault drag-item card-wide" data-id="card-arb-vault" style="display: flex; flex-direction: column; justify-content: space-between;">
+            <div class="arbitrage-label" style="color: var(--vault-color); margin-bottom: 15px; font-size: 0.85rem;">VAULT RELICS FAIR PRICE (ORACLE)</div>
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto;">
                 <div>
-                    <div class="arbitrage-label">Discrepancy</div>
-                    <div class="arbitrage-big-value" id="vault-banner-discrepancy" style="line-height: 1;">-%</div>
+                    <div class="arbitrage-label" style="margin-bottom: 8px;">Discrepancy</div>
+                    <div class="arbitrage-big-value" id="vault-banner-discrepancy" style="font-size: 2.8rem; line-height: 1;">-%</div>
                 </div>
-                <div style="text-align: right;">
-                    <div class="arbitrage-label" style="margin-bottom: 5px;">Action</div>
-                    <div id="vault-arbitrage-action" style="font-size: 0.85rem; color: white;"><span class="loading">Analyzing...</span></div>
+                <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end; justify-content: center;">
+                    <div class="arbitrage-label" style="margin-bottom: 12px;">Market Action</div>
+                    <div id="vault-arbitrage-action" style="font-size: 1.1rem; color: white; background: rgba(0,0,0,0.4); padding: 12px 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);"><span class="loading">Analyzing...</span></div>
                 </div>
             </div>
         </div>
 
-        <div class="card card-vault drag-item" data-id="card-sim-oracle" style="justify-content: center;">
-            <div class="arbitrage-label" style="color: var(--vault-color); margin-bottom: 20px;">NET PROFIT SIMULATOR (ORACLE / ADA)</div>
-            <div style="display: flex; justify-content: space-between; align-items: flex-end;">
-                <div>
-                    <div class="arbitrage-label" style="margin-bottom:5px;">Investment</div>
+        <div class="card card-vault drag-item card-wide" data-id="card-sim-oracle" style="display: flex; flex-direction: column; justify-content: space-between;">
+            <div class="arbitrage-label" style="color: var(--vault-color); margin-bottom: 15px; font-size: 0.85rem;">NET PROFIT SIMULATOR (ORACLE / ADA)</div>
+            
+            <div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 30px;">
+                <div style="flex-shrink: 0;">
+                    <div class="arbitrage-label" style="margin-bottom:8px;">Investment</div>
                     <div style="display: flex; align-items: center;">
-                        <input type="number" id="sim-ada-input" class="sim-input" value="1000" onkeyup="recalculateSimulators()" onchange="recalculateSimulators()"> <span style="font-size: 0.8rem; font-weight: bold; margin-left: 5px;">ADA</span>
+                        <input type="number" id="sim-ada-input" class="sim-input" value="1000" style="width: 140px; font-size: 1.3rem; padding: 12px;" onkeyup="recalculateSimulators()" onchange="recalculateSimulators()"> 
+                        <span style="font-size: 1rem; font-weight: bold; margin-left: 10px;">ADA</span>
                     </div>
                 </div>
-                <div style="text-align: right;">
-                    <div class="arbitrage-label">Net Return (2 Hops)</div>
-                    <div class="arbitrage-big-value" id="sim-profit" style="font-size: 1.5rem; line-height: 1;">- ADA</div>
+                
+                <div style="text-align: right; flex-grow: 1;">
+                    <div class="arbitrage-label" style="margin-bottom: 8px;">Net Return (2 Hops)</div>
+                    <div class="arbitrage-big-value" id="sim-profit" style="font-size: 2.2rem; line-height: 1;">- ADA</div>
                 </div>
             </div>
-            <div class="slippage-container"><div id="sim-slippage-bar" class="slippage-bar" style="background: #10b981;"></div></div>
-            <div id="sim-slippage-label" class="slippage-label">Price Impact: 0.00%</div>
-            <div id="optimizer-result" class="optimizer-text">💡 <b>Auto-Optimizer:</b> Calculating...</div>
+            
+            <div style="margin-top: 25px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div id="optimizer-result" class="optimizer-text" style="margin: 0; border: none; padding: 0;">💡 <b>Auto-Optimizer:</b> Calculating...</div>
+                    <div id="sim-slippage-label" class="slippage-label" style="margin: 0;">Price Impact: 0.00%</div>
+                </div>
+                <div class="slippage-container" style="margin-top: 8px;"><div id="sim-slippage-bar" class="slippage-bar" style="background: #10b981;"></div></div>
+            </div>
         </div>
 
-        <div class="card card-orange drag-item" data-id="card-sim-tri" style="justify-content: center;">
-            <div class="arbitrage-label" style="color: var(--neon-orange); margin-bottom: 20px;">NET PROFIT SIMULATOR (▲VLRM ORACLE ADA▼)</div>
-            <div style="display: flex; justify-content: space-between; align-items: flex-end;">
-                <div>
-                    <div class="arbitrage-label" style="margin-bottom:5px;">Investment</div>
+        <div class="card card-orange drag-item card-wide" data-id="card-sim-tri" style="display: flex; flex-direction: column; justify-content: space-between;">
+            <div class="arbitrage-label" style="color: var(--neon-orange); margin-bottom: 15px; font-size: 0.85rem;">NET PROFIT SIMULATOR TRIANGULAR (▲VLRM ORACLE ADA▼)</div>
+            
+            <div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 30px;">
+                <div style="flex-shrink: 0;">
+                    <div class="arbitrage-label" style="margin-bottom:8px;">Investment</div>
                     <div style="display: flex; align-items: center;">
-                        <input type="number" id="sim-tri-input" class="sim-input" value="1000" onkeyup="recalculateSimulators()" onchange="recalculateSimulators()"> <span style="font-size: 0.8rem; font-weight: bold; margin-left: 5px;">ADA</span>
+                        <input type="number" id="sim-tri-input" class="sim-input" value="1000" style="width: 140px; font-size: 1.3rem; padding: 12px;" onkeyup="recalculateSimulators()" onchange="recalculateSimulators()"> 
+                        <span style="font-size: 1rem; font-weight: bold; margin-left: 10px;">ADA</span>
                     </div>
                 </div>
-                <div style="text-align: right;">
-                    <div class="arbitrage-label">Net Return (3 Hops)</div>
-                    <div class="arbitrage-big-value" id="sim-tri-profit" style="font-size: 1.5rem; line-height: 1;">- ADA</div>
+                
+                <div style="text-align: right; flex-grow: 1;">
+                    <div class="arbitrage-label" style="margin-bottom: 8px;">Net Return (3 Hops)</div>
+                    <div class="arbitrage-big-value" id="sim-tri-profit" style="font-size: 2.2rem; line-height: 1;">- ADA</div>
                 </div>
             </div>
-            <div class="slippage-container"><div id="sim-tri-slippage-bar" class="slippage-bar" style="background: #10b981;"></div></div>
-            <div id="sim-tri-slippage-label" class="slippage-label">Max Price Impact: 0.00%</div>
-            <div id="tri-optimizer-result" class="optimizer-text">💡 <b>Auto-Optimizer:</b> Calculating...</div>
+            
+            <div style="margin-top: 25px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div id="tri-optimizer-result" class="optimizer-text" style="margin: 0; border: none; padding: 0;">💡 <b>Auto-Optimizer:</b> Calculating...</div>
+                    <div id="sim-tri-slippage-label" class="slippage-label" style="margin: 0;">Max Price Impact: 0.00%</div>
+                </div>
+                <div class="slippage-container" style="margin-top: 8px;"><div id="sim-tri-slippage-bar" class="slippage-bar" style="background: #10b981;"></div></div>
+            </div>
         </div>
 
         <div class="card card-ada drag-item" data-id="card-ada">
@@ -904,30 +916,35 @@
             const rB = document.getElementById('route-b-container');
             const triAnim = document.getElementById('tri-anim-path');
 
-            rA.className = "route-inactive"; rB.className = "route-inactive";
-            triAnim.style.display = "none";
+            if(rA) rA.className = "route-inactive"; 
+            if(rB) rB.className = "route-inactive";
+            if(triAnim) triAnim.style.display = "none";
 
             if (bestProfit > 0) { 
                 optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> Max profit <b>+${bestProfit.toFixed(2)} ADA</b> (Invest <b>${optimalInvest} ADA</b>)`; 
                 optEl.style.color = '#10b981'; 
                 
-                triEl.innerText = `+${bestPercent.toFixed(2)}%`; 
-                triEl.style.color = "#10b981";
+                if(triEl) {
+                    triEl.innerText = `+${bestPercent.toFixed(2)}%`; 
+                    triEl.style.color = "#10b981";
+                }
                 
-                triAnim.style.display = "block";
+                if(triAnim) triAnim.style.display = "block";
                 if (optimalRoute === 'A') {
-                    rA.className = "route-active";
-                    triAnim.className = "tri-line-active"; 
+                    if(rA) rA.className = "route-active";
+                    if(triAnim) triAnim.className = "tri-line-active"; 
                 }
                 if (optimalRoute === 'B') {
-                    rB.className = "route-active";
-                    triAnim.className = "tri-line-active route-reverse"; 
+                    if(rB) rB.className = "route-active";
+                    if(triAnim) triAnim.className = "tri-line-active route-reverse"; 
                 }
             } else { 
                 optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> No profitable route (fees > spread).`; 
                 optEl.style.color = 'var(--text-secondary)'; 
-                triEl.innerText = "0.00%"; 
-                triEl.style.color = "var(--text-secondary)";
+                if(triEl) {
+                    triEl.innerText = "0.00%"; 
+                    triEl.style.color = "var(--text-secondary)";
+                }
             }
         }
 
@@ -1156,9 +1173,7 @@
                         if (Math.abs(bestDeviation) >= conf.vaultAlert) {
                             const alertToggle = document.getElementById('alert-toggle'); const now = Date.now();
                             if (alertToggle && alertToggle.checked && (now - lastVaultAlertTime > ALERT_COOLDOWN)) {
-                                playDing(); 
-                                if (Notification.permission === "granted") { new Notification("🏛️ L4VA Vault Alert!", { body: `Discrepancy: ${bestDeviation.toFixed(2)}%\nAction: ${bestDeviation > 0 ? 'Sell' : 'Buy'} on ${targetDexForVault}` }); }
-                                sendTelegramAlert(`🏛️ <b>L4VA Vault Alert!</b>\n\n⚖️ Fair Price Discrepancy: <b>${bestDeviation > 0 ? '+' : ''}${bestDeviation.toFixed(2)}%</b>\n💡 Action: ${bestDeviation > 0 ? 'Sell' : 'Buy'} on ${targetDexForVault}\n\n<i>Check dashboard for real-time data.</i>`);
+                                // No alert sound/TG
                                 lastVaultAlertTime = now;
                             }
                         }
@@ -1183,15 +1198,6 @@
                         spreadEl.style.color = "#ffffff"; 
                         if (priceVyfi > priceMin) { actionEl.innerHTML = `Buy <a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Minswap</a> ➔ Sell <a href="${VYFI_LINK}" target="_blank" class="badge-dark">VyFi</a>`; suggestedActionText = "Buy Minswap, Sell VyFi"; } 
                         else { actionEl.innerHTML = `Buy <a href="${VYFI_LINK}" target="_blank" class="badge-dark">VyFi</a> ➔ Sell <a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Minswap</a>`; suggestedActionText = "Buy VyFi, Sell Minswap"; }
-                    }
-
-                    if (spread >= conf.alert) {
-                        const alertToggle = document.getElementById('alert-toggle'); const now = Date.now();
-                        if (alertToggle && alertToggle.checked && (now - lastAlertTime > ALERT_COOLDOWN)) {
-                            playDing(); if (Notification.permission === "granted") { new Notification("🚨 L4VA Arbitrage Detected!", { body: `Spread: ${spread.toFixed(2)}%\n${suggestedActionText}` }); }
-                            sendTelegramAlert(`🚨 <b>L4VA Arbitrage Detected!</b>\n\n📈 DEX Spread: <b>${spread.toFixed(2)}%</b>\n💡 Route: ${suggestedActionText}\n\n<i>Check dashboard for real-time net profit.</i>`);
-                            lastAlertTime = now;
-                        }
                     }
                 }
                 
