@@ -12,7 +12,8 @@
 
     <title>L4VA Protocol | Arbitrage Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script> <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --card-bg: #120f24;
@@ -128,10 +129,14 @@
         .bg-vyfi { background: var(--badge-vyfi-bg); color: var(--badge-vyfi-text); border-color: var(--badge-vyfi-text); }
         .bg-minswap { background: var(--badge-min-bg); color: var(--badge-min-text); border-color: var(--badge-min-text); }
 
-        /* NUEVO: ESTILOS DEL BANNER PRINCIPAL CON LA IMAGEN SUBIDA */
+        /* NUEVO: ESTILOS DEL BANNER PRINCIPAL A PRUEBA DE FALLOS */
         .arbitrage-section { 
             grid-column: 1 / -1; 
-            background: linear-gradient(rgba(10, 8, 20, 0.7), rgba(10, 8, 20, 0.85)), url('l4vabanner.jpg') center/cover no-repeat !important; 
+            background-color: #150f26 !important; /* Color de respaldo sólido por si falla la imagen */
+            background-image: linear-gradient(rgba(10, 8, 20, 0.7), rgba(10, 8, 20, 0.85)), url('./l4vabanner.jpg') !important; 
+            background-size: cover !important;
+            background-position: center !important;
+            background-repeat: no-repeat !important;
             border: 1px solid rgba(255, 123, 0, 0.3); 
             box-shadow: 0 15px 40px -10px rgba(0, 0, 0, 0.8), inset 0 0 60px rgba(94, 42, 0, 0.3), 0 0 20px rgba(255, 123, 0, 0.15); 
             padding: 20px 25px; 
@@ -490,7 +495,7 @@
     </div>
 
     <div class="footer-disclaimer">
-        This page is for informational purposes only. Nothing on this website constitutes investment advice. Always do your own research.
+        This page is for informational purposes only. Nothing on this website constitutes investment advice. Always do your research.
     </div>
 
     <script>
