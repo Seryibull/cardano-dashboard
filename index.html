@@ -96,7 +96,7 @@
         .card { border-radius: 20px; padding: 20px 25px; position: relative; background: rgba(18, 15, 36, 0.85); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); transition: transform 0.3s ease, box-shadow 0.3s ease; min-height: 280px; display: flex; flex-direction: column; justify-content: space-between;}
         .card:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 123, 0, 0.15); border-color: rgba(255, 123, 0, 0.3); }
 
-        /* CODIFICACIÓN DE COLORES AÚN MÁS OSCURA (Para mejor contraste de los datos) */
+        /* CODIFICACIÓN DE COLORES AÚN MÁS OSCURA */
         .card-ada { background: rgba(12, 14, 24, 0.96); border-color: rgba(66, 133, 244, 0.2); }
         .card-ada:hover { border-color: rgba(66, 133, 244, 0.5); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(66, 133, 244, 0.2); background: rgba(16, 18, 30, 1); }
 
@@ -129,8 +129,14 @@
         .arbitrage-grid { display: grid; grid-template-columns: 1fr; gap: 20px; position: relative; z-index: 2;}
         @media (min-width: 900px) { .arbitrage-grid { grid-template-columns: 1fr 1fr; } }
 
-        .arbitrage-box { background: rgba(20, 5, 35, 0.8); padding: 20px; border-radius: 18px; transition: all 0.3s ease; position: relative; border: 1px solid rgba(255, 123, 0, 0.15); backdrop-filter: blur(10px); box-shadow: 0 8px 25px rgba(0,0,0,0.5); }
-        .arbitrage-box:hover { border-color: rgba(255, 123, 0, 0.4); background: rgba(20, 5, 35, 0.95); transform: translateY(-2px); }
+        /* CLASES ESPECÍFICAS PARA RECUADROS INTERNOS (Con la codificación de color) */
+        .arbitrage-box { padding: 20px; border-radius: 18px; transition: all 0.3s ease; position: relative; border: 1px solid; backdrop-filter: blur(10px); box-shadow: 0 8px 25px rgba(0,0,0,0.5); }
+        
+        .arbitrage-box-vault { background: rgba(22, 16, 6, 0.96); border-color: rgba(252, 211, 77, 0.2); }
+        .arbitrage-box-vault:hover { border-color: rgba(252, 211, 77, 0.5); background: rgba(26, 19, 8, 1); transform: translateY(-2px); box-shadow: 0 12px 30px rgba(0,0,0,0.7), 0 0 20px rgba(252, 211, 77, 0.2); }
+        
+        .arbitrage-box-orange { background: rgba(22, 10, 4, 0.96); border-color: rgba(255, 123, 0, 0.2); }
+        .arbitrage-box-orange:hover { border-color: rgba(255, 123, 0, 0.5); background: rgba(28, 12, 5, 1); transform: translateY(-2px); box-shadow: 0 12px 30px rgba(0,0,0,0.7), 0 0 20px rgba(255, 123, 0, 0.2); }
 
         .arbitrage-label { color: rgba(255, 255, 255, 0.75); font-size: 0.75rem; text-transform: uppercase; font-weight: 800; margin-bottom: 5px; letter-spacing: 0.5px;}
         .arbitrage-big-value { font-size: 1.8rem; font-weight: 900; color: #ffffff; text-shadow: 0 2px 10px rgba(0,0,0,0.5); transition: all 0.3s ease; }
@@ -264,8 +270,8 @@
             </div>
             
             <div class="arbitrage-grid">
-                <div class="arbitrage-box">
-                    <div class="arbitrage-label" style="color: var(--ada-color); margin-bottom: 8px;">DEX Arbitrage (ORACLE)</div>
+                <div class="arbitrage-box arbitrage-box-vault">
+                    <div class="arbitrage-label" style="color: var(--vault-color); margin-bottom: 8px;">DEX ARBITRAGE (ORACLE / ADA)</div>
                     <div style="display: flex; justify-content: space-between; align-items: flex-end;">
                         <div>
                             <div class="arbitrage-label">Spread</div>
@@ -278,7 +284,7 @@
                     </div>
                 </div>
 
-                <div class="arbitrage-box">
+                <div class="arbitrage-box arbitrage-box-vault">
                     <div class="arbitrage-label" style="color: var(--vault-color); margin-bottom: 8px;">VAULT RELICS FAIR PRICE (ORACLE)</div>
                     <div style="display: flex; justify-content: space-between; align-items: flex-end;">
                         <div>
@@ -292,8 +298,8 @@
                     </div>
                 </div>
 
-                <div class="arbitrage-box" style="display: flex; flex-direction: column; justify-content: center;">
-                    <div class="arbitrage-label" style="color: var(--vault-color); margin-bottom: 12px;">NET PROFIT SIMULATOR (ORACLE)</div>
+                <div class="arbitrage-box arbitrage-box-vault" style="display: flex; flex-direction: column; justify-content: center;">
+                    <div class="arbitrage-label" style="color: var(--vault-color); margin-bottom: 12px;">NET PROFIT SIMULATOR (ORACLE / ADA)</div>
                     <div style="display: flex; justify-content: space-between; align-items: flex-end;">
                         <div>
                             <div class="arbitrage-label" style="margin-bottom:5px;">Investment</div>
@@ -311,8 +317,8 @@
                     <div id="optimizer-result" class="optimizer-text">💡 <b>Auto-Optimizer:</b> Calculating...</div>
                 </div>
 
-                <div class="arbitrage-box" style="display: flex; flex-direction: column; justify-content: center;">
-                    <div class="arbitrage-label" style="color: var(--neon-orange); margin-bottom: 12px;">NET PROFIT SIMULATOR TRIANGULAR</div>
+                <div class="arbitrage-box arbitrage-box-orange" style="display: flex; flex-direction: column; justify-content: center;">
+                    <div class="arbitrage-label" style="color: var(--neon-orange); margin-bottom: 12px;">NET PROFIT SIMULATOR TRIANGULAR (▲VLRM ORACLE ADA▼)</div>
                     <div style="display: flex; justify-content: space-between; align-items: flex-end;">
                         <div>
                             <div class="arbitrage-label" style="margin-bottom:5px;">Investment</div>
