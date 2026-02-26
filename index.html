@@ -150,10 +150,6 @@
         .arbitrage-section { grid-column: 1 / -1; background: var(--gradient-dark-plasma) !important; border: 1px solid rgba(255, 123, 0, 0.25); box-shadow: 0 15px 40px -10px rgba(0, 0, 0, 0.8), inset 0 0 60px rgba(94, 42, 0, 0.6), 0 0 20px rgba(255, 123, 0, 0.1); padding: 20px 25px; transition: all 0.3s ease; position: relative; overflow: hidden; min-height: auto; display: block;}
         .arbitrage-section:hover { transform: translateY(-3px); box-shadow: 0 25px 50px -10px rgba(0, 0, 0, 0.9), inset 0 0 80px rgba(120, 50, 0, 0.7), 0 0 30px rgba(255, 123, 0, 0.2); border-color: rgba(255, 123, 0, 0.5); }
 
-        @keyframes defcon-pulse { 0% { box-shadow: 0 0 0 0 rgba(255, 15, 91, 0.4); border-color: rgba(255, 15, 91, 0.5); } 70% { box-shadow: 0 0 20px 10px rgba(255, 15, 91, 0); border-color: rgba(255, 15, 91, 0.1); } 100% { box-shadow: 0 0 0 0 rgba(255, 15, 91, 0); border-color: rgba(255, 15, 91, 0.5); } }
-        .defcon-active { animation: defcon-pulse 2s infinite !important; background: linear-gradient(135deg, #3a080e 0%, #5e0000 100%) !important; }
-        .defcon-active:hover { transform: translateY(-3px) !important; }
-
         .arbitrage-banner-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; border-bottom: 1px solid rgba(255, 123, 0, 0.2); padding-bottom: 15px; margin-bottom: 20px; position: relative; z-index: 2;}
         .arbitrage-grid { display: grid; grid-template-columns: 1fr; gap: 20px; position: relative; z-index: 2;}
         @media (min-width: 900px) { .arbitrage-grid { grid-template-columns: 1fr 1fr; } }
@@ -218,18 +214,15 @@
         .setting-row { margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem;}
         .setting-input { width: 60px; padding: 5px; border-radius: 5px; border: none; background: rgba(255,255,255,0.1); color: white; text-align: center; font-family: 'Inter', sans-serif;}
         .setting-input-text { width: 130px; padding: 5px; border-radius: 5px; border: none; background: rgba(255,255,255,0.1); color: white; font-family: 'Inter', sans-serif;}
+        
         .btn-save { background: var(--gradient-fire); color: white; border: none; padding: 12px; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 15px; transition: transform 0.2s;}
         .btn-save:hover { transform: scale(1.02); }
         
-        h3.dex-subtitle { margin: 0 0 10px 0; font-size: 0.9rem; display: inline-block; }
-        
-        .merged-section-grid { display: grid; grid-template-columns: 1fr; gap: 30px; }
-        @media (min-width: 900px) { .merged-section-grid { grid-template-columns: 55fr 45fr; } .merged-right-col { border-left: 1px solid rgba(255,255,255,0.1); padding-left: 30px; } }
+        /* Botón secundario para hacer reset */
+        .btn-reset { background: rgba(255, 255, 255, 0.05); color: var(--text-secondary); border: 1px solid rgba(255,255,255,0.1); padding: 10px; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.2s; font-size: 0.85rem;}
+        .btn-reset:hover { background: rgba(255, 255, 255, 0.1); color: white; border-color: rgba(255,255,255,0.3); }
 
-        .log-entry { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.85rem; align-items: center;}
-        .log-time { color: var(--text-secondary); font-size: 0.75rem; width: 80px;}
-        .log-spread { font-weight: bold; width: 70px; text-align: left; }
-        .log-route { flex-grow: 1; text-align: right; color: rgba(255,255,255,0.8);}
+        h3.dex-subtitle { margin: 0 0 10px 0; font-size: 0.9rem; display: inline-block; }
         
         /* Footer fuera del grid principal para que no se arrastre */
         .footer-disclaimer { text-align: center; color: rgba(255,255,255,0.4); font-size: 0.75rem; padding: 20px 20px; font-style: italic; margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.05); max-width: 1200px; margin-left: auto; margin-right: auto;}
@@ -288,6 +281,7 @@
             <div class="setting-row"><span>Chat ID</span><input type="text" id="set-tg-chat" class="setting-input-text" placeholder="12345678"></div>
             
             <button class="btn-save" onclick="saveSettings()">Save & Apply</button>
+            <button class="btn-reset" onclick="resetLayout()">🔄 Restore Default Layout</button>
         </div>
     </div>
 
@@ -506,13 +500,6 @@
             </div>
         </div>
 
-        <div class="card drag-item" data-id="card-log" style="grid-column: 1 / -1; padding: 20px 25px; min-height: auto; background: rgba(10, 12, 20, 0.98);">
-            <div class="card-title" style="margin-bottom: 10px; color: #ffffff;">Opportunity Log (Daily Hunts) 📖</div>
-            <div id="opp-log" style="max-height: 250px; overflow-y: auto; padding-right: 10px;">
-                <div style="color: var(--text-secondary); text-align: center; padding: 20px; font-style: italic;">Waiting for high-spread opportunities...</div>
-            </div>
-        </div>
-
     </div>
 
     <div class="footer-disclaimer">
@@ -656,6 +643,14 @@
             }
         }
 
+        // 🔄 RESTAURAR LAYOUT POR DEFECTO
+        function resetLayout() {
+            if(confirm("Are you sure you want to restore the default dashboard layout?")) {
+                localStorage.removeItem('l4va_layout');
+                location.reload(); // Recarga para volver a pintar el HTML original
+            }
+        }
+
         function closeModals() { document.getElementById('settings-modal').style.display = 'none'; }
         
         function openSettings() { 
@@ -686,16 +681,6 @@
             document.getElementById('sim-ada-input').value = conf.sim; 
             document.getElementById('sim-tri-input').value = conf.sim; 
             closeModals(); recalculateSimulators();
-        }
-
-        function addToLog(spread, routeText, color = "#ffffff") {
-            const logEl = document.getElementById('opp-log');
-            if(logEl.innerText.includes("Waiting")) logEl.innerHTML = '';
-            const time = new Date().toLocaleTimeString();
-            const div = document.createElement('div');
-            div.className = "log-entry";
-            div.innerHTML = `<div class="log-time">${time}</div><div class="log-spread" style="color:${color};">+${spread.toFixed(2)}%</div><div class="log-route">${routeText}</div>`;
-            logEl.prepend(div);
         }
 
         async function sendTelegramAlert(message) {
@@ -1219,7 +1204,6 @@
                                 playDing(); 
                                 if (Notification.permission === "granted") { new Notification("🏛️ L4VA Vault Alert!", { body: `Discrepancy: ${bestDeviation.toFixed(2)}%\nAction: ${bestDeviation > 0 ? 'Sell' : 'Buy'} on ${targetDexForVault}` }); }
                                 sendTelegramAlert(`🏛️ <b>L4VA Vault Alert!</b>\n\n⚖️ Fair Price Discrepancy: <b>${bestDeviation > 0 ? '+' : ''}${bestDeviation.toFixed(2)}%</b>\n💡 Action: ${bestDeviation > 0 ? 'Sell' : 'Buy'} on ${targetDexForVault}\n\n<i>Check dashboard for real-time data.</i>`);
-                                addToLog(Math.abs(bestDeviation), `Vault Arb (${bestDeviation > 0 ? 'Sell' : 'Buy'} ${targetDexForVault})`, bestDeviation > 0 ? "#10b981" : "var(--neon-red)");
                                 lastVaultAlertTime = now;
                             }
                         }
@@ -1251,7 +1235,6 @@
                         if (alertToggle && alertToggle.checked && (now - lastAlertTime > ALERT_COOLDOWN)) {
                             playDing(); if (Notification.permission === "granted") { new Notification("🚨 L4VA Arbitrage Detected!", { body: `Spread: ${spread.toFixed(2)}%\n${suggestedActionText}` }); }
                             sendTelegramAlert(`🚨 <b>L4VA Arbitrage Detected!</b>\n\n📈 DEX Spread: <b>${spread.toFixed(2)}%</b>\n💡 Route: ${suggestedActionText}\n\n<i>Check dashboard for real-time net profit.</i>`);
-                            addToLog(spread, suggestedActionText, "#ffffff");
                             lastAlertTime = now;
                         }
                     }
@@ -1276,15 +1259,15 @@
                 }
                 
                 if (bestTriProfit > 0 && bestTriPercent >= conf.alert && (Date.now() - lastAlertTime > 60000)) { 
-                    addToLog(bestTriPercent, triRoute === 'A' ? "Triangular Route A" : "Triangular Route B", "#10b981");
+                    // Ya no llamamos a addToLog, solo avisa por telegram/sonido si lo programamos
                 }
 
             } catch (error) { console.error("General error:", error); }
         }
 
         async function startEngine() {
-            initSortable(); // 1. Primero ordenamos las tarjetas
-            initCharts();   // 2. Luego pintamos los gráficos
+            initSortable(); 
+            initCharts();   
             await fetchHistoryFromCloudflare();
             await fetchAdaData();
             await fetchDexData();
