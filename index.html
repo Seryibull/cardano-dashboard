@@ -96,6 +96,7 @@
         .card { border-radius: 20px; padding: 20px 25px; position: relative; background: rgba(18, 15, 36, 0.85); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); transition: transform 0.3s ease, box-shadow 0.3s ease; min-height: 280px; display: flex; flex-direction: column; justify-content: space-between;}
         .card:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 123, 0, 0.15); border-color: rgba(255, 123, 0, 0.3); }
 
+        /* CODIFICACIÓN DE COLORES OSCURA */
         .card-ada { background: rgba(12, 14, 24, 0.96); border-color: rgba(66, 133, 244, 0.2); }
         .card-ada:hover { border-color: rgba(66, 133, 244, 0.5); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(66, 133, 244, 0.2); background: rgba(16, 18, 30, 1); }
 
@@ -128,6 +129,7 @@
         .arbitrage-grid { display: grid; grid-template-columns: 1fr; gap: 20px; position: relative; z-index: 2;}
         @media (min-width: 900px) { .arbitrage-grid { grid-template-columns: 1fr 1fr; } }
 
+        /* CLASES ESPECÍFICAS PARA RECUADROS INTERNOS */
         .arbitrage-box { padding: 20px; border-radius: 18px; transition: all 0.3s ease; position: relative; border: 1px solid; backdrop-filter: blur(10px); box-shadow: 0 8px 25px rgba(0,0,0,0.5); }
         
         .arbitrage-box-vault { background: rgba(22, 16, 6, 0.96); border-color: rgba(252, 211, 77, 0.2); }
@@ -160,6 +162,7 @@
         .slippage-bar { height: 100%; width: 0%; border-radius: 4px; transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); box-shadow: 0 0 10px currentColor;}
         .slippage-label { font-size: 0.7rem; color: var(--text-secondary); text-align: right; margin-top: 6px; font-weight: 600;}
 
+        /* TRIANGULO AMPLIADO Y MEJORADO */
         .tri-wrapper { position: relative; width: 100%; max-width: 250px; height: 200px; margin: 25px auto 25px auto; }
         .tri-node { position: absolute; width: 50px; height: 50px; background: rgba(18, 15, 36, 0.9); border: 2px solid rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: bold; color: white; z-index: 2; box-shadow: 0 0 15px rgba(0,0,0,0.8); backdrop-filter: blur(5px);}
         .node-ada { top: 0; left: calc(50% - 25px); border-color: var(--ada-color); color: var(--ada-color);}
@@ -513,7 +516,6 @@
         
         const MAX_CHART_POINTS = 2880;
         
-        // Añadida vlrmOracleSpread a los arrays históricos
         let chartHistory = { 
             labels: [], spread: [], discrepancy: [], vlrmOracleSpread: [],
             vlrmAda: [], vlrmOracle: [], oracleVyfi: [], oracleMin: [], vault: [], totalLiq: [],
@@ -625,9 +627,9 @@
             chartInstance = new Chart(ctx, {
                 type: 'line',
                 data: { labels: chartHistory.labels, datasets: [
-                    { label: 'ORACLE / ADA spread', data: chartHistory.spread, borderColor: '#4285f4', tension: 0.4, borderWidth: 2, pointRadius: 0, spanGaps: true },
+                    { label: 'ORACLE / ADA spread %', data: chartHistory.spread, borderColor: '#4285f4', tension: 0.4, borderWidth: 2, pointRadius: 0, spanGaps: true },
                     { label: 'Vault Discrepancy %', data: chartHistory.discrepancy, borderColor: '#fcd34d', tension: 0.4, borderWidth: 2, pointRadius: 0, spanGaps: true },
-                    { label: 'VLRM / ORACLE spread', data: chartHistory.vlrmOracleSpread, borderColor: '#ff7b00', tension: 0.4, borderWidth: 2, pointRadius: 0, spanGaps: true }
+                    { label: 'VLRM / ORACLE spread %', data: chartHistory.vlrmOracleSpread, borderColor: '#ff7b00', tension: 0.4, borderWidth: 2, pointRadius: 0, spanGaps: true }
                 ]},
                 options: { 
                     responsive: true, maintainAspectRatio: false, 
@@ -690,6 +692,7 @@
             chartHistory.spread.push(spread);
             chartHistory.discrepancy.push(discrepancy);
             chartHistory.vlrmOracleSpread.push(vlrmOracleSpread);
+            
             if(chartHistory.labels.length > MAX_CHART_POINTS) {
                 chartHistory.labels.shift(); chartHistory.spread.shift(); chartHistory.discrepancy.shift(); chartHistory.vlrmOracleSpread.shift();
             }
@@ -914,7 +917,6 @@
                 
                 if (cloudHistory && cloudHistory.labels && cloudHistory.labels.length > 0) {
                     let expandedHistory = { labels: [], spread: [], discrepancy: [], vlrmOracleSpread: [], vlrmAda: [], vlrmOracle: [], oracleVyfi: [], oracleMin: [], vault: [], totalLiq: [], pVlrmAda: [], pVlrmOracle: [], pOracleVyfi: [], pOracleMin: [] };
-                    let hasPrices = cloudHistory.pVlrmAda && cloudHistory.pVlrmAda.length > 0;
 
                     for (let i = 0; i < cloudHistory.labels.length; i++) {
                         for(let j=0; j<30; j++) {
@@ -922,12 +924,15 @@
                             expandedHistory.spread.push(cloudHistory.spread[i]);
                             expandedHistory.discrepancy.push(cloudHistory.discrepancy[i]);
                             
-                            // Calculamos el spread VLRM/ORACLE retroactivo usando los precios en ADA guardados
-                            let vPrice = hasPrices ? cloudHistory.pVlrmAda[i] : null;
-                            let oPrice = hasPrices ? (cloudHistory.pOracleVyfi[i] > 0 ? cloudHistory.pOracleVyfi[i] : cloudHistory.pOracleMin[i]) : null;
+                            // Cálculo histórico exacto del spread de ADA entre VLRM y ORACLE
+                            let vPrice = cloudHistory.pVlrmAda ? cloudHistory.pVlrmAda[i] : null;
+                            let oPriceVy = cloudHistory.pOracleVyfi ? cloudHistory.pOracleVyfi[i] : null;
+                            let oPriceMin = cloudHistory.pOracleMin ? cloudHistory.pOracleMin[i] : null;
+                            let oPrice = (oPriceVy && oPriceVy > 0) ? oPriceVy : oPriceMin;
+                            
                             let voSpread = null;
-                            if (vPrice > 0 && oPrice > 0) {
-                                voSpread = ((Math.max(vPrice, oPrice) - Math.min(vPrice, oPrice)) / Math.min(vPrice, oPrice)) * 100;
+                            if (vPrice !== null && oPrice !== null && vPrice > 0 && oPrice > 0) {
+                                voSpread = ((oPrice - vPrice) / vPrice) * 100;
                             }
                             expandedHistory.vlrmOracleSpread.push(voSpread);
 
@@ -937,31 +942,46 @@
                             expandedHistory.oracleMin.push(cloudHistory.oracleMin[i]);
                             expandedHistory.vault.push(cloudHistory.vault[i]);
                             expandedHistory.totalLiq.push((cloudHistory.oracleVyfi[i] || 0) + (cloudHistory.oracleMin[i] || 0));
-                            expandedHistory.pVlrmAda.push(hasPrices ? cloudHistory.pVlrmAda[i] : null);
-                            expandedHistory.pVlrmOracle.push(hasPrices ? cloudHistory.pVlrmOracle[i] : null);
-                            expandedHistory.pOracleVyfi.push(hasPrices ? cloudHistory.pOracleVyfi[i] : null);
-                            expandedHistory.pOracleMin.push(hasPrices ? cloudHistory.pOracleMin[i] : null);
+                            expandedHistory.pVlrmAda.push(vPrice);
+                            expandedHistory.pVlrmOracle.push(cloudHistory.pVlrmOracle ? cloudHistory.pVlrmOracle[i] : null);
+                            expandedHistory.pOracleVyfi.push(oPriceVy);
+                            expandedHistory.pOracleMin.push(oPriceMin);
                         }
                     }
+
+                    // REGLA DE RELLENO 24H: Si faltan datos, estiramos el valor más antiguo conocido
                     const missingPoints = MAX_CHART_POINTS - expandedHistory.labels.length;
                     if (missingPoints > 0) {
-                        const nullArray = Array(missingPoints).fill(null);
                         const emptyLabels = Array(missingPoints).fill('');
                         expandedHistory.labels = [...emptyLabels, ...expandedHistory.labels];
-                        expandedHistory.spread = [...nullArray, ...expandedHistory.spread];
-                        expandedHistory.discrepancy = [...nullArray, ...expandedHistory.discrepancy];
-                        expandedHistory.vlrmOracleSpread = [...nullArray, ...expandedHistory.vlrmOracleSpread];
-                        expandedHistory.vlrmAda = [...nullArray, ...expandedHistory.vlrmAda];
-                        expandedHistory.vlrmOracle = [...nullArray, ...expandedHistory.vlrmOracle];
-                        expandedHistory.oracleVyfi = [...nullArray, ...expandedHistory.oracleVyfi];
-                        expandedHistory.oracleMin = [...nullArray, ...expandedHistory.oracleMin];
-                        expandedHistory.vault = [...nullArray, ...expandedHistory.vault];
-                        expandedHistory.totalLiq = [...nullArray, ...expandedHistory.totalLiq];
-                        expandedHistory.pVlrmAda = [...nullArray, ...expandedHistory.pVlrmAda];
-                        expandedHistory.pVlrmOracle = [...nullArray, ...expandedHistory.pVlrmOracle];
-                        expandedHistory.pOracleVyfi = [...nullArray, ...expandedHistory.pOracleVyfi];
-                        expandedHistory.pOracleMin = [...nullArray, ...expandedHistory.pOracleMin];
+
+                        const keys = Object.keys(expandedHistory);
+                        for (let key of keys) {
+                            if (key === 'labels') continue;
+                            // Encontrar el primer valor válido de este gráfico
+                            let firstVal = expandedHistory[key].find(v => v !== null && v !== undefined && !isNaN(v));
+                            if (firstVal === undefined) firstVal = 0;
+                            
+                            const padArr = Array(missingPoints).fill(firstVal);
+                            expandedHistory[key] = [...padArr, ...expandedHistory[key]];
+                        }
                     }
+
+                    // Asegurar línea continua reparando huecos internos (Forward-Fill)
+                    const keysFill = Object.keys(expandedHistory);
+                    for (let key of keysFill) {
+                        if (key === 'labels') continue;
+                        let lastGood = 0;
+                        for (let k = 0; k < expandedHistory[key].length; k++) {
+                            let val = expandedHistory[key][k];
+                            if (val !== null && val !== undefined && !isNaN(val)) {
+                                lastGood = val;
+                            } else {
+                                expandedHistory[key][k] = lastGood;
+                            }
+                        }
+                    }
+                    
                     if (expandedHistory.labels.length > MAX_CHART_POINTS) {
                         const diff = expandedHistory.labels.length - MAX_CHART_POINTS;
                         Object.keys(expandedHistory).forEach(key => { expandedHistory[key] = expandedHistory[key].slice(diff); });
@@ -1088,7 +1108,6 @@
                 
                 if (vaultTvlData > 0) {
                     const fairPrice = vaultTvlData / ORACLE_TOTAL_SUPPLY;
-                    document.getElementById('vault-tvl').innerText = `₳ ${Math.round(vaultTvlData).toLocaleString()}`; document.getElementById('vault-fair-price').innerText = `₳ ${fairPrice.toFixed(6)}`;
                     let validPrices = [];
                     if (priceVyfi > 0) validPrices.push({ dex: "VyFi", price: priceVyfi }); if (priceMin > 0) validPrices.push({ dex: "Minswap", price: priceMin });
 
@@ -1151,11 +1170,11 @@
                     }
                 }
                 
-                // CALCULO DE VLRM / ORACLE SPREAD PARA EL GRÁFICO
+                // CALCULO DE VLRM / ORACLE SPREAD PARA EL GRÁFICO (Diferencia de ADA en %)
                 let primaryOraclePrice = priceVyfi > 0 ? priceVyfi : priceMin;
                 let voSpread = 0;
                 if (priceVlrmAda > 0 && primaryOraclePrice > 0) {
-                    voSpread = ((Math.max(priceVlrmAda, primaryOraclePrice) - Math.min(priceVlrmAda, primaryOraclePrice)) / Math.min(priceVlrmAda, primaryOraclePrice)) * 100;
+                    voSpread = ((primaryOraclePrice - priceVlrmAda) / priceVlrmAda) * 100;
                 }
 
                 const mainBanner = document.getElementById('main-banner');
