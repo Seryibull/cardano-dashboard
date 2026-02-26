@@ -42,7 +42,7 @@
             min-height: 100vh; 
         }
 
-        /* 🔒 ESTILOS DEL ESCUDO API (PANTALLA DE BLOQUEO) */
+        /* 🔒 ESTILOS DEL ESCUDO API */
         #auth-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(10, 8, 20, 0.95); backdrop-filter: blur(20px);
@@ -118,9 +118,9 @@
         /* Tarjetas compactas */
         .card-compact { min-height: 120px; }
 
-        /* CODIFICACIÓN DE COLORES */
-        .card-ada { background: rgba(12, 14, 24, 0.96); border-color: rgba(66, 133, 244, 0.2); }
-        .card-ada:hover { border-color: rgba(66, 133, 244, 0.5); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(66, 133, 244, 0.2); background: rgba(16, 18, 30, 1); }
+        /* CODIFICACIÓN DE COLORES (NUEVO: ADA Y CHART AÚN MÁS OSCUROS) */
+        .card-ada { background: rgba(8, 10, 16, 0.98); border-color: rgba(66, 133, 244, 0.2); }
+        .card-ada:hover { border-color: rgba(66, 133, 244, 0.5); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(66, 133, 244, 0.2); background: rgba(12, 15, 24, 1); }
 
         /* Oscurecidos nivel abismo */
         .card-vault { background: rgba(14, 10, 4, 0.98); border-color: rgba(252, 211, 77, 0.2); }
@@ -136,8 +136,9 @@
         .arbitrage-box-orange { background: rgba(14, 6, 2, 0.98); border-color: rgba(255, 123, 0, 0.2); }
         .arbitrage-box-orange:hover { border-color: rgba(255, 123, 0, 0.5); background: rgba(18, 8, 3, 1); transform: translateY(-2px); box-shadow: 0 12px 30px rgba(0,0,0,0.7), 0 0 20px rgba(255, 123, 0, 0.2); }
 
-        .card-title { font-size: 1.05rem; font-weight: 600; margin-bottom: 15px; color: var(--neon-orange); display: flex; justify-content: space-between; align-items: center; text-transform: uppercase;}
-        .card-title.ada-title { color: var(--ada-color); text-shadow: 0 0 10px rgba(66, 133, 244, 0.3); text-transform: none;}
+        /* Card title sin text-transform para respetar las mayúsculas/minúsculas exactas */
+        .card-title { font-size: 1.05rem; font-weight: 600; margin-bottom: 15px; color: var(--neon-orange); display: flex; justify-content: space-between; align-items: center;}
+        .card-title.ada-title { color: var(--ada-color); text-shadow: 0 0 10px rgba(66, 133, 244, 0.3);}
         
         .data-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 0.95rem; }
         .data-label { color: var(--text-secondary); font-weight: 500; }
@@ -281,7 +282,7 @@
     <div class="dashboard" id="main-dashboard">
         
         <div class="card card-vault drag-item card-wide card-compact" data-id="card-arb-dex">
-            <div class="card-title" style="color: var(--vault-color);">DEX ARBITRAGE (ORACLE / ADA)</div>
+            <div class="card-title" style="color: var(--vault-color);">ORACLE / ADA dex arbitrage</div>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto;">
                 <div class="data-row" style="margin: 0;">
                     <span class="data-label" style="margin-right: 15px;">Spread:</span>
@@ -295,7 +296,7 @@
         </div>
 
         <div class="card card-vault drag-item card-wide card-compact" data-id="card-arb-vault">
-            <div class="card-title" style="color: var(--vault-color);">VAULT RELICS FAIR PRICE (ORACLE)</div>
+            <div class="card-title" style="color: var(--vault-color);">Vault relics fair price ORACLE</div>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto;">
                 <div class="data-row" style="margin: 0;">
                     <span class="data-label" style="margin-right: 15px;">Discrepancy:</span>
@@ -308,8 +309,8 @@
             </div>
         </div>
 
-        <div class="card card-vault drag-item card-wide" data-id="card-sim-oracle" style="display: flex; flex-direction: column; justify-content: space-between;">
-            <div class="card-title" style="color: var(--vault-color);">NET PROFIT SIMULATOR (ORACLE / ADA)</div>
+        <div class="card card-vault drag-item card-wide" data-id="card-sim-oracle">
+            <div class="card-title" style="color: var(--vault-color);">ORACLE / ADA net profit simulator</div>
             
             <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: auto; padding-bottom: 20px;">
                 <div class="data-row" style="margin: 0;">
@@ -332,8 +333,8 @@
             </div>
         </div>
 
-        <div class="card card-orange drag-item card-wide" data-id="card-sim-tri" style="display: flex; flex-direction: column; justify-content: space-between;">
-            <div class="card-title" style="color: var(--neon-orange);">NET PROFIT SIMULATOR TRIANGULAR (▲VLRM ORACLE ADA▼)</div>
+        <div class="card card-orange drag-item card-wide" data-id="card-sim-tri">
+            <div class="card-title" style="color: var(--neon-orange);">▲VLRM ORACLE ADA▼ triangular net profit simulator</div>
             <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: auto; padding-bottom: 20px;">
                 <div class="data-row" style="margin: 0;">
                     <div style="display: flex; align-items: center;">
@@ -357,7 +358,7 @@
 
         <div class="card card-ada drag-item" data-id="card-ada">
             <div>
-                <div class="card-title ada-title">Cardano (ADA)</div>
+                <div class="card-title ada-title">ADA</div>
                 <div class="data-row">
                     <span class="data-label">Price USD:</span>
                     <span class="data-value" id="ada-price-usd">
@@ -371,7 +372,7 @@
         
         <div class="card card-vault drag-item" data-id="card-vault">
             <div>
-                <div class="card-title" style="color: var(--vault-color);">RELICS VAULT (ORACLE)</div>
+                <div class="card-title" style="color: var(--vault-color);">Relics vault ORACLE</div>
                 <div class="data-row">
                     <span class="data-label">TVL:</span>
                     <span class="data-value">
@@ -445,7 +446,7 @@
         </div>
 
         <div class="card card-orange drag-item card-wide" data-id="card-triangular" style="display: flex; flex-direction: column;">
-            <div class="card-title" style="color: var(--neon-orange); margin-bottom: 5px;">TRIANGULAR ARBITRAGE (▲VLRM ORACLE ADA▼)</div>
+            <div class="card-title" style="color: var(--neon-orange); margin-bottom: 5px;">▲VLRM ORACLE ADA▼ triangular arbitrage</div>
             
             <div class="tri-wrapper">
                 <svg class="tri-svg" viewBox="0 0 250 200">
@@ -480,8 +481,8 @@
             </div>
         </div>
 
-        <div class="card drag-item card-wide" data-id="card-chart" style="grid-column: 1 / -1; padding: 15px; min-height: auto; background: rgba(10, 12, 20, 0.98);">
-            <div class="card-title" style="margin-bottom: 10px; font-size: 0.9rem; color: #ffffff; text-transform: none;">Spread & Vault Discrepancy (% last 24h)</div>
+        <div class="card drag-item card-wide" data-id="card-chart" style="grid-column: 1 / -1; padding: 15px; min-height: auto; background: rgba(6, 8, 12, 0.98);">
+            <div class="card-title" style="margin-bottom: 10px; font-size: 0.9rem; color: #ffffff;">Spread & vault discrepancy (last 24h %)</div>
             <div style="height: 200px; width: 100%;">
                 <canvas id="arbitrageChart"></canvas>
             </div>
@@ -688,7 +689,7 @@
                         x: { display: true, grid: { display: false }, ticks: { color: '#a0a0c0', maxTicksLimit: 8, maxRotation: 0 } }, 
                         y: { 
                             grid: { 
-                                color: (ctx) => ctx.tick.value === 0 ? 'rgba(255, 255, 255, 0.4)' : 'rgba(255,255,255,0.05)',
+                                color: (ctx) => ctx.tick.value === 0 ? '#ffffff' : 'rgba(255,255,255,0.05)',
                                 lineWidth: (ctx) => ctx.tick.value === 0 ? 2 : 1
                             }, 
                             ticks: { color: '#a0a0c0' } 
@@ -1176,11 +1177,11 @@
                             vaultActionEl.style.color = "rgba(255, 255, 255, 0.5)";
                         } else {
                             if (bestDeviation > 0) {
-                                vaultBannerDiscEl.style.color = "#10b981"; 
+                                vaultBannerDiscEl.style.color = "#ffffff"; 
                                 vaultActionEl.innerHTML = `<a href="${targetLink}" target="_blank" class="badge-dark">Sell ${targetDexForVault}</a>`; 
                                 vaultActionEl.style.color = "white";
                             } else {
-                                vaultBannerDiscEl.style.color = "var(--neon-red)"; 
+                                vaultBannerDiscEl.style.color = "#ffffff"; 
                                 vaultActionEl.innerHTML = `<a href="${targetLink}" target="_blank" class="badge-dark">Buy ${targetDexForVault}</a>`; 
                                 vaultActionEl.style.color = "white";
                             }
@@ -1189,7 +1190,9 @@
                         if (Math.abs(bestDeviation) >= conf.vaultAlert) {
                             const alertToggle = document.getElementById('alert-toggle'); const now = Date.now();
                             if (alertToggle && alertToggle.checked && (now - lastVaultAlertTime > ALERT_COOLDOWN)) {
-                                // No alert sound/TG
+                                playDing(); 
+                                if (Notification.permission === "granted") { new Notification("🏛️ L4VA Vault Alert!", { body: `Discrepancy: ${bestDeviation.toFixed(2)}%\nAction: ${bestDeviation > 0 ? 'Sell' : 'Buy'} on ${targetDexForVault}` }); }
+                                sendTelegramAlert(`🏛️ <b>L4VA Vault Alert!</b>\n\n⚖️ Fair Price Discrepancy: <b>${bestDeviation > 0 ? '+' : ''}${bestDeviation.toFixed(2)}%</b>\n💡 Action: ${bestDeviation > 0 ? 'Sell' : 'Buy'} on ${targetDexForVault}\n\n<i>Check dashboard for real-time data.</i>`);
                                 lastVaultAlertTime = now;
                             }
                         }
@@ -1214,9 +1217,18 @@
                         actionEl.innerHTML = `Low spread`;
                         actionEl.style.color = "rgba(255, 255, 255, 0.5)";
                     } else {
-                        spreadEl.style.color = "#ffffff";  // CAMBIO A COLOR BLANCO COMO PEDISTE
+                        spreadEl.style.color = "#ffffff";  // CAMBIO A COLOR BLANCO
                         if (priceVyfi > priceMin) { actionEl.innerHTML = `<a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Buy Min</a> <a href="${VYFI_LINK}" target="_blank" class="badge-dark">Sell VyFi</a>`;  } 
                         else { actionEl.innerHTML = `<a href="${VYFI_LINK}" target="_blank" class="badge-dark">Buy VyFi</a> <a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Sell Min</a>`;  }
+                    }
+
+                    if (spread >= conf.alert) {
+                        const alertToggle = document.getElementById('alert-toggle'); const now = Date.now();
+                        if (alertToggle && alertToggle.checked && (now - lastAlertTime > ALERT_COOLDOWN)) {
+                            playDing(); if (Notification.permission === "granted") { new Notification("🚨 L4VA Arbitrage Detected!", { body: `Spread: ${spread.toFixed(2)}%\n${suggestedActionText}` }); }
+                            sendTelegramAlert(`🚨 <b>L4VA Arbitrage Detected!</b>\n\n📈 DEX Spread: <b>${spread.toFixed(2)}%</b>\n💡 Route: ${suggestedActionText}\n\n<i>Check dashboard for real-time net profit.</i>`);
+                            lastAlertTime = now;
+                        }
                     }
                 }
                 
