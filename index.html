@@ -12,7 +12,7 @@
 
     <title>L4VA Protocol | Arbitrage Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script> <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --card-bg: #120f24;
@@ -82,20 +82,44 @@
 
         header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px; max-width: 1200px; margin-left: auto; margin-right: auto; flex-wrap: wrap; gap: 15px;}
         .header-left { display: flex; align-items: center; gap: 15px; }
-        .header-right { display: flex; align-items: center; gap: 15px; }
+        .header-right { display: flex; align-items: center; gap: 10px; }
         .brand-logo { font-size: 2.5rem; filter: drop-shadow(0 0 10px var(--neon-orange)); }
         
         h1 { margin: 0; font-weight: 800; font-size: 1.8rem; background: var(--gradient-fire); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -1px; display: flex; align-items: center;}
         .version-badge { color: #ffffff; font-size: 0.8rem; font-weight: 600; margin-left: 8px; opacity: 0.8; letter-spacing: 0; -webkit-text-fill-color: #ffffff; }
 
-        .settings-btn { font-size: 1.5rem; cursor: pointer; background: rgba(255,255,255,0.05); padding: 8px 12px; border-radius: 12px; transition: 0.3s; border: 1px solid rgba(255,255,255,0.1); }
-        .settings-btn:hover { background: rgba(255,255,255,0.15); transform: rotate(45deg); border-color: var(--neon-orange); }
+        /* Botones del menú (Ajustes y Modo Edición) */
+        .header-btn { font-size: 1.5rem; cursor: pointer; background: rgba(255,255,255,0.05); padding: 8px 12px; border-radius: 12px; transition: 0.3s; border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center;}
+        .header-btn:hover { background: rgba(255,255,255,0.15); border-color: var(--neon-orange); }
+        .settings-btn:hover { transform: rotate(45deg); }
+        
+        .active-edit-btn { background: rgba(255, 123, 0, 0.2) !important; border-color: var(--neon-orange) !important; box-shadow: 0 0 15px rgba(255, 123, 0, 0.5); }
 
         .dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 20px; max-width: 1200px; margin: 0 auto; filter: blur(0px); transition: filter 0.5s ease;}
         
+        /* ESTILOS DEL MODO EDICIÓN (Arrastrar y Soltar) */
+        .edit-mode-active .drag-item {
+            cursor: grab !important;
+            outline: 2px dashed var(--neon-orange) !important;
+            outline-offset: 4px;
+            transition: outline 0.3s ease;
+        }
+        .edit-mode-active .drag-item:hover { background: rgba(255, 123, 0, 0.05); }
+        .edit-mode-active .drag-item:active { cursor: grabbing !important; }
+        
+        /* Desactivar clics internos mientras editamos */
+        .edit-mode-active canvas, .edit-mode-active input, .edit-mode-active button, .edit-mode-active a, .edit-mode-active label {
+            pointer-events: none !important;
+        }
+
+        /* Clases de estado de SortableJS */
+        .sortable-ghost { opacity: 0.4; transform: scale(0.98); background: rgba(0,0,0,0.5) !important;}
+        .sortable-drag { opacity: 0.9; box-shadow: 0 25px 50px rgba(255, 123, 0, 0.6) !important; cursor: grabbing !important;}
+
         .card { border-radius: 20px; padding: 20px 25px; position: relative; background: rgba(18, 15, 36, 0.85); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); transition: transform 0.3s ease, box-shadow 0.3s ease; min-height: 280px; display: flex; flex-direction: column; justify-content: space-between;}
         .card:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 123, 0, 0.15); border-color: rgba(255, 123, 0, 0.3); }
 
+        /* CODIFICACIÓN DE COLORES OSCURA */
         .card-ada { background: rgba(12, 14, 24, 0.96); border-color: rgba(66, 133, 244, 0.2); }
         .card-ada:hover { border-color: rgba(66, 133, 244, 0.5); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(66, 133, 244, 0.2); background: rgba(16, 18, 30, 1); }
 
@@ -128,6 +152,7 @@
         .arbitrage-grid { display: grid; grid-template-columns: 1fr; gap: 20px; position: relative; z-index: 2;}
         @media (min-width: 900px) { .arbitrage-grid { grid-template-columns: 1fr 1fr; } }
 
+        /* CLASES ESPECÍFICAS PARA RECUADROS INTERNOS */
         .arbitrage-box { padding: 20px; border-radius: 18px; transition: all 0.3s ease; position: relative; border: 1px solid; backdrop-filter: blur(10px); box-shadow: 0 8px 25px rgba(0,0,0,0.5); }
         
         .arbitrage-box-vault { background: rgba(22, 16, 6, 0.96); border-color: rgba(252, 211, 77, 0.2); }
@@ -160,6 +185,7 @@
         .slippage-bar { height: 100%; width: 0%; border-radius: 4px; transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); box-shadow: 0 0 10px currentColor;}
         .slippage-label { font-size: 0.7rem; color: var(--text-secondary); text-align: right; margin-top: 6px; font-weight: 600;}
 
+        /* TRIANGULO AMPLIADO Y MEJORADO */
         .tri-wrapper { position: relative; width: 100%; max-width: 250px; height: 200px; margin: 25px auto 25px auto; }
         .tri-node { position: absolute; width: 50px; height: 50px; background: rgba(18, 15, 36, 0.9); border: 2px solid rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: bold; color: white; z-index: 2; box-shadow: 0 0 15px rgba(0,0,0,0.8); backdrop-filter: blur(5px);}
         .node-ada { top: 0; left: calc(50% - 25px); border-color: var(--ada-color); color: var(--ada-color);}
@@ -199,7 +225,8 @@
         .log-spread { font-weight: bold; width: 70px; text-align: left; }
         .log-route { flex-grow: 1; text-align: right; color: rgba(255,255,255,0.8);}
         
-        .footer-disclaimer { grid-column: 1 / -1; text-align: center; color: rgba(255,255,255,0.4); font-size: 0.75rem; padding: 20px 20px; font-style: italic; margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.05);}
+        /* Footer fuera del grid principal para que no se arrastre */
+        .footer-disclaimer { text-align: center; color: rgba(255,255,255,0.4); font-size: 0.75rem; padding: 20px 20px; font-style: italic; margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.05); max-width: 1200px; margin-left: auto; margin-right: auto;}
     </style>
 </head>
 <body>
@@ -225,7 +252,8 @@
             <h1>L4VA Protocol <span style="color: var(--text-secondary); font-weight: 400;">| Arbitrage</span> <span class="version-badge">V 1.0</span></h1>
         </div>
         <div class="header-right">
-            <div class="settings-btn" onclick="openSettings()">⚙️</div>
+            <div class="header-btn" id="edit-mode-btn" onclick="toggleEditMode()" title="Unlock Dashboard Layout">🔒</div>
+            <div class="header-btn settings-btn" onclick="openSettings()" title="Settings">⚙️</div>
         </div>
     </header>
 
@@ -258,7 +286,8 @@
     </div>
 
     <div class="dashboard" id="main-dashboard">
-        <div id="main-banner" class="card arbitrage-section">
+        
+        <div id="main-banner" class="card arbitrage-section drag-item" data-id="card-banner">
             <div class="arbitrage-banner-header">
                 <div style="font-size: 1.1rem; font-weight: 800; color: white; text-shadow: 0 2px 10px rgba(0,0,0,0.5);">⚡ Active Opportunities & Intelligence</div>
                 <label class="alert-toggle-box">
@@ -335,7 +364,7 @@
             </div>
         </div>
 
-        <div class="card card-ada">
+        <div class="card card-ada drag-item" data-id="card-ada">
             <div>
                 <div class="card-title ada-title">Cardano (ADA) 💎</div>
                 <div class="data-row">
@@ -349,7 +378,7 @@
             <div style="height: 80px; margin-top: 15px;"><canvas id="spark-ada"></canvas></div>
         </div>
         
-        <div class="card card-vault">
+        <div class="card card-vault drag-item" data-id="card-vault">
             <div>
                 <div class="card-title" style="color: var(--vault-color);">Relics Vault TVL (ORACLE) 🏛️</div>
                 <div class="data-row">
@@ -364,7 +393,7 @@
             <div style="height: 80px; margin-top: 15px;"><canvas id="spark-vault"></canvas></div>
         </div>
 
-        <div class="card card-orange">
+        <div class="card card-orange drag-item" data-id="card-vlrm-ada">
             <div class="card-title">VLRM / ADA <span class="badge bg-vyfi">VyFi</span></div>
             
             <div class="data-row">
@@ -380,7 +409,7 @@
             <div style="height: 50px;"><canvas id="spark-vlrm-ada"></canvas></div>
         </div>
 
-        <div class="card card-orange">
+        <div class="card card-orange drag-item" data-id="card-vlrm-oracle">
             <div class="card-title">VLRM / ORACLE <span class="badge bg-vyfi">VyFi</span></div>
             
             <div class="data-row">
@@ -396,7 +425,7 @@
             <div style="height: 50px;"><canvas id="spark-vlrm-oracle"></canvas></div>
         </div>
 
-        <div style="grid-column: 1 / -1; display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px;">
+        <div class="drag-item" data-id="card-multi-tri" style="grid-column: 1 / -1; display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px;">
             
             <div class="card card-vault" style="display: flex; flex-direction: column;">
                 <div class="card-title" style="color: var(--vault-color); margin-bottom: 20px;">ORACLE / ADA ⚖️</div>
@@ -468,23 +497,24 @@
 
         </div>
 
-        <div class="card" style="grid-column: 1 / -1; padding: 15px; min-height: auto; background: rgba(10, 12, 20, 0.98);">
+        <div class="card drag-item" data-id="card-chart" style="grid-column: 1 / -1; padding: 15px; min-height: auto; background: rgba(10, 12, 20, 0.98);">
             <div class="card-title" style="margin-bottom: 10px; font-size: 0.9rem; color: #ffffff;">Spread & Vault Discrepancy (% last 24h)</div>
             <div style="height: 200px; width: 100%;">
                 <canvas id="arbitrageChart"></canvas>
             </div>
         </div>
 
-        <div class="card" style="grid-column: 1 / -1; padding: 20px 25px; min-height: auto; background: rgba(10, 12, 20, 0.98);">
+        <div class="card drag-item" data-id="card-log" style="grid-column: 1 / -1; padding: 20px 25px; min-height: auto; background: rgba(10, 12, 20, 0.98);">
             <div class="card-title" style="margin-bottom: 10px; color: #ffffff;">Opportunity Log (Daily Hunts) 📖</div>
             <div id="opp-log" style="max-height: 250px; overflow-y: auto; padding-right: 10px;">
                 <div style="color: var(--text-secondary); text-align: center; padding: 20px; font-style: italic;">Waiting for high-spread opportunities...</div>
             </div>
         </div>
 
-        <div class="footer-disclaimer">
-            This page is for informational purposes only. Nothing on this website constitutes investment advice. Always do your own research.
-        </div>
+    </div>
+
+    <div class="footer-disclaimer">
+        This page is for informational purposes only. Nothing on this website constitutes investment advice. Always do your own research.
     </div>
 
     <script>
@@ -529,6 +559,7 @@
         document.getElementById('sim-ada-input').value = conf.sim;
         document.getElementById('sim-tri-input').value = conf.sim;
 
+        // 🔒 FUNCIONES DEL ESCUDO API
         function showAuthScreen(showError = false) {
             document.getElementById('auth-screen').style.display = 'flex';
             document.getElementById('main-dashboard').style.filter = 'blur(10px)';
@@ -569,6 +600,57 @@
                 }
             } catch (e) {
                 document.getElementById('auth-error-msg').innerText = "Network Error. Try again.";
+            }
+        }
+
+        // 🖐️ FUNCIONES DRAG & DROP (MODO EDICIÓN)
+        let isEditMode = false;
+        let sortableInstance = null;
+
+        function loadSavedLayout() {
+            const savedOrder = JSON.parse(localStorage.getItem('l4va_layout'));
+            if (savedOrder && savedOrder.length > 0) {
+                const dashboard = document.getElementById('main-dashboard');
+                savedOrder.forEach(id => {
+                    const el = document.querySelector(`.drag-item[data-id="${id}"]`);
+                    if (el) dashboard.appendChild(el);
+                });
+            }
+        }
+
+        function initSortable() {
+            loadSavedLayout();
+            sortableInstance = new Sortable(document.getElementById('main-dashboard'), {
+                animation: 250,
+                draggable: '.drag-item',
+                ghostClass: 'sortable-ghost',
+                dragClass: 'sortable-drag',
+                disabled: true, // Empieza desactivado
+                onEnd: function() {
+                    const order = sortableInstance.toArray();
+                    localStorage.setItem('l4va_layout', JSON.stringify(order));
+                }
+            });
+        }
+
+        function toggleEditMode() {
+            isEditMode = !isEditMode;
+            const btn = document.getElementById('edit-mode-btn');
+            const dash = document.getElementById('main-dashboard');
+            
+            if (isEditMode) {
+                btn.innerText = '🔓';
+                btn.classList.add('active-edit-btn');
+                dash.classList.add('edit-mode-active');
+                sortableInstance.option('disabled', false);
+            } else {
+                btn.innerText = '🔒';
+                btn.classList.remove('active-edit-btn');
+                dash.classList.remove('edit-mode-active');
+                sortableInstance.option('disabled', true);
+                
+                const order = sortableInstance.toArray();
+                localStorage.setItem('l4va_layout', JSON.stringify(order));
             }
         }
 
@@ -949,7 +1031,7 @@
                         }
                     }
 
-                    // ALGORITMO DE RELLENO INTELIGENTE (Para asegurar que todas las gráficas ocupen el 100% de la caja visual)
+                    // ALGORITMO DE RELLENO INTELIGENTE
                     const missingPoints = MAX_CHART_POINTS - expandedHistory.labels.length;
                     if (missingPoints > 0) {
                         const emptyLabels = Array(missingPoints).fill('');
@@ -1206,7 +1288,8 @@
         }
 
         async function startEngine() {
-            initCharts();
+            initSortable(); // 1. Primero ordenamos las tarjetas
+            initCharts();   // 2. Luego pintamos los gráficos
             await fetchHistoryFromCloudflare();
             await fetchAdaData();
             await fetchDexData();
