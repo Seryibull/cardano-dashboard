@@ -924,15 +924,18 @@
                             expandedHistory.spread.push(cloudHistory.spread[i]);
                             expandedHistory.discrepancy.push(cloudHistory.discrepancy[i]);
                             
-                            // Cálculo histórico exacto del spread de ADA entre VLRM y ORACLE
+                            // CÁLCULO SPREAD HISTÓRICO REAL (Valor de ADA en Ruta Directa vs Ruta Cruzada)
                             let vPrice = cloudHistory.pVlrmAda ? cloudHistory.pVlrmAda[i] : null;
                             let oPriceVy = cloudHistory.pOracleVyfi ? cloudHistory.pOracleVyfi[i] : null;
                             let oPriceMin = cloudHistory.pOracleMin ? cloudHistory.pOracleMin[i] : null;
                             let oPrice = (oPriceVy && oPriceVy > 0) ? oPriceVy : oPriceMin;
+                            let voRatio = cloudHistory.pVlrmOracle ? cloudHistory.pVlrmOracle[i] : null;
                             
                             let voSpread = null;
-                            if (vPrice !== null && oPrice !== null && vPrice > 0 && oPrice > 0) {
-                                voSpread = ((oPrice - vPrice) / vPrice) * 100;
+                            if (vPrice !== null && oPrice !== null && voRatio !== null && vPrice > 0 && oPrice > 0) {
+                                let valueDirect = vPrice;
+                                let valueCross = voRatio * oPrice;
+                                voSpread = ((Math.max(valueDirect, valueCross) - Math.min(valueDirect, valueCross)) / Math.min(valueDirect, valueCross)) * 100;
                             }
                             expandedHistory.vlrmOracleSpread.push(voSpread);
 
@@ -943,13 +946,13 @@
                             expandedHistory.vault.push(cloudHistory.vault[i]);
                             expandedHistory.totalLiq.push((cloudHistory.oracleVyfi[i] || 0) + (cloudHistory.oracleMin[i] || 0));
                             expandedHistory.pVlrmAda.push(vPrice);
-                            expandedHistory.pVlrmOracle.push(cloudHistory.pVlrmOracle ? cloudHistory.pVlrmOracle[i] : null);
+                            expandedHistory.pVlrmOracle.push(voRatio);
                             expandedHistory.pOracleVyfi.push(oPriceVy);
                             expandedHistory.pOracleMin.push(oPriceMin);
                         }
                     }
 
-                    // REGLA DE RELLENO 24H: Si faltan datos, estiramos el valor más antiguo conocido
+                    // ALGORITMO DE RELLENO INTELIGENTE (Para asegurar que todas las gráficas ocupen el 100% de la caja visual)
                     const missingPoints = MAX_CHART_POINTS - expandedHistory.labels.length;
                     if (missingPoints > 0) {
                         const emptyLabels = Array(missingPoints).fill('');
@@ -958,30 +961,24 @@
                         const keys = Object.keys(expandedHistory);
                         for (let key of keys) {
                             if (key === 'labels') continue;
-                            // Encontrar el primer valor válido de este gráfico
                             let firstVal = expandedHistory[key].find(v => v !== null && v !== undefined && !isNaN(v));
                             if (firstVal === undefined) firstVal = 0;
-                            
                             const padArr = Array(missingPoints).fill(firstVal);
                             expandedHistory[key] = [...padArr, ...expandedHistory[key]];
                         }
                     }
 
-                    // Asegurar línea continua reparando huecos internos (Forward-Fill)
                     const keysFill = Object.keys(expandedHistory);
                     for (let key of keysFill) {
                         if (key === 'labels') continue;
                         let lastGood = 0;
                         for (let k = 0; k < expandedHistory[key].length; k++) {
                             let val = expandedHistory[key][k];
-                            if (val !== null && val !== undefined && !isNaN(val)) {
-                                lastGood = val;
-                            } else {
-                                expandedHistory[key][k] = lastGood;
-                            }
+                            if (val !== null && val !== undefined && !isNaN(val)) { lastGood = val; } 
+                            else { expandedHistory[key][k] = lastGood; }
                         }
                     }
-                    
+
                     if (expandedHistory.labels.length > MAX_CHART_POINTS) {
                         const diff = expandedHistory.labels.length - MAX_CHART_POINTS;
                         Object.keys(expandedHistory).forEach(key => { expandedHistory[key] = expandedHistory[key].slice(diff); });
@@ -1170,11 +1167,13 @@
                     }
                 }
                 
-                // CALCULO DE VLRM / ORACLE SPREAD PARA EL GRÁFICO (Diferencia de ADA en %)
+                // CÁLCULO SPREAD EN DIRECTO (Valor ADA Directo vs Cruzado)
                 let primaryOraclePrice = priceVyfi > 0 ? priceVyfi : priceMin;
                 let voSpread = 0;
-                if (priceVlrmAda > 0 && primaryOraclePrice > 0) {
-                    voSpread = ((primaryOraclePrice - priceVlrmAda) / priceVlrmAda) * 100;
+                if (priceVlrmAda > 0 && primaryOraclePrice > 0 && oraclePerVlrmUI > 0) {
+                    let valueDirect = priceVlrmAda;
+                    let valueCross = oraclePerVlrmUI * primaryOraclePrice;
+                    voSpread = ((Math.max(valueDirect, valueCross) - Math.min(valueDirect, valueCross)) / Math.min(valueDirect, valueCross)) * 100;
                 }
 
                 const mainBanner = document.getElementById('main-banner');
