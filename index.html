@@ -99,33 +99,32 @@
         .active-edit-btn { background: rgba(255, 123, 0, 0.2) !important; border-color: var(--neon-orange) !important; box-shadow: 0 0 15px rgba(255, 123, 0, 0.5); }
 
         /* =========================================
-           NUEVO: GRID BENTO BOX (RÍGIDO Y MATEMÁTICO)
+           GRID BENTO BOX (SIN DENSE - Respeta huecos)
            ========================================= */
         .dashboard { 
             display: grid; 
             grid-template-columns: 1fr; /* Móvil: 1 columna */
             grid-auto-rows: auto;
-            grid-auto-flow: row dense; 
+            grid-auto-flow: row; /* <-- DENSE ELIMINADO */
             gap: 20px; 
             max-width: 1200px; 
             margin: 0 auto; 
             filter: blur(0px); 
             transition: filter 0.5s ease;
+            align-items: start;
         }
 
-        /* Pantallas grandes: Activamos el BENTO BOX con filas estrictas de 110px */
         @media (min-width: 768px) { 
             .dashboard { 
                 grid-template-columns: repeat(2, minmax(0, 1fr)); 
-                grid-auto-rows: 110px; /* UNIDAD BASE DEL LEGO */
+                grid-auto-rows: 110px; 
             } 
-            /* Modificadores de tamaño rígidos */
-            .drag-item { grid-row: span 2; } /* Tarjeta Normal (240px con gap) */
-            .card-compact { grid-row: span 1 !important; padding: 15px 25px; } /* Tarjeta Pequeña (110px) */
-            .card-tall { grid-row: span 4 !important; } /* Tarjeta Alta (500px con gaps) */
+            .drag-item { grid-row: span 2; } 
+            .card-compact { grid-row: span 1 !important; padding: 15px 25px; } 
+            .card-tall { grid-row: span 4 !important; } 
             .card-wide { grid-column: span 2; } 
             
-            .card-chart { grid-row: span 3 !important; } /* Gráfica (370px con gaps) */
+            .card-chart { grid-row: span 2 !important; } /* AHORA TAMAÑO NORMAL DE ALTURA */
         }
 
         @media (min-width: 1024px) { 
@@ -178,7 +177,7 @@
             border: 1px solid rgba(255,255,255,0.05); 
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); 
             transition: transform 0.3s ease, box-shadow 0.3s ease; 
-            height: 100%; /* El Grid manda sobre la altura */
+            height: 100%; 
             box-sizing: border-box;
             display: flex; 
             flex-direction: column; 
@@ -186,7 +185,6 @@
         }
         .card:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 123, 0, 0.15); border-color: rgba(255, 123, 0, 0.3); }
 
-        /* Ajustes finos para las tarjetas pequeñas (que quepa todo en 110px) */
         @media (min-width: 768px) {
             .card-compact .card-title { margin-bottom: 5px; font-size: 0.95rem; }
         }
@@ -200,6 +198,13 @@
 
         .card-orange { background: rgba(14, 6, 2, 0.98); border-color: rgba(255, 123, 0, 0.2); }
         .card-orange:hover { border-color: rgba(255, 123, 0, 0.5); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 123, 0, 0.2); background: rgba(18, 8, 3, 1); }
+
+        /* Igualados estilos para recuadros modulares */
+        .arbitrage-box-vault { background: rgba(14, 10, 4, 0.98); border-color: rgba(252, 211, 77, 0.2); }
+        .arbitrage-box-vault:hover { border-color: rgba(252, 211, 77, 0.5); background: rgba(18, 12, 5, 1); transform: translateY(-2px); box-shadow: 0 12px 30px rgba(0,0,0,0.7), 0 0 20px rgba(252, 211, 77, 0.2); }
+        
+        .arbitrage-box-orange { background: rgba(14, 6, 2, 0.98); border-color: rgba(255, 123, 0, 0.2); }
+        .arbitrage-box-orange:hover { border-color: rgba(255, 123, 0, 0.5); background: rgba(18, 8, 3, 1); transform: translateY(-2px); box-shadow: 0 12px 30px rgba(0,0,0,0.7), 0 0 20px rgba(255, 123, 0, 0.2); }
 
         /* Card title sin text-transform */
         .card-title { font-size: 1.05rem; font-weight: 600; margin-bottom: 15px; color: var(--neon-orange); display: flex; justify-content: space-between; align-items: center;}
@@ -656,8 +661,8 @@
         function initSortable() {
             loadSavedLayout();
             sortableInstance = new Sortable(document.getElementById('main-dashboard'), {
-                swap: true, // <-- INTERCAMBIO DIRECTO
-                swapClass: 'sortable-swap-highlight', // <-- CLASE DEL TARGET
+                swap: true, 
+                swapClass: 'sortable-swap-highlight', 
                 animation: 350,
                 easing: "cubic-bezier(0.25, 1, 0.5, 1)", 
                 draggable: '.drag-item',
@@ -758,9 +763,9 @@
                         x: { display: true, grid: { display: false }, ticks: { color: '#a0a0c0', maxTicksLimit: 8, maxRotation: 0 } }, 
                         y: { 
                             grid: { 
-                                color: (ctx) => ctx.tick && ctx.tick.value === 0 ? '#ffffff' : 'rgba(255,255,255,0.05)',
-                                lineWidth: (ctx) => ctx.tick && ctx.tick.value === 0 ? 2 : 1,
-                                borderDash: (ctx) => ctx.tick && ctx.tick.value === 0 ? [5, 5] : []
+                                color: (ctx) => ctx.tick && ctx.tick.value === 0 ? 'rgba(255, 255, 255, 0.5)' : 'rgba(255,255,255,0.05)',
+                                lineWidth: (ctx) => ctx.tick && ctx.tick.value === 0 ? 15 : 1
+                                // borderDash line removed para que sea sólida
                             }, 
                             ticks: { color: '#a0a0c0' } 
                         } 
@@ -1287,7 +1292,7 @@
                         actionEl.innerHTML = `Low spread`;
                         actionEl.style.color = "rgba(255, 255, 255, 0.5)";
                     } else {
-                        spreadEl.style.color = "#ffffff";  
+                        spreadEl.style.color = "#ffffff";  // CAMBIO A COLOR BLANCO
                         if (priceVyfi > priceMin) { actionEl.innerHTML = `<a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Buy Min</a> <a href="${VYFI_LINK}" target="_blank" class="badge-dark">Sell VyFi</a>`;  } 
                         else { actionEl.innerHTML = `<a href="${VYFI_LINK}" target="_blank" class="badge-dark">Buy VyFi</a> <a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Sell Min</a>`;  }
                     }
