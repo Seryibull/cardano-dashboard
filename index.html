@@ -97,26 +97,8 @@
         .settings-btn:hover { transform: rotate(45deg); }
         .active-edit-btn { background: rgba(255, 123, 0, 0.2) !important; border-color: var(--neon-orange) !important; box-shadow: 0 0 15px rgba(255, 123, 0, 0.5); }
 
-        /* NUEVO: GRID RÍGIDO PROPORCIONAL (Evita el re-escalado elástico) */
-        .dashboard { 
-            display: grid; 
-            grid-template-columns: 1fr; /* Móvil: 1 columna */
-            grid-auto-flow: dense; 
-            gap: 20px; 
-            max-width: 1200px; 
-            margin: 0 auto; 
-            filter: blur(0px); 
-            transition: filter 0.5s ease;
-        }
-
-        @media (min-width: 768px) { 
-            .dashboard { grid-template-columns: repeat(2, 1fr); } /* Tablet: 2 columnas */
-            .card-wide { grid-column: span 2; } 
-        }
-
-        @media (min-width: 1024px) { 
-            .dashboard { grid-template-columns: repeat(4, 1fr); } /* Desktop: 4 columnas rígidas */
-        }
+        /* GRID CON EFECTO DENSE PARA "TETRIS" */
+        .dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); grid-auto-flow: dense; gap: 20px; max-width: 1200px; margin: 0 auto; filter: blur(0px); transition: filter 0.5s ease;}
         
         /* ESTILOS DEL MODO EDICIÓN */
         .edit-mode-active .drag-item { cursor: grab !important; outline: 2px dashed var(--neon-orange) !important; outline-offset: 4px; transition: outline 0.3s ease; }
@@ -131,6 +113,8 @@
         .card { border-radius: 20px; padding: 20px 25px; position: relative; background: rgba(18, 15, 36, 0.85); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); transition: transform 0.3s ease, box-shadow 0.3s ease; min-height: 220px; display: flex; flex-direction: column; justify-content: space-between;}
         .card:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 123, 0, 0.15); border-color: rgba(255, 123, 0, 0.3); }
 
+        @media (min-width: 600px) { .card-wide { grid-column: span 2; } }
+        
         /* Tarjetas compactas */
         .card-compact { min-height: 120px; }
 
@@ -144,7 +128,14 @@
         .card-orange { background: rgba(14, 6, 2, 0.98); border-color: rgba(255, 123, 0, 0.2); }
         .card-orange:hover { border-color: rgba(255, 123, 0, 0.5); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 123, 0, 0.2); background: rgba(18, 8, 3, 1); }
 
-        /* Card title respetando mayúsculas/minúsculas exactas */
+        /* Igualados estilos para recuadros modulares */
+        .arbitrage-box-vault { background: rgba(14, 10, 4, 0.98); border-color: rgba(252, 211, 77, 0.2); }
+        .arbitrage-box-vault:hover { border-color: rgba(252, 211, 77, 0.5); background: rgba(18, 12, 5, 1); transform: translateY(-2px); box-shadow: 0 12px 30px rgba(0,0,0,0.7), 0 0 20px rgba(252, 211, 77, 0.2); }
+        
+        .arbitrage-box-orange { background: rgba(14, 6, 2, 0.98); border-color: rgba(255, 123, 0, 0.2); }
+        .arbitrage-box-orange:hover { border-color: rgba(255, 123, 0, 0.5); background: rgba(18, 8, 3, 1); transform: translateY(-2px); box-shadow: 0 12px 30px rgba(0,0,0,0.7), 0 0 20px rgba(255, 123, 0, 0.2); }
+
+        /* Card title sin text-transform */
         .card-title { font-size: 1.05rem; font-weight: 600; margin-bottom: 15px; color: var(--neon-orange); display: flex; justify-content: space-between; align-items: center;}
         .card-title.ada-title { color: var(--ada-color); text-shadow: 0 0 10px rgba(66, 133, 244, 0.3);}
         
@@ -164,7 +155,7 @@
         .badge-dark { background: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.2); font-size: 0.75rem; padding: 4px 10px; border-radius: 20px; font-weight: 700; display: inline-block; margin: 0 2px; text-decoration: none; transition: 0.2s ease; }
         a.badge-dark:hover { transform: translateY(-2px); background: var(--neon-orange); border-color: var(--neon-orange); color: var(--text-on-fire); box-shadow: 0 0 15px rgba(255, 123, 0, 0.4);}
         
-        /* Ocultar flechas del input numérico */
+        /* Ocultar flechas del input numérico para que quede limpio */
         input[type="number"].sim-input::-webkit-outer-spin-button,
         input[type="number"].sim-input::-webkit-inner-spin-button {
             -webkit-appearance: none;
@@ -223,7 +214,7 @@
 
         h3.dex-subtitle { margin: 0 0 10px 0; font-size: 0.9rem; display: inline-block; }
         
-        /* Footer fuera del grid principal */
+        /* Footer fuera del grid principal para que no se arrastre */
         .footer-disclaimer { text-align: center; color: rgba(255,255,255,0.4); font-size: 0.75rem; padding: 20px 20px; font-style: italic; margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.05); max-width: 1200px; margin-left: auto; margin-right: auto;}
     </style>
 </head>
@@ -328,7 +319,7 @@
                     </div>
                 </div>
                 <div class="data-row" style="margin: 0;">
-                    <span class="data-label" style="margin-right: 15px; font-size: 0.8rem; opacity: 0.8;">Net Return (2 Hops):</span>
+                    <span class="data-label" style="margin-right: 15px; font-size: 0.8rem;">Net Return (2 Hops):</span>
                     <span class="data-value" id="sim-profit" style="font-size: 1.5rem;">- ADA</span>
                 </div>
             </div>
@@ -351,7 +342,7 @@
                     </div>
                 </div>
                 <div class="data-row" style="margin: 0;">
-                    <span class="data-label" style="margin-right: 15px; font-size: 0.8rem; opacity: 0.8;">Net Return (3 Hops):</span>
+                    <span class="data-label" style="margin-right: 15px; font-size: 0.8rem;">Net Return (3 Hops):</span>
                     <span class="data-value" id="sim-tri-profit" style="font-size: 1.5rem;">- ADA</span>
                 </div>
             </div>
@@ -489,7 +480,7 @@
             </div>
         </div>
 
-        <div class="card drag-item" style="grid-column: 1 / -1; padding: 15px; min-height: auto; background: rgba(8, 10, 16, 0.98);" data-id="card-chart">
+        <div class="card drag-item card-wide" data-id="card-chart" style="grid-column: 1 / -1; padding: 15px; min-height: auto; background: rgba(8, 10, 16, 0.98);">
             <div class="card-title" style="margin-bottom: 10px; font-size: 0.9rem; color: #ffffff; text-transform: none;">Spread & vault discrepancy (last 24h %)</div>
             <div style="height: 200px; width: 100%;">
                 <canvas id="arbitrageChart"></canvas>
@@ -609,18 +600,10 @@
                 draggable: '.drag-item',
                 ghostClass: 'sortable-ghost',
                 dragClass: 'sortable-drag',
-                forceFallback: true,        
-                fallbackClass: 'sortable-drag', 
-                fallbackOnBody: true,       
                 disabled: true, 
                 onEnd: function() {
                     const order = sortableInstance.toArray();
                     localStorage.setItem('l4va_layout', JSON.stringify(order));
-                    // Forzar recálculo de los gráficos al soltar para evitar fallos de renderizado
-                    setTimeout(() => {
-                        if(chartInstance) chartInstance.resize();
-                        Object.values(sparkInstances).forEach(chart => chart.resize());
-                    }, 50);
                 }
             });
         }
@@ -705,7 +688,7 @@
                         x: { display: true, grid: { display: false }, ticks: { color: '#a0a0c0', maxTicksLimit: 8, maxRotation: 0 } }, 
                         y: { 
                             grid: { 
-                                color: (ctx) => ctx.tick && ctx.tick.value === 0 ? '#ffffff' : 'rgba(255,255,255,0.05)',
+                                color: (ctx) => ctx.tick && ctx.tick.value === 0 ? 'rgba(255, 255, 255, 0.6)' : 'rgba(255,255,255,0.05)',
                                 lineWidth: (ctx) => ctx.tick && ctx.tick.value === 0 ? 2 : 1,
                                 borderDash: (ctx) => ctx.tick && ctx.tick.value === 0 ? [5, 5] : []
                             }, 
@@ -1194,11 +1177,11 @@
                             vaultActionEl.style.color = "rgba(255, 255, 255, 0.5)";
                         } else {
                             if (bestDeviation > 0) {
-                                vaultBannerDiscEl.style.color = "#ffffff"; 
+                                vaultBannerDiscEl.style.color = "#10b981"; 
                                 vaultActionEl.innerHTML = `<a href="${targetLink}" target="_blank" class="badge-dark">Sell ${targetDexForVault}</a>`; 
                                 vaultActionEl.style.color = "white";
                             } else {
-                                vaultBannerDiscEl.style.color = "#ffffff"; 
+                                vaultBannerDiscEl.style.color = "var(--neon-red)"; 
                                 vaultActionEl.innerHTML = `<a href="${targetLink}" target="_blank" class="badge-dark">Buy ${targetDexForVault}</a>`; 
                                 vaultActionEl.style.color = "white";
                             }
@@ -1207,9 +1190,7 @@
                         if (Math.abs(bestDeviation) >= conf.vaultAlert) {
                             const alertToggle = document.getElementById('alert-toggle'); const now = Date.now();
                             if (alertToggle && alertToggle.checked && (now - lastVaultAlertTime > ALERT_COOLDOWN)) {
-                                playDing(); 
-                                if (Notification.permission === "granted") { new Notification("🏛️ L4VA Vault Alert!", { body: `Discrepancy: ${bestDeviation.toFixed(2)}%\nAction: ${bestDeviation > 0 ? 'Sell' : 'Buy'} on ${targetDexForVault}` }); }
-                                sendTelegramAlert(`🏛️ <b>L4VA Vault Alert!</b>\n\n⚖️ Fair Price Discrepancy: <b>${bestDeviation > 0 ? '+' : ''}${bestDeviation.toFixed(2)}%</b>\n💡 Action: ${bestDeviation > 0 ? 'Sell' : 'Buy'} on ${targetDexForVault}\n\n<i>Check dashboard for real-time data.</i>`);
+                                // No alert sound/TG
                                 lastVaultAlertTime = now;
                             }
                         }
@@ -1234,18 +1215,9 @@
                         actionEl.innerHTML = `Low spread`;
                         actionEl.style.color = "rgba(255, 255, 255, 0.5)";
                     } else {
-                        spreadEl.style.color = "#ffffff";  
+                        spreadEl.style.color = "#ffffff";  // CAMBIO A COLOR BLANCO
                         if (priceVyfi > priceMin) { actionEl.innerHTML = `<a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Buy Min</a> <a href="${VYFI_LINK}" target="_blank" class="badge-dark">Sell VyFi</a>`;  } 
                         else { actionEl.innerHTML = `<a href="${VYFI_LINK}" target="_blank" class="badge-dark">Buy VyFi</a> <a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Sell Min</a>`;  }
-                    }
-
-                    if (spread >= conf.alert) {
-                        const alertToggle = document.getElementById('alert-toggle'); const now = Date.now();
-                        if (alertToggle && alertToggle.checked && (now - lastAlertTime > ALERT_COOLDOWN)) {
-                            playDing(); if (Notification.permission === "granted") { new Notification("🚨 L4VA Arbitrage Detected!", { body: `Spread: ${spread.toFixed(2)}%\n${suggestedActionText}` }); }
-                            sendTelegramAlert(`🚨 <b>L4VA Arbitrage Detected!</b>\n\n📈 DEX Spread: <b>${spread.toFixed(2)}%</b>\n💡 Route: ${suggestedActionText}\n\n<i>Check dashboard for real-time net profit.</i>`);
-                            lastAlertTime = now;
-                        }
                     }
                 }
                 
