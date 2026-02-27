@@ -98,14 +98,12 @@
         .settings-btn:hover { transform: rotate(45deg); }
         .active-edit-btn { background: rgba(255, 123, 0, 0.2) !important; border-color: var(--neon-orange) !important; box-shadow: 0 0 15px rgba(255, 123, 0, 0.5); }
 
-        /* =========================================
-           GRID BENTO BOX (SIN DENSE - Respeta huecos)
-           ========================================= */
+        /* GRID BENTO BOX (CON DENSE PARA LIBERTAD TOTAL) */
         .dashboard { 
             display: grid; 
             grid-template-columns: 1fr; /* Móvil: 1 columna */
             grid-auto-rows: auto;
-            grid-auto-flow: row; /* <-- DENSE ELIMINADO */
+            grid-auto-flow: row dense; /* Vuelve "dense" para que rellene huecos libremente */
             gap: 20px; 
             max-width: 1200px; 
             margin: 0 auto; 
@@ -124,7 +122,7 @@
             .card-tall { grid-row: span 4 !important; } 
             .card-wide { grid-column: span 2; } 
             
-            .card-chart { grid-row: span 2 !important; } /* AHORA TAMAÑO NORMAL DE ALTURA */
+            .card-chart { grid-row: span 2 !important; } 
         }
 
         @media (min-width: 1024px) { 
@@ -157,14 +155,6 @@
             cursor: grabbing !important;
             z-index: 99999 !important;
             border-radius: 20px !important;
-        }
-
-        .sortable-swap-highlight {
-            outline: 3px solid var(--neon-orange) !important;
-            outline-offset: 4px !important;
-            box-shadow: inset 0 0 30px rgba(255, 123, 0, 0.3) !important;
-            transform: scale(0.98) !important;
-            transition: all 0.2s ease;
         }
 
         /* ESTILOS GENERALES DE TARJETAS */
@@ -431,7 +421,7 @@
                 </div>
                 <div class="data-row" style="margin-top: 15px;"><span class="data-label" style="font-size: 0.75rem;">Last Updated:</span><span class="data-value" style="font-size: 0.75rem;" id="ada-time">-</span></div>
             </div>
-            <div style="flex-grow: 1; min-height: 50px; position: relative; margin-top: 15px;"><canvas id="spark-ada"></canvas></div>
+            <div style="height: 80px; margin-top: 15px;"><canvas id="spark-ada"></canvas></div>
         </div>
         
         <div class="card card-vault drag-item" data-id="card-vault">
@@ -446,7 +436,7 @@
                 </div>
                 <div class="data-row"><span class="data-label">Fair price:</span><span class="data-value" id="vault-fair-price">-</span></div>
             </div>
-            <div style="flex-grow: 1; min-height: 50px; position: relative; margin-top: 15px;"><canvas id="spark-vault"></canvas></div>
+            <div style="height: 80px; margin-top: 15px;"><canvas id="spark-vault"></canvas></div>
         </div>
 
         <div class="card card-orange drag-item" data-id="card-vlrm-ada">
@@ -455,12 +445,12 @@
                 <span class="data-label">Price:</span>
                 <span class="data-value"><span id="vlrm-price-ada"><span class="loading">Connecting...</span></span> <span id="vlrm-price-change-24h" class="change-badge"></span></span>
             </div>
-            <div style="height: 50px; margin-bottom: 15px; position: relative;"><canvas id="spark-vlrm-ada-price"></canvas></div>
+            <div style="height: 50px; margin-bottom: 15px;"><canvas id="spark-vlrm-ada-price"></canvas></div>
             <div class="data-row" style="margin-top: auto;">
                 <span class="data-label">Liquidity:</span>
                 <span class="data-value"><span id="vlrm-liq-ada">-</span> <span id="vlrm-ada-change-24h" class="change-badge"></span></span>
             </div>
-            <div style="height: 50px; position: relative;"><canvas id="spark-vlrm-ada"></canvas></div>
+            <div style="height: 50px;"><canvas id="spark-vlrm-ada"></canvas></div>
         </div>
 
         <div class="card card-orange drag-item" data-id="card-vlrm-oracle">
@@ -469,12 +459,12 @@
                 <span class="data-label">Price:</span>
                 <span class="data-value"><span id="vlrm-oracle-price"><span class="loading">Waiting...</span></span> <span id="vlrm-oracle-price-change-24h" class="change-badge"></span></span>
             </div>
-            <div style="height: 50px; margin-bottom: 15px; position: relative;"><canvas id="spark-vlrm-oracle-price"></canvas></div>
+            <div style="height: 50px; margin-bottom: 15px;"><canvas id="spark-vlrm-oracle-price"></canvas></div>
             <div class="data-row" style="margin-top: auto;">
                 <span class="data-label">Liquidity:</span>
                 <span class="data-value"><span id="vlrm-oracle-liq-ada">-</span> <span id="vlrm-oracle-change-24h" class="change-badge"></span></span>
             </div>
-            <div style="height: 50px; position: relative;"><canvas id="spark-vlrm-oracle"></canvas></div>
+            <div style="height: 50px;"><canvas id="spark-vlrm-oracle"></canvas></div>
         </div>
 
         <div class="card card-vault drag-item card-wide card-tall" data-id="card-oracle-ada" style="display: flex; flex-direction: column;">
@@ -505,7 +495,7 @@
                         <span id="oracle-total-liq">-</span> <span id="total-liq-change-24h" class="change-badge" style="font-size: 1rem;"></span>
                     </div>
                 </div>
-                <div style="flex-grow: 1; min-height: 60px; margin-top: 20px; position: relative;"><canvas id="spark-total-liq"></canvas></div>
+                <div style="height: 70px; margin-top: 20px; position: relative;"><canvas id="spark-total-liq"></canvas></div>
             </div>
         </div>
 
@@ -661,8 +651,6 @@
         function initSortable() {
             loadSavedLayout();
             sortableInstance = new Sortable(document.getElementById('main-dashboard'), {
-                swap: true, 
-                swapClass: 'sortable-swap-highlight', 
                 animation: 350,
                 easing: "cubic-bezier(0.25, 1, 0.5, 1)", 
                 draggable: '.drag-item',
@@ -763,11 +751,14 @@
                         x: { display: true, grid: { display: false }, ticks: { color: '#a0a0c0', maxTicksLimit: 8, maxRotation: 0 } }, 
                         y: { 
                             grid: { 
-                                color: (ctx) => ctx.tick && ctx.tick.value === 0 ? 'rgba(255, 255, 255, 0.5)' : 'rgba(255,255,255,0.05)',
-                                lineWidth: (ctx) => ctx.tick && ctx.tick.value === 0 ? 15 : 1
-                                // borderDash line removed para que sea sólida
+                                color: (ctx) => ctx.tick && ctx.tick.value === 0 ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255,255,255,0.05)',
+                                lineWidth: (ctx) => ctx.tick && ctx.tick.value === 0 ? 15 : 1,
+                                borderDash: (ctx) => ctx.tick && ctx.tick.value === 0 ? [] : []
                             }, 
-                            ticks: { color: '#a0a0c0' } 
+                            ticks: { 
+                                color: '#a0a0c0',
+                                stepSize: 5
+                            } 
                         } 
                     }, 
                     plugins: { legend: { display: true, labels: { color: '#ffffff', boxWidth: 10 } } } 
