@@ -118,11 +118,10 @@
         /* Tarjetas compactas */
         .card-compact { min-height: 120px; }
 
-        /* CODIFICACIÓN DE COLORES (NUEVO: ADA Y CHART AÚN MÁS OSCUROS) */
+        /* CODIFICACIÓN DE COLORES */
         .card-ada { background: rgba(8, 10, 16, 0.98); border-color: rgba(66, 133, 244, 0.2); }
         .card-ada:hover { border-color: rgba(66, 133, 244, 0.5); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(66, 133, 244, 0.2); background: rgba(12, 15, 24, 1); }
 
-        /* Oscurecidos nivel abismo */
         .card-vault { background: rgba(14, 10, 4, 0.98); border-color: rgba(252, 211, 77, 0.2); }
         .card-vault:hover { border-color: rgba(252, 211, 77, 0.5); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(252, 211, 77, 0.2); background: rgba(18, 12, 5, 1); }
 
@@ -136,7 +135,7 @@
         .arbitrage-box-orange { background: rgba(14, 6, 2, 0.98); border-color: rgba(255, 123, 0, 0.2); }
         .arbitrage-box-orange:hover { border-color: rgba(255, 123, 0, 0.5); background: rgba(18, 8, 3, 1); transform: translateY(-2px); box-shadow: 0 12px 30px rgba(0,0,0,0.7), 0 0 20px rgba(255, 123, 0, 0.2); }
 
-        /* Card title sin text-transform para respetar las mayúsculas/minúsculas exactas */
+        /* Card title sin text-transform */
         .card-title { font-size: 1.05rem; font-weight: 600; margin-bottom: 15px; color: var(--neon-orange); display: flex; justify-content: space-between; align-items: center;}
         .card-title.ada-title { color: var(--ada-color); text-shadow: 0 0 10px rgba(66, 133, 244, 0.3);}
         
@@ -320,7 +319,7 @@
                     </div>
                 </div>
                 <div class="data-row" style="margin: 0;">
-                    <span class="data-label" style="margin-right: 15px;">Net Return (2 Hops):</span>
+                    <span class="data-label" style="margin-right: 15px; font-size: 0.8rem;">Net Return (2 Hops):</span>
                     <span class="data-value" id="sim-profit" style="font-size: 1.5rem;">- ADA</span>
                 </div>
             </div>
@@ -343,7 +342,7 @@
                     </div>
                 </div>
                 <div class="data-row" style="margin: 0;">
-                    <span class="data-label" style="margin-right: 15px;">Net Return (3 Hops):</span>
+                    <span class="data-label" style="margin-right: 15px; font-size: 0.8rem;">Net Return (3 Hops):</span>
                     <span class="data-value" id="sim-tri-profit" style="font-size: 1.5rem;">- ADA</span>
                 </div>
             </div>
@@ -481,8 +480,8 @@
             </div>
         </div>
 
-        <div class="card drag-item card-wide" data-id="card-chart" style="grid-column: 1 / -1; padding: 15px; min-height: auto; background: rgba(6, 8, 12, 0.98);">
-            <div class="card-title" style="margin-bottom: 10px; font-size: 0.9rem; color: #ffffff;">Spread & vault discrepancy (last 24h %)</div>
+        <div class="card drag-item card-wide" data-id="card-chart" style="grid-column: 1 / -1; padding: 15px; min-height: auto; background: rgba(8, 10, 16, 0.98);">
+            <div class="card-title" style="margin-bottom: 10px; font-size: 0.9rem; color: #ffffff; text-transform: none;">Spread & vault discrepancy (last 24h %)</div>
             <div style="height: 200px; width: 100%;">
                 <canvas id="arbitrageChart"></canvas>
             </div>
@@ -689,8 +688,9 @@
                         x: { display: true, grid: { display: false }, ticks: { color: '#a0a0c0', maxTicksLimit: 8, maxRotation: 0 } }, 
                         y: { 
                             grid: { 
-                                color: (ctx) => ctx.tick.value === 0 ? '#ffffff' : 'rgba(255,255,255,0.05)',
-                                lineWidth: (ctx) => ctx.tick.value === 0 ? 2 : 1
+                                color: (ctx) => ctx.tick && ctx.tick.value === 0 ? 'rgba(255, 255, 255, 0.6)' : 'rgba(255,255,255,0.05)',
+                                lineWidth: (ctx) => ctx.tick && ctx.tick.value === 0 ? 2 : 1,
+                                borderDash: (ctx) => ctx.tick && ctx.tick.value === 0 ? [5, 5] : []
                             }, 
                             ticks: { color: '#a0a0c0' } 
                         } 
@@ -1177,11 +1177,11 @@
                             vaultActionEl.style.color = "rgba(255, 255, 255, 0.5)";
                         } else {
                             if (bestDeviation > 0) {
-                                vaultBannerDiscEl.style.color = "#ffffff"; 
+                                vaultBannerDiscEl.style.color = "#10b981"; 
                                 vaultActionEl.innerHTML = `<a href="${targetLink}" target="_blank" class="badge-dark">Sell ${targetDexForVault}</a>`; 
                                 vaultActionEl.style.color = "white";
                             } else {
-                                vaultBannerDiscEl.style.color = "#ffffff"; 
+                                vaultBannerDiscEl.style.color = "var(--neon-red)"; 
                                 vaultActionEl.innerHTML = `<a href="${targetLink}" target="_blank" class="badge-dark">Buy ${targetDexForVault}</a>`; 
                                 vaultActionEl.style.color = "white";
                             }
@@ -1190,9 +1190,7 @@
                         if (Math.abs(bestDeviation) >= conf.vaultAlert) {
                             const alertToggle = document.getElementById('alert-toggle'); const now = Date.now();
                             if (alertToggle && alertToggle.checked && (now - lastVaultAlertTime > ALERT_COOLDOWN)) {
-                                playDing(); 
-                                if (Notification.permission === "granted") { new Notification("🏛️ L4VA Vault Alert!", { body: `Discrepancy: ${bestDeviation.toFixed(2)}%\nAction: ${bestDeviation > 0 ? 'Sell' : 'Buy'} on ${targetDexForVault}` }); }
-                                sendTelegramAlert(`🏛️ <b>L4VA Vault Alert!</b>\n\n⚖️ Fair Price Discrepancy: <b>${bestDeviation > 0 ? '+' : ''}${bestDeviation.toFixed(2)}%</b>\n💡 Action: ${bestDeviation > 0 ? 'Sell' : 'Buy'} on ${targetDexForVault}\n\n<i>Check dashboard for real-time data.</i>`);
+                                // No alert sound/TG
                                 lastVaultAlertTime = now;
                             }
                         }
@@ -1220,15 +1218,6 @@
                         spreadEl.style.color = "#ffffff";  // CAMBIO A COLOR BLANCO
                         if (priceVyfi > priceMin) { actionEl.innerHTML = `<a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Buy Min</a> <a href="${VYFI_LINK}" target="_blank" class="badge-dark">Sell VyFi</a>`;  } 
                         else { actionEl.innerHTML = `<a href="${VYFI_LINK}" target="_blank" class="badge-dark">Buy VyFi</a> <a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Sell Min</a>`;  }
-                    }
-
-                    if (spread >= conf.alert) {
-                        const alertToggle = document.getElementById('alert-toggle'); const now = Date.now();
-                        if (alertToggle && alertToggle.checked && (now - lastAlertTime > ALERT_COOLDOWN)) {
-                            playDing(); if (Notification.permission === "granted") { new Notification("🚨 L4VA Arbitrage Detected!", { body: `Spread: ${spread.toFixed(2)}%\n${suggestedActionText}` }); }
-                            sendTelegramAlert(`🚨 <b>L4VA Arbitrage Detected!</b>\n\n📈 DEX Spread: <b>${spread.toFixed(2)}%</b>\n💡 Route: ${suggestedActionText}\n\n<i>Check dashboard for real-time net profit.</i>`);
-                            lastAlertTime = now;
-                        }
                     }
                 }
                 
