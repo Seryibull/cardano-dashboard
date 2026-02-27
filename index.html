@@ -11,9 +11,12 @@
     <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22L4VA%20Arbitrage%22%2C%22short_name%22%3A%22L4VA%20Arb%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23120f24%22%2C%22theme_color%22%3A%22%23ff7b00%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22https%3A%2F%2Fcryptologos.cc%2Flogos%2Fcardano-ada-logo.png%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fpng%22%7D%5D%7D">
 
     <title>L4VA Protocol | Arbitrage Dashboard</title>
+    
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script> 
+    <link href="https://cdn.jsdelivr.net/npm/gridstack@8.2.1/dist/gridstack.min.css" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/gridstack@8.2.1/dist/gridstack-all.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    
     <style>
         :root {
             --card-bg: #120f24;
@@ -98,66 +101,41 @@
         .settings-btn:hover { transform: rotate(45deg); }
         .active-edit-btn { background: rgba(255, 123, 0, 0.2) !important; border-color: var(--neon-orange) !important; box-shadow: 0 0 15px rgba(255, 123, 0, 0.5); }
 
-        /* GRID BENTO BOX (CON DENSE PARA LIBERTAD TOTAL) */
-        .dashboard { 
-            display: grid; 
-            grid-template-columns: 1fr; /* Móvil: 1 columna */
-            grid-auto-rows: auto;
-            grid-auto-flow: row dense; /* Vuelve "dense" para que rellene huecos libremente */
-            gap: 20px; 
-            max-width: 1200px; 
-            margin: 0 auto; 
-            filter: blur(0px); 
-            transition: filter 0.5s ease;
-            align-items: start;
+        /* =========================================
+           NUEVO MOTOR DE GRID: GRIDSTACK.JS
+           ========================================= */
+        .grid-stack { max-width: 1200px; margin: 0 auto; transition: filter 0.5s ease; }
+        
+        /* ESTILOS DEL MODO EDICIÓN (GRIDSTACK) */
+        .edit-mode-active .grid-stack-item-content { 
+            cursor: grab !important; 
+            outline: 2px dashed rgba(255, 123, 0, 0.5) !important; 
+            outline-offset: 4px; 
+            transition: outline 0.3s ease; 
         }
+        .edit-mode-active .grid-stack-item-content:hover { background: rgba(255, 123, 0, 0.05); }
+        .edit-mode-active .grid-stack-item-content:active { cursor: grabbing !important; }
+        .edit-mode-active .grid-stack-item-content canvas, 
+        .edit-mode-active .grid-stack-item-content input, 
+        .edit-mode-active .grid-stack-item-content button, 
+        .edit-mode-active .grid-stack-item-content a { pointer-events: none !important; }
 
-        @media (min-width: 768px) { 
-            .dashboard { 
-                grid-template-columns: repeat(2, minmax(0, 1fr)); 
-                grid-auto-rows: 110px; 
-            } 
-            .drag-item { grid-row: span 2; } 
-            .card-compact { grid-row: span 1 !important; padding: 15px 25px; } 
-            .card-tall { grid-row: span 4 !important; } 
-            .card-wide { grid-column: span 2; } 
-            
-            .card-chart { grid-row: span 2 !important; } 
-        }
-
-        @media (min-width: 1024px) { 
-            .dashboard { grid-template-columns: repeat(4, minmax(0, 1fr)); } 
+        /* FÍSICAS DE ARRASTRE REALISTAS */
+        .grid-stack-placeholder > .placeholder-content {
+            border: 2px dashed rgba(255, 123, 0, 0.4) !important;
+            background: rgba(10, 8, 20, 0.4) !important;
+            border-radius: 20px !important;
         }
         
-        /* ESTILOS DEL MODO EDICIÓN */
-        .edit-mode-active .drag-item { cursor: grab !important; outline: 2px dashed rgba(255, 123, 0, 0.5) !important; outline-offset: 4px; transition: outline 0.3s ease; }
-        .edit-mode-active .drag-item:hover { background: rgba(255, 123, 0, 0.05); }
-        .edit-mode-active .drag-item:active { cursor: grabbing !important; }
-        .edit-mode-active canvas, .edit-mode-active input, .edit-mode-active button, .edit-mode-active a, .edit-mode-active label { pointer-events: none !important; }
-
-        /* FÍSICAS DE ARRASTRE */
-        .sortable-ghost { 
-            opacity: 1 !important; 
-            background: rgba(10, 8, 20, 0.4) !important;
-            border: 2px dashed rgba(255, 123, 0, 0.4) !important;
-            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5) !important;
-            transform: none !important;
-            border-radius: 20px !important;
-        }
-        .sortable-ghost > * { opacity: 0 !important; }
-
-        .sortable-drag { 
-            opacity: 1 !important; 
-            background: var(--card-bg) !important;
+        .ui-draggable-dragging > .grid-stack-item-content {
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.9), 0 0 40px rgba(255, 123, 0, 0.4) !important;
+            transform: scale(1.02) rotate(1deg) !important;
             border: 2px solid var(--neon-orange) !important;
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.9), 0 0 40px rgba(255, 123, 0, 0.3) !important;
-            transform: scale(1.03) rotate(2deg) !important; 
-            cursor: grabbing !important;
+            opacity: 0.98 !important;
             z-index: 99999 !important;
-            border-radius: 20px !important;
         }
 
-        /* ESTILOS GENERALES DE TARJETAS */
+        /* ESTILOS GENERALES DE TARJETAS (Ahora viven dentro de grid-stack-item-content) */
         .card { 
             border-radius: 20px; 
             padding: 20px 25px; 
@@ -173,11 +151,9 @@
             flex-direction: column; 
             justify-content: space-between;
         }
-        .card:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 123, 0, 0.15); border-color: rgba(255, 123, 0, 0.3); }
-
-        @media (min-width: 768px) {
-            .card-compact .card-title { margin-bottom: 5px; font-size: 0.95rem; }
-        }
+        
+        /* Ajustes finos de padding para las tarjetas super estrechas de 1 bloque */
+        .card-compact { padding: 15px 25px !important; }
 
         /* CODIFICACIÓN DE COLORES */
         .card-ada { background: rgba(8, 10, 16, 0.98); border-color: rgba(66, 133, 244, 0.2); }
@@ -188,13 +164,6 @@
 
         .card-orange { background: rgba(14, 6, 2, 0.98); border-color: rgba(255, 123, 0, 0.2); }
         .card-orange:hover { border-color: rgba(255, 123, 0, 0.5); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 123, 0, 0.2); background: rgba(18, 8, 3, 1); }
-
-        /* Igualados estilos para recuadros modulares */
-        .arbitrage-box-vault { background: rgba(14, 10, 4, 0.98); border-color: rgba(252, 211, 77, 0.2); }
-        .arbitrage-box-vault:hover { border-color: rgba(252, 211, 77, 0.5); background: rgba(18, 12, 5, 1); transform: translateY(-2px); box-shadow: 0 12px 30px rgba(0,0,0,0.7), 0 0 20px rgba(252, 211, 77, 0.2); }
-        
-        .arbitrage-box-orange { background: rgba(14, 6, 2, 0.98); border-color: rgba(255, 123, 0, 0.2); }
-        .arbitrage-box-orange:hover { border-color: rgba(255, 123, 0, 0.5); background: rgba(18, 8, 3, 1); transform: translateY(-2px); box-shadow: 0 12px 30px rgba(0,0,0,0.7), 0 0 20px rgba(255, 123, 0, 0.2); }
 
         /* Card title sin text-transform */
         .card-title { font-size: 1.05rem; font-weight: 600; margin-bottom: 15px; color: var(--neon-orange); display: flex; justify-content: space-between; align-items: center;}
@@ -218,7 +187,10 @@
         
         /* Ocultar flechas del input numérico */
         input[type="number"].sim-input::-webkit-outer-spin-button,
-        input[type="number"].sim-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type="number"].sim-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
         input[type="number"].sim-input { -moz-appearance: textfield; }
 
         .sim-input { background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 10px; font-weight: bold; text-align: center; margin-right: 5px; font-family: 'Inter', sans-serif;}
@@ -270,6 +242,7 @@
 
         h3.dex-subtitle { margin: 0 0 10px 0; font-size: 0.9rem; display: inline-block; }
         
+        /* Footer fuera del grid principal */
         .footer-disclaimer { text-align: center; color: rgba(255,255,255,0.4); font-size: 0.75rem; padding: 20px 20px; font-style: italic; margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.05); max-width: 1200px; margin-left: auto; margin-right: auto;}
     </style>
 </head>
@@ -333,212 +306,233 @@
         </div>
     </div>
 
-    <div class="dashboard" id="main-dashboard">
+    <div class="grid-stack" id="main-dashboard">
         
-        <div class="card card-vault drag-item card-wide card-compact" data-id="card-arb-dex">
-            <div class="card-title" style="color: var(--vault-color);">ORACLE / ADA dex arbitrage</div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto;">
-                <div class="data-row" style="margin: 0;">
-                    <span class="data-label" style="margin-right: 15px;">Spread:</span>
-                    <span class="data-value" id="arbitrage-spread" style="font-size: 1.5rem;">-%</span>
-                </div>
-                <div class="data-row" style="margin: 0;">
-                    <span class="data-label" style="margin-right: 15px;">Action Route:</span>
-                    <span id="arbitrage-action" style="font-size: 0.9rem; font-weight: bold; color: white;">...</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="card card-vault drag-item card-wide card-compact" data-id="card-arb-vault">
-            <div class="card-title" style="color: var(--vault-color);">Vault relics fair price ORACLE</div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto;">
-                <div class="data-row" style="margin: 0;">
-                    <span class="data-label" style="margin-right: 15px;">Discrepancy:</span>
-                    <span class="data-value" id="vault-banner-discrepancy" style="font-size: 1.5rem;">-%</span>
-                </div>
-                <div class="data-row" style="margin: 0;">
-                    <span class="data-label" style="margin-right: 15px;">Market Action:</span>
-                    <span id="vault-arbitrage-action" style="font-size: 0.9rem; font-weight: bold; color: white;">...</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="card card-vault drag-item card-wide" data-id="card-sim-oracle">
-            <div class="card-title" style="color: var(--vault-color);">ORACLE / ADA net profit simulator</div>
-            
-            <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: auto; padding-bottom: 20px;">
-                <div class="data-row" style="margin: 0;">
-                    <div style="display: flex; align-items: center;">
-                        <input type="number" id="sim-ada-input" class="sim-input" value="1000" style="width: 100px; font-size: 1.2rem; padding: 10px;" onkeyup="recalculateSimulators()" onchange="recalculateSimulators()"> 
-                        <span style="font-size: 0.9rem; font-weight: bold; color: var(--text-primary);">ADA</span>
+        <div class="grid-stack-item" gs-id="card-arb-dex" gs-w="2" gs-h="1" gs-x="0" gs-y="0">
+            <div class="grid-stack-item-content card card-vault card-compact">
+                <div class="card-title" style="color: var(--vault-color);">ORACLE / ADA dex arbitrage</div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto;">
+                    <div class="data-row" style="margin: 0;">
+                        <span class="data-label" style="margin-right: 15px;">Spread:</span>
+                        <span class="data-value" id="arbitrage-spread" style="font-size: 1.5rem;">-%</span>
+                    </div>
+                    <div class="data-row" style="margin: 0;">
+                        <span class="data-label" style="margin-right: 15px;">Action Route:</span>
+                        <span id="arbitrage-action" style="font-size: 0.9rem; font-weight: bold; color: white;">...</span>
                     </div>
                 </div>
-                <div class="data-row" style="margin: 0;">
-                    <span class="data-label" style="margin-right: 15px; font-size: 0.7rem; opacity: 0.6;">Net Return (2 Hops):</span>
-                    <span class="data-value" id="sim-profit" style="font-size: 1.5rem;">- ADA</span>
-                </div>
-            </div>
-            <div style="border-top: 1px solid rgba(255,255,255,0.05); padding-top: 15px;">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <div id="optimizer-result" class="optimizer-text" style="margin: 0; padding: 0;">💡 <b>Auto-Optimizer:</b> Calculating...</div>
-                    <div id="sim-slippage-label" class="slippage-label" style="margin: 0;">Price Impact: 0.00%</div>
-                </div>
-                <div class="slippage-container" style="margin-top: 8px;"><div id="sim-slippage-bar" class="slippage-bar" style="background: #10b981;"></div></div>
             </div>
         </div>
 
-        <div class="card card-orange drag-item card-wide" data-id="card-sim-tri">
-            <div class="card-title" style="color: var(--neon-orange);">▲VLRM ORACLE ADA▼ triangular net profit simulator</div>
-            <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: auto; padding-bottom: 20px;">
-                <div class="data-row" style="margin: 0;">
-                    <div style="display: flex; align-items: center;">
-                        <input type="number" id="sim-tri-input" class="sim-input" value="1000" style="width: 100px; font-size: 1.2rem; padding: 10px;" onkeyup="recalculateSimulators()" onchange="recalculateSimulators()"> 
-                        <span style="font-size: 0.9rem; font-weight: bold; color: var(--text-primary);">ADA</span>
+        <div class="grid-stack-item" gs-id="card-arb-vault" gs-w="2" gs-h="1" gs-x="2" gs-y="0">
+            <div class="grid-stack-item-content card card-vault card-compact">
+                <div class="card-title" style="color: var(--vault-color);">Vault relics fair price ORACLE</div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto;">
+                    <div class="data-row" style="margin: 0;">
+                        <span class="data-label" style="margin-right: 15px;">Discrepancy:</span>
+                        <span class="data-value" id="vault-banner-discrepancy" style="font-size: 1.5rem;">-%</span>
+                    </div>
+                    <div class="data-row" style="margin: 0;">
+                        <span class="data-label" style="margin-right: 15px;">Market Action:</span>
+                        <span id="vault-arbitrage-action" style="font-size: 0.9rem; font-weight: bold; color: white;">...</span>
                     </div>
                 </div>
-                <div class="data-row" style="margin: 0;">
-                    <span class="data-label" style="margin-right: 15px; font-size: 0.7rem; opacity: 0.6;">Net Return (3 Hops):</span>
-                    <span class="data-value" id="sim-tri-profit" style="font-size: 1.5rem;">- ADA</span>
-                </div>
-            </div>
-            <div style="border-top: 1px solid rgba(255,255,255,0.05); padding-top: 15px;">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <div id="tri-optimizer-result" class="optimizer-text" style="margin: 0; padding: 0;">💡 <b>Auto-Optimizer:</b> Calculating...</div>
-                    <div id="sim-tri-slippage-label" class="slippage-label" style="margin: 0;">Max Price Impact: 0.00%</div>
-                </div>
-                <div class="slippage-container" style="margin-top: 8px;"><div id="sim-tri-slippage-bar" class="slippage-bar" style="background: #10b981;"></div></div>
             </div>
         </div>
 
-        <div class="card card-ada drag-item" data-id="card-ada">
-            <div>
-                <div class="card-title ada-title">ADA</div>
-                <div class="data-row">
-                    <span class="data-label">Price USD:</span>
-                    <span class="data-value" id="ada-price-usd">
-                        <span class="loading">Loading...</span> <span id="ada-change-24h" class="change-badge"></span>
-                    </span>
+        <div class="grid-stack-item" gs-id="card-sim-oracle" gs-w="2" gs-h="2" gs-x="0" gs-y="1">
+            <div class="grid-stack-item-content card card-vault">
+                <div class="card-title" style="color: var(--vault-color);">ORACLE / ADA net profit simulator</div>
+                <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: auto; padding-bottom: 20px;">
+                    <div class="data-row" style="margin: 0;">
+                        <div style="display: flex; align-items: center;">
+                            <input type="number" id="sim-ada-input" class="sim-input" value="1000" style="width: 100px; font-size: 1.2rem; padding: 10px;" onkeyup="recalculateSimulators()" onchange="recalculateSimulators()"> 
+                            <span style="font-size: 0.9rem; font-weight: bold; color: var(--text-primary);">ADA</span>
+                        </div>
+                    </div>
+                    <div class="data-row" style="margin: 0;">
+                        <span class="data-label" style="margin-right: 15px; font-size: 0.7rem; opacity: 0.6;">Net Return (2 Hops):</span>
+                        <span class="data-value" id="sim-profit" style="font-size: 1.5rem;">- ADA</span>
+                    </div>
                 </div>
-                <div class="data-row" style="margin-top: 15px;"><span class="data-label" style="font-size: 0.75rem;">Last Updated:</span><span class="data-value" style="font-size: 0.75rem;" id="ada-time">-</span></div>
-            </div>
-            <div style="height: 80px; margin-top: 15px;"><canvas id="spark-ada"></canvas></div>
-        </div>
-        
-        <div class="card card-vault drag-item" data-id="card-vault">
-            <div>
-                <div class="card-title" style="color: var(--vault-color);">Relics vault ORACLE</div>
-                <div class="data-row">
-                    <span class="data-label">TVL:</span>
-                    <span class="data-value">
-                        <span id="vault-tvl"><span class="loading">Calculating...</span></span>
-                        <span id="vault-change-24h" class="change-badge"></span>
-                    </span>
+                <div style="border-top: 1px solid rgba(255,255,255,0.05); padding-top: 15px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div id="optimizer-result" class="optimizer-text" style="margin: 0; padding: 0;">💡 <b>Auto-Optimizer:</b> Calculating...</div>
+                        <div id="sim-slippage-label" class="slippage-label" style="margin: 0;">Price Impact: 0.00%</div>
+                    </div>
+                    <div class="slippage-container" style="margin-top: 8px;"><div id="sim-slippage-bar" class="slippage-bar" style="background: #10b981;"></div></div>
                 </div>
-                <div class="data-row"><span class="data-label">Fair price:</span><span class="data-value" id="vault-fair-price">-</span></div>
             </div>
-            <div style="height: 80px; margin-top: 15px;"><canvas id="spark-vault"></canvas></div>
         </div>
 
-        <div class="card card-orange drag-item" data-id="card-vlrm-ada">
-            <div class="card-title" style="color: var(--neon-orange);">VLRM / ADA <span class="badge bg-vyfi" style="margin-left:auto;">VyFi</span></div>
-            <div class="data-row">
-                <span class="data-label">Price:</span>
-                <span class="data-value"><span id="vlrm-price-ada"><span class="loading">Connecting...</span></span> <span id="vlrm-price-change-24h" class="change-badge"></span></span>
+        <div class="grid-stack-item" gs-id="card-sim-tri" gs-w="2" gs-h="2" gs-x="2" gs-y="1">
+            <div class="grid-stack-item-content card card-orange">
+                <div class="card-title" style="color: var(--neon-orange);">▲VLRM ORACLE ADA▼ triangular net profit simulator</div>
+                <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: auto; padding-bottom: 20px;">
+                    <div class="data-row" style="margin: 0;">
+                        <div style="display: flex; align-items: center;">
+                            <input type="number" id="sim-tri-input" class="sim-input" value="1000" style="width: 100px; font-size: 1.2rem; padding: 10px;" onkeyup="recalculateSimulators()" onchange="recalculateSimulators()"> 
+                            <span style="font-size: 0.9rem; font-weight: bold; color: var(--text-primary);">ADA</span>
+                        </div>
+                    </div>
+                    <div class="data-row" style="margin: 0;">
+                        <span class="data-label" style="margin-right: 15px; font-size: 0.7rem; opacity: 0.6;">Net Return (3 Hops):</span>
+                        <span class="data-value" id="sim-tri-profit" style="font-size: 1.5rem;">- ADA</span>
+                    </div>
+                </div>
+                <div style="border-top: 1px solid rgba(255,255,255,0.05); padding-top: 15px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div id="tri-optimizer-result" class="optimizer-text" style="margin: 0; padding: 0;">💡 <b>Auto-Optimizer:</b> Calculating...</div>
+                        <div id="sim-tri-slippage-label" class="slippage-label" style="margin: 0;">Max Price Impact: 0.00%</div>
+                    </div>
+                    <div class="slippage-container" style="margin-top: 8px;"><div id="sim-tri-slippage-bar" class="slippage-bar" style="background: #10b981;"></div></div>
+                </div>
             </div>
-            <div style="height: 50px; margin-bottom: 15px;"><canvas id="spark-vlrm-ada-price"></canvas></div>
-            <div class="data-row" style="margin-top: auto;">
-                <span class="data-label">Liquidity:</span>
-                <span class="data-value"><span id="vlrm-liq-ada">-</span> <span id="vlrm-ada-change-24h" class="change-badge"></span></span>
-            </div>
-            <div style="height: 50px;"><canvas id="spark-vlrm-ada"></canvas></div>
         </div>
 
-        <div class="card card-orange drag-item" data-id="card-vlrm-oracle">
-            <div class="card-title" style="color: var(--neon-orange);">VLRM / ORACLE <span class="badge bg-vyfi" style="margin-left:auto;">VyFi</span></div>
-            <div class="data-row">
-                <span class="data-label">Price:</span>
-                <span class="data-value"><span id="vlrm-oracle-price"><span class="loading">Waiting...</span></span> <span id="vlrm-oracle-price-change-24h" class="change-badge"></span></span>
-            </div>
-            <div style="height: 50px; margin-bottom: 15px;"><canvas id="spark-vlrm-oracle-price"></canvas></div>
-            <div class="data-row" style="margin-top: auto;">
-                <span class="data-label">Liquidity:</span>
-                <span class="data-value"><span id="vlrm-oracle-liq-ada">-</span> <span id="vlrm-oracle-change-24h" class="change-badge"></span></span>
-            </div>
-            <div style="height: 50px;"><canvas id="spark-vlrm-oracle"></canvas></div>
-        </div>
-
-        <div class="card card-vault drag-item card-wide card-tall" data-id="card-oracle-ada" style="display: flex; flex-direction: column;">
-            <div class="card-title" style="color: var(--vault-color); margin-bottom: 20px;">ORACLE / ADA</div>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 20px;">
+        <div class="grid-stack-item" gs-id="card-ada" gs-w="1" gs-h="2" gs-x="0" gs-y="3">
+            <div class="grid-stack-item-content card card-ada">
                 <div>
-                    <h3 class="dex-subtitle"><span class="badge bg-vyfi">VYFI</span></h3>
-                    <div class="data-row"><span class="data-label">Price:</span><span class="data-value"><span id="oracle-vyfi-price">-</span> <span id="oracle-vyfi-price-change-24h" class="change-badge"></span></span></div>
-                    <div style="height: 50px; margin-bottom: 25px; position: relative;"><canvas id="spark-oracle-vyfi-price"></canvas></div>
-                    
-                    <div class="data-row"><span class="data-label">Liquidity:</span><span class="data-value"><span id="oracle-vyfi-liq">-</span> <span id="oracle-vyfi-change-24h" class="change-badge"></span></span></div>
-                    <div style="height: 50px; position: relative;"><canvas id="spark-oracle-vyfi"></canvas></div>
-                </div>
-                <div style="border-left: 2px solid rgba(255,255,255,0.05); padding-left: 20px;">
-                    <h3 class="dex-subtitle"><span class="badge bg-minswap">MINSWAP</span></h3>
-                    <div class="data-row"><span class="data-label">Price:</span><span class="data-value"><span id="oracle-min-price">-</span> <span id="oracle-min-price-change-24h" class="change-badge"></span></span></div>
-                    <div style="height: 50px; margin-bottom: 25px; position: relative;"><canvas id="spark-oracle-min-price"></canvas></div>
-                    
-                    <div class="data-row"><span class="data-label">Liquidity:</span><span class="data-value"><span id="oracle-min-liq">-</span> <span id="oracle-min-change-24h" class="change-badge"></span></span></div>
-                    <div style="height: 50px; position: relative;"><canvas id="spark-oracle-min"></canvas></div>
-                </div>
-            </div>
-            
-            <div style="margin-top: auto; padding-top: 25px; border-top: 1px solid rgba(255,255,255,0.05);">
-                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-                    <h3 class="dex-subtitle" style="color: var(--text-secondary); font-size: 1rem; text-transform: uppercase; margin:0;">Total Combined Liquidity</h3>
-                    <div class="data-value" style="font-size: 2rem; color: #ffffff; text-shadow: 0 2px 10px rgba(0,0,0,0.5);">
-                        <span id="oracle-total-liq">-</span> <span id="total-liq-change-24h" class="change-badge" style="font-size: 1rem;"></span>
+                    <div class="card-title ada-title">ADA</div>
+                    <div class="data-row">
+                        <span class="data-label">Price USD:</span>
+                        <span class="data-value" id="ada-price-usd">
+                            <span class="loading">Loading...</span> <span id="ada-change-24h" class="change-badge"></span>
+                        </span>
                     </div>
+                    <div class="data-row" style="margin-top: 15px;"><span class="data-label" style="font-size: 0.75rem;">Last Updated:</span><span class="data-value" style="font-size: 0.75rem;" id="ada-time">-</span></div>
                 </div>
-                <div style="height: 70px; margin-top: 20px; position: relative;"><canvas id="spark-total-liq"></canvas></div>
+                <div style="flex-grow: 1; min-height: 50px; position: relative; margin-top: 15px;"><canvas id="spark-ada"></canvas></div>
+            </div>
+        </div>
+        
+        <div class="grid-stack-item" gs-id="card-vault" gs-w="1" gs-h="2" gs-x="1" gs-y="3">
+            <div class="grid-stack-item-content card card-vault">
+                <div>
+                    <div class="card-title" style="color: var(--vault-color);">Relics vault ORACLE</div>
+                    <div class="data-row">
+                        <span class="data-label">TVL:</span>
+                        <span class="data-value">
+                            <span id="vault-tvl"><span class="loading">Calculating...</span></span>
+                            <span id="vault-change-24h" class="change-badge"></span>
+                        </span>
+                    </div>
+                    <div class="data-row"><span class="data-label">Fair price:</span><span class="data-value" id="vault-fair-price">-</span></div>
+                </div>
+                <div style="flex-grow: 1; min-height: 50px; position: relative; margin-top: 15px;"><canvas id="spark-vault"></canvas></div>
             </div>
         </div>
 
-        <div class="card card-orange drag-item card-wide card-tall" data-id="card-triangular" style="display: flex; flex-direction: column;">
-            <div class="card-title" style="color: var(--neon-orange); margin-bottom: 5px;">▲VLRM ORACLE ADA▼ triangular arbitrage</div>
-            
-            <div class="tri-wrapper">
-                <svg class="tri-svg" viewBox="0 0 250 200" preserveAspectRatio="xMidYMid meet">
-                    <polygon points="125,25 225,175 25,175" class="tri-line-bg" />
-                    <polygon id="tri-anim-path" points="125,25 225,175 25,175" class="tri-line-active" style="display:none;" />
-                </svg>
-                <div class="tri-node node-ada">ADA</div>
-                <div class="tri-node node-vlrm">VLRM</div>
-                <div class="tri-node node-oracle">ORAC</div>
+        <div class="grid-stack-item" gs-id="card-vlrm-ada" gs-w="1" gs-h="2" gs-x="2" gs-y="3">
+            <div class="grid-stack-item-content card card-orange">
+                <div class="card-title" style="color: var(--neon-orange);">VLRM / ADA <span class="badge bg-vyfi" style="margin-left:auto;">VyFi</span></div>
+                <div class="data-row">
+                    <span class="data-label">Price:</span>
+                    <span class="data-value"><span id="vlrm-price-ada"><span class="loading">Connecting...</span></span> <span id="vlrm-price-change-24h" class="change-badge"></span></span>
+                </div>
+                <div style="height: 50px; margin-bottom: 15px; position: relative;"><canvas id="spark-vlrm-ada-price"></canvas></div>
+                <div class="data-row" style="margin-top: auto;">
+                    <span class="data-label">Liquidity:</span>
+                    <span class="data-value"><span id="vlrm-liq-ada">-</span> <span id="vlrm-ada-change-24h" class="change-badge"></span></span>
+                </div>
+                <div style="height: 50px; position: relative;"><canvas id="spark-vlrm-ada"></canvas></div>
             </div>
+        </div>
 
-            <div style="margin-top: auto; padding-top: 25px; border-top: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; justify-content: center;">
-                <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px;">
-                    <div class="arbitrage-label" style="margin-bottom: 0;">Optimal Net Discrepancy</div>
-                    <div class="arbitrage-big-value" id="tri-arb-spread" style="font-size: 2.2rem; line-height: 1;"><span class="loading">Scanning...</span></div>
+        <div class="grid-stack-item" gs-id="card-vlrm-oracle" gs-w="1" gs-h="2" gs-x="3" gs-y="3">
+            <div class="grid-stack-item-content card card-orange">
+                <div class="card-title" style="color: var(--neon-orange);">VLRM / ORACLE <span class="badge bg-vyfi" style="margin-left:auto;">VyFi</span></div>
+                <div class="data-row">
+                    <span class="data-label">Price:</span>
+                    <span class="data-value"><span id="vlrm-oracle-price"><span class="loading">Waiting...</span></span> <span id="vlrm-oracle-price-change-24h" class="change-badge"></span></span>
+                </div>
+                <div style="height: 50px; margin-bottom: 15px; position: relative;"><canvas id="spark-vlrm-oracle-price"></canvas></div>
+                <div class="data-row" style="margin-top: auto;">
+                    <span class="data-label">Liquidity:</span>
+                    <span class="data-value"><span id="vlrm-oracle-liq-ada">-</span> <span id="vlrm-oracle-change-24h" class="change-badge"></span></span>
+                </div>
+                <div style="height: 50px; position: relative;"><canvas id="spark-vlrm-oracle"></canvas></div>
+            </div>
+        </div>
+
+        <div class="grid-stack-item" gs-id="card-oracle-ada" gs-w="2" gs-h="3" gs-x="0" gs-y="5">
+            <div class="grid-stack-item-content card card-vault" style="display: flex; flex-direction: column;">
+                <div class="card-title" style="color: var(--vault-color); margin-bottom: 20px;">ORACLE / ADA</div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 20px;">
+                    <div>
+                        <h3 class="dex-subtitle"><span class="badge bg-vyfi">VYFI</span></h3>
+                        <div class="data-row"><span class="data-label">Price:</span><span class="data-value"><span id="oracle-vyfi-price">-</span> <span id="oracle-vyfi-price-change-24h" class="change-badge"></span></span></div>
+                        <div style="height: 50px; margin-bottom: 25px; position: relative;"><canvas id="spark-oracle-vyfi-price"></canvas></div>
+                        
+                        <div class="data-row"><span class="data-label">Liquidity:</span><span class="data-value"><span id="oracle-vyfi-liq">-</span> <span id="oracle-vyfi-change-24h" class="change-badge"></span></span></div>
+                        <div style="height: 50px; position: relative;"><canvas id="spark-oracle-vyfi"></canvas></div>
+                    </div>
+                    <div style="border-left: 2px solid rgba(255,255,255,0.05); padding-left: 20px;">
+                        <h3 class="dex-subtitle"><span class="badge bg-minswap">MINSWAP</span></h3>
+                        <div class="data-row"><span class="data-label">Price:</span><span class="data-value"><span id="oracle-min-price">-</span> <span id="oracle-min-price-change-24h" class="change-badge"></span></span></div>
+                        <div style="height: 50px; margin-bottom: 25px; position: relative;"><canvas id="spark-oracle-min-price"></canvas></div>
+                        
+                        <div class="data-row"><span class="data-label">Liquidity:</span><span class="data-value"><span id="oracle-min-liq">-</span> <span id="oracle-min-change-24h" class="change-badge"></span></span></div>
+                        <div style="height: 50px; position: relative;"><canvas id="spark-oracle-min"></canvas></div>
+                    </div>
                 </div>
                 
-                <div style="font-size: 0.85rem; line-height: 1.8; display: flex; flex-direction: column; gap: 8px;">
-                    <div id="route-a-container" class="route-inactive" style="display: flex; align-items: center; gap: 8px;">
-                        <div class="route-dot"></div>
-                        <div>Route A: <span style="font-weight: bold; color: white;">Buy VLRM ➔ Swap ORAC ➔ Sell ORAC</span></div>
+                <div style="margin-top: auto; padding-top: 25px; border-top: 1px solid rgba(255,255,255,0.05);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                        <h3 class="dex-subtitle" style="color: var(--text-secondary); font-size: 1rem; text-transform: uppercase; margin:0;">Total Combined Liquidity</h3>
+                        <div class="data-value" style="font-size: 2rem; color: #ffffff; text-shadow: 0 2px 10px rgba(0,0,0,0.5);">
+                            <span id="oracle-total-liq">-</span> <span id="total-liq-change-24h" class="change-badge" style="font-size: 1rem;"></span>
+                        </div>
                     </div>
-                    <div id="route-b-container" class="route-inactive" style="display: flex; align-items: center; gap: 8px;">
-                        <div class="route-dot"></div>
-                        <div>Route B: <span style="font-weight: bold; color: white;">Buy ORAC ➔ Swap VLRM ➔ Sell VLRM</span></div>
-                    </div>
-                </div>
-                
-                <div style="font-size: 0.75rem; font-style: italic; color: var(--text-secondary); margin-top: 20px;">
-                    * Percentage dynamically calculated from Auto-Optimizer's max realistic net profit.
+                    <div style="height: 70px; margin-top: 20px; position: relative;"><canvas id="spark-total-liq"></canvas></div>
                 </div>
             </div>
         </div>
 
-        <div class="card drag-item card-wide card-chart" data-id="card-chart" style="grid-column: 1 / -1; padding: 15px; background: rgba(8, 10, 16, 0.98);">
-            <div class="card-title" style="margin-bottom: 10px; font-size: 0.9rem; color: #ffffff; text-transform: none;">Spread & vault discrepancy (last 24h %)</div>
-            <div style="flex-grow: 1; width: 100%; position: relative; min-height: 0;">
-                <canvas id="arbitrageChart"></canvas>
+        <div class="grid-stack-item" gs-id="card-triangular" gs-w="2" gs-h="3" gs-x="2" gs-y="5">
+            <div class="grid-stack-item-content card card-orange" style="display: flex; flex-direction: column;">
+                <div class="card-title" style="color: var(--neon-orange); margin-bottom: 5px;">▲VLRM ORACLE ADA▼ triangular arbitrage</div>
+                
+                <div class="tri-wrapper">
+                    <svg class="tri-svg" viewBox="0 0 250 200" preserveAspectRatio="xMidYMid meet">
+                        <polygon points="125,25 225,175 25,175" class="tri-line-bg" />
+                        <polygon id="tri-anim-path" points="125,25 225,175 25,175" class="tri-line-active" style="display:none;" />
+                    </svg>
+                    <div class="tri-node node-ada">ADA</div>
+                    <div class="tri-node node-vlrm">VLRM</div>
+                    <div class="tri-node node-oracle">ORAC</div>
+                </div>
+
+                <div style="margin-top: auto; padding-top: 25px; border-top: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; justify-content: center;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px;">
+                        <div class="arbitrage-label" style="margin-bottom: 0;">Optimal Net Discrepancy</div>
+                        <div class="arbitrage-big-value" id="tri-arb-spread" style="font-size: 2.2rem; line-height: 1;"><span class="loading">Scanning...</span></div>
+                    </div>
+                    
+                    <div style="font-size: 0.85rem; line-height: 1.8; display: flex; flex-direction: column; gap: 8px;">
+                        <div id="route-a-container" class="route-inactive" style="display: flex; align-items: center; gap: 8px;">
+                            <div class="route-dot"></div>
+                            <div>Route A: <span style="font-weight: bold; color: white;">Buy VLRM ➔ Swap ORAC ➔ Sell ORAC</span></div>
+                        </div>
+                        <div id="route-b-container" class="route-inactive" style="display: flex; align-items: center; gap: 8px;">
+                            <div class="route-dot"></div>
+                            <div>Route B: <span style="font-weight: bold; color: white;">Buy ORAC ➔ Swap VLRM ➔ Sell VLRM</span></div>
+                        </div>
+                    </div>
+                    
+                    <div style="font-size: 0.75rem; font-style: italic; color: var(--text-secondary); margin-top: 20px;">
+                        * Percentage dynamically calculated from Auto-Optimizer's max realistic net profit.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid-stack-item" gs-id="card-chart" gs-w="4" gs-h="2" gs-x="0" gs-y="8">
+            <div class="grid-stack-item-content card" style="background: rgba(8, 10, 16, 0.98);">
+                <div class="card-title" style="margin-bottom: 10px; font-size: 0.9rem; color: #ffffff; text-transform: none;">Spread & vault discrepancy (last 24h %)</div>
+                <div style="flex-grow: 1; width: 100%; position: relative; min-height: 0;">
+                    <canvas id="arbitrageChart"></canvas>
+                </div>
             </div>
         </div>
 
@@ -635,40 +629,38 @@
         }
 
         let isEditMode = false;
-        let sortableInstance = null;
-
-        function loadSavedLayout() {
-            const savedOrder = JSON.parse(localStorage.getItem('l4va_layout'));
-            if (savedOrder && savedOrder.length > 0) {
-                const dashboard = document.getElementById('main-dashboard');
-                savedOrder.forEach(id => {
-                    const el = document.querySelector(`.drag-item[data-id="${id}"]`);
-                    if (el) dashboard.appendChild(el);
-                });
-            }
-        }
+        let grid = null;
 
         function initSortable() {
-            loadSavedLayout();
-            sortableInstance = new Sortable(document.getElementById('main-dashboard'), {
-                animation: 350,
-                easing: "cubic-bezier(0.25, 1, 0.5, 1)", 
-                draggable: '.drag-item',
-                ghostClass: 'sortable-ghost',
-                dragClass: 'sortable-drag',
-                forceFallback: true,        
-                fallbackClass: 'sortable-drag', 
-                fallbackOnBody: true,       
-                disabled: true, 
-                onEnd: function() {
-                    const order = sortableInstance.toArray();
-                    localStorage.setItem('l4va_layout', JSON.stringify(order));
-                    setTimeout(() => {
-                        if(chartInstance) chartInstance.resize();
-                        Object.values(sparkInstances).forEach(chart => chart.resize());
-                    }, 50);
-                }
+            // INICIALIZAMOS GRIDSTACK.JS
+            grid = GridStack.init({
+                column: 4,
+                cellHeight: 110,
+                margin: 20,
+                float: true, // ¡PERMITE HUECOS VACÍOS ABSOLUTOS!
+                disableDrag: true, 
+                disableResize: true,
+                animate: true,
+                alwaysShowResizeHandle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
             });
+
+            // CARGAMOS EL LAYOUT SI EXISTE
+            const savedLayout = JSON.parse(localStorage.getItem('l4va_grid_layout'));
+            if (savedLayout && savedLayout.length > 0) {
+                grid.load(savedLayout);
+            }
+
+            // REDIBUJAMOS LOS GRÁFICOS AL SOLTAR UNA TARJETA
+            grid.on('change', function(event, items) {
+                if(chartInstance) chartInstance.resize();
+                Object.values(sparkInstances).forEach(chart => chart.resize());
+            });
+        }
+
+        function saveLayout() {
+            if (!grid) return;
+            const layout = grid.save();
+            localStorage.setItem('l4va_grid_layout', JSON.stringify(layout));
         }
 
         function toggleEditMode() {
@@ -680,21 +672,19 @@
                 btn.innerText = '🔓';
                 btn.classList.add('active-edit-btn');
                 dash.classList.add('edit-mode-active');
-                sortableInstance.option('disabled', false);
+                grid.enableMove(true);
             } else {
                 btn.innerText = '🔒';
                 btn.classList.remove('active-edit-btn');
                 dash.classList.remove('edit-mode-active');
-                sortableInstance.option('disabled', true);
-                
-                const order = sortableInstance.toArray();
-                localStorage.setItem('l4va_layout', JSON.stringify(order));
+                grid.enableMove(false);
+                saveLayout();
             }
         }
 
         function resetLayout() {
             if(confirm("Are you sure you want to restore the default dashboard layout?")) {
-                localStorage.removeItem('l4va_layout');
+                localStorage.removeItem('l4va_grid_layout');
                 location.reload(); 
             }
         }
@@ -753,7 +743,7 @@
                             grid: { 
                                 color: (ctx) => ctx.tick && ctx.tick.value === 0 ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255,255,255,0.05)',
                                 lineWidth: (ctx) => ctx.tick && ctx.tick.value === 0 ? 15 : 1,
-                                borderDash: (ctx) => ctx.tick && ctx.tick.value === 0 ? [] : []
+                                borderDash: []
                             }, 
                             ticks: { 
                                 color: '#a0a0c0',
@@ -1283,7 +1273,7 @@
                         actionEl.innerHTML = `Low spread`;
                         actionEl.style.color = "rgba(255, 255, 255, 0.5)";
                     } else {
-                        spreadEl.style.color = "#ffffff";  // CAMBIO A COLOR BLANCO
+                        spreadEl.style.color = "#ffffff";  
                         if (priceVyfi > priceMin) { actionEl.innerHTML = `<a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Buy Min</a> <a href="${VYFI_LINK}" target="_blank" class="badge-dark">Sell VyFi</a>`;  } 
                         else { actionEl.innerHTML = `<a href="${VYFI_LINK}" target="_blank" class="badge-dark">Buy VyFi</a> <a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Sell Min</a>`;  }
                     }
