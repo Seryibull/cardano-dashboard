@@ -97,8 +97,8 @@
         .settings-btn:hover { transform: rotate(45deg); }
         .active-edit-btn { background: rgba(255, 123, 0, 0.2) !important; border-color: var(--neon-orange) !important; box-shadow: 0 0 15px rgba(255, 123, 0, 0.5); }
 
-        /* GRID CON EFECTO DENSE PARA "TETRIS" */
-        .dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); grid-auto-flow: dense; gap: 20px; max-width: 1200px; margin: 0 auto; filter: blur(0px); transition: filter 0.5s ease;}
+        /* GRID: auto-fill evita que las tarjetas se estiren en huecos vacíos */
+        .dashboard { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); grid-auto-flow: dense; gap: 20px; max-width: 1200px; margin: 0 auto; filter: blur(0px); transition: filter 0.5s ease;}
         
         /* ESTILOS DEL MODO EDICIÓN */
         .edit-mode-active .drag-item { cursor: grab !important; outline: 2px dashed var(--neon-orange) !important; outline-offset: 4px; transition: outline 0.3s ease; }
@@ -319,7 +319,7 @@
                     </div>
                 </div>
                 <div class="data-row" style="margin: 0;">
-                    <span class="data-label" style="margin-right: 15px; font-size: 0.7rem; opacity: 0.7;">Net Return (2 Hops):</span>
+                    <span class="data-label" style="margin-right: 15px; font-size: 0.7rem; opacity: 0.6;">Net Return (2 Hops):</span>
                     <span class="data-value" id="sim-profit" style="font-size: 1.5rem;">- ADA</span>
                 </div>
             </div>
@@ -342,7 +342,7 @@
                     </div>
                 </div>
                 <div class="data-row" style="margin: 0;">
-                    <span class="data-label" style="margin-right: 15px; font-size: 0.7rem; opacity: 0.7;">Net Return (3 Hops):</span>
+                    <span class="data-label" style="margin-right: 15px; font-size: 0.7rem; opacity: 0.6;">Net Return (3 Hops):</span>
                     <span class="data-value" id="sim-tri-profit" style="font-size: 1.5rem;">- ADA</span>
                 </div>
             </div>
@@ -600,10 +600,17 @@
                 draggable: '.drag-item',
                 ghostClass: 'sortable-ghost',
                 dragClass: 'sortable-drag',
+                forceFallback: true,        
+                fallbackClass: 'sortable-drag', 
+                fallbackOnBody: true,       
                 disabled: true, 
                 onEnd: function() {
                     const order = sortableInstance.toArray();
                     localStorage.setItem('l4va_layout', JSON.stringify(order));
+                    setTimeout(() => {
+                        if(chartInstance) chartInstance.resize();
+                        Object.values(sparkInstances).forEach(chart => chart.resize());
+                    }, 50);
                 }
             });
         }
@@ -1190,7 +1197,9 @@
                         if (Math.abs(bestDeviation) >= conf.vaultAlert) {
                             const alertToggle = document.getElementById('alert-toggle'); const now = Date.now();
                             if (alertToggle && alertToggle.checked && (now - lastVaultAlertTime > ALERT_COOLDOWN)) {
-                                // No alert sound/TG
+                                playDing(); 
+                                if (Notification.permission === "granted") { new Notification("🏛️ L4VA Vault Alert!", { body: `Discrepancy: ${bestDeviation.toFixed(2)}%\nAction: ${bestDeviation > 0 ? 'Sell' : 'Buy'} on ${targetDexForVault}` }); }
+                                sendTelegramAlert(`🏛️ <b>L4VA Vault Alert!</b>\n\n⚖️ Fair Price Discrepancy: <b>${bestDeviation > 0 ? '+' : ''}${bestDeviation.toFixed(2)}%</b>\n💡 Action: ${bestDeviation > 0 ? 'Sell' : 'Buy'} on ${targetDexForVault}\n\n<i>Check dashboard for real-time data.</i>`);
                                 lastVaultAlertTime = now;
                             }
                         }
@@ -1215,9 +1224,18 @@
                         actionEl.innerHTML = `Low spread`;
                         actionEl.style.color = "rgba(255, 255, 255, 0.5)";
                     } else {
-                        spreadEl.style.color = "#ffffff";  // CAMBIO A COLOR BLANCO
+                        spreadEl.style.color = "#ffffff";  
                         if (priceVyfi > priceMin) { actionEl.innerHTML = `<a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Buy Min</a> <a href="${VYFI_LINK}" target="_blank" class="badge-dark">Sell VyFi</a>`;  } 
                         else { actionEl.innerHTML = `<a href="${VYFI_LINK}" target="_blank" class="badge-dark">Buy VyFi</a> <a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Sell Min</a>`;  }
+                    }
+
+                    if (spread >= conf.alert) {
+                        const alertToggle = document.getElementById('alert-toggle'); const now = Date.now();
+                        if (alertToggle && alertToggle.checked && (now - lastAlertTime > ALERT_COOLDOWN)) {
+                            playDing(); if (Notification.permission === "granted") { new Notification("🚨 L4VA Arbitrage Detected!", { body: `Spread: ${spread.toFixed(2)}%\n${suggestedActionText}` }); }
+                            sendTelegramAlert(`🚨 <b>L4VA Arbitrage Detected!</b>\n\n📈 DEX Spread: <b>${spread.toFixed(2)}%</b>\n💡 Route: ${suggestedActionText}\n\n<i>Check dashboard for real-time net profit.</i>`);
+                            lastAlertTime = now;
+                        }
                     }
                 }
                 
