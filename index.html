@@ -12,7 +12,8 @@
 
     <title>L4VA Protocol | Arbitrage Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script> <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script> 
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --card-bg: #120f24;
@@ -97,24 +98,65 @@
         .settings-btn:hover { transform: rotate(45deg); }
         .active-edit-btn { background: rgba(255, 123, 0, 0.2) !important; border-color: var(--neon-orange) !important; box-shadow: 0 0 15px rgba(255, 123, 0, 0.5); }
 
-        /* GRID: auto-fill evita que las tarjetas se estiren en huecos vacíos */
-        .dashboard { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); grid-auto-flow: dense; gap: 20px; max-width: 1200px; margin: 0 auto; filter: blur(0px); transition: filter 0.5s ease;}
+        /* GRID RÍGIDO PROPORCIONAL: Impide que las tarjetas cambien de tamaño */
+        .dashboard { 
+            display: grid; 
+            grid-template-columns: 1fr; 
+            grid-auto-flow: dense; 
+            gap: 20px; 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            filter: blur(0px); 
+            transition: filter 0.5s ease;
+        }
+
+        @media (min-width: 768px) { 
+            .dashboard { grid-template-columns: repeat(2, minmax(0, 1fr)); } 
+            .card-wide { grid-column: span 2; } 
+        }
+
+        @media (min-width: 1024px) { 
+            .dashboard { grid-template-columns: repeat(4, minmax(0, 1fr)); } 
+            .card-wide { grid-column: span 2; } 
+        }
         
         /* ESTILOS DEL MODO EDICIÓN */
-        .edit-mode-active .drag-item { cursor: grab !important; outline: 2px dashed var(--neon-orange) !important; outline-offset: 4px; transition: outline 0.3s ease; }
+        .edit-mode-active .drag-item { cursor: grab !important; outline: 2px dashed rgba(255, 123, 0, 0.5) !important; outline-offset: 4px; transition: outline 0.3s ease; }
         .edit-mode-active .drag-item:hover { background: rgba(255, 123, 0, 0.05); }
         .edit-mode-active .drag-item:active { cursor: grabbing !important; }
         .edit-mode-active canvas, .edit-mode-active input, .edit-mode-active button, .edit-mode-active a, .edit-mode-active label { pointer-events: none !important; }
 
-        .sortable-ghost { opacity: 0.4; transform: scale(0.98); background: rgba(0,0,0,0.5) !important;}
-        .sortable-drag { opacity: 0.9; box-shadow: 0 25px 50px rgba(255, 123, 0, 0.6) !important; cursor: grabbing !important;}
+        /* NUEVAS FÍSICAS DE ARRASTRE */
+        
+        /* El hueco que dejas atrás (Zona de Aterrizaje) */
+        .sortable-ghost { 
+            opacity: 1 !important; 
+            background: rgba(10, 8, 20, 0.4) !important;
+            border: 2px dashed rgba(255, 123, 0, 0.4) !important;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5) !important;
+            transform: none !important;
+            border-radius: 20px !important;
+        }
+        .sortable-ghost > * { 
+            opacity: 0 !important; /* Oculta el contenido interno, dejando solo la caja vacía */
+        }
+
+        /* La tarjeta que tienes agarrada volando */
+        .sortable-drag { 
+            opacity: 1 !important; 
+            background: var(--card-bg) !important;
+            border: 2px solid var(--neon-orange) !important;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.9), 0 0 40px rgba(255, 123, 0, 0.3) !important;
+            transform: scale(1.03) rotate(2deg) !important; 
+            cursor: grabbing !important;
+            z-index: 99999 !important;
+            border-radius: 20px !important;
+        }
 
         /* ESTILOS GENERALES DE TARJETAS */
         .card { border-radius: 20px; padding: 20px 25px; position: relative; background: rgba(18, 15, 36, 0.85); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); transition: transform 0.3s ease, box-shadow 0.3s ease; min-height: 220px; display: flex; flex-direction: column; justify-content: space-between;}
         .card:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 123, 0, 0.15); border-color: rgba(255, 123, 0, 0.3); }
 
-        @media (min-width: 600px) { .card-wide { grid-column: span 2; } }
-        
         /* Tarjetas compactas */
         .card-compact { min-height: 120px; }
 
@@ -596,7 +638,8 @@
         function initSortable() {
             loadSavedLayout();
             sortableInstance = new Sortable(document.getElementById('main-dashboard'), {
-                animation: 250,
+                animation: 350,
+                easing: "cubic-bezier(0.25, 1, 0.5, 1)", 
                 draggable: '.drag-item',
                 ghostClass: 'sortable-ghost',
                 dragClass: 'sortable-drag',
