@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0a0814">
+    <link rel="apple-touch-icon" href="https://cryptologos.cc/logos/cardano-ada-logo.png">
+    <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22L4VA%20Arbitrage%22%2C%22short_name%22%3A%22L4VA%20Arb%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23120f24%22%2C%22theme_color%22%3A%22%23ff7b00%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22https%3A%2F%2Fcryptologos.cc%2Flogos%2Fcardano-ada-logo.png%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fpng%22%7D%5D%7D">
+
+    <title>L4VA Protocol | Arbitrage Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script> <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --card-bg: #120f24;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0c0;
+            --text-on-fire: #150f26; 
+            --neon-orange: #ff7b00;
+            --neon-red: #ff0f5b;
+            --gradient-fire: linear-gradient(135deg, var(--neon-orange), var(--neon-red));
+            --ada-color: #4285f4;
+            --vault-color: #fcd34d;
+            --badge-vyfi-bg: rgba(139, 92, 246, 0.15);
+            --badge-vyfi-text: #a78bfa;
+            --badge-min-bg: rgba(137, 170, 255, 0.15); 
+            --badge-min-text: #89aaff; 
+        }
+
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: linear-gradient(rgba(10, 8, 20, 0.4), rgba(10, 8, 20, 0.75)), url('https://app.l4va.org/assets/banner-bg.webp');
+            background-size: cover;
+            background-position: center top;
+            background-attachment: fixed;
+            color: var(--text-primary); 
+            margin: 0; 
+            padding: 20px 20px; 
+            min-height: 100vh; 
+        }
+
+        /* 🔒 ESTILOS DEL ESCUDO API */
+        #auth-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(10, 8, 20, 0.95); backdrop-filter: blur(20px);
+            z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center;
+            transition: opacity 0.5s ease;
+        }
+        .auth-box {
+            background: var(--card-bg); padding: 40px; border-radius: 20px;
+            border: 1px solid var(--neon-orange); box-shadow: 0 0 50px rgba(255, 123, 0, 0.2);
+            text-align: center; max-width: 400px; width: 90%;
+        }
+        .auth-title { font-size: 1.5rem; font-weight: 800; color: white; margin-bottom: 10px; }
+        .auth-subtitle { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 30px; }
+        
+        .auth-input-container { position: relative; width: 100%; margin-bottom: 20px; }
+        .auth-input {
+            width: 100%; padding: 15px; padding-right: 65px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(0,0,0,0.5); color: white; font-size: 1.1rem; text-align: center;
+            outline: none; font-family: 'Inter', sans-serif; box-sizing: border-box;
+        }
+        .auth-input:focus { border-color: var(--neon-orange); box-shadow: 0 0 15px rgba(255, 123, 0, 0.3); }
+        .toggle-password {
+            position: absolute; right: 15px; top: 50%; transform: translateY(-50%);
+            color: var(--neon-orange); font-size: 0.8rem; font-weight: 800; cursor: pointer;
+            opacity: 0.7; transition: 0.3s; letter-spacing: 0.5px;
+        }
+        .toggle-password:hover { opacity: 1; text-shadow: 0 0 10px var(--neon-orange); }
+
+        .auth-btn {
+            background: var(--gradient-fire); color: white; border: none; padding: 15px;
+            width: 100%; border-radius: 12px; font-weight: 800; font-size: 1rem;
+            cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .auth-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(255, 123, 0, 0.4); }
+        .auth-error { color: var(--neon-red); font-size: 0.85rem; margin-top: 15px; height: 20px; font-weight: bold;}
+
+        header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px; max-width: 1200px; margin-left: auto; margin-right: auto; flex-wrap: wrap; gap: 15px;}
+        .header-left { display: flex; align-items: center; gap: 15px; }
+        .header-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap;}
+        .brand-logo { font-size: 2.5rem; filter: drop-shadow(0 0 10px var(--neon-orange)); }
+        
+        h1 { margin: 0; font-weight: 800; font-size: 1.8rem; background: var(--gradient-fire); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -1px; display: flex; align-items: center;}
+        .version-badge { color: #ffffff; font-size: 0.8rem; font-weight: 600; margin-left: 8px; opacity: 0.8; letter-spacing: 0; -webkit-text-fill-color: #ffffff; }
+
+        /* Controles de la barra superior */
+        .alert-toggle-box { font-size: 0.8rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 8px; color: var(--text-primary); background: rgba(0, 0, 0, 0.6); padding: 8px 16px; border-radius: 30px; border: 1px solid rgba(255, 123, 0, 0.4); transition: 0.3s; backdrop-filter: blur(5px);}
+        .alert-toggle-box:hover { border-color: var(--neon-orange); background: rgba(255, 123, 0, 0.2); }
+        .alert-toggle-box input { accent-color: var(--neon-orange); transform: scale(1.2); }
+
+        .header-btn { font-size: 1.5rem; cursor: pointer; background: rgba(255,255,255,0.05); padding: 8px 12px; border-radius: 12px; transition: 0.3s; border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center;}
+        .header-btn:hover { background: rgba(255,255,255,0.15); border-color: var(--neon-orange); }
+        .settings-btn:hover { transform: rotate(45deg); }
+        .active-edit-btn { background: rgba(255, 123, 0, 0.2) !important; border-color: var(--neon-orange) !important; box-shadow: 0 0 15px rgba(255, 123, 0, 0.5); }
+
+        /* GRID CON EFECTO DENSE PARA "TETRIS" */
+        .dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); grid-auto-flow: dense; gap: 20px; max-width: 1200px; margin: 0 auto; filter: blur(0px); transition: filter 0.5s ease;}
+        
+        /* ESTILOS DEL MODO EDICIÓN */
+        .edit-mode-active .drag-item { cursor: grab !important; outline: 2px dashed var(--neon-orange) !important; outline-offset: 4px; transition: outline 0.3s ease; }
+        .edit-mode-active .drag-item:hover { background: rgba(255, 123, 0, 0.05); }
+        .edit-mode-active .drag-item:active { cursor: grabbing !important; }
+        .edit-mode-active canvas, .edit-mode-active input, .edit-mode-active button, .edit-mode-active a, .edit-mode-active label { pointer-events: none !important; }
+
+        .sortable-ghost { opacity: 0.4; transform: scale(0.98); background: rgba(0,0,0,0.5) !important;}
+        .sortable-drag { opacity: 0.9; box-shadow: 0 25px 50px rgba(255, 123, 0, 0.6) !important; cursor: grabbing !important;}
+
+        /* ESTILOS GENERALES DE TARJETAS */
+        .card { border-radius: 20px; padding: 20px 25px; position: relative; background: rgba(18, 15, 36, 0.85); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); transition: transform 0.3s ease, box-shadow 0.3s ease; min-height: 220px; display: flex; flex-direction: column; justify-content: space-between;}
+        .card:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 123, 0, 0.15); border-color: rgba(255, 123, 0, 0.3); }
+
+        @media (min-width: 600px) { .card-wide { grid-column: span 2; } }
+        
+        /* Tarjetas compactas */
+        .card-compact { min-height: 120px; }
+
+        /* CODIFICACIÓN DE COLORES */
+        .card-ada { background: rgba(8, 10, 16, 0.98); border-color: rgba(66, 133, 244, 0.2); }
+        .card-ada:hover { border-color: rgba(66, 133, 244, 0.5); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(66, 133, 244, 0.2); background: rgba(12, 15, 24, 1); }
+
+        .card-vault { background: rgba(14, 10, 4, 0.98); border-color: rgba(252, 211, 77, 0.2); }
+        .card-vault:hover { border-color: rgba(252, 211, 77, 0.5); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(252, 211, 77, 0.2); background: rgba(18, 12, 5, 1); }
+
+        .card-orange { background: rgba(14, 6, 2, 0.98); border-color: rgba(255, 123, 0, 0.2); }
+        .card-orange:hover { border-color: rgba(255, 123, 0, 0.5); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 123, 0, 0.2); background: rgba(18, 8, 3, 1); }
+
+        /* Igualados estilos para recuadros modulares */
+        .arbitrage-box-vault { background: rgba(14, 10, 4, 0.98); border-color: rgba(252, 211, 77, 0.2); }
+        .arbitrage-box-vault:hover { border-color: rgba(252, 211, 77, 0.5); background: rgba(18, 12, 5, 1); transform: translateY(-2px); box-shadow: 0 12px 30px rgba(0,0,0,0.7), 0 0 20px rgba(252, 211, 77, 0.2); }
+        
+        .arbitrage-box-orange { background: rgba(14, 6, 2, 0.98); border-color: rgba(255, 123, 0, 0.2); }
+        .arbitrage-box-orange:hover { border-color: rgba(255, 123, 0, 0.5); background: rgba(18, 8, 3, 1); transform: translateY(-2px); box-shadow: 0 12px 30px rgba(0,0,0,0.7), 0 0 20px rgba(255, 123, 0, 0.2); }
+
+        /* Card title sin text-transform */
+        .card-title { font-size: 1.05rem; font-weight: 600; margin-bottom: 15px; color: var(--neon-orange); display: flex; justify-content: space-between; align-items: center;}
+        .card-title.ada-title { color: var(--ada-color); text-shadow: 0 0 10px rgba(66, 133, 244, 0.3);}
+        
+        .data-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 0.95rem; }
+        .data-label { color: var(--text-secondary); font-weight: 500; }
+        .data-value { font-weight: 800; font-size: 1.1rem; color: var(--text-primary); display: flex; align-items: center; gap: 8px;}
+        
+        .change-badge { font-size: 0.75rem; font-weight: 800; }
+        .badge { font-size: 0.7rem; padding: 4px 10px; border-radius: 20px; font-weight: 700; text-transform: uppercase; border: 1px solid transparent; }
+        .bg-vyfi { background: var(--badge-vyfi-bg); color: var(--badge-vyfi-text); border-color: var(--badge-vyfi-text); }
+        .bg-minswap { background: var(--badge-min-bg); color: var(--badge-min-text); border-color: var(--badge-min-text); }
+
+        .arbitrage-label { color: rgba(255, 255, 255, 0.75); font-size: 0.75rem; text-transform: uppercase; font-weight: 800; margin-bottom: 5px; letter-spacing: 0.5px;}
+        .arbitrage-big-value { font-size: 1.8rem; font-weight: 900; color: #ffffff; text-shadow: 0 2px 10px rgba(0,0,0,0.5); transition: all 0.3s ease; }
+        .loading { color: inherit; opacity: 0.6; font-style: italic; font-weight: normal; font-size: 0.9rem;}
+        
+        .badge-dark { background: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.2); font-size: 0.75rem; padding: 4px 10px; border-radius: 20px; font-weight: 700; display: inline-block; margin: 0 2px; text-decoration: none; transition: 0.2s ease; }
+        a.badge-dark:hover { transform: translateY(-2px); background: var(--neon-orange); border-color: var(--neon-orange); color: var(--text-on-fire); box-shadow: 0 0 15px rgba(255, 123, 0, 0.4);}
+        
+        /* Ocultar flechas del input numérico para que quede limpio */
+        input[type="number"].sim-input::-webkit-outer-spin-button,
+        input[type="number"].sim-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type="number"].sim-input {
+            -moz-appearance: textfield; 
+        }
+
+        .sim-input { background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 10px; font-weight: bold; text-align: center; margin-right: 5px; font-family: 'Inter', sans-serif;}
+        .sim-input:focus { outline: none; border-color: var(--neon-orange); box-shadow: 0 0 10px rgba(255, 123, 0, 0.2);}
+        
+        .profit-positive { color: #10b981; text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
+        .profit-negative { color: var(--neon-red); text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
+        
+        .optimizer-text { font-size: 0.75rem; color: var(--text-secondary); font-weight: 600;}
+        .usd-profit { font-size: 0.9rem; color: rgba(255,255,255,0.6); font-weight: 600; text-shadow: none; display: inline-block; margin-left: 8px;}
+
+        .slippage-container { width: 100%; height: 8px; background: rgba(0,0,0,0.4); border-radius: 4px; overflow: hidden; position: relative; border: 1px solid rgba(255,255,255,0.1);}
+        .slippage-bar { height: 100%; width: 0%; border-radius: 4px; transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); box-shadow: 0 0 10px currentColor;}
+        .slippage-label { font-size: 0.7rem; color: var(--text-secondary); text-align: right; font-weight: 600;}
+
+        /* TRIANGULO AMPLIADO Y MEJORADO */
+        .tri-wrapper { position: relative; width: 100%; max-width: 250px; height: 200px; margin: 25px auto 25px auto; }
+        .tri-node { position: absolute; width: 50px; height: 50px; background: rgba(18, 15, 36, 0.9); border: 2px solid rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: bold; color: white; z-index: 2; box-shadow: 0 0 15px rgba(0,0,0,0.8); backdrop-filter: blur(5px);}
+        .node-ada { top: 0; left: calc(50% - 25px); border-color: var(--ada-color); color: var(--ada-color);}
+        .node-vlrm { bottom: 0; right: 0; border-color: var(--neon-orange); color: var(--neon-orange);}
+        .node-oracle { bottom: 0; left: 0; border-color: var(--vault-color); color: var(--vault-color);}
+        
+        .tri-svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;}
+        .tri-line-bg { fill: none; stroke: rgba(255,255,255,0.05); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round;}
+        .tri-line-active { fill: none; stroke: #10b981; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 10 15; animation: dash-flow 1s linear infinite; filter: drop-shadow(0 0 5px #10b981);}
+        .route-reverse { animation-direction: reverse; }
+        
+        @keyframes dash-flow { from { stroke-dashoffset: 25; } to { stroke-dashoffset: 0; } }
+
+        .route-active { color: #10b981; transition: 0.3s; }
+        .route-active .route-dot { background: #10b981; box-shadow: 0 0 10px #10b981; }
+        .route-inactive { color: var(--text-secondary); opacity: 0.5; transition: 0.3s; }
+        .route-inactive .route-dot { background: rgba(255,255,255,0.2); box-shadow: none; }
+        .route-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex-shrink: 0; transition: all 0.3s ease; }
+
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); z-index: 1000; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box;}
+        .modal-content { background: var(--card-bg); padding: 25px; border-radius: 20px; border: 2px solid var(--neon-orange); width: 100%; max-width: 340px; box-shadow: 0 10px 40px rgba(0,0,0,0.8); max-height: 90vh; overflow-y: auto;}
+        .modal-title { font-size: 1.2rem; font-weight: 800; margin-bottom: 15px; color: white; display: flex; justify-content: space-between;}
+        .setting-section-title { font-size: 0.75rem; color: var(--neon-orange); margin: 15px 0 10px 0; font-weight: bold; letter-spacing: 1px;}
+        .setting-row { margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem;}
+        .setting-input { width: 60px; padding: 5px; border-radius: 5px; border: none; background: rgba(255,255,255,0.1); color: white; text-align: center; font-family: 'Inter', sans-serif;}
+        .setting-input-text { width: 130px; padding: 5px; border-radius: 5px; border: none; background: rgba(255,255,255,0.1); color: white; font-family: 'Inter', sans-serif;}
+        
+        .btn-save { background: var(--gradient-fire); color: white; border: none; padding: 12px; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 15px; transition: transform 0.2s;}
+        .btn-save:hover { transform: scale(1.02); }
+        
+        .btn-reset { background: rgba(255, 255, 255, 0.05); color: var(--text-secondary); border: 1px solid rgba(255,255,255,0.1); padding: 10px; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.2s; font-size: 0.85rem;}
+        .btn-reset:hover { background: rgba(255, 255, 255, 0.1); color: white; border-color: rgba(255,255,255,0.3); }
+
+        h3.dex-subtitle { margin: 0 0 10px 0; font-size: 0.9rem; display: inline-block; }
+        
+        /* Footer fuera del grid principal para que no se arrastre */
+        .footer-disclaimer { text-align: center; color: rgba(255,255,255,0.4); font-size: 0.75rem; padding: 20px 20px; font-style: italic; margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.05); max-width: 1200px; margin-left: auto; margin-right: auto;}
+    </style>
+</head>
+<body>
+
+    <div id="auth-screen">
+        <div class="auth-box">
+            <div class="auth-title">L4VA TERMINAL</div>
+            <div class="auth-subtitle">Restricted Access. Authentication Required.</div>
+            
+            <div class="auth-input-container">
+                <input type="password" id="terminal-passkey" class="auth-input" placeholder="Enter Passkey...">
+                <span class="toggle-password" onclick="togglePasswordVisibility()">SHOW</span>
+            </div>
+
+            <button class="auth-btn" onclick="unlockTerminal()">UNLOCK TERMINAL</button>
+            <div id="auth-error-msg" class="auth-error"></div>
+        </div>
+    </div>
+
+    <header>
+        <div class="header-left">
+            <div class="brand-logo">🔥</div>
+            <h1>L4VA Protocol <span style="color: var(--text-secondary); font-weight: 400;">| Arbitrage</span> <span class="version-badge">V 1.0</span></h1>
+        </div>
+        <div class="header-right">
+            <label class="alert-toggle-box" style="margin-right: 5px;">
+                <input type="checkbox" id="alert-toggle" checked> 🔔 Alerts ON
+            </label>
+            <div class="header-btn" id="edit-mode-btn" onclick="toggleEditMode()" title="Unlock Dashboard Layout">🔒</div>
+            <div class="header-btn settings-btn" onclick="openSettings()" title="Settings">⚙️</div>
+        </div>
+    </header>
+
+    <div id="settings-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-title"><span>⚙️ Preferences</span><span style="cursor:pointer;" onclick="closeModals()">✕</span></div>
+            
+            <div class="setting-section-title">SIMULATOR</div>
+            <div class="setting-row"><span>Simulator Base (ADA)</span><input type="number" id="set-sim" class="setting-input"></div>
+            
+            <div class="setting-section-title">ALERTS</div>
+            <div class="setting-row"><span>Spread Alert (%)</span><input type="number" id="set-alert" class="setting-input"></div>
+            <div class="setting-row"><span>Vault Alert (%)</span><input type="number" id="set-vault-alert" class="setting-input"></div>
+            
+            <div class="setting-section-title">DEX FEES (ADA)</div>
+            <div class="setting-row"><span>Network (Tx) Fee</span><input type="number" step="0.1" id="set-fee-net" class="setting-input"></div>
+            <div class="setting-row"><span>Minswap Batcher</span><input type="number" step="0.1" id="set-fee-min" class="setting-input"></div>
+            <div class="setting-row"><span>VyFi Batcher</span><input type="number" step="0.1" id="set-fee-vyfi" class="setting-input"></div>
+
+            <div class="setting-section-title">LP FEES (%)</div>
+            <div class="setting-row"><span>Minswap LP Fee</span><input type="number" step="0.1" id="set-lp-min" class="setting-input"></div>
+            <div class="setting-row"><span>VyFi LP Fee</span><input type="number" step="0.1" id="set-lp-vyfi" class="setting-input"></div>
+
+            <div class="setting-section-title">TELEGRAM ALERTS (Optional)</div>
+            <div class="setting-row"><span>Bot Token</span><input type="text" id="set-tg-bot" class="setting-input-text" placeholder="123:ABC..."></div>
+            <div class="setting-row"><span>Chat ID</span><input type="text" id="set-tg-chat" class="setting-input-text" placeholder="12345678"></div>
+            
+            <button class="btn-save" onclick="saveSettings()">Save & Apply</button>
+            <button class="btn-reset" onclick="resetLayout()">🔄 Restore Default Layout</button>
+        </div>
+    </div>
+
+    <div class="dashboard" id="main-dashboard">
+        
+        <div class="card card-vault drag-item card-wide card-compact" data-id="card-arb-dex">
+            <div class="card-title" style="color: var(--vault-color);">ORACLE / ADA dex arbitrage</div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto;">
+                <div class="data-row" style="margin: 0;">
+                    <span class="data-label" style="margin-right: 15px;">Spread:</span>
+                    <span class="data-value" id="arbitrage-spread" style="font-size: 1.5rem;">-%</span>
+                </div>
+                <div class="data-row" style="margin: 0;">
+                    <span class="data-label" style="margin-right: 15px;">Action Route:</span>
+                    <span id="arbitrage-action" style="font-size: 0.9rem; font-weight: bold; color: white;">...</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card card-vault drag-item card-wide card-compact" data-id="card-arb-vault">
+            <div class="card-title" style="color: var(--vault-color);">Vault relics fair price ORACLE</div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto;">
+                <div class="data-row" style="margin: 0;">
+                    <span class="data-label" style="margin-right: 15px;">Discrepancy:</span>
+                    <span class="data-value" id="vault-banner-discrepancy" style="font-size: 1.5rem;">-%</span>
+                </div>
+                <div class="data-row" style="margin: 0;">
+                    <span class="data-label" style="margin-right: 15px;">Market Action:</span>
+                    <span id="vault-arbitrage-action" style="font-size: 0.9rem; font-weight: bold; color: white;">...</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card card-vault drag-item card-wide" data-id="card-sim-oracle">
+            <div class="card-title" style="color: var(--vault-color);">ORACLE / ADA net profit simulator</div>
+            
+            <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: auto; padding-bottom: 20px;">
+                <div class="data-row" style="margin: 0;">
+                    <div style="display: flex; align-items: center;">
+                        <input type="number" id="sim-ada-input" class="sim-input" value="1000" style="width: 100px; font-size: 1.2rem; padding: 10px;" onkeyup="recalculateSimulators()" onchange="recalculateSimulators()"> 
+                        <span style="font-size: 0.9rem; font-weight: bold; color: var(--text-primary);">ADA</span>
+                    </div>
+                </div>
+                <div class="data-row" style="margin: 0;">
+                    <span class="data-label" style="margin-right: 15px; font-size: 0.8rem;">Net Return (2 Hops):</span>
+                    <span class="data-value" id="sim-profit" style="font-size: 1.5rem;">- ADA</span>
+                </div>
+            </div>
+            <div style="border-top: 1px solid rgba(255,255,255,0.05); padding-top: 15px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div id="optimizer-result" class="optimizer-text" style="margin: 0; padding: 0;">💡 <b>Auto-Optimizer:</b> Calculating...</div>
+                    <div id="sim-slippage-label" class="slippage-label" style="margin: 0;">Price Impact: 0.00%</div>
+                </div>
+                <div class="slippage-container" style="margin-top: 8px;"><div id="sim-slippage-bar" class="slippage-bar" style="background: #10b981;"></div></div>
+            </div>
+        </div>
+
+        <div class="card card-orange drag-item card-wide" data-id="card-sim-tri">
+            <div class="card-title" style="color: var(--neon-orange);">▲VLRM ORACLE ADA▼ triangular net profit simulator</div>
+            <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: auto; padding-bottom: 20px;">
+                <div class="data-row" style="margin: 0;">
+                    <div style="display: flex; align-items: center;">
+                        <input type="number" id="sim-tri-input" class="sim-input" value="1000" style="width: 100px; font-size: 1.2rem; padding: 10px;" onkeyup="recalculateSimulators()" onchange="recalculateSimulators()"> 
+                        <span style="font-size: 0.9rem; font-weight: bold; color: var(--text-primary);">ADA</span>
+                    </div>
+                </div>
+                <div class="data-row" style="margin: 0;">
+                    <span class="data-label" style="margin-right: 15px; font-size: 0.8rem;">Net Return (3 Hops):</span>
+                    <span class="data-value" id="sim-tri-profit" style="font-size: 1.5rem;">- ADA</span>
+                </div>
+            </div>
+            <div style="border-top: 1px solid rgba(255,255,255,0.05); padding-top: 15px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div id="tri-optimizer-result" class="optimizer-text" style="margin: 0; padding: 0;">💡 <b>Auto-Optimizer:</b> Calculating...</div>
+                    <div id="sim-tri-slippage-label" class="slippage-label" style="margin: 0;">Max Price Impact: 0.00%</div>
+                </div>
+                <div class="slippage-container" style="margin-top: 8px;"><div id="sim-tri-slippage-bar" class="slippage-bar" style="background: #10b981;"></div></div>
+            </div>
+        </div>
+
+        <div class="card card-ada drag-item" data-id="card-ada">
+            <div>
+                <div class="card-title ada-title">ADA</div>
+                <div class="data-row">
+                    <span class="data-label">Price USD:</span>
+                    <span class="data-value" id="ada-price-usd">
+                        <span class="loading">Loading...</span> <span id="ada-change-24h" class="change-badge"></span>
+                    </span>
+                </div>
+                <div class="data-row" style="margin-top: 15px;"><span class="data-label" style="font-size: 0.75rem;">Last Updated:</span><span class="data-value" style="font-size: 0.75rem;" id="ada-time">-</span></div>
+            </div>
+            <div style="height: 80px; margin-top: 15px;"><canvas id="spark-ada"></canvas></div>
+        </div>
+        
+        <div class="card card-vault drag-item" data-id="card-vault">
+            <div>
+                <div class="card-title" style="color: var(--vault-color);">Relics vault ORACLE</div>
+                <div class="data-row">
+                    <span class="data-label">TVL:</span>
+                    <span class="data-value">
+                        <span id="vault-tvl"><span class="loading">Calculating...</span></span>
+                        <span id="vault-change-24h" class="change-badge"></span>
+                    </span>
+                </div>
+                <div class="data-row"><span class="data-label">Fair price:</span><span class="data-value" id="vault-fair-price">-</span></div>
+            </div>
+            <div style="height: 80px; margin-top: 15px;"><canvas id="spark-vault"></canvas></div>
+        </div>
+
+        <div class="card card-orange drag-item" data-id="card-vlrm-ada">
+            <div class="card-title" style="color: var(--neon-orange);">VLRM / ADA <span class="badge bg-vyfi" style="margin-left:auto;">VyFi</span></div>
+            <div class="data-row">
+                <span class="data-label">Price:</span>
+                <span class="data-value"><span id="vlrm-price-ada"><span class="loading">Connecting...</span></span> <span id="vlrm-price-change-24h" class="change-badge"></span></span>
+            </div>
+            <div style="height: 50px; margin-bottom: 15px;"><canvas id="spark-vlrm-ada-price"></canvas></div>
+            <div class="data-row" style="margin-top: auto;">
+                <span class="data-label">Liquidity:</span>
+                <span class="data-value"><span id="vlrm-liq-ada">-</span> <span id="vlrm-ada-change-24h" class="change-badge"></span></span>
+            </div>
+            <div style="height: 50px;"><canvas id="spark-vlrm-ada"></canvas></div>
+        </div>
+
+        <div class="card card-orange drag-item" data-id="card-vlrm-oracle">
+            <div class="card-title" style="color: var(--neon-orange);">VLRM / ORACLE <span class="badge bg-vyfi" style="margin-left:auto;">VyFi</span></div>
+            <div class="data-row">
+                <span class="data-label">Price:</span>
+                <span class="data-value"><span id="vlrm-oracle-price"><span class="loading">Waiting...</span></span> <span id="vlrm-oracle-price-change-24h" class="change-badge"></span></span>
+            </div>
+            <div style="height: 50px; margin-bottom: 15px;"><canvas id="spark-vlrm-oracle-price"></canvas></div>
+            <div class="data-row" style="margin-top: auto;">
+                <span class="data-label">Liquidity:</span>
+                <span class="data-value"><span id="vlrm-oracle-liq-ada">-</span> <span id="vlrm-oracle-change-24h" class="change-badge"></span></span>
+            </div>
+            <div style="height: 50px;"><canvas id="spark-vlrm-oracle"></canvas></div>
+        </div>
+
+        <div class="card card-vault drag-item card-wide" data-id="card-oracle-ada" style="display: flex; flex-direction: column;">
+            <div class="card-title" style="color: var(--vault-color); margin-bottom: 20px;">ORACLE / ADA</div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 20px;">
+                <div>
+                    <h3 class="dex-subtitle"><span class="badge bg-vyfi">VYFI</span></h3>
+                    <div class="data-row"><span class="data-label">Price:</span><span class="data-value"><span id="oracle-vyfi-price">-</span> <span id="oracle-vyfi-price-change-24h" class="change-badge"></span></span></div>
+                    <div style="height: 50px; margin-bottom: 25px;"><canvas id="spark-oracle-vyfi-price"></canvas></div>
+                    
+                    <div class="data-row"><span class="data-label">Liquidity:</span><span class="data-value"><span id="oracle-vyfi-liq">-</span> <span id="oracle-vyfi-change-24h" class="change-badge"></span></span></div>
+                    <div style="height: 50px;"><canvas id="spark-oracle-vyfi"></canvas></div>
+                </div>
+                <div style="border-left: 2px solid rgba(255,255,255,0.05); padding-left: 20px;">
+                    <h3 class="dex-subtitle"><span class="badge bg-minswap">MINSWAP</span></h3>
+                    <div class="data-row"><span class="data-label">Price:</span><span class="data-value"><span id="oracle-min-price">-</span> <span id="oracle-min-price-change-24h" class="change-badge"></span></span></div>
+                    <div style="height: 50px; margin-bottom: 25px;"><canvas id="spark-oracle-min-price"></canvas></div>
+                    
+                    <div class="data-row"><span class="data-label">Liquidity:</span><span class="data-value"><span id="oracle-min-liq">-</span> <span id="oracle-min-change-24h" class="change-badge"></span></span></div>
+                    <div style="height: 50px;"><canvas id="spark-oracle-min"></canvas></div>
+                </div>
+            </div>
+            
+            <div style="margin-top: auto; padding-top: 25px; border-top: 1px solid rgba(255,255,255,0.05);">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                    <h3 class="dex-subtitle" style="color: var(--text-secondary); font-size: 1rem; text-transform: uppercase; margin:0;">Total Combined Liquidity</h3>
+                    <div class="data-value" style="font-size: 2rem; color: #ffffff; text-shadow: 0 2px 10px rgba(0,0,0,0.5);">
+                        <span id="oracle-total-liq">-</span> <span id="total-liq-change-24h" class="change-badge" style="font-size: 1rem;"></span>
+                    </div>
+                </div>
+                <div style="height: 70px; margin-top: 20px;"><canvas id="spark-total-liq"></canvas></div>
+            </div>
+        </div>
+
+        <div class="card card-orange drag-item card-wide" data-id="card-triangular" style="display: flex; flex-direction: column;">
+            <div class="card-title" style="color: var(--neon-orange); margin-bottom: 5px;">▲VLRM ORACLE ADA▼ triangular arbitrage</div>
+            
+            <div class="tri-wrapper">
+                <svg class="tri-svg" viewBox="0 0 250 200">
+                    <polygon points="125,25 225,175 25,175" class="tri-line-bg" />
+                    <polygon id="tri-anim-path" points="125,25 225,175 25,175" class="tri-line-active" style="display:none;" />
+                </svg>
+                <div class="tri-node node-ada">ADA</div>
+                <div class="tri-node node-vlrm">VLRM</div>
+                <div class="tri-node node-oracle">ORAC</div>
+            </div>
+
+            <div style="margin-top: auto; padding-top: 25px; border-top: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; justify-content: center;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px;">
+                    <div class="arbitrage-label" style="margin-bottom: 0;">Optimal Net Discrepancy</div>
+                    <div class="arbitrage-big-value" id="tri-arb-spread" style="font-size: 2.2rem; line-height: 1;"><span class="loading">Scanning...</span></div>
+                </div>
+                
+                <div style="font-size: 0.85rem; line-height: 1.8; display: flex; flex-direction: column; gap: 8px;">
+                    <div id="route-a-container" class="route-inactive" style="display: flex; align-items: center; gap: 8px;">
+                        <div class="route-dot"></div>
+                        <div>Route A: <span style="font-weight: bold; color: white;">Buy VLRM ➔ Swap ORAC ➔ Sell ORAC</span></div>
+                    </div>
+                    <div id="route-b-container" class="route-inactive" style="display: flex; align-items: center; gap: 8px;">
+                        <div class="route-dot"></div>
+                        <div>Route B: <span style="font-weight: bold; color: white;">Buy ORAC ➔ Swap VLRM ➔ Sell VLRM</span></div>
+                    </div>
+                </div>
+                
+                <div style="font-size: 0.75rem; font-style: italic; color: var(--text-secondary); margin-top: 20px;">
+                    * Percentage dynamically calculated from Auto-Optimizer's max realistic net profit.
+                </div>
+            </div>
+        </div>
+
+        <div class="card drag-item card-wide" data-id="card-chart" style="grid-column: 1 / -1; padding: 15px; min-height: auto; background: rgba(8, 10, 16, 0.98);">
+            <div class="card-title" style="margin-bottom: 10px; font-size: 0.9rem; color: #ffffff; text-transform: none;">Spread & vault discrepancy (last 24h %)</div>
+            <div style="height: 200px; width: 100%;">
+                <canvas id="arbitrageChart"></canvas>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="footer-disclaimer">
+        This page is for informational purposes only. Nothing on this website constitutes investment advice. Always do your own research.
+    </div>
+
+    <script>
+        const PROXY_URL = 'https://l4va.seryibull.workers.dev';
+        const VLRM = "63efb704b7396890e4d9539d030c0e667739043add65c00f96c586c056616c6f72756d";
+        const ORACLE = "328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b27393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
+        const ORACLE_TOTAL_SUPPLY = 1000000;
+        const VYFI_LINK = "https://app.vyfi.io/dex?tokenA=lovelace&tokenB=328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b27393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
+        const MINSWAP_LINK = "https://minswap.org/swap?cA=&tA=&cB=328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b2&tB=7393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
+
+        let defaultConf = { alert: 15, vaultAlert: 20, sim: 1000, tgBot: "", tgChat: "", feeNet: 0.2, feeMin: 0.7, feeVyfi: 1.9, lpFeeMin: 0.3, lpFeeVyfi: 0.3 };
+        let conf = JSON.parse(localStorage.getItem('l4va_config')) || defaultConf;
+        let userPasskey = localStorage.getItem('l4va_passkey') || "";
+        
+        if(conf.feeNet === undefined) { conf.feeNet = 0.2; conf.feeMin = 0.7; conf.feeVyfi = 1.9; }
+        if(conf.lpFeeMin === undefined) { conf.lpFeeMin = 0.3; conf.lpFeeVyfi = 0.3; }
+        if(conf.vaultAlert === undefined) { conf.vaultAlert = 20; }
+
+        let lastAlertTime = 0;
+        let lastVaultAlertTime = 0; 
+        let chartInstance = null;
+        let sparkInstances = {}; 
+        const ALERT_COOLDOWN = 5 * 60 * 1000;
+        let currentAdaUsd = 0; 
+        let fetchInterval = null;
+        
+        const MAX_CHART_POINTS = 2880;
+        
+        let chartHistory = { 
+            labels: [], spread: [], discrepancy: [], vlrmOracleSpread: [],
+            vlrmAda: [], vlrmOracle: [], oracleVyfi: [], oracleMin: [], vault: [], totalLiq: [],
+            pVlrmAda: [], pVlrmOracle: [], pOracleVyfi: [], pOracleMin: []
+        };
+        
+        let currentPools = {
+            vyfi: { price: 0, reserveAda: 0, reserveTok: 0 },
+            minswap: { price: 0, reserveAda: 0, reserveTok: 0 },
+            vlrmAda: { resAda: 0, resTok: 0 },
+            crossVO: { resVlrm: 0, resOracle: 0 }
+        };
+
+        document.getElementById('sim-ada-input').value = conf.sim;
+        document.getElementById('sim-tri-input').value = conf.sim;
+
+        // 🔒 FUNCIONES DEL ESCUDO API
+        function showAuthScreen(showError = false) {
+            document.getElementById('auth-screen').style.display = 'flex';
+            document.getElementById('main-dashboard').style.filter = 'blur(10px)';
+            if(showError) document.getElementById('auth-error-msg').innerText = "❌ Access Denied. Invalid Passkey.";
+        }
+
+        function hideAuthScreen() {
+            document.getElementById('auth-screen').style.display = 'none';
+            document.getElementById('main-dashboard').style.filter = 'none';
+        }
+        
+        function togglePasswordVisibility() {
+            const input = document.getElementById('terminal-passkey');
+            const toggleBtn = document.querySelector('.toggle-password');
+            if (input.type === 'password') {
+                input.type = 'text';
+                toggleBtn.innerText = 'HIDE';
+            } else {
+                input.type = 'password';
+                toggleBtn.innerText = 'SHOW';
+            }
+        }
+
+        async function unlockTerminal() {
+            const input = document.getElementById('terminal-passkey').value.trim();
+            if(!input) return;
+            userPasskey = input;
+            document.getElementById('auth-error-msg').innerText = "Verifying...";
+            
+            try {
+                const res = await fetch(PROXY_URL + '?data=history', { headers: { "X-Terminal-Key": userPasskey } });
+                if(res.status === 401) {
+                    showAuthScreen(true);
+                } else {
+                    localStorage.setItem('l4va_passkey', userPasskey);
+                    hideAuthScreen();
+                    startEngine(); 
+                }
+            } catch (e) {
+                document.getElementById('auth-error-msg').innerText = "Network Error. Try again.";
+            }
+        }
+
+        let isEditMode = false;
+        let sortableInstance = null;
+
+        function loadSavedLayout() {
+            const savedOrder = JSON.parse(localStorage.getItem('l4va_layout'));
+            if (savedOrder && savedOrder.length > 0) {
+                const dashboard = document.getElementById('main-dashboard');
+                savedOrder.forEach(id => {
+                    const el = document.querySelector(`.drag-item[data-id="${id}"]`);
+                    if (el) dashboard.appendChild(el);
+                });
+            }
+        }
+
+        function initSortable() {
+            loadSavedLayout();
+            sortableInstance = new Sortable(document.getElementById('main-dashboard'), {
+                animation: 250,
+                draggable: '.drag-item',
+                ghostClass: 'sortable-ghost',
+                dragClass: 'sortable-drag',
+                disabled: true, 
+                onEnd: function() {
+                    const order = sortableInstance.toArray();
+                    localStorage.setItem('l4va_layout', JSON.stringify(order));
+                }
+            });
+        }
+
+        function toggleEditMode() {
+            isEditMode = !isEditMode;
+            const btn = document.getElementById('edit-mode-btn');
+            const dash = document.getElementById('main-dashboard');
+            
+            if (isEditMode) {
+                btn.innerText = '🔓';
+                btn.classList.add('active-edit-btn');
+                dash.classList.add('edit-mode-active');
+                sortableInstance.option('disabled', false);
+            } else {
+                btn.innerText = '🔒';
+                btn.classList.remove('active-edit-btn');
+                dash.classList.remove('edit-mode-active');
+                sortableInstance.option('disabled', true);
+                
+                const order = sortableInstance.toArray();
+                localStorage.setItem('l4va_layout', JSON.stringify(order));
+            }
+        }
+
+        function resetLayout() {
+            if(confirm("Are you sure you want to restore the default dashboard layout?")) {
+                localStorage.removeItem('l4va_layout');
+                location.reload(); 
+            }
+        }
+
+        function closeModals() { document.getElementById('settings-modal').style.display = 'none'; }
+        
+        function openSettings() { 
+            document.getElementById('set-alert').value = conf.alert; 
+            document.getElementById('set-vault-alert').value = conf.vaultAlert; 
+            document.getElementById('set-sim').value = document.getElementById('sim-ada-input').value; 
+            document.getElementById('set-tg-bot').value = conf.tgBot || ""; document.getElementById('set-tg-chat').value = conf.tgChat || ""; 
+            document.getElementById('set-fee-net').value = conf.feeNet; 
+            document.getElementById('set-fee-min').value = conf.feeMin; 
+            document.getElementById('set-fee-vyfi').value = conf.feeVyfi;
+            document.getElementById('set-lp-min').value = conf.lpFeeMin;
+            document.getElementById('set-lp-vyfi').value = conf.lpFeeVyfi;
+            document.getElementById('settings-modal').style.display = 'flex'; 
+        }
+        
+        function saveSettings() {
+            conf.alert = parseFloat(document.getElementById('set-alert').value); 
+            conf.vaultAlert = parseFloat(document.getElementById('set-vault-alert').value); 
+            conf.sim = parseFloat(document.getElementById('set-sim').value);
+            conf.tgBot = document.getElementById('set-tg-bot').value.trim(); 
+            conf.tgChat = document.getElementById('set-tg-chat').value.trim();
+            conf.feeNet = parseFloat(document.getElementById('set-fee-net').value); 
+            conf.feeMin = parseFloat(document.getElementById('set-fee-min').value); 
+            conf.feeVyfi = parseFloat(document.getElementById('set-fee-vyfi').value);
+            conf.lpFeeMin = parseFloat(document.getElementById('set-lp-min').value);
+            conf.lpFeeVyfi = parseFloat(document.getElementById('set-lp-vyfi').value);
+            localStorage.setItem('l4va_config', JSON.stringify(conf));
+            document.getElementById('sim-ada-input').value = conf.sim; 
+            document.getElementById('sim-tri-input').value = conf.sim; 
+            closeModals(); recalculateSimulators();
+        }
+
+        async function sendTelegramAlert(message) {
+            if (!conf.tgBot || !conf.tgChat) return;
+            try { await fetch(`https://api.telegram.org/bot${conf.tgBot}/sendMessage`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ chat_id: conf.tgChat, text: message, parse_mode: 'HTML' }) }); } catch (e) {}
+        }
+
+        function initCharts() {
+            const ctx = document.getElementById('arbitrageChart').getContext('2d');
+            chartInstance = new Chart(ctx, {
+                type: 'line',
+                data: { labels: chartHistory.labels, datasets: [
+                    { label: 'ORACLE / ADA spread %', data: chartHistory.spread, borderColor: '#4285f4', tension: 0.4, borderWidth: 2, pointRadius: 0, spanGaps: true },
+                    { label: 'Vault Discrepancy %', data: chartHistory.discrepancy, borderColor: '#fcd34d', tension: 0.4, borderWidth: 2, pointRadius: 0, spanGaps: true },
+                    { label: 'VLRM / ORACLE spread %', data: chartHistory.vlrmOracleSpread, borderColor: '#ff7b00', tension: 0.4, borderWidth: 2, pointRadius: 0, spanGaps: true }
+                ]},
+                options: { 
+                    responsive: true, maintainAspectRatio: false, 
+                    scales: { 
+                        x: { display: true, grid: { display: false }, ticks: { color: '#a0a0c0', maxTicksLimit: 8, maxRotation: 0 } }, 
+                        y: { 
+                            grid: { 
+                                color: (ctx) => ctx.tick && ctx.tick.value === 0 ? 'rgba(255, 255, 255, 0.6)' : 'rgba(255,255,255,0.05)',
+                                lineWidth: (ctx) => ctx.tick && ctx.tick.value === 0 ? 2 : 1,
+                                borderDash: (ctx) => ctx.tick && ctx.tick.value === 0 ? [5, 5] : []
+                            }, 
+                            ticks: { color: '#a0a0c0' } 
+                        } 
+                    }, 
+                    plugins: { legend: { display: true, labels: { color: '#ffffff', boxWidth: 10 } } } 
+                }
+            });
+
+            const sparkOptions = { responsive: true, maintainAspectRatio: false, scales: { x: { display: false }, y: { display: false } }, plugins: { legend: { display: false }, tooltip: { enabled: false } }, layout: { padding: 0 }, animation: false };
+            const createSpark = (id, color, dataArr) => new Chart(document.getElementById(id).getContext('2d'), { type: 'line', data: { labels: chartHistory.labels, datasets: [{ data: dataArr, borderColor: color, borderWidth: 2, tension: 0.4, pointRadius: 0, fill: true, backgroundColor: color.replace('1)', '0.1)'), spanGaps: true }] }, options: sparkOptions });
+
+            sparkInstances.vlrmAda = createSpark('spark-vlrm-ada', 'rgba(167, 139, 250, 1)', chartHistory.vlrmAda); 
+            sparkInstances.vlrmOracle = createSpark('spark-vlrm-oracle', 'rgba(167, 139, 250, 1)', chartHistory.vlrmOracle); 
+            sparkInstances.oracleVyfi = createSpark('spark-oracle-vyfi', 'rgba(167, 139, 250, 1)', chartHistory.oracleVyfi); 
+            sparkInstances.oracleMin = createSpark('spark-oracle-min', 'rgba(137, 170, 255, 1)', chartHistory.oracleMin); 
+            sparkInstances.vault = createSpark('spark-vault', 'rgba(252, 211, 77, 1)', chartHistory.vault); 
+            sparkInstances.totalLiq = createSpark('spark-total-liq', 'rgba(255, 255, 255, 1)', chartHistory.totalLiq); 
+            sparkInstances.ada = createSpark('spark-ada', 'rgba(66, 133, 244, 1)', []); 
+
+            sparkInstances.pVlrmAda = createSpark('spark-vlrm-ada-price', 'rgba(255, 255, 255, 1)', chartHistory.pVlrmAda); 
+            sparkInstances.pVlrmOracle = createSpark('spark-vlrm-oracle-price', 'rgba(255, 255, 255, 1)', chartHistory.pVlrmOracle); 
+            sparkInstances.pOracleVyfi = createSpark('spark-oracle-vyfi-price', 'rgba(255, 255, 255, 1)', chartHistory.pOracleVyfi); 
+            sparkInstances.pOracleMin = createSpark('spark-oracle-min-price', 'rgba(255, 255, 255, 1)', chartHistory.pOracleMin); 
+        }
+        
+        function updateSparklines(vAdaTvl, vOraTvl, oVyfiTvl, oMinTvl, vaultTvl, pVAda, pVOra, pOVyfi, pOMin) {
+            chartHistory.vlrmAda.push(vAdaTvl);
+            chartHistory.vlrmOracle.push(vOraTvl);
+            chartHistory.oracleVyfi.push(oVyfiTvl);
+            chartHistory.oracleMin.push(oMinTvl);
+            chartHistory.vault.push(vaultTvl);
+            chartHistory.totalLiq.push(oVyfiTvl + oMinTvl);
+
+            chartHistory.pVlrmAda.push(pVAda);
+            chartHistory.pVlrmOracle.push(pVOra);
+            chartHistory.pOracleVyfi.push(pOVyfi);
+            chartHistory.pOracleMin.push(pOMin);
+
+            if(chartHistory.vlrmAda.length > MAX_CHART_POINTS) {
+                chartHistory.vlrmAda.shift(); chartHistory.vlrmOracle.shift(); chartHistory.oracleVyfi.shift(); chartHistory.oracleMin.shift(); chartHistory.vault.shift(); chartHistory.totalLiq.shift();
+                chartHistory.pVlrmAda.shift(); chartHistory.pVlrmOracle.shift(); chartHistory.pOracleVyfi.shift(); chartHistory.pOracleMin.shift();
+            }
+
+            sparkInstances.vlrmAda.update('none'); sparkInstances.vlrmOracle.update('none'); sparkInstances.oracleVyfi.update('none'); sparkInstances.oracleMin.update('none'); sparkInstances.vault.update('none'); sparkInstances.totalLiq.update('none');
+            sparkInstances.pVlrmAda.update('none'); sparkInstances.pVlrmOracle.update('none'); sparkInstances.pOracleVyfi.update('none'); sparkInstances.pOracleMin.update('none');
+        }
+
+        function updateMainChart(spread, discrepancy, vlrmOracleSpread) {
+            const now = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            chartHistory.labels.push(now);
+            chartHistory.spread.push(spread);
+            chartHistory.discrepancy.push(discrepancy);
+            chartHistory.vlrmOracleSpread.push(vlrmOracleSpread);
+            
+            if(chartHistory.labels.length > MAX_CHART_POINTS) {
+                chartHistory.labels.shift(); chartHistory.spread.shift(); chartHistory.discrepancy.shift(); chartHistory.vlrmOracleSpread.shift();
+            }
+            chartInstance.update('none');
+        }
+
+        function calcChangeUI(elementId, historyArray, currentValue) {
+            const el = document.getElementById(elementId);
+            if(!el) return;
+            let oldestValue = historyArray.find(v => v !== null && v > 0);
+            if (!oldestValue) { el.innerText = ""; return; }
+            const change = ((currentValue - oldestValue) / oldestValue) * 100;
+            if (Math.abs(change) < 0.01) { el.innerText = "0.00%"; el.style.color = "var(--text-secondary)"; }
+            else if (change > 0) { el.innerText = `+${change.toFixed(2)}%`; el.style.color = "#10b981"; }
+            else { el.innerText = `${change.toFixed(2)}%`; el.style.color = "var(--neon-red)"; }
+        }
+
+        function getAmmOut(amountIn, reserveIn, reserveOut, feePct) {
+            if(reserveIn <= 0 || reserveOut <= 0 || amountIn <= 0) return 0;
+            const feeMultiplier = 1 - (feePct / 100); 
+            const amountInWithFee = amountIn * feeMultiplier;
+            return (reserveOut * amountInWithFee) / (reserveIn + amountInWithFee);
+        }
+
+        function updateSlippageUI(elementId, labelId, maxImpact) {
+            const bar = document.getElementById(elementId);
+            const label = document.getElementById(labelId);
+            if(!bar || !label) return;
+            
+            let width = Math.min(maxImpact * 10, 100); 
+            bar.style.width = `${width}%`;
+            label.innerText = `Price Impact: ${maxImpact.toFixed(2)}%`;
+
+            if (maxImpact < 2) { bar.style.background = "#10b981"; label.style.color = "#10b981"; textShadow = "0 0 10px #10b981"; }
+            else if (maxImpact < 5) { bar.style.background = "#fcd34d"; label.style.color = "#fcd34d"; textShadow = "0 0 10px #fcd34d"; }
+            else { bar.style.background = "var(--neon-red)"; label.style.color = "var(--neon-red)"; textShadow = "0 0 10px var(--neon-red)"; }
+        }
+
+        function recalculateSimulators() { recalculateDexSimulator(); recalculateTriSimulator(); }
+
+        function recalculateDexSimulator() {
+            const investAda = parseFloat(document.getElementById('sim-ada-input').value) || 0;
+            const simEl = document.getElementById('sim-profit'); const optEl = document.getElementById('optimizer-result');
+            
+            if(currentPools.vyfi.price <= 0 || currentPools.minswap.price <= 0) { 
+                simEl.innerText = "0.00 ADA"; updateSlippageUI('sim-slippage-bar', 'sim-slippage-label', 0); return; 
+            }
+            
+            const networkFee = conf.feeNet; const minFixed = conf.feeMin; const vyfiFixed = conf.feeVyfi;
+            let poolBuy, poolSell, fixedFeeBuy, fixedFeeSell, lpBuy, lpSell;
+
+            if (currentPools.minswap.price < currentPools.vyfi.price) { 
+                poolBuy = currentPools.minswap; poolSell = currentPools.vyfi; 
+                fixedFeeBuy = minFixed; fixedFeeSell = vyfiFixed; lpBuy = conf.lpFeeMin; lpSell = conf.lpFeeVyfi;
+            } else { 
+                poolBuy = currentPools.vyfi; poolSell = currentPools.minswap; 
+                fixedFeeBuy = vyfiFixed; fixedFeeSell = minFixed; lpBuy = conf.lpFeeVyfi; lpSell = conf.lpFeeMin;
+            }
+
+            let netProfit = 0; let swapAdaAmount = investAda - fixedFeeBuy - networkFee;
+            let maxImpact = 0;
+
+            if (swapAdaAmount > 0) {
+                let amountInWithFee1 = swapAdaAmount * (1 - (lpBuy/100));
+                let impact1 = (amountInWithFee1 / (poolBuy.reserveAda + amountInWithFee1)) * 100;
+                
+                let tokensReceived = getAmmOut(swapAdaAmount, poolBuy.reserveAda, poolBuy.reserveTok, lpBuy);
+                
+                let amountInWithFee2 = tokensReceived * (1 - (lpSell/100));
+                let impact2 = (amountInWithFee2 / (poolSell.reserveTok + amountInWithFee2)) * 100;
+
+                maxImpact = Math.max(impact1, impact2);
+
+                let adaGrossReceived = getAmmOut(tokensReceived, poolSell.reserveTok, poolSell.reserveAda, lpSell);
+                netProfit = (adaGrossReceived - fixedFeeSell - networkFee) - investAda;
+            }
+            
+            updateSlippageUI('sim-slippage-bar', 'sim-slippage-label', maxImpact);
+
+            if (swapAdaAmount <= 0) { simEl.innerText = "Insufficient ADA"; simEl.className = "data-value profit-negative"; } 
+            else { 
+                let sign = netProfit > 0 ? "+" : ""; 
+                let usdStr = currentAdaUsd > 0 ? `<span class="usd-profit">(~$${(Math.abs(netProfit)*currentAdaUsd).toFixed(2)})</span>` : "";
+                simEl.innerHTML = `${sign}${netProfit.toFixed(2)} ADA ${usdStr}`; 
+                simEl.className = netProfit > 0 ? "data-value profit-positive" : "data-value profit-negative"; 
+            }
+
+            let bestProfit = -Infinity; let optimalInvest = 0;
+            for(let i = 10; i <= 5000; i += 10) {
+                let testSwapAmount = i - fixedFeeBuy - networkFee;
+                if(testSwapAmount <= 0) continue;
+                let testTokens = getAmmOut(testSwapAmount, poolBuy.reserveAda, poolBuy.reserveTok, lpBuy);
+                let testAdaGross = getAmmOut(testTokens, poolSell.reserveTok, poolSell.reserveAda, lpSell);
+                let testNet = (testAdaGross - fixedFeeSell - networkFee) - i;
+                if (testNet > bestProfit) { bestProfit = testNet; optimalInvest = i; } else if (testNet < bestProfit && testNet > 0) break;
+            }
+
+            if (bestProfit > 0) { optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> Max profit <b>+${bestProfit.toFixed(2)} ADA</b> (Invest <b>${optimalInvest} ADA</b>)`; optEl.style.color = '#10b981'; } 
+            else { optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> No profitable route (fees > spread).`; optEl.style.color = 'var(--text-secondary)'; }
+        }
+
+        function calcTriNetDetails(investAda) {
+            if(investAda <= 0) return { netProfit: -Infinity, route: null, maxImpact: 0 };
+            let pVA = currentPools.vlrmAda; let pVO = currentPools.crossVO; let pOVy = currentPools.vyfi; let pOMin = currentPools.minswap; 
+            if(pVA.resAda <= 0 || pVO.resVlrm <= 0) return { netProfit: -Infinity, route: null, maxImpact: 0 };
+
+            const netF = conf.feeNet; const fVy = conf.feeVyfi + netF; const fMin = conf.feeMin + netF; 
+            const lpVy = conf.lpFeeVyfi; const lpMin = conf.lpFeeMin;
+
+            let outA = -Infinity; let impactA = 0; let adaAfterLeg1A = investAda - fVy;
+            if(adaAfterLeg1A > 0) {
+                let fee1 = 1-(lpVy/100); let imp1 = (adaAfterLeg1A*fee1)/(pVA.resAda + adaAfterLeg1A*fee1)*100;
+                let vlrmOut = getAmmOut(adaAfterLeg1A, pVA.resAda, pVA.resTok, lpVy); 
+                
+                let imp2 = (vlrmOut*fee1)/(pVO.resVlrm + vlrmOut*fee1)*100;
+                let oracleOut = getAmmOut(vlrmOut, pVO.resVlrm, pVO.resOracle, lpVy); 
+                
+                let feeMin = 1-(lpMin/100);
+                let imp3Vy = (oracleOut*fee1)/(pOVy.reserveTok + oracleOut*fee1)*100;
+                let imp3Min = (oracleOut*feeMin)/(pOMin.reserveTok + oracleOut*feeMin)*100;
+
+                let adaEndVy = getAmmOut(oracleOut, pOVy.reserveTok, pOVy.reserveAda, lpVy) - fVy - fVy; 
+                let adaEndMin = getAmmOut(oracleOut, pOMin.reserveTok, pOMin.reserveAda, lpMin) - fVy - fMin; 
+                
+                if (adaEndVy > adaEndMin) { outA = adaEndVy; impactA = Math.max(imp1, imp2, imp3Vy); }
+                else { outA = adaEndMin; impactA = Math.max(imp1, imp2, imp3Min); }
+            }
+
+            let outB = -Infinity; let impactB = 0; let adaAfterLeg1B_Vy = investAda - fVy; let adaAfterLeg1B_Min = investAda - fMin;
+            if(adaAfterLeg1B_Vy > 0 || adaAfterLeg1B_Min > 0) {
+                let feeVy = 1-(lpVy/100); let feeMin = 1-(lpMin/100);
+
+                let imp1Vy = (adaAfterLeg1B_Vy*feeVy)/(pOVy.reserveAda + adaAfterLeg1B_Vy*feeVy)*100;
+                let oracleOutVy = getAmmOut(adaAfterLeg1B_Vy, pOVy.reserveAda, pOVy.reserveTok, lpVy);
+                let imp2Vy = (oracleOutVy*feeVy)/(pVO.resOracle + oracleOutVy*feeVy)*100;
+                let vlrmOutVy = getAmmOut(oracleOutVy, pVO.resOracle, pVO.resVlrm, lpVy);
+                let imp3Vy = (vlrmOutVy*feeVy)/(pVA.resTok + vlrmOutVy*feeVy)*100;
+                let finalVyVy = getAmmOut(vlrmOutVy, pVA.resTok, pVA.resAda, lpVy) - fVy - fVy;
+                
+                let imp1Min = (adaAfterLeg1B_Min*feeMin)/(pOMin.reserveAda + adaAfterLeg1B_Min*feeMin)*100;
+                let oracleOutMin = getAmmOut(adaAfterLeg1B_Min, pOMin.reserveAda, pOMin.reserveTok, lpMin);
+                let imp2Min = (oracleOutMin*feeVy)/(pVO.resOracle + oracleOutMin*feeVy)*100;
+                let vlrmOutMin = getAmmOut(oracleOutMin, pVO.resOracle, pVO.resVlrm, lpVy);
+                let imp3Min = (vlrmOutMin*feeVy)/(pVA.resTok + vlrmOutMin*feeVy)*100;
+                let finalMinVy = getAmmOut(vlrmOutMin, pVA.resTok, pVA.resAda, lpVy) - fVy - fVy;
+                
+                if (finalVyVy > finalMinVy) { outB = finalVyVy; impactB = Math.max(imp1Vy, imp2Vy, imp3Vy); }
+                else { outB = finalMinVy; impactB = Math.max(imp1Min, imp2Min, imp3Min); }
+            }
+            
+            if (outA > outB) return { netProfit: outA - investAda, route: 'A', maxImpact: impactA }; 
+            else return { netProfit: outB - investAda, route: 'B', maxImpact: impactB }; 
+        }
+
+        function recalculateTriSimulator() {
+            const investAda = parseFloat(document.getElementById('sim-tri-input').value) || 0;
+            const simEl = document.getElementById('sim-tri-profit'); 
+            const optEl = document.getElementById('tri-optimizer-result');
+            
+            let currentData = calcTriNetDetails(investAda);
+            let netProfit = currentData.netProfit;
+
+            updateSlippageUI('sim-tri-slippage-bar', 'sim-tri-slippage-label', currentData.maxImpact);
+
+            if(investAda <= 0 || netProfit === -Infinity) { 
+                simEl.innerText = "Insufficient"; simEl.className = "data-value profit-negative"; 
+            } else { 
+                let sign = netProfit > 0 ? "+" : ""; 
+                let usdStr = currentAdaUsd > 0 ? `<span class="usd-profit">(~$${(Math.abs(netProfit)*currentAdaUsd).toFixed(2)})</span>` : "";
+                simEl.innerHTML = `${sign}${netProfit.toFixed(2)} ADA ${usdStr}`; 
+                simEl.className = netProfit > 0 ? "data-value profit-positive" : "data-value profit-negative"; 
+            }
+
+            let bestProfit = -Infinity; let optimalInvest = 0; let optimalRoute = null; let bestPercent = 0;
+            for(let i = 10; i <= 5000; i += 10) {
+                let testData = calcTriNetDetails(i);
+                if (testData.netProfit > bestProfit) { 
+                    bestProfit = testData.netProfit; optimalInvest = i; optimalRoute = testData.route; bestPercent = (testData.netProfit / i) * 100;
+                } else if (testData.netProfit < bestProfit && testData.netProfit > 0) break;
+            }
+
+            const triEl = document.getElementById('tri-arb-spread');
+            const rA = document.getElementById('route-a-container');
+            const rB = document.getElementById('route-b-container');
+            const triAnim = document.getElementById('tri-anim-path');
+
+            if(rA) rA.className = "route-inactive"; 
+            if(rB) rB.className = "route-inactive";
+            if(triAnim) triAnim.style.display = "none";
+
+            if (bestProfit > 0) { 
+                optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> Max profit <b>+${bestProfit.toFixed(2)} ADA</b> (Invest <b>${optimalInvest} ADA</b>)`; 
+                optEl.style.color = '#10b981'; 
+                
+                if(triEl) {
+                    triEl.innerText = `+${bestPercent.toFixed(2)}%`; 
+                    triEl.style.color = "#10b981";
+                }
+                
+                if(triAnim) triAnim.style.display = "block";
+                if (optimalRoute === 'A') {
+                    if(rA) rA.className = "route-active";
+                    if(triAnim) triAnim.className = "tri-line-active"; 
+                }
+                if (optimalRoute === 'B') {
+                    if(rB) rB.className = "route-active";
+                    if(triAnim) triAnim.className = "tri-line-active route-reverse"; 
+                }
+            } else { 
+                optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> No profitable route (fees > spread).`; 
+                optEl.style.color = 'var(--text-secondary)'; 
+                if(triEl) {
+                    triEl.innerText = "0.00%"; 
+                    triEl.style.color = "var(--text-secondary)";
+                }
+            }
+        }
+
+        async function fetchHistoryFromCloudflare() {
+            try {
+                const res = await fetch(PROXY_URL + '?data=history', { headers: { "X-Terminal-Key": userPasskey } });
+                if(res.status === 401) { showAuthScreen(); return; }
+                
+                const cloudHistory = await res.json();
+                
+                if (cloudHistory && cloudHistory.labels && cloudHistory.labels.length > 0) {
+                    let expandedHistory = { labels: [], spread: [], discrepancy: [], vlrmOracleSpread: [], vlrmAda: [], vlrmOracle: [], oracleVyfi: [], oracleMin: [], vault: [], totalLiq: [], pVlrmAda: [], pVlrmOracle: [], pOracleVyfi: [], pOracleMin: [] };
+
+                    for (let i = 0; i < cloudHistory.labels.length; i++) {
+                        for(let j=0; j<30; j++) {
+                            expandedHistory.labels.push(j === 0 ? cloudHistory.labels[i] : '');
+                            expandedHistory.spread.push(cloudHistory.spread[i]);
+                            expandedHistory.discrepancy.push(cloudHistory.discrepancy[i]);
+                            
+                            let vPrice = cloudHistory.pVlrmAda ? cloudHistory.pVlrmAda[i] : null;
+                            let oPriceVy = cloudHistory.pOracleVyfi ? cloudHistory.pOracleVyfi[i] : null;
+                            let oPriceMin = cloudHistory.pOracleMin ? cloudHistory.pOracleMin[i] : null;
+                            let oPrice = (oPriceVy && oPriceVy > 0) ? oPriceVy : oPriceMin;
+                            let voRatio = cloudHistory.pVlrmOracle ? cloudHistory.pVlrmOracle[i] : null;
+                            
+                            let voSpread = null;
+                            if (vPrice !== null && oPrice !== null && voRatio !== null && vPrice > 0 && oPrice > 0) {
+                                let valueDirect = vPrice;
+                                let valueCross = voRatio * oPrice;
+                                voSpread = ((Math.max(valueDirect, valueCross) - Math.min(valueDirect, valueCross)) / Math.min(valueDirect, valueCross)) * 100;
+                            }
+                            expandedHistory.vlrmOracleSpread.push(voSpread);
+
+                            expandedHistory.vlrmAda.push(cloudHistory.vlrmAda[i]);
+                            expandedHistory.vlrmOracle.push(cloudHistory.vlrmOracle[i]);
+                            expandedHistory.oracleVyfi.push(cloudHistory.oracleVyfi[i]);
+                            expandedHistory.oracleMin.push(cloudHistory.oracleMin[i]);
+                            expandedHistory.vault.push(cloudHistory.vault[i]);
+                            expandedHistory.totalLiq.push((cloudHistory.oracleVyfi[i] || 0) + (cloudHistory.oracleMin[i] || 0));
+                            expandedHistory.pVlrmAda.push(vPrice);
+                            expandedHistory.pVlrmOracle.push(voRatio);
+                            expandedHistory.pOracleVyfi.push(oPriceVy);
+                            expandedHistory.pOracleMin.push(oPriceMin);
+                        }
+                    }
+
+                    const missingPoints = MAX_CHART_POINTS - expandedHistory.labels.length;
+                    if (missingPoints > 0) {
+                        const emptyLabels = Array(missingPoints).fill('');
+                        expandedHistory.labels = [...emptyLabels, ...expandedHistory.labels];
+
+                        const keys = Object.keys(expandedHistory);
+                        for (let key of keys) {
+                            if (key === 'labels') continue;
+                            let firstVal = expandedHistory[key].find(v => v !== null && v !== undefined && !isNaN(v));
+                            if (firstVal === undefined) firstVal = 0;
+                            const padArr = Array(missingPoints).fill(firstVal);
+                            expandedHistory[key] = [...padArr, ...expandedHistory[key]];
+                        }
+                    }
+
+                    const keysFill = Object.keys(expandedHistory);
+                    for (let key of keysFill) {
+                        if (key === 'labels') continue;
+                        let lastGood = 0;
+                        for (let k = 0; k < expandedHistory[key].length; k++) {
+                            let val = expandedHistory[key][k];
+                            if (val !== null && val !== undefined && !isNaN(val)) { lastGood = val; } 
+                            else { expandedHistory[key][k] = lastGood; }
+                        }
+                    }
+
+                    if (expandedHistory.labels.length > MAX_CHART_POINTS) {
+                        const diff = expandedHistory.labels.length - MAX_CHART_POINTS;
+                        Object.keys(expandedHistory).forEach(key => { expandedHistory[key] = expandedHistory[key].slice(diff); });
+                    }
+                    chartHistory = expandedHistory;
+                    
+                    chartInstance.data.labels = chartHistory.labels; 
+                    chartInstance.data.datasets[0].data = chartHistory.spread; 
+                    chartInstance.data.datasets[1].data = chartHistory.discrepancy; 
+                    chartInstance.data.datasets[2].data = chartHistory.vlrmOracleSpread; 
+                    chartInstance.update('none');
+                    
+                    sparkInstances.vlrmAda.data.labels = chartHistory.labels; sparkInstances.vlrmAda.data.datasets[0].data = chartHistory.vlrmAda; sparkInstances.vlrmAda.update('none');
+                    sparkInstances.vlrmOracle.data.labels = chartHistory.labels; sparkInstances.vlrmOracle.data.datasets[0].data = chartHistory.vlrmOracle; sparkInstances.vlrmOracle.update('none');
+                    sparkInstances.oracleVyfi.data.labels = chartHistory.labels; sparkInstances.oracleVyfi.data.datasets[0].data = chartHistory.oracleVyfi; sparkInstances.oracleVyfi.update('none');
+                    sparkInstances.oracleMin.data.labels = chartHistory.labels; sparkInstances.oracleMin.data.datasets[0].data = chartHistory.oracleMin; sparkInstances.oracleMin.update('none');
+                    sparkInstances.vault.data.labels = chartHistory.labels; sparkInstances.vault.data.datasets[0].data = chartHistory.vault; sparkInstances.vault.update('none');
+                    sparkInstances.totalLiq.data.labels = chartHistory.labels; sparkInstances.totalLiq.data.datasets[0].data = chartHistory.totalLiq; sparkInstances.totalLiq.update('none');
+                    sparkInstances.pVlrmAda.data.labels = chartHistory.labels; sparkInstances.pVlrmAda.data.datasets[0].data = chartHistory.pVlrmAda; sparkInstances.pVlrmAda.update('none');
+                    sparkInstances.pVlrmOracle.data.labels = chartHistory.labels; sparkInstances.pVlrmOracle.data.datasets[0].data = chartHistory.pVlrmOracle; sparkInstances.pVlrmOracle.update('none');
+                    sparkInstances.pOracleVyfi.data.labels = chartHistory.labels; sparkInstances.pOracleVyfi.data.datasets[0].data = chartHistory.pOracleVyfi; sparkInstances.pOracleVyfi.update('none');
+                    sparkInstances.pOracleMin.data.labels = chartHistory.labels; sparkInstances.pOracleMin.data.datasets[0].data = chartHistory.pOracleMin; sparkInstances.pOracleMin.update('none');
+                }
+            } catch (e) { console.error("Error loading history:", e); }
+        }
+
+        async function fetchAdaData() {
+            try {
+                const response = await fetch('https://api.coingecko.com/api/v3/coins/cardano/market_chart?vs_currency=usd&days=1');
+                const data = await response.json();
+                const prices = data.prices.map(p => p[1]);
+                currentAdaUsd = prices[prices.length - 1]; 
+                const oldestAda = prices[0];
+                const adaChange = ((currentAdaUsd - oldestAda) / oldestAda) * 100;
+
+                const priceEl = document.getElementById('ada-price-usd');
+                priceEl.innerHTML = `$${currentAdaUsd.toFixed(4)} <span id="ada-change-24h" class="change-badge"></span>`;
+                
+                const changeEl = document.getElementById('ada-change-24h');
+                if (adaChange > 0) { changeEl.innerText = `+${adaChange.toFixed(2)}%`; changeEl.style.color = "#10b981"; }
+                else { changeEl.innerText = `${adaChange.toFixed(2)}%`; changeEl.style.color = "var(--neon-red)"; }
+
+                document.getElementById('ada-time').innerText = new Date().toLocaleTimeString();
+
+                sparkInstances.ada.data.labels = Array(prices.length).fill('');
+                sparkInstances.ada.data.datasets[0].data = prices;
+                sparkInstances.ada.update('none');
+
+                return currentAdaUsd;
+            } catch (error) { return null; }
+        }
+
+        async function fetchDexData() {
+            try {
+                const response = await fetch(PROXY_URL, { headers: { "X-Terminal-Key": userPasskey } });
+                if(response.status === 401) { showAuthScreen(); return; }
+                
+                const data = await response.json();
+                if (data.error) throw new Error(data.error);
+
+                let vaultTvlData = 0;
+                if (data.vaultTvl && data.vaultTvl > 0) { vaultTvlData = data.vaultTvl; }
+
+                let priceVlrmAda = 0; let vlrmVyfiAdaReserve = 0; let vlrmVyfiTokReserve = 0; let vlrmAdaTvl = 0;
+                const vlrmVyfiPool = data.vyfiPools.find(p => p.unitsPair.includes('lovelace') && p.unitsPair.includes(VLRM));
+                if (vlrmVyfiPool) {
+                    priceVlrmAda = vlrmVyfiPool.tokenA.unit === 'lovelace' ? vlrmVyfiPool.tokenB.lpRatio[vlrmVyfiPool.unitsPair].priceRatioAB : vlrmVyfiPool.tokenA.lpRatio[vlrmVyfiPool.unitsPair].priceRatioBA;
+                    vlrmAdaTvl = vlrmVyfiPool.tvl;
+                    document.getElementById('vlrm-price-ada').innerText = `₳ ${priceVlrmAda.toFixed(6)}`; document.getElementById('vlrm-liq-ada').innerText = `₳ ${Math.round(vlrmAdaTvl).toLocaleString()}`;
+                    vlrmVyfiAdaReserve = vlrmAdaTvl / 2; vlrmVyfiTokReserve = vlrmVyfiAdaReserve / priceVlrmAda;
+                }
+                
+                let crossVlrmReserve = 0; let crossOracleReserve = 0; let crossTvl = 0; 
+                let rawCrossRatio = 0; let oraclePerVlrmUI = 0;
+                const crossPool = data.vyfiPools.find(p => p.unitsPair.includes(VLRM) && p.unitsPair.includes(ORACLE));
+                if (crossPool) {
+                    crossTvl = crossPool.tvl;
+                    rawCrossRatio = crossPool.tokenA.unit.includes(VLRM) ? crossPool.tokenB.lpRatio[crossPool.unitsPair].priceRatioAB : crossPool.tokenA.lpRatio[crossPool.unitsPair].priceRatioBA;
+                    
+                    crossVlrmReserve = (crossTvl / 2) / priceVlrmAda; 
+                    crossOracleReserve = crossVlrmReserve / rawCrossRatio; 
+                    
+                    if (crossVlrmReserve > 0) {
+                        oraclePerVlrmUI = crossOracleReserve / crossVlrmReserve;
+                    }
+                    
+                    document.getElementById('vlrm-oracle-price').innerText = `${oraclePerVlrmUI.toFixed(4)}`;
+                    document.getElementById('vlrm-oracle-liq-ada').innerText = `₳ ${Math.round(crossTvl).toLocaleString()}`; 
+                }
+
+                let totalOracleLiqAda = 0, priceVyfi = 0, priceMin = 0; let vyfiTvLAda = 0, minTvlAda = 0;
+                const oracleVyfiPool = data.vyfiPools.find(p => p.unitsPair.includes('lovelace') && p.unitsPair.includes(ORACLE));
+                if (oracleVyfiPool) {
+                    priceVyfi = oracleVyfiPool.tokenA.unit === 'lovelace' ? oracleVyfiPool.tokenB.lpRatio[oracleVyfiPool.unitsPair].priceRatioAB : oracleVyfiPool.tokenA.lpRatio[oracleVyfiPool.unitsPair].priceRatioBA;
+                    vyfiTvLAda = oracleVyfiPool.tvl; totalOracleLiqAda += vyfiTvLAda;
+                    document.getElementById('oracle-vyfi-price').innerText = `₳ ${priceVyfi.toFixed(6)}`; document.getElementById('oracle-vyfi-liq').innerText = `₳ ${Math.round(vyfiTvLAda).toLocaleString()}`;
+                }
+                
+                if (data.minPrice && data.minPrice.length > 0) {
+                    priceMin = parseFloat(data.minPrice[0].close); document.getElementById('oracle-min-price').innerText = `₳ ${priceMin.toFixed(6)}`;
+                    if (data.minTvl && data.minTvl.length > 0) { minTvlAda = parseFloat(data.minTvl[data.minTvl.length - 1].value); totalOracleLiqAda += minTvlAda; document.getElementById('oracle-min-liq').innerText = `₳ ${Math.round(minTvlAda).toLocaleString()}`; }
+                }
+                document.getElementById('oracle-total-liq').innerText = `₳ ${Math.round(totalOracleLiqAda).toLocaleString()}`;
+
+                updateSparklines(vlrmAdaTvl, crossTvl, vyfiTvLAda, minTvlAda, vaultTvlData, priceVlrmAda, oraclePerVlrmUI, priceVyfi, priceMin);
+
+                calcChangeUI('vlrm-ada-change-24h', chartHistory.vlrmAda, vlrmAdaTvl);
+                calcChangeUI('vlrm-oracle-change-24h', chartHistory.vlrmOracle, crossTvl);
+                calcChangeUI('oracle-vyfi-change-24h', chartHistory.oracleVyfi, vyfiTvLAda);
+                calcChangeUI('oracle-min-change-24h', chartHistory.oracleMin, minTvlAda);
+                calcChangeUI('vault-change-24h', chartHistory.vault, vaultTvlData);
+                calcChangeUI('total-liq-change-24h', chartHistory.totalLiq, totalOracleLiqAda);
+                
+                calcChangeUI('vlrm-price-change-24h', chartHistory.pVlrmAda, priceVlrmAda);
+                calcChangeUI('vlrm-oracle-price-change-24h', chartHistory.pVlrmOracle, oraclePerVlrmUI);
+                calcChangeUI('oracle-vyfi-price-change-24h', chartHistory.pOracleVyfi, priceVyfi);
+                calcChangeUI('oracle-min-price-change-24h', chartHistory.pOracleMin, priceMin);
+
+                currentPools.vyfi = { price: priceVyfi, reserveAda: priceVyfi > 0 ? (vyfiTvLAda / 2) : 0, reserveTok: priceVyfi > 0 ? (vyfiTvLAda / 2) / priceVyfi : 0 };
+                currentPools.minswap = { price: priceMin, reserveAda: priceMin > 0 ? (minTvlAda / 2) : 0, reserveTok: priceMin > 0 ? (minTvlAda / 2) / priceMin : 0 };
+                currentPools.vlrmAda = { resAda: vlrmVyfiAdaReserve, resTok: vlrmVyfiTokReserve }; currentPools.crossVO = { resVlrm: crossVlrmReserve, resOracle: crossOracleReserve };
+
+                let bestDeviation = 0; let targetDexForVault = "";
+                
+                if (vaultTvlData > 0) {
+                    const fairPrice = vaultTvlData / ORACLE_TOTAL_SUPPLY;
+                    document.getElementById('vault-tvl').innerText = `₳ ${Math.round(vaultTvlData).toLocaleString()}`; 
+                    document.getElementById('vault-fair-price').innerText = `₳ ${fairPrice.toFixed(6)}`;
+                    
+                    let validPrices = [];
+                    if (priceVyfi > 0) validPrices.push({ dex: "VyFi", price: priceVyfi }); if (priceMin > 0) validPrices.push({ dex: "Minswap", price: priceMin });
+
+                    if (validPrices.length > 0) {
+                        validPrices.forEach(p => { let deviation = ((p.price - fairPrice) / fairPrice) * 100; if (Math.abs(deviation) > Math.abs(bestDeviation)) { bestDeviation = deviation; targetDexForVault = p.dex; } });
+                        const vaultBannerDiscEl = document.getElementById('vault-banner-discrepancy'); const vaultActionEl = document.getElementById('vault-arbitrage-action');
+                        let sign = bestDeviation > 0 ? '+' : ''; vaultBannerDiscEl.innerText = `${sign}${bestDeviation.toFixed(2)}%`;
+
+                        let targetLink = targetDexForVault === "Minswap" ? MINSWAP_LINK : VYFI_LINK; 
+                        
+                        if (Math.abs(bestDeviation) < 0.5) {
+                            vaultBannerDiscEl.style.color = "rgba(255, 255, 255, 0.5)";
+                            vaultActionEl.innerHTML = `Balanced`;
+                            vaultActionEl.style.color = "rgba(255, 255, 255, 0.5)";
+                        } else {
+                            if (bestDeviation > 0) {
+                                vaultBannerDiscEl.style.color = "#10b981"; 
+                                vaultActionEl.innerHTML = `<a href="${targetLink}" target="_blank" class="badge-dark">Sell ${targetDexForVault}</a>`; 
+                                vaultActionEl.style.color = "white";
+                            } else {
+                                vaultBannerDiscEl.style.color = "var(--neon-red)"; 
+                                vaultActionEl.innerHTML = `<a href="${targetLink}" target="_blank" class="badge-dark">Buy ${targetDexForVault}</a>`; 
+                                vaultActionEl.style.color = "white";
+                            }
+                        }
+
+                        if (Math.abs(bestDeviation) >= conf.vaultAlert) {
+                            const alertToggle = document.getElementById('alert-toggle'); const now = Date.now();
+                            if (alertToggle && alertToggle.checked && (now - lastVaultAlertTime > ALERT_COOLDOWN)) {
+                                // No alert sound/TG
+                                lastVaultAlertTime = now;
+                            }
+                        }
+                    }
+                } else {
+                    document.getElementById('vault-tvl').innerText = `API Offline`; 
+                    document.getElementById('vault-fair-price').innerText = `-`;
+                    document.getElementById('vault-banner-discrepancy').innerText = `-%`;
+                    document.getElementById('vault-banner-discrepancy').style.color = "rgba(255, 255, 255, 0.5)";
+                    document.getElementById('vault-arbitrage-action').innerHTML = `Offline`;
+                    document.getElementById('vault-arbitrage-action').style.color = "rgba(255, 255, 255, 0.5)";
+                }
+
+                let spread = 0;
+                if (priceVyfi > 0 && priceMin > 0) {
+                    const highestPrice = Math.max(priceVyfi, priceMin); const lowestPrice = Math.min(priceVyfi, priceMin); spread = ((highestPrice - lowestPrice) / lowestPrice) * 100;
+                    const spreadEl = document.getElementById('arbitrage-spread'); const actionEl = document.getElementById('arbitrage-action');
+                    spreadEl.innerText = `${spread.toFixed(2)}%`;
+                    
+                    if (spread < 0.5) {
+                        spreadEl.style.color = "rgba(255, 255, 255, 0.5)"; 
+                        actionEl.innerHTML = `Low spread`;
+                        actionEl.style.color = "rgba(255, 255, 255, 0.5)";
+                    } else {
+                        spreadEl.style.color = "#ffffff";  // CAMBIO A COLOR BLANCO
+                        if (priceVyfi > priceMin) { actionEl.innerHTML = `<a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Buy Min</a> <a href="${VYFI_LINK}" target="_blank" class="badge-dark">Sell VyFi</a>`;  } 
+                        else { actionEl.innerHTML = `<a href="${VYFI_LINK}" target="_blank" class="badge-dark">Buy VyFi</a> <a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Sell Min</a>`;  }
+                    }
+                }
+                
+                let primaryOraclePrice = priceVyfi > 0 ? priceVyfi : priceMin;
+                let voSpread = 0;
+                if (priceVlrmAda > 0 && primaryOraclePrice > 0 && oraclePerVlrmUI > 0) {
+                    let valueDirect = priceVlrmAda;
+                    let valueCross = oraclePerVlrmUI * primaryOraclePrice;
+                    voSpread = ((Math.max(valueDirect, valueCross) - Math.min(valueDirect, valueCross)) / Math.min(valueDirect, valueCross)) * 100;
+                }
+
+                updateMainChart(spread, bestDeviation, voSpread);
+                recalculateSimulators();
+
+            } catch (error) { console.error("General error:", error); }
+        }
+
+        async function startEngine() {
+            initSortable(); 
+            initCharts();   
+            await fetchHistoryFromCloudflare();
+            await fetchAdaData();
+            await fetchDexData();
+            
+            fetchInterval = setInterval(async () => {
+                await fetchAdaData();
+                await fetchDexData();
+            }, 30000);
+        }
+
+        window.onload = () => {
+            if (!userPasskey) {
+                showAuthScreen();
+            } else {
+                startEngine();
+            }
+        };
+    </script>
+</body>
+</html>
