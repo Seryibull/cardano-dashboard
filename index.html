@@ -102,17 +102,12 @@
         .active-edit-btn { background: rgba(255, 123, 0, 0.2) !important; border-color: var(--neon-orange) !important; box-shadow: 0 0 15px rgba(255, 123, 0, 0.5); }
 
         /* =========================================
-           NUEVO MOTOR DE GRID: GRIDSTACK.JS
+           MOTOR DEL GRID: GRIDSTACK.JS
            ========================================= */
         .grid-stack { max-width: 1200px; margin: 0 auto; transition: filter 0.5s ease; }
         
-        /* ESTILOS DEL MODO EDICIÓN (GRIDSTACK) */
-        .edit-mode-active .grid-stack-item-content { 
-            cursor: grab !important; 
-            outline: 2px dashed rgba(255, 123, 0, 0.5) !important; 
-            outline-offset: 4px; 
-            transition: outline 0.3s ease; 
-        }
+        /* Ocultar interacciones internas durante edición */
+        .edit-mode-active .grid-stack-item-content { cursor: grab !important; outline: 2px dashed rgba(255, 123, 0, 0.5) !important; outline-offset: 4px; transition: outline 0.3s ease; }
         .edit-mode-active .grid-stack-item-content:hover { background: rgba(255, 123, 0, 0.05); }
         .edit-mode-active .grid-stack-item-content:active { cursor: grabbing !important; }
         .edit-mode-active .grid-stack-item-content canvas, 
@@ -127,33 +122,35 @@
             border-radius: 20px !important;
         }
         
-        .ui-draggable-dragging > .grid-stack-item-content {
+        .grid-stack-item.ui-draggable-dragging > .grid-stack-item-content {
             box-shadow: 0 30px 60px rgba(0, 0, 0, 0.9), 0 0 40px rgba(255, 123, 0, 0.4) !important;
             transform: scale(1.02) rotate(1deg) !important;
             border: 2px solid var(--neon-orange) !important;
-            opacity: 0.98 !important;
+            opacity: 0.95 !important;
             z-index: 99999 !important;
         }
 
-        /* ESTILOS GENERALES DE TARJETAS (Ahora viven dentro de grid-stack-item-content) */
+        /* ESTILOS GENERALES DE TARJETAS */
         .card { 
             border-radius: 20px; 
             padding: 20px 25px; 
-            position: relative; 
+            position: absolute; /* Requisito de GridStack */
+            top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(18, 15, 36, 0.85); 
             backdrop-filter: blur(10px); 
             border: 1px solid rgba(255,255,255,0.05); 
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); 
             transition: transform 0.3s ease, box-shadow 0.3s ease; 
-            height: 100%; 
             box-sizing: border-box;
             display: flex; 
             flex-direction: column; 
             justify-content: space-between;
         }
-        
-        /* Ajustes finos de padding para las tarjetas super estrechas de 1 bloque */
+        .card:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 123, 0, 0.15); border-color: rgba(255, 123, 0, 0.3); }
+
+        /* Ajustes finos de padding para las tarjetas super estrechas (radares) */
         .card-compact { padding: 15px 25px !important; }
+        .card-compact .card-title { margin-bottom: 5px; font-size: 0.95rem; }
 
         /* CODIFICACIÓN DE COLORES */
         .card-ada { background: rgba(8, 10, 16, 0.98); border-color: rgba(66, 133, 244, 0.2); }
@@ -187,10 +184,7 @@
         
         /* Ocultar flechas del input numérico */
         input[type="number"].sim-input::-webkit-outer-spin-button,
-        input[type="number"].sim-input::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
+        input[type="number"].sim-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
         input[type="number"].sim-input { -moz-appearance: textfield; }
 
         .sim-input { background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 10px; font-weight: bold; text-align: center; margin-right: 5px; font-family: 'Inter', sans-serif;}
@@ -308,7 +302,7 @@
 
     <div class="grid-stack" id="main-dashboard">
         
-        <div class="grid-stack-item" gs-id="card-arb-dex" gs-w="2" gs-h="1" gs-x="0" gs-y="0">
+        <div class="grid-stack-item" gs-id="card-arb-dex" gs-w="6" gs-h="1" gs-x="0" gs-y="0">
             <div class="grid-stack-item-content card card-vault card-compact">
                 <div class="card-title" style="color: var(--vault-color);">ORACLE / ADA dex arbitrage</div>
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto;">
@@ -324,7 +318,7 @@
             </div>
         </div>
 
-        <div class="grid-stack-item" gs-id="card-arb-vault" gs-w="2" gs-h="1" gs-x="2" gs-y="0">
+        <div class="grid-stack-item" gs-id="card-arb-vault" gs-w="6" gs-h="1" gs-x="6" gs-y="0">
             <div class="grid-stack-item-content card card-vault card-compact">
                 <div class="card-title" style="color: var(--vault-color);">Vault relics fair price ORACLE</div>
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto;">
@@ -340,7 +334,7 @@
             </div>
         </div>
 
-        <div class="grid-stack-item" gs-id="card-sim-oracle" gs-w="2" gs-h="2" gs-x="0" gs-y="1">
+        <div class="grid-stack-item" gs-id="card-sim-oracle" gs-w="6" gs-h="2" gs-x="0" gs-y="1">
             <div class="grid-stack-item-content card card-vault">
                 <div class="card-title" style="color: var(--vault-color);">ORACLE / ADA net profit simulator</div>
                 <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: auto; padding-bottom: 20px;">
@@ -365,7 +359,7 @@
             </div>
         </div>
 
-        <div class="grid-stack-item" gs-id="card-sim-tri" gs-w="2" gs-h="2" gs-x="2" gs-y="1">
+        <div class="grid-stack-item" gs-id="card-sim-tri" gs-w="6" gs-h="2" gs-x="6" gs-y="1">
             <div class="grid-stack-item-content card card-orange">
                 <div class="card-title" style="color: var(--neon-orange);">▲VLRM ORACLE ADA▼ triangular net profit simulator</div>
                 <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: auto; padding-bottom: 20px;">
@@ -390,7 +384,7 @@
             </div>
         </div>
 
-        <div class="grid-stack-item" gs-id="card-ada" gs-w="1" gs-h="2" gs-x="0" gs-y="3">
+        <div class="grid-stack-item" gs-id="card-ada" gs-w="3" gs-h="2" gs-x="0" gs-y="3">
             <div class="grid-stack-item-content card card-ada">
                 <div>
                     <div class="card-title ada-title">ADA</div>
@@ -406,7 +400,7 @@
             </div>
         </div>
         
-        <div class="grid-stack-item" gs-id="card-vault" gs-w="1" gs-h="2" gs-x="1" gs-y="3">
+        <div class="grid-stack-item" gs-id="card-vault" gs-w="3" gs-h="2" gs-x="3" gs-y="3">
             <div class="grid-stack-item-content card card-vault">
                 <div>
                     <div class="card-title" style="color: var(--vault-color);">Relics vault ORACLE</div>
@@ -423,7 +417,7 @@
             </div>
         </div>
 
-        <div class="grid-stack-item" gs-id="card-vlrm-ada" gs-w="1" gs-h="2" gs-x="2" gs-y="3">
+        <div class="grid-stack-item" gs-id="card-vlrm-ada" gs-w="3" gs-h="2" gs-x="6" gs-y="3">
             <div class="grid-stack-item-content card card-orange">
                 <div class="card-title" style="color: var(--neon-orange);">VLRM / ADA <span class="badge bg-vyfi" style="margin-left:auto;">VyFi</span></div>
                 <div class="data-row">
@@ -439,7 +433,7 @@
             </div>
         </div>
 
-        <div class="grid-stack-item" gs-id="card-vlrm-oracle" gs-w="1" gs-h="2" gs-x="3" gs-y="3">
+        <div class="grid-stack-item" gs-id="card-vlrm-oracle" gs-w="3" gs-h="2" gs-x="9" gs-y="3">
             <div class="grid-stack-item-content card card-orange">
                 <div class="card-title" style="color: var(--neon-orange);">VLRM / ORACLE <span class="badge bg-vyfi" style="margin-left:auto;">VyFi</span></div>
                 <div class="data-row">
@@ -455,7 +449,7 @@
             </div>
         </div>
 
-        <div class="grid-stack-item" gs-id="card-oracle-ada" gs-w="2" gs-h="3" gs-x="0" gs-y="5">
+        <div class="grid-stack-item" gs-id="card-oracle-ada" gs-w="6" gs-h="4" gs-x="0" gs-y="5">
             <div class="grid-stack-item-content card card-vault" style="display: flex; flex-direction: column;">
                 <div class="card-title" style="color: var(--vault-color); margin-bottom: 20px;">ORACLE / ADA</div>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 20px;">
@@ -484,12 +478,12 @@
                             <span id="oracle-total-liq">-</span> <span id="total-liq-change-24h" class="change-badge" style="font-size: 1rem;"></span>
                         </div>
                     </div>
-                    <div style="height: 70px; margin-top: 20px; position: relative;"><canvas id="spark-total-liq"></canvas></div>
+                    <div style="flex-grow: 1; min-height: 60px; margin-top: 20px; position: relative;"><canvas id="spark-total-liq"></canvas></div>
                 </div>
             </div>
         </div>
 
-        <div class="grid-stack-item" gs-id="card-triangular" gs-w="2" gs-h="3" gs-x="2" gs-y="5">
+        <div class="grid-stack-item" gs-id="card-triangular" gs-w="6" gs-h="4" gs-x="6" gs-y="5">
             <div class="grid-stack-item-content card card-orange" style="display: flex; flex-direction: column;">
                 <div class="card-title" style="color: var(--neon-orange); margin-bottom: 5px;">▲VLRM ORACLE ADA▼ triangular arbitrage</div>
                 
@@ -527,7 +521,7 @@
             </div>
         </div>
 
-        <div class="grid-stack-item" gs-id="card-chart" gs-w="4" gs-h="2" gs-x="0" gs-y="8">
+        <div class="grid-stack-item" gs-id="card-chart" gs-w="12" gs-h="2" gs-x="0" gs-y="9">
             <div class="grid-stack-item-content card" style="background: rgba(8, 10, 16, 0.98);">
                 <div class="card-title" style="margin-bottom: 10px; font-size: 0.9rem; color: #ffffff; text-transform: none;">Spread & vault discrepancy (last 24h %)</div>
                 <div style="flex-grow: 1; width: 100%; position: relative; min-height: 0;">
@@ -632,12 +626,12 @@
         let grid = null;
 
         function initSortable() {
-            // INICIALIZAMOS GRIDSTACK.JS
+            // INICIALIZAMOS GRIDSTACK PARA 12 COLUMNAS ABSOLUTAS
             grid = GridStack.init({
-                column: 4,
-                cellHeight: 110,
+                column: 12,
+                cellHeight: 120, // Altura base de las celdas (encaja con las tarjetas compactas)
                 margin: 20,
-                float: true, // ¡PERMITE HUECOS VACÍOS ABSOLUTOS!
+                float: true, // ¡PERMITE DEJAR HUECOS VACÍOS DONDE QUIERAS!
                 disableDrag: true, 
                 disableResize: true,
                 animate: true,
@@ -743,7 +737,7 @@
                             grid: { 
                                 color: (ctx) => ctx.tick && ctx.tick.value === 0 ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255,255,255,0.05)',
                                 lineWidth: (ctx) => ctx.tick && ctx.tick.value === 0 ? 15 : 1,
-                                borderDash: []
+                                borderDash: [] // Línea sólida semitransparente ancha
                             }, 
                             ticks: { 
                                 color: '#a0a0c0',
