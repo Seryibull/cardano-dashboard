@@ -102,7 +102,7 @@
         .active-edit-btn { background: rgba(255, 123, 0, 0.2) !important; border-color: var(--neon-orange) !important; box-shadow: 0 0 15px rgba(255, 123, 0, 0.5); }
 
         /* =========================================
-           MOTOR DEL GRID: GRIDSTACK.JS (Libertad Absoluta)
+           MOTOR DEL GRID: GRIDSTACK.JS
            ========================================= */
         #main-dashboard { 
             max-width: 1200px; 
@@ -110,7 +110,6 @@
             transition: filter 0.5s ease; 
         }
         
-        /* Garantizar que no haya barras de scroll internas en los elementos del panel */
         .grid-stack-item-content {
             overflow: hidden !important; 
         }
@@ -139,7 +138,7 @@
             z-index: 99999 !important;
         }
 
-        /* ESTILOS GENERALES DE TARJETAS */
+        /* ESTILOS GENERALES DE TARJETAS (Sin movimiento, sin color de borde) */
         .card { 
             border-radius: 20px; 
             padding: 20px 25px; 
@@ -149,13 +148,15 @@
             backdrop-filter: blur(10px); 
             border: 1px solid rgba(255,255,255,0.05); 
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); 
-            transition: transform 0.3s ease, box-shadow 0.3s ease; 
+            transition: background 0.3s ease, box-shadow 0.3s ease; /* Quitamos 'transform' */
             box-sizing: border-box;
             display: flex; 
             flex-direction: column; 
             justify-content: space-between;
         }
-        .card:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 123, 0, 0.15); border-color: rgba(255, 123, 0, 0.3); }
+        
+        /* Efecto hover global para el gráfico principal que no tiene color específico */
+        .card:hover { box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 255, 255, 0.05); }
 
         /* Ajustes finos para las tarjetas pequeñas compactas */
         .card-compact { padding: 15px 25px !important; justify-content: center !important;}
@@ -163,22 +164,15 @@
             .card-compact .card-title { margin-bottom: 5px; font-size: 0.95rem; }
         }
 
-        /* CODIFICACIÓN DE COLORES */
-        .card-ada { background: rgba(8, 10, 16, 0.98); border-color: rgba(66, 133, 244, 0.2); }
-        .card-ada:hover { border-color: rgba(66, 133, 244, 0.5); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(66, 133, 244, 0.2); background: rgba(12, 15, 24, 1); }
+        /* CODIFICACIÓN DE COLORES (Sin bordes, solo resplandor Neón) */
+        .card-ada { background: rgba(8, 10, 16, 0.98); }
+        .card-ada:hover { box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(66, 133, 244, 0.2); background: rgba(12, 15, 24, 1); }
 
-        .card-vault { background: rgba(14, 10, 4, 0.98); border-color: rgba(252, 211, 77, 0.2); }
-        .card-vault:hover { border-color: rgba(252, 211, 77, 0.5); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(252, 211, 77, 0.2); background: rgba(18, 12, 5, 1); }
+        .card-vault { background: rgba(14, 10, 4, 0.98); }
+        .card-vault:hover { box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(252, 211, 77, 0.2); background: rgba(18, 12, 5, 1); }
 
-        .card-orange { background: rgba(14, 6, 2, 0.98); border-color: rgba(255, 123, 0, 0.2); }
-        .card-orange:hover { border-color: rgba(255, 123, 0, 0.5); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 123, 0, 0.2); background: rgba(18, 8, 3, 1); }
-
-        /* Igualados estilos para recuadros modulares */
-        .arbitrage-box-vault { background: rgba(14, 10, 4, 0.98); border-color: rgba(252, 211, 77, 0.2); }
-        .arbitrage-box-vault:hover { border-color: rgba(252, 211, 77, 0.5); background: rgba(18, 12, 5, 1); transform: translateY(-2px); box-shadow: 0 12px 30px rgba(0,0,0,0.7), 0 0 20px rgba(252, 211, 77, 0.2); }
-        
-        .arbitrage-box-orange { background: rgba(14, 6, 2, 0.98); border-color: rgba(255, 123, 0, 0.2); }
-        .arbitrage-box-orange:hover { border-color: rgba(255, 123, 0, 0.5); background: rgba(18, 8, 3, 1); transform: translateY(-2px); box-shadow: 0 12px 30px rgba(0,0,0,0.7), 0 0 20px rgba(255, 123, 0, 0.2); }
+        .card-orange { background: rgba(14, 6, 2, 0.98); }
+        .card-orange:hover { box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 123, 0, 0.2); background: rgba(18, 8, 3, 1); }
 
         /* Card title sin text-transform */
         .card-title { font-size: 1.05rem; font-weight: 600; margin-bottom: 15px; color: var(--neon-orange); display: flex; justify-content: space-between; align-items: center;}
@@ -246,7 +240,7 @@
         .setting-input { width: 60px; padding: 5px; border-radius: 5px; border: none; background: rgba(255,255,255,0.1); color: white; text-align: center; font-family: 'Inter', sans-serif;}
         .setting-input-text { width: 130px; padding: 5px; border-radius: 5px; border: none; background: rgba(255,255,255,0.1); color: white; font-family: 'Inter', sans-serif;}
         
-        .btn-save { background: var(--gradient-fire); color: white; border: none; padding: 12px; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 15px; transition: transform 0.2s;}
+        .btn-save { background: var(--gradient-fire); color: white; border: none; padding: 12px; width: 100%; border-radius: 10px; font-weight: bold; cursor: margin-top: 15px; transition: transform 0.2s;}
         .btn-save:hover { transform: scale(1.02); }
         
         .btn-reset { background: rgba(255, 255, 255, 0.05); color: var(--text-secondary); border: 1px solid rgba(255,255,255,0.1); padding: 10px; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.2s; font-size: 0.85rem;}
@@ -254,7 +248,6 @@
 
         h3.dex-subtitle { margin: 0 0 10px 0; font-size: 0.9rem; display: inline-block; }
         
-        /* Footer fuera del grid principal */
         .footer-disclaimer { text-align: center; color: rgba(255,255,255,0.4); font-size: 0.75rem; padding: 20px 20px; font-style: italic; margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.05); max-width: 1200px; margin-left: auto; margin-right: auto;}
     </style>
 </head>
@@ -496,7 +489,7 @@
                             <span id="oracle-total-liq">-</span> <span id="total-liq-change-24h" class="change-badge" style="font-size: 1rem;"></span>
                         </div>
                     </div>
-                    <div style="flex-grow: 1; min-height: 60px; margin-top: 20px; margin-bottom: 15px; position: relative;"><canvas id="spark-total-liq"></canvas></div>
+                    <div style="height: 70px; margin-top: 20px; margin-bottom: 15px; position: relative;"><canvas id="spark-total-liq"></canvas></div>
                 </div>
             </div>
         </div>
@@ -596,7 +589,6 @@
         document.getElementById('sim-ada-input').value = conf.sim;
         document.getElementById('sim-tri-input').value = conf.sim;
 
-        // 🔒 FUNCIONES DEL ESCUDO API
         function showAuthScreen(showError = false) {
             document.getElementById('auth-screen').style.display = 'flex';
             document.getElementById('main-dashboard').style.filter = 'blur(10px)';
