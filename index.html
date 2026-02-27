@@ -139,10 +139,12 @@
             z-index: 99999 !important;
         }
 
-        /* ESTILOS GENERALES DE TARJETAS (Dentro del motor) */
+        /* ESTILOS GENERALES DE TARJETAS */
         .card { 
             border-radius: 20px; 
             padding: 20px 25px; 
+            position: absolute; 
+            top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(18, 15, 36, 0.85); 
             backdrop-filter: blur(10px); 
             border: 1px solid rgba(255,255,255,0.05); 
@@ -170,6 +172,13 @@
 
         .card-orange { background: rgba(14, 6, 2, 0.98); border-color: rgba(255, 123, 0, 0.2); }
         .card-orange:hover { border-color: rgba(255, 123, 0, 0.5); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 123, 0, 0.2); background: rgba(18, 8, 3, 1); }
+
+        /* Igualados estilos para recuadros modulares */
+        .arbitrage-box-vault { background: rgba(14, 10, 4, 0.98); border-color: rgba(252, 211, 77, 0.2); }
+        .arbitrage-box-vault:hover { border-color: rgba(252, 211, 77, 0.5); background: rgba(18, 12, 5, 1); transform: translateY(-2px); box-shadow: 0 12px 30px rgba(0,0,0,0.7), 0 0 20px rgba(252, 211, 77, 0.2); }
+        
+        .arbitrage-box-orange { background: rgba(14, 6, 2, 0.98); border-color: rgba(255, 123, 0, 0.2); }
+        .arbitrage-box-orange:hover { border-color: rgba(255, 123, 0, 0.5); background: rgba(18, 8, 3, 1); transform: translateY(-2px); box-shadow: 0 12px 30px rgba(0,0,0,0.7), 0 0 20px rgba(255, 123, 0, 0.2); }
 
         /* Card title sin text-transform */
         .card-title { font-size: 1.05rem; font-weight: 600; margin-bottom: 15px; color: var(--neon-orange); display: flex; justify-content: space-between; align-items: center;}
@@ -487,7 +496,7 @@
                             <span id="oracle-total-liq">-</span> <span id="total-liq-change-24h" class="change-badge" style="font-size: 1rem;"></span>
                         </div>
                     </div>
-                    <div style="flex-grow: 1; min-height: 60px; height: 70px; margin-top: 20px; position: relative;"><canvas id="spark-total-liq"></canvas></div>
+                    <div style="flex-grow: 1; min-height: 60px; margin-top: 20px; position: relative;"><canvas id="spark-total-liq"></canvas></div>
                 </div>
             </div>
         </div>
@@ -636,9 +645,9 @@
         function initSortable() {
             grid = GridStack.init({
                 column: 12,
-                cellHeight: 125, // Un poco más alto para dar respiro interno
-                margin: 20,
-                float: true, // ¡PERMITE DEJAR HUECOS VACÍOS DONDE QUIERAS SIN RELLENAR!
+                cellHeight: 130, 
+                margin: 10, 
+                float: true, 
                 disableDrag: true, 
                 disableResize: true,
                 animate: true,
