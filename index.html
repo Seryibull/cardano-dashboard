@@ -138,7 +138,7 @@
             z-index: 99999 !important;
         }
 
-        /* ESTILOS GENERALES DE TARJETAS (Sin movimiento, sin color de borde) */
+        /* ESTILOS GENERALES DE TARJETAS */
         .card { 
             border-radius: 20px; 
             padding: 20px 25px; 
@@ -148,23 +148,21 @@
             backdrop-filter: blur(10px); 
             border: 1px solid rgba(255,255,255,0.05); 
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); 
-            transition: background 0.3s ease, box-shadow 0.3s ease; /* Quitamos 'transform' */
+            transition: background 0.3s ease, box-shadow 0.3s ease; 
             box-sizing: border-box;
             display: flex; 
             flex-direction: column; 
             justify-content: space-between;
         }
         
-        /* Efecto hover global para el gráfico principal que no tiene color específico */
         .card:hover { box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 255, 255, 0.05); }
 
-        /* Ajustes finos para las tarjetas pequeñas compactas */
         .card-compact { padding: 15px 25px !important; justify-content: center !important;}
         @media (min-width: 768px) {
             .card-compact .card-title { margin-bottom: 5px; font-size: 0.95rem; }
         }
 
-        /* CODIFICACIÓN DE COLORES (Sin bordes, solo resplandor Neón) */
+        /* EFECTOS DE NEÓN DE CADA TARJETA */
         .card-ada { background: rgba(8, 10, 16, 0.98); }
         .card-ada:hover { box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(66, 133, 244, 0.2); background: rgba(12, 15, 24, 1); }
 
@@ -174,7 +172,22 @@
         .card-orange { background: rgba(14, 6, 2, 0.98); }
         .card-orange:hover { box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 123, 0, 0.2); background: rgba(18, 8, 3, 1); }
 
-        /* Card title sin text-transform */
+        /* =========================================
+           NUEVO EFECTO: RESPLANDOR VERDE (ALERTAS Y PROFIT)
+           ========================================= */
+        @keyframes greenAlertPulse {
+            0% { box-shadow: 0 0 15px rgba(16, 185, 129, 0.3), inset 0 0 10px rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.4); }
+            100% { box-shadow: 0 0 50px rgba(16, 185, 129, 0.9), inset 0 0 20px rgba(16, 185, 129, 0.3); border-color: rgba(16, 185, 129, 0.9); }
+        }
+        
+        .glow-active {
+            animation: greenAlertPulse 1.5s infinite alternate ease-in-out !important;
+            border-color: rgba(16, 185, 129, 0.8) !important;
+            /* Forzamos a que el fondo sea un poco más oscuro para que resalte más el brillo verde */
+            background: rgba(10, 15, 15, 0.98) !important;
+        }
+
+        /* Títulos e información interna */
         .card-title { font-size: 1.05rem; font-weight: 600; margin-bottom: 15px; color: var(--neon-orange); display: flex; justify-content: space-between; align-items: center;}
         .card-title.ada-title { color: var(--ada-color); text-shadow: 0 0 10px rgba(66, 133, 244, 0.3);}
         
@@ -194,7 +207,7 @@
         .badge-dark { background: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.2); font-size: 0.75rem; padding: 4px 10px; border-radius: 20px; font-weight: 700; display: inline-block; margin: 0 2px; text-decoration: none; transition: 0.2s ease; }
         a.badge-dark:hover { transform: translateY(-2px); background: var(--neon-orange); border-color: var(--neon-orange); color: var(--text-on-fire); box-shadow: 0 0 15px rgba(255, 123, 0, 0.4);}
         
-        /* Ocultar flechas del input numérico */
+        /* Input numérico */
         input[type="number"].sim-input::-webkit-outer-spin-button,
         input[type="number"].sim-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
         input[type="number"].sim-input { -moz-appearance: textfield; }
@@ -212,7 +225,7 @@
         .slippage-bar { height: 100%; width: 0%; border-radius: 4px; transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); box-shadow: 0 0 10px currentColor;}
         .slippage-label { font-size: 0.7rem; color: var(--text-secondary); text-align: right; font-weight: 600;}
 
-        /* TRIANGULO AMPLIADO Y MEJORADO */
+        /* TRIANGULO */
         .tri-wrapper { position: relative; width: 100%; max-width: 250px; height: 100%; min-height: 150px; margin: 25px auto 25px auto; flex-grow: 1; }
         .tri-node { position: absolute; width: 50px; height: 50px; background: rgba(18, 15, 36, 0.9); border: 2px solid rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: bold; color: white; z-index: 2; box-shadow: 0 0 15px rgba(0,0,0,0.8); backdrop-filter: blur(5px);}
         .node-ada { top: 0; left: calc(50% - 25px); border-color: var(--ada-color); color: var(--ada-color);}
@@ -240,7 +253,7 @@
         .setting-input { width: 60px; padding: 5px; border-radius: 5px; border: none; background: rgba(255,255,255,0.1); color: white; text-align: center; font-family: 'Inter', sans-serif;}
         .setting-input-text { width: 130px; padding: 5px; border-radius: 5px; border: none; background: rgba(255,255,255,0.1); color: white; font-family: 'Inter', sans-serif;}
         
-        .btn-save { background: var(--gradient-fire); color: white; border: none; padding: 12px; width: 100%; border-radius: 10px; font-weight: bold; cursor: margin-top: 15px; transition: transform 0.2s;}
+        .btn-save { background: var(--gradient-fire); color: white; border: none; padding: 12px; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 15px; transition: transform 0.2s;}
         .btn-save:hover { transform: scale(1.02); }
         
         .btn-reset { background: rgba(255, 255, 255, 0.05); color: var(--text-secondary); border: 1px solid rgba(255,255,255,0.1); padding: 10px; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.2s; font-size: 0.85rem;}
@@ -313,7 +326,7 @@
 
     <div class="grid-stack" id="main-dashboard">
         
-        <div class="grid-stack-item" gs-id="card-arb-dex" gs-w="6" gs-h="1" gs-x="0" gs-y="0">
+        <div class="grid-stack-item drag-item" gs-id="card-arb-dex" gs-w="6" gs-h="1" gs-x="0" gs-y="0">
             <div class="grid-stack-item-content card card-vault card-compact">
                 <div class="card-title" style="color: var(--vault-color);">ORACLE / ADA dex arbitrage</div>
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto;">
@@ -329,7 +342,7 @@
             </div>
         </div>
 
-        <div class="grid-stack-item" gs-id="card-arb-vault" gs-w="6" gs-h="1" gs-x="6" gs-y="0">
+        <div class="grid-stack-item drag-item" gs-id="card-arb-vault" gs-w="6" gs-h="1" gs-x="6" gs-y="0">
             <div class="grid-stack-item-content card card-vault card-compact">
                 <div class="card-title" style="color: var(--vault-color);">Vault relics fair price ORACLE</div>
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto;">
@@ -345,7 +358,7 @@
             </div>
         </div>
 
-        <div class="grid-stack-item" gs-id="card-sim-oracle" gs-w="6" gs-h="2" gs-x="0" gs-y="1">
+        <div class="grid-stack-item drag-item" gs-id="card-sim-oracle" gs-w="6" gs-h="2" gs-x="0" gs-y="1">
             <div class="grid-stack-item-content card card-vault">
                 <div class="card-title" style="color: var(--vault-color);">ORACLE / ADA net profit simulator</div>
                 <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: auto; padding-bottom: 20px;">
@@ -370,7 +383,7 @@
             </div>
         </div>
 
-        <div class="grid-stack-item" gs-id="card-sim-tri" gs-w="6" gs-h="2" gs-x="6" gs-y="1">
+        <div class="grid-stack-item drag-item" gs-id="card-sim-tri" gs-w="6" gs-h="2" gs-x="6" gs-y="1">
             <div class="grid-stack-item-content card card-orange">
                 <div class="card-title" style="color: var(--neon-orange);">▲VLRM ORACLE ADA▼ triangular net profit simulator</div>
                 <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: auto; padding-bottom: 20px;">
@@ -395,7 +408,7 @@
             </div>
         </div>
 
-        <div class="grid-stack-item" gs-id="card-ada" gs-w="3" gs-h="2" gs-x="0" gs-y="3">
+        <div class="grid-stack-item drag-item" gs-id="card-ada" gs-w="3" gs-h="2" gs-x="0" gs-y="3">
             <div class="grid-stack-item-content card card-ada">
                 <div>
                     <div class="card-title ada-title">ADA</div>
@@ -411,7 +424,7 @@
             </div>
         </div>
         
-        <div class="grid-stack-item" gs-id="card-vault" gs-w="3" gs-h="2" gs-x="3" gs-y="3">
+        <div class="grid-stack-item drag-item" gs-id="card-vault" gs-w="3" gs-h="2" gs-x="3" gs-y="3">
             <div class="grid-stack-item-content card card-vault">
                 <div>
                     <div class="card-title" style="color: var(--vault-color);">Relics vault ORACLE</div>
@@ -428,7 +441,7 @@
             </div>
         </div>
 
-        <div class="grid-stack-item" gs-id="card-vlrm-ada" gs-w="3" gs-h="2" gs-x="6" gs-y="3">
+        <div class="grid-stack-item drag-item" gs-id="card-vlrm-ada" gs-w="3" gs-h="2" gs-x="6" gs-y="3">
             <div class="grid-stack-item-content card card-orange">
                 <div class="card-title" style="color: var(--neon-orange);">VLRM / ADA <span class="badge bg-vyfi" style="margin-left:auto;">VyFi</span></div>
                 <div class="data-row">
@@ -444,7 +457,7 @@
             </div>
         </div>
 
-        <div class="grid-stack-item" gs-id="card-vlrm-oracle" gs-w="3" gs-h="2" gs-x="9" gs-y="3">
+        <div class="grid-stack-item drag-item" gs-id="card-vlrm-oracle" gs-w="3" gs-h="2" gs-x="9" gs-y="3">
             <div class="grid-stack-item-content card card-orange">
                 <div class="card-title" style="color: var(--neon-orange);">VLRM / ORACLE <span class="badge bg-vyfi" style="margin-left:auto;">VyFi</span></div>
                 <div class="data-row">
@@ -460,7 +473,7 @@
             </div>
         </div>
 
-        <div class="grid-stack-item" gs-id="card-oracle-ada" gs-w="6" gs-h="4" gs-x="0" gs-y="5">
+        <div class="grid-stack-item drag-item" gs-id="card-oracle-ada" gs-w="6" gs-h="4" gs-x="0" gs-y="5">
             <div class="grid-stack-item-content card card-vault" style="display: flex; flex-direction: column;">
                 <div class="card-title" style="color: var(--vault-color); margin-bottom: 20px;">ORACLE / ADA</div>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 20px;">
@@ -494,7 +507,7 @@
             </div>
         </div>
 
-        <div class="grid-stack-item" gs-id="card-triangular" gs-w="6" gs-h="4" gs-x="6" gs-y="5">
+        <div class="grid-stack-item drag-item" gs-id="card-triangular" gs-w="6" gs-h="4" gs-x="6" gs-y="5">
             <div class="grid-stack-item-content card card-orange" style="display: flex; flex-direction: column;">
                 <div class="card-title" style="color: var(--neon-orange); margin-bottom: 5px;">▲VLRM ORACLE ADA▼ triangular arbitrage</div>
                 
@@ -532,7 +545,7 @@
             </div>
         </div>
 
-        <div class="grid-stack-item" gs-id="card-chart" gs-w="12" gs-h="2" gs-x="0" gs-y="9">
+        <div class="grid-stack-item drag-item" gs-id="card-chart" gs-w="12" gs-h="2" gs-x="0" gs-y="9">
             <div class="grid-stack-item-content card" style="background: rgba(8, 10, 16, 0.98);">
                 <div class="card-title" style="margin-bottom: 10px; font-size: 0.9rem; color: #ffffff; text-transform: none;">Spread & vault discrepancy (last 24h %)</div>
                 <div style="flex-grow: 1; width: 100%; position: relative; min-height: 0;">
@@ -845,9 +858,12 @@
         function recalculateDexSimulator() {
             const investAda = parseFloat(document.getElementById('sim-ada-input').value) || 0;
             const simEl = document.getElementById('sim-profit'); const optEl = document.getElementById('optimizer-result');
+            const cardEl = document.querySelector('[gs-id="card-sim-oracle"] .card'); // Target para el glow
             
             if(currentPools.vyfi.price <= 0 || currentPools.minswap.price <= 0) { 
-                simEl.innerText = "0.00 ADA"; updateSlippageUI('sim-slippage-bar', 'sim-slippage-label', 0); return; 
+                simEl.innerText = "0.00 ADA"; updateSlippageUI('sim-slippage-bar', 'sim-slippage-label', 0); 
+                if(cardEl) cardEl.classList.remove('glow-active');
+                return; 
             }
             
             const networkFee = conf.feeNet; const minFixed = conf.feeMin; const vyfiFixed = conf.feeVyfi;
@@ -899,8 +915,15 @@
                 if (testNet > bestProfit) { bestProfit = testNet; optimalInvest = i; } else if (testNet < bestProfit && testNet > 0) break;
             }
 
-            if (bestProfit > 0) { optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> Max profit <b>+${bestProfit.toFixed(2)} ADA</b> (Invest <b>${optimalInvest} ADA</b>)`; optEl.style.color = '#10b981'; } 
-            else { optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> No profitable route (fees > spread).`; optEl.style.color = 'var(--text-secondary)'; }
+            if (bestProfit > 0) { 
+                optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> Max profit <b>+${bestProfit.toFixed(2)} ADA</b> (Invest <b>${optimalInvest} ADA</b>)`; 
+                optEl.style.color = '#10b981'; 
+                if(cardEl) cardEl.classList.add('glow-active'); // Enciende resplandor verde
+            } else { 
+                optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> No profitable route (fees > spread).`; 
+                optEl.style.color = 'var(--text-secondary)'; 
+                if(cardEl) cardEl.classList.remove('glow-active'); // Apaga resplandor verde
+            }
         }
 
         function calcTriNetDetails(investAda) {
@@ -960,6 +983,7 @@
             const investAda = parseFloat(document.getElementById('sim-tri-input').value) || 0;
             const simEl = document.getElementById('sim-tri-profit'); 
             const optEl = document.getElementById('tri-optimizer-result');
+            const cardEl = document.querySelector('[gs-id="card-sim-tri"] .card'); // Target para el glow
             
             let currentData = calcTriNetDetails(investAda);
             let netProfit = currentData.netProfit;
@@ -995,6 +1019,7 @@
             if (bestProfit > 0) { 
                 optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> Max profit <b>+${bestProfit.toFixed(2)} ADA</b> (Invest <b>${optimalInvest} ADA</b>)`; 
                 optEl.style.color = '#10b981'; 
+                if(cardEl) cardEl.classList.add('glow-active'); // Enciende resplandor verde
                 
                 if(triEl) {
                     triEl.innerText = `+${bestPercent.toFixed(2)}%`; 
@@ -1013,6 +1038,8 @@
             } else { 
                 optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> No profitable route (fees > spread).`; 
                 optEl.style.color = 'var(--text-secondary)'; 
+                if(cardEl) cardEl.classList.remove('glow-active'); // Apaga resplandor verde
+                
                 if(triEl) {
                     triEl.innerText = "0.00%"; 
                     triEl.style.color = "var(--text-secondary)";
@@ -1212,6 +1239,7 @@
                 currentPools.vlrmAda = { resAda: vlrmVyfiAdaReserve, resTok: vlrmVyfiTokReserve }; currentPools.crossVO = { resVlrm: crossVlrmReserve, resOracle: crossOracleReserve };
 
                 let bestDeviation = 0; let targetDexForVault = "";
+                const vaultCard = document.querySelector('[gs-id="card-arb-vault"] .card'); // Target glow Vault
                 
                 if (vaultTvlData > 0) {
                     const fairPrice = vaultTvlData / ORACLE_TOTAL_SUPPLY;
@@ -1244,7 +1272,9 @@
                             }
                         }
 
+                        // LÓGICA DE GLOW: VAULT ALERTS
                         if (Math.abs(bestDeviation) >= conf.vaultAlert) {
+                            if(vaultCard) vaultCard.classList.add('glow-active');
                             const alertToggle = document.getElementById('alert-toggle'); const now = Date.now();
                             if (alertToggle && alertToggle.checked && (now - lastVaultAlertTime > ALERT_COOLDOWN)) {
                                 playDing(); 
@@ -1252,9 +1282,12 @@
                                 sendTelegramAlert(`🏛️ <b>L4VA Vault Alert!</b>\n\n⚖️ Fair Price Discrepancy: <b>${bestDeviation > 0 ? '+' : ''}${bestDeviation.toFixed(2)}%</b>\n💡 Action: ${bestDeviation > 0 ? 'Sell' : 'Buy'} on ${targetDexForVault}\n\n<i>Check dashboard for real-time data.</i>`);
                                 lastVaultAlertTime = now;
                             }
+                        } else {
+                            if(vaultCard) vaultCard.classList.remove('glow-active');
                         }
                     }
                 } else {
+                    if(vaultCard) vaultCard.classList.remove('glow-active');
                     document.getElementById('vault-tvl').innerText = `API Offline`; 
                     document.getElementById('vault-fair-price').innerText = `-`;
                     document.getElementById('vault-banner-discrepancy').innerText = `-%`;
@@ -1264,6 +1297,8 @@
                 }
 
                 let spread = 0;
+                const dexCard = document.querySelector('[gs-id="card-arb-dex"] .card'); // Target glow DEX
+                
                 if (priceVyfi > 0 && priceMin > 0) {
                     const highestPrice = Math.max(priceVyfi, priceMin); const lowestPrice = Math.min(priceVyfi, priceMin); spread = ((highestPrice - lowestPrice) / lowestPrice) * 100;
                     const spreadEl = document.getElementById('arbitrage-spread'); const actionEl = document.getElementById('arbitrage-action');
@@ -1279,14 +1314,20 @@
                         else { actionEl.innerHTML = `<a href="${VYFI_LINK}" target="_blank" class="badge-dark">Buy VyFi</a> <a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Sell Min</a>`;  }
                     }
 
+                    // LÓGICA DE GLOW: SPREAD ALERTS
                     if (spread >= conf.alert) {
+                        if(dexCard) dexCard.classList.add('glow-active');
                         const alertToggle = document.getElementById('alert-toggle'); const now = Date.now();
                         if (alertToggle && alertToggle.checked && (now - lastAlertTime > ALERT_COOLDOWN)) {
                             playDing(); if (Notification.permission === "granted") { new Notification("🚨 L4VA Arbitrage Detected!", { body: `Spread: ${spread.toFixed(2)}%\n${suggestedActionText}` }); }
                             sendTelegramAlert(`🚨 <b>L4VA Arbitrage Detected!</b>\n\n📈 DEX Spread: <b>${spread.toFixed(2)}%</b>\n💡 Route: ${suggestedActionText}\n\n<i>Check dashboard for real-time net profit.</i>`);
                             lastAlertTime = now;
                         }
+                    } else {
+                        if(dexCard) dexCard.classList.remove('glow-active');
                     }
+                } else {
+                    if(dexCard) dexCard.classList.remove('glow-active');
                 }
                 
                 let primaryOraclePrice = priceVyfi > 0 ? priceVyfi : priceMin;
