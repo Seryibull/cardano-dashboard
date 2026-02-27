@@ -102,7 +102,7 @@
         .active-edit-btn { background: rgba(255, 123, 0, 0.2) !important; border-color: var(--neon-orange) !important; box-shadow: 0 0 15px rgba(255, 123, 0, 0.5); }
 
         /* =========================================
-           MOTOR DEL GRID: GRIDSTACK.JS
+           MOTOR DEL GRID: GRIDSTACK.JS (Libertad Absoluta)
            ========================================= */
         #main-dashboard { 
             max-width: 1200px; 
@@ -110,6 +110,7 @@
             transition: filter 0.5s ease; 
         }
         
+        /* Garantizar que no haya barras de scroll internas en los elementos del panel */
         .grid-stack-item-content {
             overflow: hidden !important; 
         }
@@ -154,9 +155,9 @@
             flex-direction: column; 
             justify-content: space-between;
         }
-        
         .card:hover { box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 255, 255, 0.05); }
 
+        /* Ajustes finos para las tarjetas pequeñas compactas */
         .card-compact { padding: 15px 25px !important; justify-content: center !important;}
         @media (min-width: 768px) {
             .card-compact .card-title { margin-bottom: 5px; font-size: 0.95rem; }
@@ -173,7 +174,7 @@
         .card-orange:hover { box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 123, 0, 0.2); background: rgba(18, 8, 3, 1); }
 
         /* =========================================
-           NUEVO EFECTO: RESPLANDOR VERDE (ALERTAS Y PROFIT)
+           EFECTO: RESPLANDOR VERDE (ALERTAS Y PROFIT)
            ========================================= */
         @keyframes greenAlertPulse {
             0% { box-shadow: 0 0 15px rgba(16, 185, 129, 0.3), inset 0 0 10px rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.4); }
@@ -183,11 +184,10 @@
         .glow-active {
             animation: greenAlertPulse 1.5s infinite alternate ease-in-out !important;
             border-color: rgba(16, 185, 129, 0.8) !important;
-            /* Forzamos a que el fondo sea un poco más oscuro para que resalte más el brillo verde */
             background: rgba(10, 15, 15, 0.98) !important;
         }
 
-        /* Títulos e información interna */
+        /* Card title sin text-transform */
         .card-title { font-size: 1.05rem; font-weight: 600; margin-bottom: 15px; color: var(--neon-orange); display: flex; justify-content: space-between; align-items: center;}
         .card-title.ada-title { color: var(--ada-color); text-shadow: 0 0 10px rgba(66, 133, 244, 0.3);}
         
@@ -207,7 +207,7 @@
         .badge-dark { background: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.2); font-size: 0.75rem; padding: 4px 10px; border-radius: 20px; font-weight: 700; display: inline-block; margin: 0 2px; text-decoration: none; transition: 0.2s ease; }
         a.badge-dark:hover { transform: translateY(-2px); background: var(--neon-orange); border-color: var(--neon-orange); color: var(--text-on-fire); box-shadow: 0 0 15px rgba(255, 123, 0, 0.4);}
         
-        /* Input numérico */
+        /* Ocultar flechas del input numérico */
         input[type="number"].sim-input::-webkit-outer-spin-button,
         input[type="number"].sim-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
         input[type="number"].sim-input { -moz-appearance: textfield; }
@@ -225,7 +225,7 @@
         .slippage-bar { height: 100%; width: 0%; border-radius: 4px; transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); box-shadow: 0 0 10px currentColor;}
         .slippage-label { font-size: 0.7rem; color: var(--text-secondary); text-align: right; font-weight: 600;}
 
-        /* TRIANGULO */
+        /* TRIANGULO AMPLIADO Y MEJORADO */
         .tri-wrapper { position: relative; width: 100%; max-width: 250px; height: 100%; min-height: 150px; margin: 25px auto 25px auto; flex-grow: 1; }
         .tri-node { position: absolute; width: 50px; height: 50px; background: rgba(18, 15, 36, 0.9); border: 2px solid rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: bold; color: white; z-index: 2; box-shadow: 0 0 15px rgba(0,0,0,0.8); backdrop-filter: blur(5px);}
         .node-ada { top: 0; left: calc(50% - 25px); border-color: var(--ada-color); color: var(--ada-color);}
@@ -261,6 +261,7 @@
 
         h3.dex-subtitle { margin: 0 0 10px 0; font-size: 0.9rem; display: inline-block; }
         
+        /* Footer fuera del grid principal */
         .footer-disclaimer { text-align: center; color: rgba(255,255,255,0.4); font-size: 0.75rem; padding: 20px 20px; font-style: italic; margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.05); max-width: 1200px; margin-left: auto; margin-right: auto;}
     </style>
 </head>
@@ -420,7 +421,9 @@
                     </div>
                     <div class="data-row" style="margin-top: 15px;"><span class="data-label" style="font-size: 0.75rem;">Last Updated:</span><span class="data-value" style="font-size: 0.75rem;" id="ada-time">-</span></div>
                 </div>
-                <div style="flex-grow: 1; min-height: 50px; position: relative; margin-top: 15px;"><canvas id="spark-ada"></canvas></div>
+                <div style="height: 65px; width: 100%; position: relative; margin-top: auto; margin-bottom: 5px;">
+                    <canvas id="spark-ada"></canvas>
+                </div>
             </div>
         </div>
         
@@ -437,7 +440,9 @@
                     </div>
                     <div class="data-row"><span class="data-label">Fair price:</span><span class="data-value" id="vault-fair-price">-</span></div>
                 </div>
-                <div style="flex-grow: 1; min-height: 50px; position: relative; margin-top: 15px;"><canvas id="spark-vault"></canvas></div>
+                <div style="height: 65px; width: 100%; position: relative; margin-top: auto; margin-bottom: 5px;">
+                    <canvas id="spark-vault"></canvas>
+                </div>
             </div>
         </div>
 
@@ -735,6 +740,8 @@
             closeModals(); recalculateSimulators();
         }
 
+        function playDing() { try { const ctx = new (window.AudioContext || window.webkitAudioContext)(); const osc = ctx.createOscillator(); const gainNode = ctx.createGain(); osc.type = 'sine'; osc.frequency.setValueAtTime(880, ctx.currentTime); gainNode.gain.setValueAtTime(0.1, ctx.currentTime); osc.connect(gainNode); gainNode.connect(ctx.destination); osc.start(); gainNode.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.5); osc.stop(ctx.currentTime + 0.5); } catch (e) {} }
+
         async function sendTelegramAlert(message) {
             if (!conf.tgBot || !conf.tgChat) return;
             try { await fetch(`https://api.telegram.org/bot${conf.tgBot}/sendMessage`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ chat_id: conf.tgChat, text: message, parse_mode: 'HTML' }) }); } catch (e) {}
@@ -858,7 +865,7 @@
         function recalculateDexSimulator() {
             const investAda = parseFloat(document.getElementById('sim-ada-input').value) || 0;
             const simEl = document.getElementById('sim-profit'); const optEl = document.getElementById('optimizer-result');
-            const cardEl = document.querySelector('[gs-id="card-sim-oracle"] .card'); // Target para el glow
+            const cardEl = document.querySelector('[gs-id="card-sim-oracle"] .card');
             
             if(currentPools.vyfi.price <= 0 || currentPools.minswap.price <= 0) { 
                 simEl.innerText = "0.00 ADA"; updateSlippageUI('sim-slippage-bar', 'sim-slippage-label', 0); 
@@ -918,11 +925,11 @@
             if (bestProfit > 0) { 
                 optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> Max profit <b>+${bestProfit.toFixed(2)} ADA</b> (Invest <b>${optimalInvest} ADA</b>)`; 
                 optEl.style.color = '#10b981'; 
-                if(cardEl) cardEl.classList.add('glow-active'); // Enciende resplandor verde
+                if(cardEl) cardEl.classList.add('glow-active');
             } else { 
                 optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> No profitable route (fees > spread).`; 
                 optEl.style.color = 'var(--text-secondary)'; 
-                if(cardEl) cardEl.classList.remove('glow-active'); // Apaga resplandor verde
+                if(cardEl) cardEl.classList.remove('glow-active');
             }
         }
 
@@ -983,7 +990,7 @@
             const investAda = parseFloat(document.getElementById('sim-tri-input').value) || 0;
             const simEl = document.getElementById('sim-tri-profit'); 
             const optEl = document.getElementById('tri-optimizer-result');
-            const cardEl = document.querySelector('[gs-id="card-sim-tri"] .card'); // Target para el glow
+            const cardEl = document.querySelector('[gs-id="card-sim-tri"] .card');
             
             let currentData = calcTriNetDetails(investAda);
             let netProfit = currentData.netProfit;
@@ -1012,14 +1019,13 @@
             const rB = document.getElementById('route-b-container');
             const triAnim = document.getElementById('tri-anim-path');
 
-            if(rA) rA.className = "route-inactive"; 
-            if(rB) rB.className = "route-inactive";
-            if(triAnim) triAnim.style.display = "none";
+            rA.className = "route-inactive"; rB.className = "route-inactive";
+            triAnim.style.display = "none";
 
             if (bestProfit > 0) { 
                 optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> Max profit <b>+${bestProfit.toFixed(2)} ADA</b> (Invest <b>${optimalInvest} ADA</b>)`; 
                 optEl.style.color = '#10b981'; 
-                if(cardEl) cardEl.classList.add('glow-active'); // Enciende resplandor verde
+                if(cardEl) cardEl.classList.add('glow-active');
                 
                 if(triEl) {
                     triEl.innerText = `+${bestPercent.toFixed(2)}%`; 
@@ -1028,17 +1034,17 @@
                 
                 if(triAnim) triAnim.style.display = "block";
                 if (optimalRoute === 'A') {
-                    if(rA) rA.className = "route-active";
-                    if(triAnim) triAnim.className = "tri-line-active"; 
+                    rA.className = "route-active";
+                    triAnim.className = "tri-line-active"; 
                 }
                 if (optimalRoute === 'B') {
-                    if(rB) rB.className = "route-active";
-                    if(triAnim) triAnim.className = "tri-line-active route-reverse"; 
+                    rB.className = "route-active";
+                    triAnim.className = "tri-line-active route-reverse"; 
                 }
             } else { 
                 optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> No profitable route (fees > spread).`; 
                 optEl.style.color = 'var(--text-secondary)'; 
-                if(cardEl) cardEl.classList.remove('glow-active'); // Apaga resplandor verde
+                if(cardEl) cardEl.classList.remove('glow-active');
                 
                 if(triEl) {
                     triEl.innerText = "0.00%"; 
@@ -1239,7 +1245,7 @@
                 currentPools.vlrmAda = { resAda: vlrmVyfiAdaReserve, resTok: vlrmVyfiTokReserve }; currentPools.crossVO = { resVlrm: crossVlrmReserve, resOracle: crossOracleReserve };
 
                 let bestDeviation = 0; let targetDexForVault = "";
-                const vaultCard = document.querySelector('[gs-id="card-arb-vault"] .card'); // Target glow Vault
+                const vaultCard = document.querySelector('[gs-id="card-arb-vault"] .card');
                 
                 if (vaultTvlData > 0) {
                     const fairPrice = vaultTvlData / ORACLE_TOTAL_SUPPLY;
@@ -1258,21 +1264,17 @@
                         
                         if (Math.abs(bestDeviation) < 0.5) {
                             vaultBannerDiscEl.style.color = "rgba(255, 255, 255, 0.5)";
-                            vaultActionEl.innerHTML = `Balanced`;
-                            vaultActionEl.style.color = "rgba(255, 255, 255, 0.5)";
+                            vaultActionEl.innerHTML = `<span style="color: rgba(255, 255, 255, 0.6);">Balanced</span>`;
                         } else {
                             if (bestDeviation > 0) {
                                 vaultBannerDiscEl.style.color = "#10b981"; 
                                 vaultActionEl.innerHTML = `<a href="${targetLink}" target="_blank" class="badge-dark">Sell ${targetDexForVault}</a>`; 
-                                vaultActionEl.style.color = "white";
                             } else {
                                 vaultBannerDiscEl.style.color = "var(--neon-red)"; 
                                 vaultActionEl.innerHTML = `<a href="${targetLink}" target="_blank" class="badge-dark">Buy ${targetDexForVault}</a>`; 
-                                vaultActionEl.style.color = "white";
                             }
                         }
 
-                        // LÓGICA DE GLOW: VAULT ALERTS
                         if (Math.abs(bestDeviation) >= conf.vaultAlert) {
                             if(vaultCard) vaultCard.classList.add('glow-active');
                             const alertToggle = document.getElementById('alert-toggle'); const now = Date.now();
@@ -1292,12 +1294,11 @@
                     document.getElementById('vault-fair-price').innerText = `-`;
                     document.getElementById('vault-banner-discrepancy').innerText = `-%`;
                     document.getElementById('vault-banner-discrepancy').style.color = "rgba(255, 255, 255, 0.5)";
-                    document.getElementById('vault-arbitrage-action').innerHTML = `Offline`;
-                    document.getElementById('vault-arbitrage-action').style.color = "rgba(255, 255, 255, 0.5)";
+                    document.getElementById('vault-arbitrage-action').innerHTML = `<span style="color: rgba(255, 255, 255, 0.6);">Offline</span>`;
                 }
 
                 let spread = 0;
-                const dexCard = document.querySelector('[gs-id="card-arb-dex"] .card'); // Target glow DEX
+                const dexCard = document.querySelector('[gs-id="card-arb-dex"] .card');
                 
                 if (priceVyfi > 0 && priceMin > 0) {
                     const highestPrice = Math.max(priceVyfi, priceMin); const lowestPrice = Math.min(priceVyfi, priceMin); spread = ((highestPrice - lowestPrice) / lowestPrice) * 100;
@@ -1306,15 +1307,13 @@
                     
                     if (spread < 0.5) {
                         spreadEl.style.color = "rgba(255, 255, 255, 0.5)"; 
-                        actionEl.innerHTML = `Low spread`;
-                        actionEl.style.color = "rgba(255, 255, 255, 0.5)";
+                        actionEl.innerHTML = `<span style="color: rgba(255, 255, 255, 0.6);">Low spread</span>`;
                     } else {
                         spreadEl.style.color = "#ffffff";  
                         if (priceVyfi > priceMin) { actionEl.innerHTML = `<a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Buy Min</a> <a href="${VYFI_LINK}" target="_blank" class="badge-dark">Sell VyFi</a>`;  } 
                         else { actionEl.innerHTML = `<a href="${VYFI_LINK}" target="_blank" class="badge-dark">Buy VyFi</a> <a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Sell Min</a>`;  }
                     }
 
-                    // LÓGICA DE GLOW: SPREAD ALERTS
                     if (spread >= conf.alert) {
                         if(dexCard) dexCard.classList.add('glow-active');
                         const alertToggle = document.getElementById('alert-toggle'); const now = Date.now();
