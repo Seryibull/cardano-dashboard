@@ -91,6 +91,7 @@
         h1 { margin: 0; font-weight: 800; font-size: 1.8rem; background: var(--gradient-fire); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -1px; display: flex; align-items: center;}
         .version-badge { color: #ffffff; font-size: 0.8rem; font-weight: 600; margin-left: 8px; opacity: 0.8; letter-spacing: 0; -webkit-text-fill-color: #ffffff; }
 
+        /* Controles de la barra superior */
         .alert-toggle-box { font-size: 0.8rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 8px; color: var(--text-primary); background: rgba(0, 0, 0, 0.6); padding: 8px 16px; border-radius: 30px; border: 1px solid rgba(255, 123, 0, 0.4); transition: 0.3s; backdrop-filter: blur(5px);}
         .alert-toggle-box:hover { border-color: var(--neon-orange); background: rgba(255, 123, 0, 0.2); }
         .alert-toggle-box input { accent-color: var(--neon-orange); transform: scale(1.2); }
@@ -353,7 +354,7 @@
                     </div>
                     <div class="data-row" style="margin-top: 15px;"><span class="data-label" style="font-size: 0.75rem;">Last Updated:</span><span class="data-value" style="font-size: 0.75rem;" id="ada-time">-</span></div>
                 </div>
-                <div style="flex-grow: 1; min-height: 0; position: relative; margin-top: 15px; width: 100%;">
+                <div style="flex-grow: 1; min-height: 0; position: relative; margin-top: 15px;">
                     <canvas id="spark-ada"></canvas>
                 </div>
             </div>
@@ -372,7 +373,7 @@
                     </div>
                     <div class="data-row"><span class="data-label">Fair price:</span><span class="data-value" id="vault-fair-price">-</span></div>
                 </div>
-                <div style="flex-grow: 1; min-height: 0; position: relative; margin-top: 15px; width: 100%;">
+                <div style="flex-grow: 1; min-height: 0; position: relative; margin-top: 15px;">
                     <canvas id="spark-vault"></canvas>
                 </div>
             </div>
@@ -434,14 +435,14 @@
                     </div>
                 </div>
                 
-                <div style="margin-top: auto; padding-top: 25px; border-top: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; flex-grow: 1; min-height: 0;">
+                <div style="margin-top: auto; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; flex-grow: 1; min-height: 0;">
                     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; flex-shrink: 0;">
                         <h3 class="dex-subtitle" style="color: var(--text-secondary); font-size: 1rem; text-transform: uppercase; margin:0;">Total Combined Liquidity</h3>
                         <div class="data-value" style="font-size: 2rem; color: #ffffff; text-shadow: 0 2px 10px rgba(0,0,0,0.5);">
                             <span id="oracle-total-liq">-</span> <span id="total-liq-change-24h" class="change-badge" style="font-size: 1rem;"></span>
                         </div>
                     </div>
-                    <div style="flex-grow: 1; min-height: 0; position: relative; margin-top: 15px; width: 100%;">
+                    <div style="flex: 0 0 50px; height: 50px; max-height: 50px; width: 100%; position: relative; margin-top: 15px; overflow: hidden;">
                         <canvas id="spark-total-liq"></canvas>
                     </div>
                 </div>
@@ -707,23 +708,16 @@
                     scales: { 
                         x: { display: true, grid: { display: false }, ticks: { color: '#a0a0c0', maxTicksLimit: 8, maxRotation: 0 } }, 
                         y: { 
+                            // FORZAMOS LA LÍNEA DEL CERO Y SU VISIBILIDAD
+                            beginAtZero: true,
                             suggestedMin: -5,
                             suggestedMax: 5,
+                            border: { display: false }, 
                             grid: { 
-                                color: function(context) {
-                                    if (context.tick && context.tick.value === 0) return 'rgba(255, 255, 255, 0.4)'; // Blanco al 40%
-                                    return 'rgba(255, 255, 255, 0.05)';
-                                },
-                                lineWidth: function(context) {
-                                    if (context.tick && context.tick.value === 0) return 3; // Grosor 3px
-                                    return 1;
-                                },
-                                drawBorder: false
+                                color: (ctx) => { return (ctx.tick && ctx.tick.value === 0) ? '#ffffff' : 'rgba(255, 255, 255, 0.05)'; },
+                                lineWidth: (ctx) => { return (ctx.tick && ctx.tick.value === 0) ? 2 : 1; }
                             }, 
-                            ticks: { 
-                                color: '#a0a0c0',
-                                stepSize: 5
-                            } 
+                            ticks: { color: '#a0a0c0', stepSize: 5 } 
                         } 
                     }, 
                     plugins: { legend: { display: true, labels: { color: '#ffffff', boxWidth: 10 } } } 
@@ -1020,6 +1014,7 @@
                     for (let i = 0; i < cloudHistory.labels.length; i++) {
                         for(let j=0; j<30; j++) {
                             expandedHistory.labels.push(cloudHistory.labels[i]);
+                            
                             expandedHistory.spread.push(cloudHistory.spread[i]);
                             expandedHistory.discrepancy.push(cloudHistory.discrepancy[i]);
                             
@@ -1299,6 +1294,11 @@
 
         async function startEngine() {
             initSortable(); 
+            
+            // LA MAGIA: Cargar la configuración DESPUÉS de que GridStack monte las tarjetas
+            document.getElementById('sim-ada-input').value = conf.sim;
+            document.getElementById('sim-tri-input').value = conf.sim;
+
             initCharts();   
             await fetchHistoryFromCloudflare();
             await fetchAdaData();
@@ -1310,11 +1310,7 @@
             }, 30000);
         }
 
-        // CARGA INTELIGENTE Y SEGURO DE LA CONFIGURACIÓN AL ABRIR LA WEB
         window.onload = () => {
-            document.getElementById('sim-ada-input').value = conf.sim;
-            document.getElementById('sim-tri-input').value = conf.sim;
-            
             if (!userPasskey) {
                 showAuthScreen();
             } else {
