@@ -122,29 +122,29 @@
         /* 🎨 EFECTO FOCO SUPERIOR Y SOMBRAS DIAGONALES */
         .card-ada { 
             box-shadow: -10px 10px 40px rgba(0, 0, 0, 0.5); 
-            background: radial-gradient(250px circle at top right, rgba(66, 133, 244, 0.05), transparent), rgba(8, 10, 16, 0.98); 
+            background: radial-gradient(250px circle at top right, rgba(66, 133, 244, 0.08), transparent), rgba(8, 10, 16, 0.98); 
         }
         .card-ada:hover { 
             box-shadow: -15px 15px 50px rgba(0, 0, 0, 0.7), 0 0 20px rgba(66, 133, 244, 0.15); 
-            background: radial-gradient(250px circle at top right, rgba(66, 133, 244, 0.1), transparent), rgba(12, 15, 24, 1); 
+            background: radial-gradient(250px circle at top right, rgba(66, 133, 244, 0.15), transparent), rgba(12, 15, 24, 1); 
         }
         
         .card-vault { 
             box-shadow: -10px 10px 40px rgba(0, 0, 0, 0.5); 
-            background: radial-gradient(250px circle at top right, rgba(252, 211, 77, 0.05), transparent), rgba(14, 10, 4, 0.98); 
+            background: radial-gradient(250px circle at top right, rgba(252, 211, 77, 0.08), transparent), rgba(14, 10, 4, 0.98); 
         }
         .card-vault:hover { 
             box-shadow: -15px 15px 50px rgba(0, 0, 0, 0.7), 0 0 20px rgba(252, 211, 77, 0.15); 
-            background: radial-gradient(250px circle at top right, rgba(252, 211, 77, 0.1), transparent), rgba(18, 12, 5, 1); 
+            background: radial-gradient(250px circle at top right, rgba(252, 211, 77, 0.15), transparent), rgba(18, 12, 5, 1); 
         }
         
         .card-orange { 
             box-shadow: -10px 10px 40px rgba(0, 0, 0, 0.5); 
-            background: radial-gradient(250px circle at top right, rgba(255, 123, 0, 0.05), transparent), rgba(14, 6, 2, 0.98); 
+            background: radial-gradient(250px circle at top right, rgba(255, 123, 0, 0.08), transparent), rgba(14, 6, 2, 0.98); 
         }
         .card-orange:hover { 
             box-shadow: -15px 15px 50px rgba(0, 0, 0, 0.7), 0 0 20px rgba(255, 123, 0, 0.15); 
-            background: radial-gradient(250px circle at top right, rgba(255, 123, 0, 0.1), transparent), rgba(18, 8, 3, 1); 
+            background: radial-gradient(250px circle at top right, rgba(255, 123, 0, 0.15), transparent), rgba(18, 8, 3, 1); 
         }
 
         /* 🎨 GRÁFICA PRINCIPAL: Brillo sutil y mate */
@@ -162,7 +162,7 @@
             0% { box-shadow: -10px 10px 40px rgba(16, 185, 129, 0.3), inset 0 0 10px rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.4); }
             100% { box-shadow: -15px 15px 60px rgba(16, 185, 129, 0.9), inset 0 0 20px rgba(16, 185, 129, 0.3); border-color: rgba(16, 185, 129, 0.9); }
         }
-        .glow-active { animation: greenAlertPulse 1.5s infinite alternate ease-in-out !important; border-color: rgba(16, 185, 129, 0.8) !important; background: radial-gradient(250px circle at top right, rgba(16, 185, 129, 0.05), transparent), rgba(10, 15, 15, 0.98) !important; }
+        .glow-active { animation: greenAlertPulse 1.5s infinite alternate ease-in-out !important; border-color: rgba(16, 185, 129, 0.8) !important; background: radial-gradient(250px circle at top right, rgba(16, 185, 129, 0.08), transparent), rgba(10, 15, 15, 0.98) !important; }
 
         /* =========================================
            🛡️ ESCUDO INFALIBLE PARA LAS GRÁFICAS
@@ -198,7 +198,6 @@
         .badge-dark { background: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.2); font-size: 0.75rem; padding: 4px 10px; border-radius: 20px; font-weight: 700; display: inline-block; margin: 0 2px; text-decoration: none; transition: 0.2s ease; }
         a.badge-dark:hover { transform: translateY(-2px); background: var(--neon-orange); border-color: var(--neon-orange); color: var(--text-on-fire); box-shadow: 0 0 15px rgba(255, 123, 0, 0.4);}
         
-        /* Ocultar flechas del input numérico */
         input[type="number"].sim-input::-webkit-outer-spin-button, input[type="number"].sim-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
         input[type="number"].sim-input { -moz-appearance: textfield; }
         
@@ -227,7 +226,7 @@
         .slippage-bar { height: 100%; width: 0%; border-radius: 4px; transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); box-shadow: 0 0 10px currentColor;}
         .slippage-label { font-size: 0.7rem; color: var(--text-secondary); text-align: right; font-weight: 600;}
 
-        /* TRIANGULO */
+        /* TRIANGULO: Líneas Sólidas de Neón */
         .tri-wrapper { position: relative; width: 100%; max-width: 250px; height: 100%; min-height: 150px; margin: 25px auto 25px auto; flex-grow: 1; }
         .tri-node { position: absolute; width: 50px; height: 50px; background: rgba(18, 15, 36, 0.9); border: 2px solid rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: bold; color: white; z-index: 2; box-shadow: 0 0 15px rgba(0,0,0,0.8); backdrop-filter: blur(5px);}
         .node-ada { top: 0; left: calc(50% - 25px); border-color: var(--ada-color); color: var(--ada-color);}
@@ -235,9 +234,17 @@
         .node-oracle { bottom: 0; left: 0; border-color: var(--vault-color); color: var(--vault-color);}
         .tri-svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;}
         .tri-line-bg { fill: none; stroke: rgba(255,255,255,0.05); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round;}
-        .tri-line-active { fill: none; stroke: #10b981; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 10 15; animation: dash-flow 1s linear infinite; filter: drop-shadow(0 0 5px #10b981);}
-        .route-reverse { animation-direction: reverse; }
-        @keyframes dash-flow { from { stroke-dashoffset: 25; } to { stroke-dashoffset: 0; } }
+        
+        /* Línea continua con resplandor fuerte */
+        .tri-line-active { 
+            fill: none; 
+            stroke: #10b981; 
+            stroke-width: 4; 
+            stroke-linecap: round; 
+            stroke-linejoin: round; 
+            filter: drop-shadow(0 0 10px #10b981);
+            transition: all 0.3s ease;
+        }
 
         .route-active { color: #10b981; transition: 0.3s; }
         .route-active .route-dot { background: #10b981; box-shadow: 0 0 10px #10b981; }
@@ -484,18 +491,18 @@
                         <div>
                             <h3 class="dex-subtitle"><span class="badge bg-vyfi">VYFI</span></h3>
                             <div class="data-row"><span class="data-label">Price:</span><span class="data-value"><span id="oracle-vyfi-price">-</span> <span id="oracle-vyfi-price-change-24h" class="change-badge"></span></span></div>
-                            <div class="spark-wrapper" style="height: 40px; margin-bottom: 25px;"><canvas id="spark-oracle-vyfi-price"></canvas></div>
+                            <div class="spark-wrapper" style="height: 35px; margin-bottom: 25px;"><canvas id="spark-oracle-vyfi-price"></canvas></div>
                             
                             <div class="data-row"><span class="data-label">Liquidity:</span><span class="data-value"><span id="oracle-vyfi-liq">-</span> <span id="oracle-vyfi-change-24h" class="change-badge"></span></span></div>
-                            <div class="spark-wrapper" style="height: 40px;"><canvas id="spark-oracle-vyfi"></canvas></div>
+                            <div class="spark-wrapper" style="height: 35px;"><canvas id="spark-oracle-vyfi"></canvas></div>
                         </div>
                         <div style="border-left: 2px solid rgba(255,255,255,0.05); padding-left: 20px;">
                             <h3 class="dex-subtitle"><span class="badge bg-minswap">MINSWAP</span></h3>
                             <div class="data-row"><span class="data-label">Price:</span><span class="data-value"><span id="oracle-min-price">-</span> <span id="oracle-min-price-change-24h" class="change-badge"></span></span></div>
-                            <div class="spark-wrapper" style="height: 40px; margin-bottom: 25px;"><canvas id="spark-oracle-min-price"></canvas></div>
+                            <div class="spark-wrapper" style="height: 35px; margin-bottom: 25px;"><canvas id="spark-oracle-min-price"></canvas></div>
                             
                             <div class="data-row"><span class="data-label">Liquidity:</span><span class="data-value"><span id="oracle-min-liq">-</span> <span id="oracle-min-change-24h" class="change-badge"></span></span></div>
-                            <div class="spark-wrapper" style="height: 40px;"><canvas id="spark-oracle-min"></canvas></div>
+                            <div class="spark-wrapper" style="height: 35px;"><canvas id="spark-oracle-min"></canvas></div>
                         </div>
                     </div>
                 </div>
@@ -507,7 +514,7 @@
                             <span id="oracle-total-liq">-</span> <span id="total-liq-change-24h" class="change-badge" style="font-size: 0.9rem;"></span>
                         </div>
                     </div>
-                    <div class="spark-wrapper" style="height: 25px; width: 90%; margin: 0 auto 5px auto;">
+                    <div class="spark-wrapper" style="height: 55px; width: 100%; margin-top: 10px;">
                         <canvas id="spark-total-liq"></canvas>
                     </div>
                 </div>
@@ -555,7 +562,7 @@
         <div class="grid-stack-item drag-item" gs-id="card-chart" gs-w="12" gs-h="2" gs-x="0" gs-y="9">
             <div class="grid-stack-item-content card">
                 <div class="card-title" style="margin-bottom: 10px; font-size: 0.9rem; color: #ffffff; text-transform: none; flex-shrink: 0;">Spread & vault discrepancy (last 24h %)</div>
-                <div class="spark-wrapper" style="flex-grow: 1; height: auto;">
+                <div class="spark-wrapper" style="flex-grow: 1; height: 100%;">
                     <canvas id="arbitrageChart"></canvas>
                 </div>
             </div>
@@ -575,8 +582,8 @@
         const VYFI_LINK = "https://app.vyfi.io/dex?tokenA=lovelace&tokenB=328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b27393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
         const MINSWAP_LINK = "https://minswap.org/swap?cA=&tA=&cB=328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b2&tB=7393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
 
-        // TACTICA DE VERSIONADO: Cambia este valor para resetear el panel a los usuarios en futuras actualizaciones
-        const LAYOUT_VERSION = "v1.1"; 
+        // VERSIÓN DEL LAYOUT (Al cambiar este valor, el navegador limpia los bloques rotos guardados en caché)
+        const LAYOUT_VERSION = "v1.2"; 
 
         let defaultConf = { alert: 15, vaultAlert: 20, simDex: 1000, simTri: 1000, tgBot: "", tgChat: "", feeNet: 0.2, feeMin: 0.7, feeVyfi: 1.9, lpFeeMin: 0.3, lpFeeVyfi: 0.3 };
         let savedConf = JSON.parse(localStorage.getItem('l4va_config')) || {};
@@ -668,7 +675,6 @@
                 alwaysShowResizeHandle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
             });
 
-            // Usamos la variable de versión para no cargar layouts rotos antiguos
             const savedLayout = JSON.parse(localStorage.getItem(`l4va_grid_layout_${LAYOUT_VERSION}`));
             if (savedLayout && savedLayout.length > 0) {
                 grid.load(savedLayout);
@@ -756,17 +762,15 @@
         }
 
         function updateSimConfig(sourceId, confKey) {
-            let el = document.getElementById(sourceId);
-            let rawVal = el.value;
-            
-            // Si el usuario borra la casilla entera o escribe un "-", no guardamos "NaN" ni bloqueamos.
+            let rawVal = document.getElementById(sourceId).value;
             let val = parseFloat(rawVal);
+            
             if (!isNaN(val) && val >= 0) {
                 conf[confKey] = val;
                 localStorage.setItem('l4va_config', JSON.stringify(conf));
             }
             
-            // Calculamos visualmente con el valor temporal, o con 0 si está vacío
+            // Calculamos usando el valor temporal (o 0 si ha borrado la casilla), pero sin borrar la config final
             if (confKey === 'simDex') recalculateDexSimulator(isNaN(val) ? 0 : val);
             if (confKey === 'simTri') recalculateTriSimulator(isNaN(val) ? 0 : val);
         }
@@ -1022,15 +1026,14 @@
             } catch (e) { console.error("Error loading history:", e); }
         }
 
-        // MOTOR ADA FIABLE (CryptoCompare API) -> Adiós Binance bloqueado
+        // MOTOR ADA FIABLE
         async function fetchAdaData() {
             try {
-                let prices = [];
                 const response = await fetch('https://min-api.cryptocompare.com/data/v2/histohour?fsym=ADA&tsym=USD&limit=24');
                 const data = await response.json();
                 if(data.Response !== "Success") throw new Error("API Limitada");
                 
-                prices = data.Data.Data.map(p => p.close);
+                const prices = data.Data.Data.map(p => p.close);
                 currentAdaUsd = prices[prices.length - 1]; 
                 const oldestAda = prices[0]; 
                 const adaChange = ((currentAdaUsd - oldestAda) / oldestAda) * 100;
@@ -1083,7 +1086,7 @@
                     const spreadEl = document.getElementById('arbitrage-spread'); const actionEl = document.getElementById('arbitrage-action');
                     spreadEl.innerText = `${spread.toFixed(2)}%`;
                     if (spread < 0.5) { spreadEl.style.color = "rgba(255, 255, 255, 0.5)"; actionEl.innerHTML = `<span style="color: rgba(255, 255, 255, 0.6);">Low spread</span>`; } 
-                    else { spreadEl.style.color = "#ffffff"; if (priceVyfi > priceMin) { actionEl.innerHTML = `<a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Buy Min</a> <a href="${VYFI_LINK}" target="_blank" class="badge-dark">Sell VyFi</a>`; } else { actionEl.innerHTML = `<a href="${VYFI_LINK}" target="_blank" class="badge-dark">Buy VyFi</a> <a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Sell Min</a>`; } }
+                    else { spreadEl.style.color = "#ffffff"; if (priceVyfi > priceMin) { actionEl.innerHTML = `<a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Buy Minswap</a> <a href="${VYFI_LINK}" target="_blank" class="badge-dark">Sell VyFi</a>`; } else { actionEl.innerHTML = `<a href="${VYFI_LINK}" target="_blank" class="badge-dark">Buy VyFi</a> <a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Sell Minswap</a>`; } }
                     if (spread >= conf.alert) { if(dexCard) dexCard.classList.add('glow-active'); const alertToggle = document.getElementById('alert-toggle'); const now = Date.now(); if (alertToggle && alertToggle.checked && (now - lastAlertTime > ALERT_COOLDOWN)) { playDing(); if (Notification.permission === "granted") { new Notification("🚨 L4VA Arbitrage Detected!", { body: `Spread: ${spread.toFixed(2)}%\n${suggestedActionText}` }); } sendTelegramAlert(`🚨 <b>L4VA Arbitrage Detected!</b>\n\n📈 DEX Spread: <b>${spread.toFixed(2)}%</b>\n💡 Route: ${suggestedActionText}\n\n<i>Check dashboard for real-time net profit.</i>`); lastAlertTime = now; } } else { if(dexCard) dexCard.classList.remove('glow-active'); }
                 } else { if(dexCard) dexCard.classList.remove('glow-active'); }
                 let primaryOraclePrice = priceVyfi > 0 ? priceVyfi : priceMin; let voSpread = 0;
