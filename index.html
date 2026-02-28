@@ -102,7 +102,7 @@
         .active-edit-btn { background: rgba(255, 123, 0, 0.2) !important; border-color: var(--neon-orange) !important; box-shadow: 0 0 15px rgba(255, 123, 0, 0.5); }
 
         /* =========================================
-           MOTOR DEL GRID: GRIDSTACK.JS (Libertad Absoluta)
+           MOTOR DEL GRID: GRIDSTACK.JS 
            ========================================= */
         #main-dashboard { 
             max-width: 1200px; 
@@ -110,7 +110,6 @@
             transition: filter 0.5s ease; 
         }
         
-        /* Garantizar que no haya barras de scroll internas en los elementos del panel */
         .grid-stack-item-content {
             overflow: hidden !important; 
         }
@@ -155,9 +154,9 @@
             flex-direction: column; 
             justify-content: space-between;
         }
+        
         .card:hover { box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 255, 255, 0.05); }
 
-        /* Ajustes finos para las tarjetas pequeñas compactas */
         .card-compact { padding: 15px 25px !important; justify-content: center !important;}
         @media (min-width: 768px) {
             .card-compact .card-title { margin-bottom: 5px; font-size: 0.95rem; }
@@ -187,7 +186,7 @@
             background: rgba(10, 15, 15, 0.98) !important;
         }
 
-        /* Card title sin text-transform */
+        /* Títulos e información interna */
         .card-title { font-size: 1.05rem; font-weight: 600; margin-bottom: 15px; color: var(--neon-orange); display: flex; justify-content: space-between; align-items: center;}
         .card-title.ada-title { color: var(--ada-color); text-shadow: 0 0 10px rgba(66, 133, 244, 0.3);}
         
@@ -365,7 +364,7 @@
                 <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: auto; padding-bottom: 20px;">
                     <div class="data-row" style="margin: 0;">
                         <div style="display: flex; align-items: center;">
-                            <input type="number" id="sim-ada-input" class="sim-input" value="1000" style="width: 100px; font-size: 1.2rem; padding: 10px;" onkeyup="recalculateSimulators()" onchange="recalculateSimulators()"> 
+                            <input type="number" id="sim-ada-input" class="sim-input" onkeyup="updateSimConfig('sim-ada-input')" onchange="updateSimConfig('sim-ada-input')"> 
                             <span style="font-size: 0.9rem; font-weight: bold; color: var(--text-primary);">ADA</span>
                         </div>
                     </div>
@@ -390,7 +389,7 @@
                 <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: auto; padding-bottom: 20px;">
                     <div class="data-row" style="margin: 0;">
                         <div style="display: flex; align-items: center;">
-                            <input type="number" id="sim-tri-input" class="sim-input" value="1000" style="width: 100px; font-size: 1.2rem; padding: 10px;" onkeyup="recalculateSimulators()" onchange="recalculateSimulators()"> 
+                            <input type="number" id="sim-tri-input" class="sim-input" onkeyup="updateSimConfig('sim-tri-input')" onchange="updateSimConfig('sim-tri-input')"> 
                             <span style="font-size: 0.9rem; font-weight: bold; color: var(--text-primary);">ADA</span>
                         </div>
                     </div>
@@ -507,7 +506,7 @@
                             <span id="oracle-total-liq">-</span> <span id="total-liq-change-24h" class="change-badge" style="font-size: 1rem;"></span>
                         </div>
                     </div>
-                    <div style="height: 70px; margin-top: 20px; margin-bottom: 15px; position: relative;"><canvas id="spark-total-liq"></canvas></div>
+                    <div style="height: 65px; width: 100%; position: relative; margin-top: auto; margin-bottom: 5px;"><canvas id="spark-total-liq"></canvas></div>
                 </div>
             </div>
         </div>
@@ -581,6 +580,12 @@
         if(conf.lpFeeMin === undefined) { conf.lpFeeMin = 0.3; conf.lpFeeVyfi = 0.3; }
         if(conf.vaultAlert === undefined) { conf.vaultAlert = 20; }
 
+        // Inicializar los inputs en la interfaz al cargar
+        document.addEventListener("DOMContentLoaded", () => {
+            document.getElementById('sim-ada-input').value = conf.sim;
+            document.getElementById('sim-tri-input').value = conf.sim;
+        });
+
         let lastAlertTime = 0;
         let lastVaultAlertTime = 0; 
         let chartInstance = null;
@@ -603,9 +608,6 @@
             vlrmAda: { resAda: 0, resTok: 0 },
             crossVO: { resVlrm: 0, resOracle: 0 }
         };
-
-        document.getElementById('sim-ada-input').value = conf.sim;
-        document.getElementById('sim-tri-input').value = conf.sim;
 
         function showAuthScreen(showError = false) {
             document.getElementById('auth-screen').style.display = 'flex';
@@ -722,7 +724,7 @@
             document.getElementById('set-lp-vyfi').value = conf.lpFeeVyfi;
             document.getElementById('settings-modal').style.display = 'flex'; 
         }
-        
+
         function saveSettings() {
             conf.alert = parseFloat(document.getElementById('set-alert').value); 
             conf.vaultAlert = parseFloat(document.getElementById('set-vault-alert').value); 
@@ -734,10 +736,26 @@
             conf.feeVyfi = parseFloat(document.getElementById('set-fee-vyfi').value);
             conf.lpFeeMin = parseFloat(document.getElementById('set-lp-min').value);
             conf.lpFeeVyfi = parseFloat(document.getElementById('set-lp-vyfi').value);
+            
             localStorage.setItem('l4va_config', JSON.stringify(conf));
+            
+            // Actualizar inputs del panel
             document.getElementById('sim-ada-input').value = conf.sim; 
             document.getElementById('sim-tri-input').value = conf.sim; 
-            closeModals(); recalculateSimulators();
+            closeModals(); 
+            recalculateSimulators();
+        }
+
+        // NUEVA FUNCIÓN: Guarda y sincroniza los inputs de los simuladores en tiempo real
+        function updateSimConfig(sourceId) {
+            let val = parseFloat(document.getElementById(sourceId).value) || 0;
+            conf.sim = val;
+            localStorage.setItem('l4va_config', JSON.stringify(conf));
+            
+            if(sourceId === 'sim-ada-input') document.getElementById('sim-tri-input').value = val;
+            if(sourceId === 'sim-tri-input') document.getElementById('sim-ada-input').value = val;
+            
+            recalculateSimulators();
         }
 
         function playDing() { try { const ctx = new (window.AudioContext || window.webkitAudioContext)(); const osc = ctx.createOscillator(); const gainNode = ctx.createGain(); osc.type = 'sine'; osc.frequency.setValueAtTime(880, ctx.currentTime); gainNode.gain.setValueAtTime(0.1, ctx.currentTime); osc.connect(gainNode); gainNode.connect(ctx.destination); osc.start(); gainNode.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.5); osc.stop(ctx.currentTime + 0.5); } catch (e) {} }
@@ -762,9 +780,15 @@
                         x: { display: true, grid: { display: false }, ticks: { color: '#a0a0c0', maxTicksLimit: 8, maxRotation: 0 } }, 
                         y: { 
                             grid: { 
-                                color: (ctx) => ctx.tick && ctx.tick.value === 0 ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255,255,255,0.05)',
-                                lineWidth: (ctx) => ctx.tick && ctx.tick.value === 0 ? 15 : 1,
-                                borderDash: [] 
+                                // Color de la cuadrícula evaluado con función estricta para asegurar que el 0 siempre se pinte
+                                color: function(context) {
+                                    if (context.tick && context.tick.value === 0) return 'rgba(255, 255, 255, 0.15)'; 
+                                    return 'rgba(255, 255, 255, 0.05)';
+                                },
+                                lineWidth: function(context) {
+                                    if (context.tick && context.tick.value === 0) return 8; 
+                                    return 1;
+                                }
                             }, 
                             ticks: { 
                                 color: '#a0a0c0',
