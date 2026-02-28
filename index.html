@@ -354,7 +354,7 @@
                     </div>
                     <div class="data-row" style="margin-top: 15px;"><span class="data-label" style="font-size: 0.75rem;">Last Updated:</span><span class="data-value" style="font-size: 0.75rem;" id="ada-time">-</span></div>
                 </div>
-                <div style="flex: 0 0 65px; height: 65px; max-height: 65px; width: 100%; position: relative; margin-top: auto; overflow: hidden;">
+                <div style="height: 65px; width: 100%; position: relative; margin-top: auto; margin-bottom: 5px;">
                     <canvas id="spark-ada"></canvas>
                 </div>
             </div>
@@ -373,7 +373,7 @@
                     </div>
                     <div class="data-row"><span class="data-label">Fair price:</span><span class="data-value" id="vault-fair-price">-</span></div>
                 </div>
-                <div style="flex: 0 0 65px; height: 65px; max-height: 65px; width: 100%; position: relative; margin-top: auto; overflow: hidden;">
+                <div style="height: 65px; width: 100%; position: relative; margin-top: auto; margin-bottom: 5px;">
                     <canvas id="spark-vault"></canvas>
                 </div>
             </div>
@@ -433,14 +433,14 @@
                     </div>
                 </div>
                 
-                <div style="margin-top: auto; padding-top: 25px; border-top: 1px solid rgba(255,255,255,0.05);">
+                <div style="margin-top: auto; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.05);">
                     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
                         <h3 class="dex-subtitle" style="color: var(--text-secondary); font-size: 1rem; text-transform: uppercase; margin:0;">Total Combined Liquidity</h3>
                         <div class="data-value" style="font-size: 2rem; color: #ffffff; text-shadow: 0 2px 10px rgba(0,0,0,0.5);">
                             <span id="oracle-total-liq">-</span> <span id="total-liq-change-24h" class="change-badge" style="font-size: 1rem;"></span>
                         </div>
                     </div>
-                    <div style="flex: 0 0 65px; height: 65px; max-height: 65px; width: 100%; position: relative; margin-top: 15px; overflow: hidden;">
+                    <div style="height: 60px; width: 100%; position: relative; margin-top: 15px;">
                         <canvas id="spark-total-liq"></canvas>
                     </div>
                 </div>
@@ -517,7 +517,7 @@
         if(conf.vaultAlert === undefined) { conf.vaultAlert = 20; }
         if(conf.sim === undefined) { conf.sim = 1000; }
 
-        // Inicializar los inputs en la interfaz al cargar inmediatamente
+        // Inicialización inmediata al cargar el script (Evita el bug del DOMContentLoaded)
         document.getElementById('sim-ada-input').value = conf.sim;
         document.getElementById('sim-tri-input').value = conf.sim;
 
@@ -718,9 +718,10 @@
                                     return 'rgba(255, 255, 255, 0.05)';
                                 },
                                 lineWidth: function(context) {
-                                    if (context.tick && context.tick.value === 0) return 10; // Grosor forzado a 10px
+                                    if (context.tick && context.tick.value === 0) return 10; 
                                     return 1;
-                                }
+                                },
+                                borderDash: [] 
                             }, 
                             ticks: { 
                                 color: '#a0a0c0',
@@ -1021,7 +1022,8 @@
 
                     for (let i = 0; i < cloudHistory.labels.length; i++) {
                         for(let j=0; j<30; j++) {
-                            expandedHistory.labels.push(j === 0 ? cloudHistory.labels[i] : '');
+                            // SOLUCIÓN HORAS: Obligamos a que la etiqueta de tiempo real se copie a todos los puntos intermedios
+                            expandedHistory.labels.push(cloudHistory.labels[i]);
                             expandedHistory.spread.push(cloudHistory.spread[i]);
                             expandedHistory.discrepancy.push(cloudHistory.discrepancy[i]);
                             
@@ -1052,7 +1054,20 @@
                         }
                     }
 
-                    // ELIMINADO EL RELLENO DE CADENAS VACÍAS (Para que el eje X no se rompa)
+                    const missingPoints = MAX_CHART_POINTS - expandedHistory.labels.length;
+                    if (missingPoints > 0) {
+                        const emptyLabels = Array(missingPoints).fill(cloudHistory.labels[0] || ''); // Evitamos textos vacíos en el relleno
+                        expandedHistory.labels = [...emptyLabels, ...expandedHistory.labels];
+
+                        const keys = Object.keys(expandedHistory);
+                        for (let key of keys) {
+                            if (key === 'labels') continue;
+                            let firstVal = expandedHistory[key].find(v => v !== null && v !== undefined && !isNaN(v));
+                            if (firstVal === undefined) firstVal = 0;
+                            const padArr = Array(missingPoints).fill(firstVal);
+                            expandedHistory[key] = [...padArr, ...expandedHistory[key]];
+                        }
+                    }
 
                     const keysFill = Object.keys(expandedHistory);
                     for (let key of keysFill) {
