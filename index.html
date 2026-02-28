@@ -91,7 +91,6 @@
         h1 { margin: 0; font-weight: 800; font-size: 1.8rem; background: var(--gradient-fire); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -1px; display: flex; align-items: center;}
         .version-badge { color: #ffffff; font-size: 0.8rem; font-weight: 600; margin-left: 8px; opacity: 0.8; letter-spacing: 0; -webkit-text-fill-color: #ffffff; }
 
-        /* Controles de la barra superior */
         .alert-toggle-box { font-size: 0.8rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 8px; color: var(--text-primary); background: rgba(0, 0, 0, 0.6); padding: 8px 16px; border-radius: 30px; border: 1px solid rgba(255, 123, 0, 0.4); transition: 0.3s; backdrop-filter: blur(5px);}
         .alert-toggle-box:hover { border-color: var(--neon-orange); background: rgba(255, 123, 0, 0.2); }
         .alert-toggle-box input { accent-color: var(--neon-orange); transform: scale(1.2); }
@@ -115,28 +114,53 @@
         .grid-stack-placeholder > .placeholder-content { border: 2px dashed rgba(255, 123, 0, 0.4) !important; background: rgba(10, 8, 20, 0.4) !important; border-radius: 20px !important; }
         .grid-stack-item.ui-draggable-dragging > .grid-stack-item-content { box-shadow: 0 30px 60px rgba(0, 0, 0, 0.9), 0 0 40px rgba(255, 123, 0, 0.4) !important; transform: scale(1.02) rotate(1deg) !important; border: 2px solid var(--neon-orange) !important; opacity: 0.95 !important; z-index: 99999 !important; }
 
-        .card { border-radius: 20px; padding: 20px 25px; position: absolute; top: 0; left: 0; right: 0; bottom: 0; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); transition: background 0.3s ease, box-shadow 0.3s ease; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; }
-        .card:hover { box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 255, 255, 0.05); }
-
+        .card { border-radius: 20px; padding: 20px 25px; position: absolute; top: 0; left: 0; right: 0; bottom: 0; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); transition: background 0.3s ease, box-shadow 0.3s ease; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; }
+        
         .card-compact { padding: 15px 25px !important; justify-content: center !important;}
         @media (min-width: 768px) { .card-compact .card-title { margin-bottom: 5px; font-size: 0.95rem; } }
 
-        /* 🎨 EFECTO "FOCO SUPERIOR" EN LOS FONDOS */
-        .card-ada { background: radial-gradient(200px circle at top right, rgba(66, 133, 244, 0.15), transparent), rgba(8, 10, 16, 0.98); }
-        .card-ada:hover { box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(66, 133, 244, 0.2); background: radial-gradient(200px circle at top right, rgba(66, 133, 244, 0.25), transparent), rgba(12, 15, 24, 1); }
+        /* 🎨 EFECTO "FOCO SUPERIOR" REDUCIDO Y TASK 1 SOMBRAS DIAGONALES */
+        .card-ada { 
+            box-shadow: -10px 10px 40px rgba(0, 0, 0, 0.5); /* T1 Sombra */
+            background: radial-gradient(200px circle at top right, rgba(66, 133, 244, 0.08), transparent), rgba(8, 10, 16, 0.98); /* T4 Brillo reducido */
+        }
+        .card-ada:hover { 
+            box-shadow: -15px 15px 50px rgba(0, 0, 0, 0.7), 0 0 20px rgba(66, 133, 244, 0.2); 
+            background: radial-gradient(200px circle at top right, rgba(66, 133, 244, 0.15), transparent), rgba(12, 15, 24, 1); 
+        }
         
-        .card-vault { background: radial-gradient(200px circle at top right, rgba(252, 211, 77, 0.15), transparent), rgba(14, 10, 4, 0.98); }
-        .card-vault:hover { box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(252, 211, 77, 0.2); background: radial-gradient(200px circle at top right, rgba(252, 211, 77, 0.25), transparent), rgba(18, 12, 5, 1); }
+        .card-vault { 
+            box-shadow: -10px 10px 40px rgba(0, 0, 0, 0.5); /* T1 Sombra */
+            background: radial-gradient(200px circle at top right, rgba(252, 211, 77, 0.08), transparent), rgba(14, 10, 4, 0.98); /* T4 Brillo reducido */
+        }
+        .card-vault:hover { 
+            box-shadow: -15px 15px 50px rgba(0, 0, 0, 0.7), 0 0 20px rgba(252, 211, 77, 0.2); 
+            background: radial-gradient(200px circle at top right, rgba(252, 211, 77, 0.15), transparent), rgba(18, 12, 5, 1); 
+        }
         
-        .card-orange { background: radial-gradient(200px circle at top right, rgba(255, 123, 0, 0.15), transparent), rgba(14, 6, 2, 0.98); }
-        .card-orange:hover { box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 123, 0, 0.2); background: radial-gradient(200px circle at top right, rgba(255, 123, 0, 0.25), transparent), rgba(18, 8, 3, 1); }
+        .card-orange { 
+            box-shadow: -10px 10px 40px rgba(0, 0, 0, 0.5); /* T1 Sombra */
+            background: radial-gradient(200px circle at top right, rgba(255, 123, 0, 0.08), transparent), rgba(14, 6, 2, 0.98); /* T4 Brillo reducido */
+        }
+        .card-orange:hover { 
+            box-shadow: -15px 15px 50px rgba(0, 0, 0, 0.7), 0 0 20px rgba(255, 123, 0, 0.2); 
+            background: radial-gradient(200px circle at top right, rgba(255, 123, 0, 0.15), transparent), rgba(18, 8, 3, 1); 
+        }
+
+        /* TASK 1: Excepción para la gráfica inferior */
+        [gs-id="card-chart"] .card {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); /* Mantiene sombra estándar */
+        }
+        [gs-id="card-chart"] .card:hover {
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6); 
+        }
 
         /* EFECTO: RESPLANDOR VERDE (ALERTAS Y PROFIT) */
         @keyframes greenAlertPulse {
             0% { box-shadow: 0 0 15px rgba(16, 185, 129, 0.3), inset 0 0 10px rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.4); }
             100% { box-shadow: 0 0 50px rgba(16, 185, 129, 0.9), inset 0 0 20px rgba(16, 185, 129, 0.3); border-color: rgba(16, 185, 129, 0.9); }
         }
-        .glow-active { animation: greenAlertPulse 1.5s infinite alternate ease-in-out !important; border-color: rgba(16, 185, 129, 0.8) !important; background: radial-gradient(200px circle at top right, rgba(16, 185, 129, 0.15), transparent), rgba(10, 15, 15, 0.98) !important; }
+        .glow-active { animation: greenAlertPulse 1.5s infinite alternate ease-in-out !important; border-color: rgba(16, 185, 129, 0.8) !important; background: radial-gradient(200px circle at top right, rgba(16, 185, 129, 0.08), transparent), rgba(10, 15, 15, 0.98) !important; }
 
         .card-title { font-size: 1.05rem; font-weight: 600; margin-bottom: 15px; color: var(--neon-orange); display: flex; justify-content: space-between; align-items: center;}
         .card-title.ada-title { color: var(--ada-color); text-shadow: 0 0 10px rgba(66, 133, 244, 0.3);}
@@ -358,7 +382,7 @@
                     </div>
                     <div class="data-row" style="margin-top: 15px;"><span class="data-label" style="font-size: 0.75rem;">Last Updated:</span><span class="data-value" style="font-size: 0.75rem;" id="ada-time">-</span></div>
                 </div>
-                <div style="flex: 1 1 0; position: relative; min-height: 0; margin-top: 15px; width: 100%;">
+                <div style="height: 60px; position: relative; margin-top: auto; margin-bottom: 5px; width: 100%; flex-shrink: 0;">
                     <canvas id="spark-ada" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%;"></canvas>
                 </div>
             </div>
@@ -377,7 +401,7 @@
                     </div>
                     <div class="data-row"><span class="data-label">Fair price:</span><span class="data-value" id="vault-fair-price">-</span></div>
                 </div>
-                <div style="flex: 1 1 0; position: relative; min-height: 0; margin-top: 15px; width: 100%;">
+                <div style="height: 60px; position: relative; margin-top: auto; margin-bottom: 5px; width: 100%; flex-shrink: 0;">
                     <canvas id="spark-vault" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%;"></canvas>
                 </div>
             </div>
@@ -439,14 +463,14 @@
                     </div>
                 </div>
                 
-                <div style="margin-top: auto; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; flex-grow: 1; min-height: 0;">
+                <div style="margin-top: auto; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column;">
                     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; flex-shrink: 0;">
                         <h3 class="dex-subtitle" style="color: var(--text-secondary); font-size: 1rem; text-transform: uppercase; margin:0;">Total Combined Liquidity</h3>
                         <div class="data-value" style="font-size: 2rem; color: #ffffff; text-shadow: 0 2px 10px rgba(0,0,0,0.5);">
                             <span id="oracle-total-liq">-</span> <span id="total-liq-change-24h" class="change-badge" style="font-size: 1rem;"></span>
                         </div>
                     </div>
-                    <div style="flex: 1 1 0; min-height: 0; position: relative; margin-top: 10px; width: 100%;">
+                    <div style="flex: 0 0 45px; height: 45px; position: relative; margin-top: 15px; margin-bottom: 5px; width: calc(100% - 10px); left: 5px; overflow: hidden;">
                         <canvas id="spark-total-liq" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%;"></canvas>
                     </div>
                 </div>
@@ -605,15 +629,11 @@
                 grid.load(savedLayout);
             }
 
-            // MAGIA DEL SIMULADOR: Inyecta valores guardados CADA VEZ que el Grid se construye o mueve
-            document.getElementById('sim-ada-input').value = conf.sim;
-            document.getElementById('sim-tri-input').value = conf.sim;
-
             grid.on('change', function(event, items) {
                 if(chartInstance) chartInstance.resize();
                 Object.values(sparkInstances).forEach(chart => chart.resize());
                 
-                // Refuerza los valores de simulación tras editar
+                // Refuerza los valores tras un cambio de layout para GridStack
                 document.getElementById('sim-ada-input').value = conf.sim;
                 document.getElementById('sim-tri-input').value = conf.sim;
             });
@@ -705,46 +725,32 @@
             try { await fetch(`https://api.telegram.org/bot${conf.tgBot}/sendMessage`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ chat_id: conf.tgChat, text: message, parse_mode: 'HTML' }) }); } catch (e) {}
         }
 
-        // --- PLUGIN INFALIBLE: DIBUJA EL TÚNEL DE TOLERANCIA Y LA LÍNEA 0% ---
+        // --- PLUGIN: DIBUJA EL TÚNEL DE TOLERANCIA Y LA LÍNEA 0% ---
         const drawToleranceBandPlugin = {
             id: 'drawToleranceBandPlugin',
             beforeDraw: (chart) => {
                 if (chart.canvas.id !== 'arbitrageChart') return;
                 const ctx = chart.ctx;
                 const yAxis = chart.scales.y;
-                
-                // Mapeamos los píxeles matemáticos de la gráfica
                 const topY = yAxis.getPixelForValue(5);
                 const bottomY = yAxis.getPixelForValue(-5);
                 const zeroY = yAxis.getPixelForValue(0);
                 
                 ctx.save();
-                
-                // Dibuja la banda transparente que va de +5 a -5
                 if (topY >= yAxis.top && bottomY <= yAxis.bottom) {
-                    ctx.fillStyle = 'rgba(255, 255, 255, 0.08)'; // Banda muy sutil, no tapa las líneas
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.08)'; 
                     ctx.fillRect(chart.chartArea.left, topY, chart.chartArea.right - chart.chartArea.left, bottomY - topY);
                 }
-                
-                // Dibuja la línea cero exacta
                 if (zeroY >= yAxis.top && zeroY <= yAxis.bottom) {
-                    ctx.beginPath();
-                    ctx.moveTo(chart.chartArea.left, zeroY);
-                    ctx.lineTo(chart.chartArea.right, zeroY);
-                    ctx.lineWidth = 1;
-                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)'; // Línea blanca central
-                    ctx.stroke();
+                    ctx.beginPath(); ctx.moveTo(chart.chartArea.left, zeroY); ctx.lineTo(chart.chartArea.right, zeroY); ctx.lineWidth = 1; ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)'; ctx.stroke();
                 }
-
                 ctx.restore();
             }
         };
 
         function initCharts() {
             const ctx = document.getElementById('arbitrageChart').getContext('2d');
-            
             Chart.register(drawToleranceBandPlugin); 
-
             chartInstance = new Chart(ctx, {
                 type: 'line',
                 data: { labels: chartHistory.labels, datasets: [
@@ -756,16 +762,7 @@
                     responsive: true, maintainAspectRatio: false, 
                     scales: { 
                         x: { display: true, grid: { display: false }, ticks: { color: '#a0a0c0', maxTicksLimit: 8, maxRotation: 0 } }, 
-                        y: { 
-                            // Forza a la gráfica a contener siempre el espacio del 5 al -5
-                            suggestedMin: -5,
-                            suggestedMax: 5,
-                            grid: { 
-                                color: 'rgba(255, 255, 255, 0.05)',
-                                drawBorder: false
-                            }, 
-                            ticks: { color: '#a0a0c0', stepSize: 5 } 
-                        } 
+                        y: { suggestedMin: -5, suggestedMax: 5, grid: { color: 'rgba(255, 255, 255, 0.05)', drawBorder: false }, ticks: { color: '#a0a0c0', stepSize: 5 } } 
                     }, 
                     plugins: { legend: { display: true, labels: { color: '#ffffff', boxWidth: 10 } } } 
                 }
@@ -789,37 +786,20 @@
         }
         
         function updateSparklines(vAdaTvl, vOraTvl, oVyfiTvl, oMinTvl, vaultTvl, pVAda, pVOra, pOVyfi, pOMin) {
-            chartHistory.vlrmAda.push(vAdaTvl);
-            chartHistory.vlrmOracle.push(vOraTvl);
-            chartHistory.oracleVyfi.push(oVyfiTvl);
-            chartHistory.oracleMin.push(oMinTvl);
-            chartHistory.vault.push(vaultTvl);
-            chartHistory.totalLiq.push(oVyfiTvl + oMinTvl);
-
-            chartHistory.pVlrmAda.push(pVAda);
-            chartHistory.pVlrmOracle.push(pVOra);
-            chartHistory.pOracleVyfi.push(pOVyfi);
-            chartHistory.pOracleMin.push(pOMin);
+            chartHistory.vlrmAda.push(vAdaTvl); chartHistory.vlrmOracle.push(vOraTvl); chartHistory.oracleVyfi.push(oVyfiTvl); chartHistory.oracleMin.push(oMinTvl); chartHistory.vault.push(vaultTvl); chartHistory.totalLiq.push(oVyfiTvl + oMinTvl);
+            chartHistory.pVlrmAda.push(pVAda); chartHistory.pVlrmOracle.push(pVOra); chartHistory.pOracleVyfi.push(pOVyfi); chartHistory.pOracleMin.push(pOMin);
 
             if(chartHistory.vlrmAda.length > MAX_CHART_POINTS) {
                 chartHistory.vlrmAda.shift(); chartHistory.vlrmOracle.shift(); chartHistory.oracleVyfi.shift(); chartHistory.oracleMin.shift(); chartHistory.vault.shift(); chartHistory.totalLiq.shift();
                 chartHistory.pVlrmAda.shift(); chartHistory.pVlrmOracle.shift(); chartHistory.pOracleVyfi.shift(); chartHistory.pOracleMin.shift();
             }
-
-            sparkInstances.vlrmAda.update('none'); sparkInstances.vlrmOracle.update('none'); sparkInstances.oracleVyfi.update('none'); sparkInstances.oracleMin.update('none'); sparkInstances.vault.update('none'); sparkInstances.totalLiq.update('none');
-            sparkInstances.pVlrmAda.update('none'); sparkInstances.pVlrmOracle.update('none'); sparkInstances.pOracleVyfi.update('none'); sparkInstances.pOracleMin.update('none');
+            sparkInstances.vlrmAda.update('none'); sparkInstances.vlrmOracle.update('none'); sparkInstances.oracleVyfi.update('none'); sparkInstances.oracleMin.update('none'); sparkInstances.vault.update('none'); sparkInstances.totalLiq.update('none'); sparkInstances.pVlrmAda.update('none'); sparkInstances.pVlrmOracle.update('none'); sparkInstances.pOracleVyfi.update('none'); sparkInstances.pOracleMin.update('none');
         }
 
         function updateMainChart(spread, discrepancy, vlrmOracleSpread) {
             const now = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-            chartHistory.labels.push(now);
-            chartHistory.spread.push(spread);
-            chartHistory.discrepancy.push(discrepancy);
-            chartHistory.vlrmOracleSpread.push(vlrmOracleSpread);
-            
-            if(chartHistory.labels.length > MAX_CHART_POINTS) {
-                chartHistory.labels.shift(); chartHistory.spread.shift(); chartHistory.discrepancy.shift(); chartHistory.vlrmOracleSpread.shift();
-            }
+            chartHistory.labels.push(now); chartHistory.spread.push(spread); chartHistory.discrepancy.push(discrepancy); chartHistory.vlrmOracleSpread.push(vlrmOracleSpread);
+            if(chartHistory.labels.length > MAX_CHART_POINTS) { chartHistory.labels.shift(); chartHistory.spread.shift(); chartHistory.discrepancy.shift(); chartHistory.vlrmOracleSpread.shift(); }
             chartInstance.update('none');
         }
 
@@ -836,20 +816,14 @@
 
         function getAmmOut(amountIn, reserveIn, reserveOut, feePct) {
             if(reserveIn <= 0 || reserveOut <= 0 || amountIn <= 0) return 0;
-            const feeMultiplier = 1 - (feePct / 100); 
-            const amountInWithFee = amountIn * feeMultiplier;
+            const feeMultiplier = 1 - (feePct / 100); const amountInWithFee = amountIn * feeMultiplier;
             return (reserveOut * amountInWithFee) / (reserveIn + amountInWithFee);
         }
 
         function updateSlippageUI(elementId, labelId, maxImpact) {
-            const bar = document.getElementById(elementId);
-            const label = document.getElementById(labelId);
+            const bar = document.getElementById(elementId); const label = document.getElementById(labelId);
             if(!bar || !label) return;
-            
-            let width = Math.min(maxImpact * 10, 100); 
-            bar.style.width = `${width}%`;
-            label.innerText = `Price Impact: ${maxImpact.toFixed(2)}%`;
-
+            let width = Math.min(maxImpact * 10, 100); bar.style.width = `${width}%`; label.innerText = `Price Impact: ${maxImpact.toFixed(2)}%`;
             if (maxImpact < 2) { bar.style.background = "#10b981"; label.style.color = "#10b981"; textShadow = "0 0 10px #10b981"; }
             else if (maxImpact < 5) { bar.style.background = "#fcd34d"; label.style.color = "#fcd34d"; textShadow = "0 0 10px #fcd34d"; }
             else { bar.style.background = "var(--neon-red)"; label.style.color = "var(--neon-red)"; textShadow = "0 0 10px var(--neon-red)"; }
@@ -862,189 +836,85 @@
             const simEl = document.getElementById('sim-profit'); const optEl = document.getElementById('optimizer-result');
             const cardEl = document.querySelector('[gs-id="card-sim-oracle"] .card');
             
-            if(currentPools.vyfi.price <= 0 || currentPools.minswap.price <= 0) { 
-                simEl.innerText = "0.00 ADA"; updateSlippageUI('sim-slippage-bar', 'sim-slippage-label', 0); 
-                if(cardEl) cardEl.classList.remove('glow-active');
-                return; 
-            }
-            
+            if(currentPools.vyfi.price <= 0 || currentPools.minswap.price <= 0) { simEl.innerText = "0.00 ADA"; updateSlippageUI('sim-slippage-bar', 'sim-slippage-label', 0); if(cardEl) cardEl.classList.remove('glow-active'); return; }
             const networkFee = conf.feeNet; const minFixed = conf.feeMin; const vyfiFixed = conf.feeVyfi;
             let poolBuy, poolSell, fixedFeeBuy, fixedFeeSell, lpBuy, lpSell;
-
-            if (currentPools.minswap.price < currentPools.vyfi.price) { 
-                poolBuy = currentPools.minswap; poolSell = currentPools.vyfi; 
-                fixedFeeBuy = minFixed; fixedFeeSell = vyfiFixed; lpBuy = conf.lpFeeMin; lpSell = conf.lpFeeVyfi;
-            } else { 
-                poolBuy = currentPools.vyfi; poolSell = currentPools.minswap; 
-                fixedFeeBuy = vyfiFixed; fixedFeeSell = minFixed; lpBuy = conf.lpFeeVyfi; lpSell = conf.lpFeeMin;
-            }
-
-            let netProfit = 0; let swapAdaAmount = investAda - fixedFeeBuy - networkFee;
-            let maxImpact = 0;
-
+            if (currentPools.minswap.price < currentPools.vyfi.price) { poolBuy = currentPools.minswap; poolSell = currentPools.vyfi; fixedFeeBuy = minFixed; fixedFeeSell = vyfiFixed; lpBuy = conf.lpFeeMin; lpSell = conf.lpFeeVyfi; }
+            else { poolBuy = currentPools.vyfi; poolSell = currentPools.minswap; fixedFeeBuy = vyfiFixed; fixedFeeSell = minFixed; lpBuy = conf.lpFeeVyfi; lpSell = conf.lpFeeMin; }
+            let netProfit = 0; let swapAdaAmount = investAda - fixedFeeBuy - networkFee; let maxImpact = 0;
             if (swapAdaAmount > 0) {
-                let amountInWithFee1 = swapAdaAmount * (1 - (lpBuy/100));
-                let impact1 = (amountInWithFee1 / (poolBuy.reserveAda + amountInWithFee1)) * 100;
-                
+                let amountInWithFee1 = swapAdaAmount * (1 - (lpBuy/100)); let impact1 = (amountInWithFee1 / (poolBuy.reserveAda + amountInWithFee1)) * 100;
                 let tokensReceived = getAmmOut(swapAdaAmount, poolBuy.reserveAda, poolBuy.reserveTok, lpBuy);
-                
-                let amountInWithFee2 = tokensReceived * (1 - (lpSell/100));
-                let impact2 = (amountInWithFee2 / (poolSell.reserveTok + amountInWithFee2)) * 100;
-
+                let amountInWithFee2 = tokensReceived * (1 - (lpSell/100)); let impact2 = (amountInWithFee2 / (poolSell.reserveTok + amountInWithFee2)) * 100;
                 maxImpact = Math.max(impact1, impact2);
-
                 let adaGrossReceived = getAmmOut(tokensReceived, poolSell.reserveTok, poolSell.reserveAda, lpSell);
                 netProfit = (adaGrossReceived - fixedFeeSell - networkFee) - investAda;
             }
-            
             updateSlippageUI('sim-slippage-bar', 'sim-slippage-label', maxImpact);
-
             if (swapAdaAmount <= 0) { simEl.innerText = "Insufficient ADA"; simEl.className = "data-value profit-negative"; } 
-            else { 
-                let sign = netProfit > 0 ? "+" : ""; 
-                let usdStr = currentAdaUsd > 0 ? `<span class="usd-profit">(~$${(Math.abs(netProfit)*currentAdaUsd).toFixed(2)})</span>` : "";
-                simEl.innerHTML = `${sign}${netProfit.toFixed(2)} ADA ${usdStr}`; 
-                simEl.className = netProfit > 0 ? "data-value profit-positive" : "data-value profit-negative"; 
-            }
-
+            else { let sign = netProfit > 0 ? "+" : ""; let usdStr = currentAdaUsd > 0 ? `<span class="usd-profit">(~$${(Math.abs(netProfit)*currentAdaUsd).toFixed(2)})</span>` : ""; simEl.innerHTML = `${sign}${netProfit.toFixed(2)} ADA ${usdStr}`; simEl.className = netProfit > 0 ? "data-value profit-positive" : "data-value profit-negative"; }
             let bestProfit = -Infinity; let optimalInvest = 0;
             for(let i = 10; i <= 5000; i += 10) {
-                let testSwapAmount = i - fixedFeeBuy - networkFee;
-                if(testSwapAmount <= 0) continue;
+                let testSwapAmount = i - fixedFeeBuy - networkFee; if(testSwapAmount <= 0) continue;
                 let testTokens = getAmmOut(testSwapAmount, poolBuy.reserveAda, poolBuy.reserveTok, lpBuy);
                 let testAdaGross = getAmmOut(testTokens, poolSell.reserveTok, poolSell.reserveAda, lpSell);
                 let testNet = (testAdaGross - fixedFeeSell - networkFee) - i;
                 if (testNet > bestProfit) { bestProfit = testNet; optimalInvest = i; } else if (testNet < bestProfit && testNet > 0) break;
             }
-
-            if (bestProfit > 0) { 
-                optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> Max profit <b>+${bestProfit.toFixed(2)} ADA</b> (Invest <b>${optimalInvest} ADA</b>)`; 
-                optEl.style.color = '#10b981'; 
-                if(cardEl) cardEl.classList.add('glow-active');
-            } else { 
-                optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> No profitable route (fees > spread).`; 
-                optEl.style.color = 'var(--text-secondary)'; 
-                if(cardEl) cardEl.classList.remove('glow-active');
-            }
+            if (bestProfit > 0) { optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> Max profit <b>+${bestProfit.toFixed(2)} ADA</b> (Invest <b>${optimalInvest} ADA</b>)`; optEl.style.color = '#10b981'; if(cardEl) cardEl.classList.add('glow-active'); }
+            else { optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> No profitable route (fees > spread).`; optEl.style.color = 'var(--text-secondary)'; if(cardEl) cardEl.classList.remove('glow-active'); }
         }
 
         function calcTriNetDetails(investAda) {
             if(investAda <= 0) return { netProfit: -Infinity, route: null, maxImpact: 0 };
-            let pVA = currentPools.vlrmAda; let pVO = currentPools.crossVO; let pOVy = currentPools.vyfi; let pOMin = currentPools.minswap; 
-            if(pVA.resAda <= 0 || pVO.resVlrm <= 0) return { netProfit: -Infinity, route: null, maxImpact: 0 };
-
-            const netF = conf.feeNet; const fVy = conf.feeVyfi + netF; const fMin = conf.feeMin + netF; 
-            const lpVy = conf.lpFeeVyfi; const lpMin = conf.lpFeeMin;
-
+            let pVA = currentPools.vlrmAda; let pVO = currentPools.crossVO; let pOVy = currentPools.vyfi; let pOMin = currentPools.minswap; if(pVA.resAda <= 0 || pVO.resVlrm <= 0) return { netProfit: -Infinity, route: null, maxImpact: 0 };
+            const netF = conf.feeNet; const fVy = conf.feeVyfi + netF; const fMin = conf.feeMin + netF; const lpVy = conf.lpFeeVyfi; const lpMin = conf.lpFeeMin;
             let outA = -Infinity; let impactA = 0; let adaAfterLeg1A = investAda - fVy;
             if(adaAfterLeg1A > 0) {
-                let fee1 = 1-(lpVy/100); let imp1 = (adaAfterLeg1A*fee1)/(pVA.resAda + adaAfterLeg1A*fee1)*100;
-                let vlrmOut = getAmmOut(adaAfterLeg1A, pVA.resAda, pVA.resTok, lpVy); 
-                
-                let imp2 = (vlrmOut*fee1)/(pVO.resVlrm + vlrmOut*fee1)*100;
-                let oracleOut = getAmmOut(vlrmOut, pVO.resVlrm, pVO.resOracle, lpVy); 
-                
-                let feeMin = 1-(lpMin/100);
-                let imp3Vy = (oracleOut*fee1)/(pOVy.reserveTok + oracleOut*fee1)*100;
-                let imp3Min = (oracleOut*feeMin)/(pOMin.reserveTok + oracleOut*feeMin)*100;
-
+                let fee1 = 1-(lpVy/100); let imp1 = (adaAfterLeg1A*fee1)/(pVA.resAda + adaAfterLeg1A*fee1)*100; let vlrmOut = getAmmOut(adaAfterLeg1A, pVA.resAda, pVA.resTok, lpVy); 
+                let imp2 = (vlrmOut*fee1)/(pVO.resVlrm + vlrmOut*fee1)*100; let oracleOut = getAmmOut(vlrmOut, pVO.resVlrm, pVO.resOracle, lpVy); 
+                let feeMin = 1-(lpMin/100); let imp3Vy = (oracleOut*fee1)/(pOVy.reserveTok + oracleOut*fee1)*100; let imp3Min = (oracleOut*feeMin)/(pOMin.reserveTok + oracleOut*feeMin)*100;
                 let adaEndVy = getAmmOut(oracleOut, pOVy.reserveTok, pOVy.reserveAda, lpVy) - fVy - fVy; 
                 let adaEndMin = getAmmOut(oracleOut, pOMin.reserveTok, pOMin.reserveAda, lpMin) - fVy - fMin; 
-                
-                if (adaEndVy > adaEndMin) { outA = adaEndVy; impactA = Math.max(imp1, imp2, imp3Vy); }
-                else { outA = adaEndMin; impactA = Math.max(imp1, imp2, imp3Min); }
+                if (adaEndVy > adaEndMin) { outA = adaEndVy; impactA = Math.max(imp1, imp2, imp3Vy); } else { outA = adaEndMin; impactA = Math.max(imp1, imp2, imp3Min); }
             }
-
             let outB = -Infinity; let impactB = 0; let adaAfterLeg1B_Vy = investAda - fVy; let adaAfterLeg1B_Min = investAda - fMin;
             if(adaAfterLeg1B_Vy > 0 || adaAfterLeg1B_Min > 0) {
                 let feeVy = 1-(lpVy/100); let feeMin = 1-(lpMin/100);
-
-                let imp1Vy = (adaAfterLeg1B_Vy*feeVy)/(pOVy.reserveAda + adaAfterLeg1B_Vy*feeVy)*100;
-                let oracleOutVy = getAmmOut(adaAfterLeg1B_Vy, pOVy.reserveAda, pOVy.reserveTok, lpVy);
-                let imp2Vy = (oracleOutVy*feeVy)/(pVO.resOracle + oracleOutVy*feeVy)*100;
-                let vlrmOutVy = getAmmOut(oracleOutVy, pVO.resOracle, pVO.resVlrm, lpVy);
-                let imp3Vy = (vlrmOutVy*feeVy)/(pVA.resTok + vlrmOutVy*feeVy)*100;
-                let finalVyVy = getAmmOut(vlrmOutVy, pVA.resTok, pVA.resAda, lpVy) - fVy - fVy;
-                
-                let imp1Min = (adaAfterLeg1B_Min*feeMin)/(pOMin.reserveAda + adaAfterLeg1B_Min*feeMin)*100;
-                let oracleOutMin = getAmmOut(adaAfterLeg1B_Min, pOMin.reserveAda, pOMin.reserveTok, lpMin);
-                let imp2Min = (oracleOutMin*feeVy)/(pVO.resOracle + oracleOutMin*feeVy)*100;
-                let vlrmOutMin = getAmmOut(oracleOutMin, pVO.resOracle, pVO.resVlrm, lpVy);
-                let imp3Min = (vlrmOutMin*feeVy)/(pVA.resTok + vlrmOutMin*feeVy)*100;
-                let finalMinVy = getAmmOut(vlrmOutMin, pVA.resTok, pVA.resAda, lpVy) - fVy - fVy;
-                
-                if (finalVyVy > finalMinVy) { outB = finalVyVy; impactB = Math.max(imp1Vy, imp2Vy, imp3Vy); }
-                else { outB = finalMinVy; impactB = Math.max(imp1Min, imp2Min, imp3Min); }
+                let imp1Vy = (adaAfterLeg1B_Vy*feeVy)/(pOVy.reserveAda + adaAfterLeg1B_Vy*feeVy)*100; let oracleOutVy = getAmmOut(adaAfterLeg1B_Vy, pOVy.reserveAda, pOVy.reserveTok, lpVy);
+                let imp2Vy = (oracleOutVy*feeVy)/(pVO.resOracle + oracleOutVy*feeVy)*100; let vlrmOutVy = getAmmOut(oracleOutVy, pVO.resOracle, pVO.resVlrm, lpVy);
+                let imp3Vy = (vlrmOutVy*feeVy)/(pVA.resTok + vlrmOutVy*feeVy)*100; let finalVyVy = getAmmOut(vlrmOutVy, pVA.resTok, pVA.resAda, lpVy) - fVy - fVy;
+                let imp1Min = (adaAfterLeg1B_Min*feeMin)/(pOMin.reserveAda + adaAfterLeg1B_Min*feeMin)*100; let oracleOutMin = getAmmOut(adaAfterLeg1B_Min, pOMin.reserveAda, pOMin.reserveTok, lpMin);
+                let imp2Min = (oracleOutMin*feeVy)/(pVO.resOracle + oracleOutMin*feeVy)*100; let vlrmOutMin = getAmmOut(oracleOutMin, pVO.resOracle, pVO.resVlrm, lpVy);
+                let imp3Min = (vlrmOutMin*feeVy)/(pVA.resTok + vlrmOutMin*feeVy)*100; let finalMinVy = getAmmOut(vlrmOutMin, pVA.resTok, pVA.resAda, lpVy) - fVy - fVy;
+                if (finalVyVy > finalMinVy) { outB = finalVyVy; impactB = Math.max(imp1Vy, imp2Vy, imp3Vy); } else { outB = finalMinVy; impactB = Math.max(imp1Min, imp2Min, imp3Min); }
             }
-            
-            if (outA > outB) return { netProfit: outA - investAda, route: 'A', maxImpact: impactA }; 
-            else return { netProfit: outB - investAda, route: 'B', maxImpact: impactB }; 
+            if (outA > outB) return { netProfit: outA - investAda, route: 'A', maxImpact: impactA }; else return { netProfit: outB - investAda, route: 'B', maxImpact: impactB }; 
         }
 
         function recalculateTriSimulator() {
             const investAda = parseFloat(document.getElementById('sim-tri-input').value) || 0;
-            const simEl = document.getElementById('sim-tri-profit'); 
-            const optEl = document.getElementById('tri-optimizer-result');
+            const simEl = document.getElementById('sim-tri-profit'); const optEl = document.getElementById('tri-optimizer-result');
             const cardEl = document.querySelector('[gs-id="card-sim-tri"] .card');
-            
-            let currentData = calcTriNetDetails(investAda);
-            let netProfit = currentData.netProfit;
-
+            let currentData = calcTriNetDetails(investAda); let netProfit = currentData.netProfit;
             updateSlippageUI('sim-tri-slippage-bar', 'sim-tri-slippage-label', currentData.maxImpact);
-
-            if(investAda <= 0 || netProfit === -Infinity) { 
-                simEl.innerText = "Insufficient"; simEl.className = "data-value profit-negative"; 
-            } else { 
-                let sign = netProfit > 0 ? "+" : ""; 
-                let usdStr = currentAdaUsd > 0 ? `<span class="usd-profit">(~$${(Math.abs(netProfit)*currentAdaUsd).toFixed(2)})</span>` : "";
-                simEl.innerHTML = `${sign}${netProfit.toFixed(2)} ADA ${usdStr}`; 
-                simEl.className = netProfit > 0 ? "data-value profit-positive" : "data-value profit-negative"; 
-            }
-
+            if(investAda <= 0 || netProfit === -Infinity) { simEl.innerText = "Insufficient"; simEl.className = "data-value profit-negative"; } 
+            else { let sign = netProfit > 0 ? "+" : ""; let usdStr = currentAdaUsd > 0 ? `<span class="usd-profit">(~$${(Math.abs(netProfit)*currentAdaUsd).toFixed(2)})</span>` : ""; simEl.innerHTML = `${sign}${netProfit.toFixed(2)} ADA ${usdStr}`; simEl.className = netProfit > 0 ? "data-value profit-positive" : "data-value profit-negative"; }
             let bestProfit = -Infinity; let optimalInvest = 0; let optimalRoute = null; let bestPercent = 0;
             for(let i = 10; i <= 5000; i += 10) {
-                let testData = calcTriNetDetails(i);
-                if (testData.netProfit > bestProfit) { 
-                    bestProfit = testData.netProfit; optimalInvest = i; optimalRoute = testData.route; bestPercent = (testData.netProfit / i) * 100;
-                } else if (testData.netProfit < bestProfit && testData.netProfit > 0) break;
+                let testData = calcTriNetDetails(i); if (testData.netProfit > bestProfit) { bestProfit = testData.netProfit; optimalInvest = i; optimalRoute = testData.route; bestPercent = (testData.netProfit / i) * 100; } else if (testData.netProfit < bestProfit && testData.netProfit > 0) break;
             }
-
-            const triEl = document.getElementById('tri-arb-spread');
-            const rA = document.getElementById('route-a-container');
-            const rB = document.getElementById('route-b-container');
-            const triAnim = document.getElementById('tri-anim-path');
-
-            rA.className = "route-inactive"; rB.className = "route-inactive";
-            triAnim.style.display = "none";
-
+            const triEl = document.getElementById('tri-arb-spread'); const rA = document.getElementById('route-a-container'); const rB = document.getElementById('route-b-container'); const triAnim = document.getElementById('tri-anim-path');
+            rA.className = "route-inactive"; rB.className = "route-inactive"; triAnim.style.display = "none";
             if (bestProfit > 0) { 
-                optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> Max profit <b>+${bestProfit.toFixed(2)} ADA</b> (Invest <b>${optimalInvest} ADA</b>)`; 
-                optEl.style.color = '#10b981'; 
-                if(cardEl) cardEl.classList.add('glow-active');
-                
-                if(triEl) {
-                    triEl.innerText = `+${bestPercent.toFixed(2)}%`; 
-                    triEl.style.color = "#10b981";
-                }
-                
+                optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> Max profit <b>+${bestProfit.toFixed(2)} ADA</b> (Invest <b>${optimalInvest} ADA</b>)`; optEl.style.color = '#10b981'; if(cardEl) cardEl.classList.add('glow-active');
+                if(triEl) { triEl.innerText = `+${bestPercent.toFixed(2)}%`; triEl.style.color = "#10b981"; }
                 if(triAnim) triAnim.style.display = "block";
-                if (optimalRoute === 'A') {
-                    rA.className = "route-active";
-                    triAnim.className = "tri-line-active"; 
-                }
-                if (optimalRoute === 'B') {
-                    rB.className = "route-active";
-                    triAnim.className = "tri-line-active route-reverse"; 
-                }
+                if (optimalRoute === 'A') { rA.className = "route-active"; triAnim.className = "tri-line-active"; }
+                if (optimalRoute === 'B') { rB.className = "route-active"; triAnim.className = "tri-line-active route-reverse"; }
             } else { 
-                optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> No profitable route (fees > spread).`; 
-                optEl.style.color = 'var(--text-secondary)'; 
-                if(cardEl) cardEl.classList.remove('glow-active');
-                
-                if(triEl) {
-                    triEl.innerText = "0.00%"; 
-                    triEl.style.color = "var(--text-secondary)";
-                }
+                optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> No profitable route (fees > spread).`; optEl.style.color = 'var(--text-secondary)'; if(cardEl) cardEl.classList.remove('glow-active');
+                if(triEl) { triEl.innerText = "0.00%"; triEl.style.color = "var(--text-secondary)"; }
             }
         }
 
@@ -1052,94 +922,28 @@
             try {
                 const res = await fetch(PROXY_URL + '?data=history', { headers: { "X-Terminal-Key": userPasskey } });
                 if(res.status === 401) { showAuthScreen(); return; }
-                
                 const cloudHistory = await res.json();
-                
                 if (cloudHistory && cloudHistory.labels && cloudHistory.labels.length > 0) {
                     let expandedHistory = { labels: [], spread: [], discrepancy: [], vlrmOracleSpread: [], vlrmAda: [], vlrmOracle: [], oracleVyfi: [], oracleMin: [], vault: [], totalLiq: [], pVlrmAda: [], pVlrmOracle: [], pOracleVyfi: [], pOracleMin: [] };
-
                     for (let i = 0; i < cloudHistory.labels.length; i++) {
                         for(let j=0; j<30; j++) {
-                            expandedHistory.labels.push(cloudHistory.labels[i]);
-                            
-                            expandedHistory.spread.push(cloudHistory.spread[i]);
-                            expandedHistory.discrepancy.push(cloudHistory.discrepancy[i]);
-                            
-                            let vPrice = cloudHistory.pVlrmAda ? cloudHistory.pVlrmAda[i] : null;
-                            let oPriceVy = cloudHistory.pOracleVyfi ? cloudHistory.pOracleVyfi[i] : null;
-                            let oPriceMin = cloudHistory.pOracleMin ? cloudHistory.pOracleMin[i] : null;
-                            let oPrice = (oPriceVy && oPriceVy > 0) ? oPriceVy : oPriceMin;
-                            let voRatio = cloudHistory.pVlrmOracle ? cloudHistory.pVlrmOracle[i] : null;
-                            
-                            let voSpread = null;
-                            if (vPrice !== null && oPrice !== null && voRatio !== null && vPrice > 0 && oPrice > 0) {
-                                let valueDirect = vPrice;
-                                let valueCross = voRatio * oPrice;
-                                voSpread = ((Math.max(valueDirect, valueCross) - Math.min(valueDirect, valueCross)) / Math.min(valueDirect, valueCross)) * 100;
-                            }
-                            expandedHistory.vlrmOracleSpread.push(voSpread);
-
-                            expandedHistory.vlrmAda.push(cloudHistory.vlrmAda[i]);
-                            expandedHistory.vlrmOracle.push(cloudHistory.vlrmOracle[i]);
-                            expandedHistory.oracleVyfi.push(cloudHistory.oracleVyfi[i]);
-                            expandedHistory.oracleMin.push(cloudHistory.oracleMin[i]);
-                            expandedHistory.vault.push(cloudHistory.vault[i]);
-                            expandedHistory.totalLiq.push((cloudHistory.oracleVyfi[i] || 0) + (cloudHistory.oracleMin[i] || 0));
-                            expandedHistory.pVlrmAda.push(vPrice);
-                            expandedHistory.pVlrmOracle.push(voRatio);
-                            expandedHistory.pOracleVyfi.push(oPriceVy);
-                            expandedHistory.pOracleMin.push(oPriceMin);
+                            expandedHistory.labels.push(cloudHistory.labels[i]); expandedHistory.spread.push(cloudHistory.spread[i]); expandedHistory.discrepancy.push(cloudHistory.discrepancy[i]);
+                            let vPrice = cloudHistory.pVlrmAda ? cloudHistory.pVlrmAda[i] : null; let oPriceVy = cloudHistory.pOracleVyfi ? cloudHistory.pOracleVyfi[i] : null; let oPriceMin = cloudHistory.pOracleMin ? cloudHistory.pOracleMin[i] : null; let oPrice = (oPriceVy && oPriceVy > 0) ? oPriceVy : oPriceMin; let voRatio = cloudHistory.pVlrmOracle ? cloudHistory.pVlrmOracle[i] : null;
+                            let voSpread = null; if (vPrice !== null && oPrice !== null && voRatio !== null && vPrice > 0 && oPrice > 0) { let valueDirect = vPrice; let valueCross = voRatio * oPrice; voSpread = ((Math.max(valueDirect, valueCross) - Math.min(valueDirect, valueCross)) / Math.min(valueDirect, valueCross)) * 100; }
+                            expandedHistory.vlrmOracleSpread.push(voSpread); expandedHistory.vlrmAda.push(cloudHistory.vlrmAda[i]); expandedHistory.vlrmOracle.push(cloudHistory.vlrmOracle[i]); expandedHistory.oracleVyfi.push(cloudHistory.oracleVyfi[i]); expandedHistory.oracleMin.push(cloudHistory.oracleMin[i]); expandedHistory.vault.push(cloudHistory.vault[i]); expandedHistory.totalLiq.push((cloudHistory.oracleVyfi[i] || 0) + (cloudHistory.oracleMin[i] || 0)); expandedHistory.pVlrmAda.push(vPrice); expandedHistory.pVlrmOracle.push(voRatio); expandedHistory.pOracleVyfi.push(oPriceVy); expandedHistory.pOracleMin.push(oPriceMin);
                         }
                     }
-
                     const missingPoints = MAX_CHART_POINTS - expandedHistory.labels.length;
                     if (missingPoints > 0) {
-                        const emptyLabels = Array(missingPoints).fill(cloudHistory.labels[0] || '00:00'); 
-                        expandedHistory.labels = [...emptyLabels, ...expandedHistory.labels];
-
+                        const emptyLabels = Array(missingPoints).fill(cloudHistory.labels[0] || '00:00'); expandedHistory.labels = [...emptyLabels, ...expandedHistory.labels];
                         const keys = Object.keys(expandedHistory);
-                        for (let key of keys) {
-                            if (key === 'labels') continue;
-                            let firstVal = expandedHistory[key].find(v => v !== null && v !== undefined && !isNaN(v));
-                            if (firstVal === undefined) firstVal = 0;
-                            const padArr = Array(missingPoints).fill(firstVal);
-                            expandedHistory[key] = [...padArr, ...expandedHistory[key]];
-                        }
+                        for (let key of keys) { if (key === 'labels') continue; let firstVal = expandedHistory[key].find(v => v !== null && v !== undefined && !isNaN(v)); if (firstVal === undefined) firstVal = 0; const padArr = Array(missingPoints).fill(firstVal); expandedHistory[key] = [...padArr, ...expandedHistory[key]]; }
                     }
-
                     const keysFill = Object.keys(expandedHistory);
-                    for (let key of keysFill) {
-                        if (key === 'labels') continue;
-                        let lastGood = 0;
-                        for (let k = 0; k < expandedHistory[key].length; k++) {
-                            let val = expandedHistory[key][k];
-                            if (val !== null && val !== undefined && !isNaN(val)) { lastGood = val; } 
-                            else { expandedHistory[key][k] = lastGood; }
-                        }
-                    }
-
-                    if (expandedHistory.labels.length > MAX_CHART_POINTS) {
-                        const diff = expandedHistory.labels.length - MAX_CHART_POINTS;
-                        Object.keys(expandedHistory).forEach(key => { expandedHistory[key] = expandedHistory[key].slice(diff); });
-                    }
-                    chartHistory = expandedHistory;
-                    
-                    chartInstance.data.labels = chartHistory.labels; 
-                    chartInstance.data.datasets[0].data = chartHistory.spread; 
-                    chartInstance.data.datasets[1].data = chartHistory.discrepancy; 
-                    chartInstance.data.datasets[2].data = chartHistory.vlrmOracleSpread; 
-                    chartInstance.update('none');
-                    
-                    sparkInstances.vlrmAda.data.labels = chartHistory.labels; sparkInstances.vlrmAda.data.datasets[0].data = chartHistory.vlrmAda; sparkInstances.vlrmAda.update('none');
-                    sparkInstances.vlrmOracle.data.labels = chartHistory.labels; sparkInstances.vlrmOracle.data.datasets[0].data = chartHistory.vlrmOracle; sparkInstances.vlrmOracle.update('none');
-                    sparkInstances.oracleVyfi.data.labels = chartHistory.labels; sparkInstances.oracleVyfi.data.datasets[0].data = chartHistory.oracleVyfi; sparkInstances.oracleVyfi.update('none');
-                    sparkInstances.oracleMin.data.labels = chartHistory.labels; sparkInstances.oracleMin.data.datasets[0].data = chartHistory.oracleMin; sparkInstances.oracleMin.update('none');
-                    sparkInstances.vault.data.labels = chartHistory.labels; sparkInstances.vault.data.datasets[0].data = chartHistory.vault; sparkInstances.vault.update('none');
-                    sparkInstances.totalLiq.data.labels = chartHistory.labels; sparkInstances.totalLiq.data.datasets[0].data = chartHistory.totalLiq; sparkInstances.totalLiq.update('none');
-                    sparkInstances.pVlrmAda.data.labels = chartHistory.labels; sparkInstances.pVlrmAda.data.datasets[0].data = chartHistory.pVlrmAda; sparkInstances.pVlrmAda.update('none');
-                    sparkInstances.pVlrmOracle.data.labels = chartHistory.labels; sparkInstances.pVlrmOracle.data.datasets[0].data = chartHistory.pVlrmOracle; sparkInstances.pVlrmOracle.update('none');
-                    sparkInstances.pOracleVyfi.data.labels = chartHistory.labels; sparkInstances.pOracleVyfi.data.datasets[0].data = chartHistory.pOracleVyfi; sparkInstances.pOracleVyfi.update('none');
-                    sparkInstances.pOracleMin.data.labels = chartHistory.labels; sparkInstances.pOracleMin.data.datasets[0].data = chartHistory.pOracleMin; sparkInstances.pOracleMin.update('none');
+                    for (let key of keysFill) { if (key === 'labels') continue; let lastGood = 0; for (let k = 0; k < expandedHistory[key].length; k++) { let val = expandedHistory[key][k]; if (val !== null && val !== undefined && !isNaN(val)) { lastGood = val; } else { expandedHistory[key][k] = lastGood; } } }
+                    if (expandedHistory.labels.length > MAX_CHART_POINTS) { const diff = expandedHistory.labels.length - MAX_CHART_POINTS; Object.keys(expandedHistory).forEach(key => { expandedHistory[key] = expandedHistory[key].slice(diff); }); }
+                    chartHistory = expandedHistory; chartInstance.data.labels = chartHistory.labels; chartInstance.data.datasets[0].data = chartHistory.spread; chartInstance.data.datasets[1].data = chartHistory.discrepancy; chartInstance.data.datasets[2].data = chartHistory.vlrmOracleSpread; chartInstance.update('none');
+                    sparkInstances.vlrmAda.data.labels = chartHistory.labels; sparkInstances.vlrmAda.data.datasets[0].data = chartHistory.vlrmAda; sparkInstances.vlrmAda.update('none'); sparkInstances.vlrmOracle.data.labels = chartHistory.labels; sparkInstances.vlrmOracle.data.datasets[0].data = chartHistory.vlrmOracle; sparkInstances.vlrmOracle.update('none'); sparkInstances.oracleVyfi.data.labels = chartHistory.labels; sparkInstances.oracleVyfi.data.datasets[0].data = chartHistory.oracleVyfi; sparkInstances.oracleVyfi.update('none'); sparkInstances.oracleMin.data.labels = chartHistory.labels; sparkInstances.oracleMin.data.datasets[0].data = chartHistory.oracleMin; sparkInstances.oracleMin.update('none'); sparkInstances.vault.data.labels = chartHistory.labels; sparkInstances.vault.data.datasets[0].data = chartHistory.vault; sparkInstances.vault.update('none'); sparkInstances.totalLiq.data.labels = chartHistory.labels; sparkInstances.totalLiq.data.datasets[0].data = chartHistory.totalLiq; sparkInstances.totalLiq.update('none'); sparkInstances.pVlrmAda.data.labels = chartHistory.labels; sparkInstances.pVlrmAda.data.datasets[0].data = chartHistory.pVlrmAda; sparkInstances.pVlrmAda.update('none'); sparkInstances.pVlrmOracle.data.labels = chartHistory.labels; sparkInstances.pVlrmOracle.data.datasets[0].data = chartHistory.pVlrmOracle; sparkInstances.pVlrmOracle.update('none'); sparkInstances.pOracleVyfi.data.labels = chartHistory.labels; sparkInstances.pOracleVyfi.data.datasets[0].data = chartHistory.pOracleVyfi; sparkInstances.pOracleVyfi.update('none'); sparkInstances.pOracleMin.data.labels = chartHistory.labels; sparkInstances.pOracleMin.data.datasets[0].data = chartHistory.pOracleMin; sparkInstances.pOracleMin.update('none');
                 }
             } catch (e) { console.error("Error loading history:", e); }
         }
@@ -1147,26 +951,10 @@
         async function fetchAdaData() {
             try {
                 const response = await fetch('https://api.coingecko.com/api/v3/coins/cardano/market_chart?vs_currency=usd&days=1');
-                const data = await response.json();
-                const prices = data.prices.map(p => p[1]);
-                currentAdaUsd = prices[prices.length - 1]; 
-                const oldestAda = prices[0];
-                const adaChange = ((currentAdaUsd - oldestAda) / oldestAda) * 100;
-
-                const priceEl = document.getElementById('ada-price-usd');
-                priceEl.innerHTML = `$${currentAdaUsd.toFixed(4)} <span id="ada-change-24h" class="change-badge"></span>`;
-                
-                const changeEl = document.getElementById('ada-change-24h');
-                if (adaChange > 0) { changeEl.innerText = `+${adaChange.toFixed(2)}%`; changeEl.style.color = "#10b981"; }
-                else { changeEl.innerText = `${adaChange.toFixed(2)}%`; changeEl.style.color = "var(--neon-red)"; }
-
-                document.getElementById('ada-time').innerText = new Date().toLocaleTimeString();
-
-                sparkInstances.ada.data.labels = Array(prices.length).fill('');
-                sparkInstances.ada.data.datasets[0].data = prices;
-                sparkInstances.ada.update('none');
-
-                return currentAdaUsd;
+                const data = await response.json(); const prices = data.prices.map(p => p[1]); currentAdaUsd = prices[prices.length - 1]; const oldestAda = prices[0]; const adaChange = ((currentAdaUsd - oldestAda) / oldestAda) * 100;
+                const priceEl = document.getElementById('ada-price-usd'); priceEl.innerHTML = `$${currentAdaUsd.toFixed(4)} <span id="ada-change-24h" class="change-badge"></span>`;
+                const changeEl = document.getElementById('ada-change-24h'); if (adaChange > 0) { changeEl.innerText = `+${adaChange.toFixed(2)}%`; changeEl.style.color = "#10b981"; } else { changeEl.innerText = `${adaChange.toFixed(2)}%`; changeEl.style.color = "var(--neon-red)"; }
+                document.getElementById('ada-time').innerText = new Date().toLocaleTimeString(); sparkInstances.ada.data.labels = Array(prices.length).fill(''); sparkInstances.ada.data.datasets[0].data = prices; sparkInstances.ada.update('none'); return currentAdaUsd;
             } catch (error) { return null; }
         }
 
@@ -1174,191 +962,53 @@
             try {
                 const response = await fetch(PROXY_URL, { headers: { "X-Terminal-Key": userPasskey } });
                 if(response.status === 401) { showAuthScreen(); return; }
-                
-                const data = await response.json();
-                if (data.error) throw new Error(data.error);
-
-                let vaultTvlData = 0;
-                if (data.vaultTvl && data.vaultTvl > 0) { vaultTvlData = data.vaultTvl; }
-
+                const data = await response.json(); if (data.error) throw new Error(data.error);
+                let vaultTvlData = 0; if (data.vaultTvl && data.vaultTvl > 0) { vaultTvlData = data.vaultTvl; }
                 let priceVlrmAda = 0; let vlrmVyfiAdaReserve = 0; let vlrmVyfiTokReserve = 0; let vlrmAdaTvl = 0;
                 const vlrmVyfiPool = data.vyfiPools.find(p => p.unitsPair.includes('lovelace') && p.unitsPair.includes(VLRM));
-                if (vlrmVyfiPool) {
-                    priceVlrmAda = vlrmVyfiPool.tokenA.unit === 'lovelace' ? vlrmVyfiPool.tokenB.lpRatio[vlrmVyfiPool.unitsPair].priceRatioAB : vlrmVyfiPool.tokenA.lpRatio[vlrmVyfiPool.unitsPair].priceRatioBA;
-                    vlrmAdaTvl = vlrmVyfiPool.tvl;
-                    document.getElementById('vlrm-price-ada').innerText = `₳ ${priceVlrmAda.toFixed(6)}`; document.getElementById('vlrm-liq-ada').innerText = `₳ ${Math.round(vlrmAdaTvl).toLocaleString()}`;
-                    vlrmVyfiAdaReserve = vlrmAdaTvl / 2; vlrmVyfiTokReserve = vlrmVyfiAdaReserve / priceVlrmAda;
-                }
-                
-                let crossVlrmReserve = 0; let crossOracleReserve = 0; let crossTvl = 0; 
-                let rawCrossRatio = 0; let oraclePerVlrmUI = 0;
+                if (vlrmVyfiPool) { priceVlrmAda = vlrmVyfiPool.tokenA.unit === 'lovelace' ? vlrmVyfiPool.tokenB.lpRatio[vlrmVyfiPool.unitsPair].priceRatioAB : vlrmVyfiPool.tokenA.lpRatio[vlrmVyfiPool.unitsPair].priceRatioBA; vlrmAdaTvl = vlrmVyfiPool.tvl; document.getElementById('vlrm-price-ada').innerText = `₳ ${priceVlrmAda.toFixed(6)}`; document.getElementById('vlrm-liq-ada').innerText = `₳ ${Math.round(vlrmAdaTvl).toLocaleString()}`; vlrmVyfiAdaReserve = vlrmAdaTvl / 2; vlrmVyfiTokReserve = vlrmVyfiAdaReserve / priceVlrmAda; }
+                let crossVlrmReserve = 0; let crossOracleReserve = 0; let crossTvl = 0; let rawCrossRatio = 0; let oraclePerVlrmUI = 0;
                 const crossPool = data.vyfiPools.find(p => p.unitsPair.includes(VLRM) && p.unitsPair.includes(ORACLE));
-                if (crossPool) {
-                    crossTvl = crossPool.tvl;
-                    rawCrossRatio = crossPool.tokenA.unit.includes(VLRM) ? crossPool.tokenB.lpRatio[crossPool.unitsPair].priceRatioAB : crossPool.tokenA.lpRatio[crossPool.unitsPair].priceRatioBA;
-                    
-                    crossVlrmReserve = (crossTvl / 2) / priceVlrmAda; 
-                    crossOracleReserve = crossVlrmReserve / rawCrossRatio; 
-                    
-                    if (crossVlrmReserve > 0) {
-                        oraclePerVlrmUI = crossOracleReserve / crossVlrmReserve;
-                    }
-                    
-                    document.getElementById('vlrm-oracle-price').innerText = `${oraclePerVlrmUI.toFixed(4)}`;
-                    document.getElementById('vlrm-oracle-liq-ada').innerText = `₳ ${Math.round(crossTvl).toLocaleString()}`; 
-                }
-
+                if (crossPool) { crossTvl = crossPool.tvl; rawCrossRatio = crossPool.tokenA.unit.includes(VLRM) ? crossPool.tokenB.lpRatio[crossPool.unitsPair].priceRatioAB : crossPool.tokenA.lpRatio[crossPool.unitsPair].priceRatioBA; crossVlrmReserve = (crossTvl / 2) / priceVlrmAda; crossOracleReserve = crossVlrmReserve / rawCrossRatio; if (crossVlrmReserve > 0) { oraclePerVlrmUI = crossOracleReserve / crossVlrmReserve; } document.getElementById('vlrm-oracle-price').innerText = `${oraclePerVlrmUI.toFixed(4)}`; document.getElementById('vlrm-oracle-liq-ada').innerText = `₳ ${Math.round(crossTvl).toLocaleString()}`; }
                 let totalOracleLiqAda = 0, priceVyfi = 0, priceMin = 0; let vyfiTvLAda = 0, minTvlAda = 0;
                 const oracleVyfiPool = data.vyfiPools.find(p => p.unitsPair.includes('lovelace') && p.unitsPair.includes(ORACLE));
-                if (oracleVyfiPool) {
-                    priceVyfi = oracleVyfiPool.tokenA.unit === 'lovelace' ? oracleVyfiPool.tokenB.lpRatio[oracleVyfiPool.unitsPair].priceRatioAB : oracleVyfiPool.tokenA.lpRatio[oracleVyfiPool.unitsPair].priceRatioBA;
-                    vyfiTvLAda = oracleVyfiPool.tvl; totalOracleLiqAda += vyfiTvLAda;
-                    document.getElementById('oracle-vyfi-price').innerText = `₳ ${priceVyfi.toFixed(6)}`; document.getElementById('oracle-vyfi-liq').innerText = `₳ ${Math.round(vyfiTvLAda).toLocaleString()}`;
-                }
-                
-                if (data.minPrice && data.minPrice.length > 0) {
-                    priceMin = parseFloat(data.minPrice[0].close); document.getElementById('oracle-min-price').innerText = `₳ ${priceMin.toFixed(6)}`;
-                    if (data.minTvl && data.minTvl.length > 0) { minTvlAda = parseFloat(data.minTvl[data.minTvl.length - 1].value); totalOracleLiqAda += minTvlAda; document.getElementById('oracle-min-liq').innerText = `₳ ${Math.round(minTvlAda).toLocaleString()}`; }
-                }
+                if (oracleVyfiPool) { priceVyfi = oracleVyfiPool.tokenA.unit === 'lovelace' ? oracleVyfiPool.tokenB.lpRatio[oracleVyfiPool.unitsPair].priceRatioAB : oracleVyfiPool.tokenA.lpRatio[oracleVyfiPool.unitsPair].priceRatioBA; vyfiTvLAda = oracleVyfiPool.tvl; totalOracleLiqAda += vyfiTvLAda; document.getElementById('oracle-vyfi-price').innerText = `₳ ${priceVyfi.toFixed(6)}`; document.getElementById('oracle-vyfi-liq').innerText = `₳ ${Math.round(vyfiTvLAda).toLocaleString()}`; }
+                if (data.minPrice && data.minPrice.length > 0) { priceMin = parseFloat(data.minPrice[0].close); document.getElementById('oracle-min-price').innerText = `₳ ${priceMin.toFixed(6)}`; if (data.minTvl && data.minTvl.length > 0) { minTvlAda = parseFloat(data.minTvl[data.minTvl.length - 1].value); totalOracleLiqAda += minTvlAda; document.getElementById('oracle-min-liq').innerText = `₳ ${Math.round(minTvlAda).toLocaleString()}`; } }
                 document.getElementById('oracle-total-liq').innerText = `₳ ${Math.round(totalOracleLiqAda).toLocaleString()}`;
-
                 updateSparklines(vlrmAdaTvl, crossTvl, vyfiTvLAda, minTvlAda, vaultTvlData, priceVlrmAda, oraclePerVlrmUI, priceVyfi, priceMin);
-
-                calcChangeUI('vlrm-ada-change-24h', chartHistory.vlrmAda, vlrmAdaTvl);
-                calcChangeUI('vlrm-oracle-change-24h', chartHistory.vlrmOracle, crossTvl);
-                calcChangeUI('oracle-vyfi-change-24h', chartHistory.oracleVyfi, vyfiTvLAda);
-                calcChangeUI('oracle-min-change-24h', chartHistory.oracleMin, minTvlAda);
-                calcChangeUI('vault-change-24h', chartHistory.vault, vaultTvlData);
-                calcChangeUI('total-liq-change-24h', chartHistory.totalLiq, totalOracleLiqAda);
-                
-                calcChangeUI('vlrm-price-change-24h', chartHistory.pVlrmAda, priceVlrmAda);
-                calcChangeUI('vlrm-oracle-price-change-24h', chartHistory.pVlrmOracle, oraclePerVlrmUI);
-                calcChangeUI('oracle-vyfi-price-change-24h', chartHistory.pOracleVyfi, priceVyfi);
-                calcChangeUI('oracle-min-price-change-24h', chartHistory.pOracleMin, priceMin);
-
-                currentPools.vyfi = { price: priceVyfi, reserveAda: priceVyfi > 0 ? (vyfiTvLAda / 2) : 0, reserveTok: priceVyfi > 0 ? (vyfiTvLAda / 2) / priceVyfi : 0 };
-                currentPools.minswap = { price: priceMin, reserveAda: priceMin > 0 ? (minTvlAda / 2) : 0, reserveTok: priceMin > 0 ? (minTvlAda / 2) / priceMin : 0 };
-                currentPools.vlrmAda = { resAda: vlrmVyfiAdaReserve, resTok: vlrmVyfiTokReserve }; currentPools.crossVO = { resVlrm: crossVlrmReserve, resOracle: crossOracleReserve };
-
-                let bestDeviation = 0; let targetDexForVault = "";
-                const vaultCard = document.querySelector('[gs-id="card-arb-vault"] .card');
-                
+                calcChangeUI('vlrm-ada-change-24h', chartHistory.vlrmAda, vlrmAdaTvl); calcChangeUI('vlrm-oracle-change-24h', chartHistory.vlrmOracle, crossTvl); calcChangeUI('oracle-vyfi-change-24h', chartHistory.oracleVyfi, vyfiTvLAda); calcChangeUI('oracle-min-change-24h', chartHistory.oracleMin, minTvlAda); calcChangeUI('vault-change-24h', chartHistory.vault, vaultTvlData); calcChangeUI('total-liq-change-24h', chartHistory.totalLiq, totalOracleLiqAda); calcChangeUI('vlrm-price-change-24h', chartHistory.pVlrmAda, priceVlrmAda); calcChangeUI('vlrm-oracle-price-change-24h', chartHistory.pVlrmOracle, oraclePerVlrmUI); calcChangeUI('oracle-vyfi-price-change-24h', chartHistory.pOracleVyfi, priceVyfi); calcChangeUI('oracle-min-price-change-24h', chartHistory.pOracleMin, priceMin);
+                currentPools.vyfi = { price: priceVyfi, reserveAda: priceVyfi > 0 ? (vyfiTvLAda / 2) : 0, reserveTok: priceVyfi > 0 ? (vyfiTvLAda / 2) / priceVyfi : 0 }; currentPools.minswap = { price: priceMin, reserveAda: priceMin > 0 ? (minTvlAda / 2) : 0, reserveTok: priceMin > 0 ? (minTvlAda / 2) / priceMin : 0 }; currentPools.vlrmAda = { resAda: vlrmVyfiAdaReserve, resTok: vlrmVyfiTokReserve }; currentPools.crossVO = { resVlrm: crossVlrmReserve, resOracle: crossOracleReserve };
+                let bestDeviation = 0; let targetDexForVault = ""; const vaultCard = document.querySelector('[gs-id="card-arb-vault"] .card');
                 if (vaultTvlData > 0) {
-                    const fairPrice = vaultTvlData / ORACLE_TOTAL_SUPPLY;
-                    document.getElementById('vault-tvl').innerText = `₳ ${Math.round(vaultTvlData).toLocaleString()}`; 
-                    document.getElementById('vault-fair-price').innerText = `₳ ${fairPrice.toFixed(6)}`;
-                    
-                    let validPrices = [];
-                    if (priceVyfi > 0) validPrices.push({ dex: "VyFi", price: priceVyfi }); if (priceMin > 0) validPrices.push({ dex: "Minswap", price: priceMin });
-
+                    const fairPrice = vaultTvlData / ORACLE_TOTAL_SUPPLY; document.getElementById('vault-tvl').innerText = `₳ ${Math.round(vaultTvlData).toLocaleString()}`; document.getElementById('vault-fair-price').innerText = `₳ ${fairPrice.toFixed(6)}`;
+                    let validPrices = []; if (priceVyfi > 0) validPrices.push({ dex: "VyFi", price: priceVyfi }); if (priceMin > 0) validPrices.push({ dex: "Minswap", price: priceMin });
                     if (validPrices.length > 0) {
                         validPrices.forEach(p => { let deviation = ((p.price - fairPrice) / fairPrice) * 100; if (Math.abs(deviation) > Math.abs(bestDeviation)) { bestDeviation = deviation; targetDexForVault = p.dex; } });
                         const vaultBannerDiscEl = document.getElementById('vault-banner-discrepancy'); const vaultActionEl = document.getElementById('vault-arbitrage-action');
                         let sign = bestDeviation > 0 ? '+' : ''; vaultBannerDiscEl.innerText = `${sign}${bestDeviation.toFixed(2)}%`;
-
                         let targetLink = targetDexForVault === "Minswap" ? MINSWAP_LINK : VYFI_LINK; 
-                        
-                        if (Math.abs(bestDeviation) < 0.5) {
-                            vaultBannerDiscEl.style.color = "rgba(255, 255, 255, 0.5)";
-                            vaultActionEl.innerHTML = `<span style="color: rgba(255, 255, 255, 0.6);">Balanced</span>`;
-                        } else {
-                            if (bestDeviation > 0) {
-                                vaultBannerDiscEl.style.color = "#10b981"; 
-                                vaultActionEl.innerHTML = `<a href="${targetLink}" target="_blank" class="badge-dark">Sell ${targetDexForVault}</a>`; 
-                            } else {
-                                vaultBannerDiscEl.style.color = "var(--neon-red)"; 
-                                vaultActionEl.innerHTML = `<a href="${targetLink}" target="_blank" class="badge-dark">Buy ${targetDexForVault}</a>`; 
-                            }
-                        }
-
-                        if (Math.abs(bestDeviation) >= conf.vaultAlert) {
-                            if(vaultCard) vaultCard.classList.add('glow-active');
-                            const alertToggle = document.getElementById('alert-toggle'); const now = Date.now();
-                            if (alertToggle && alertToggle.checked && (now - lastVaultAlertTime > ALERT_COOLDOWN)) {
-                                playDing(); 
-                                if (Notification.permission === "granted") { new Notification("🏛️ L4VA Vault Alert!", { body: `Discrepancy: ${bestDeviation.toFixed(2)}%\nAction: ${bestDeviation > 0 ? 'Sell' : 'Buy'} on ${targetDexForVault}` }); }
-                                sendTelegramAlert(`🏛️ <b>L4VA Vault Alert!</b>\n\n⚖️ Fair Price Discrepancy: <b>${bestDeviation > 0 ? '+' : ''}${bestDeviation.toFixed(2)}%</b>\n💡 Action: ${bestDeviation > 0 ? 'Sell' : 'Buy'} on ${targetDexForVault}\n\n<i>Check dashboard for real-time data.</i>`);
-                                lastVaultAlertTime = now;
-                            }
-                        } else {
-                            if(vaultCard) vaultCard.classList.remove('glow-active');
-                        }
+                        if (Math.abs(bestDeviation) < 0.5) { vaultBannerDiscEl.style.color = "rgba(255, 255, 255, 0.5)"; vaultActionEl.innerHTML = `<span style="color: rgba(255, 255, 255, 0.6);">Balanced</span>`; } 
+                        else { if (bestDeviation > 0) { vaultBannerDiscEl.style.color = "#10b981"; vaultActionEl.innerHTML = `<a href="${targetLink}" target="_blank" class="badge-dark">Sell ${targetDexForVault}</a>`; } else { vaultBannerDiscEl.style.color = "var(--neon-red)"; vaultActionEl.innerHTML = `<a href="${targetLink}" target="_blank" class="badge-dark">Buy ${targetDexForVault}</a>`; } }
+                        if (Math.abs(bestDeviation) >= conf.vaultAlert) { if(vaultCard) vaultCard.classList.add('glow-active'); const alertToggle = document.getElementById('alert-toggle'); const now = Date.now(); if (alertToggle && alertToggle.checked && (now - lastVaultAlertTime > ALERT_COOLDOWN)) { playDing(); if (Notification.permission === "granted") { new Notification("🏛️ L4VA Vault Alert!", { body: `Discrepancy: ${bestDeviation.toFixed(2)}%\nAction: ${bestDeviation > 0 ? 'Sell' : 'Buy'} on ${targetDexForVault}` }); } sendTelegramAlert(`🏛️ <b>L4VA Vault Alert!</b>\n\n⚖️ Fair Price Discrepancy: <b>${bestDeviation > 0 ? '+' : ''}${bestDeviation.toFixed(2)}%</b>\n💡 Action: ${bestDeviation > 0 ? 'Sell' : 'Buy'} on ${targetDexForVault}\n\n<i>Check dashboard for real-time data.</i>`); lastVaultAlertTime = now; } } else { if(vaultCard) vaultCard.classList.remove('glow-active'); }
                     }
-                } else {
-                    if(vaultCard) vaultCard.classList.remove('glow-active');
-                    document.getElementById('vault-tvl').innerText = `API Offline`; 
-                    document.getElementById('vault-fair-price').innerText = `-`;
-                    document.getElementById('vault-banner-discrepancy').innerText = `-%`;
-                    document.getElementById('vault-banner-discrepancy').style.color = "rgba(255, 255, 255, 0.5)";
-                    document.getElementById('vault-arbitrage-action').innerHTML = `<span style="color: rgba(255, 255, 255, 0.6);">Offline</span>`;
-                }
-
-                let spread = 0;
-                const dexCard = document.querySelector('[gs-id="card-arb-dex"] .card');
-                
+                } else { if(vaultCard) vaultCard.classList.remove('glow-active'); document.getElementById('vault-tvl').innerText = `API Offline`; document.getElementById('vault-fair-price').innerText = `-`; document.getElementById('vault-banner-discrepancy').innerText = `-%`; document.getElementById('vault-banner-discrepancy').style.color = "rgba(255, 255, 255, 0.5)"; document.getElementById('vault-arbitrage-action').innerHTML = `<span style="color: rgba(255, 255, 255, 0.6);">Offline</span>`; }
+                let spread = 0; const dexCard = document.querySelector('[gs-id="card-arb-dex"] .card');
                 if (priceVyfi > 0 && priceMin > 0) {
                     const highestPrice = Math.max(priceVyfi, priceMin); const lowestPrice = Math.min(priceVyfi, priceMin); spread = ((highestPrice - lowestPrice) / lowestPrice) * 100;
                     const spreadEl = document.getElementById('arbitrage-spread'); const actionEl = document.getElementById('arbitrage-action');
                     spreadEl.innerText = `${spread.toFixed(2)}%`;
-                    
-                    if (spread < 0.5) {
-                        spreadEl.style.color = "rgba(255, 255, 255, 0.5)"; 
-                        actionEl.innerHTML = `<span style="color: rgba(255, 255, 255, 0.6);">Low spread</span>`;
-                    } else {
-                        spreadEl.style.color = "#ffffff";  
-                        if (priceVyfi > priceMin) { actionEl.innerHTML = `<a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Buy Min</a> <a href="${VYFI_LINK}" target="_blank" class="badge-dark">Sell VyFi</a>`;  } 
-                        else { actionEl.innerHTML = `<a href="${VYFI_LINK}" target="_blank" class="badge-dark">Buy VyFi</a> <a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Sell Min</a>`;  }
-                    }
-
-                    if (spread >= conf.alert) {
-                        if(dexCard) dexCard.classList.add('glow-active');
-                        const alertToggle = document.getElementById('alert-toggle'); const now = Date.now();
-                        if (alertToggle && alertToggle.checked && (now - lastAlertTime > ALERT_COOLDOWN)) {
-                            playDing(); if (Notification.permission === "granted") { new Notification("🚨 L4VA Arbitrage Detected!", { body: `Spread: ${spread.toFixed(2)}%\n${suggestedActionText}` }); }
-                            sendTelegramAlert(`🚨 <b>L4VA Arbitrage Detected!</b>\n\n📈 DEX Spread: <b>${spread.toFixed(2)}%</b>\n💡 Route: ${suggestedActionText}\n\n<i>Check dashboard for real-time net profit.</i>`);
-                            lastAlertTime = now;
-                        }
-                    } else {
-                        if(dexCard) dexCard.classList.remove('glow-active');
-                    }
-                } else {
-                    if(dexCard) dexCard.classList.remove('glow-active');
-                }
-                
-                let primaryOraclePrice = priceVyfi > 0 ? priceVyfi : priceMin;
-                let voSpread = 0;
-                if (priceVlrmAda > 0 && primaryOraclePrice > 0 && oraclePerVlrmUI > 0) {
-                    let valueDirect = priceVlrmAda;
-                    let valueCross = oraclePerVlrmUI * primaryOraclePrice;
-                    voSpread = ((Math.max(valueDirect, valueCross) - Math.min(valueDirect, valueCross)) / Math.min(valueDirect, valueCross)) * 100;
-                }
-
-                updateMainChart(spread, bestDeviation, voSpread);
-                recalculateSimulators();
-
+                    if (spread < 0.5) { spreadEl.style.color = "rgba(255, 255, 255, 0.5)"; actionEl.innerHTML = `<span style="color: rgba(255, 255, 255, 0.6);">Low spread</span>`; } 
+                    else { spreadEl.style.color = "#ffffff"; if (priceVyfi > priceMin) { actionEl.innerHTML = `<a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Buy Min</a> <a href="${VYFI_LINK}" target="_blank" class="badge-dark">Sell VyFi</a>`; } else { actionEl.innerHTML = `<a href="${VYFI_LINK}" target="_blank" class="badge-dark">Buy VyFi</a> <a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Sell Min</a>`; } }
+                    if (spread >= conf.alert) { if(dexCard) dexCard.classList.add('glow-active'); const alertToggle = document.getElementById('alert-toggle'); const now = Date.now(); if (alertToggle && alertToggle.checked && (now - lastAlertTime > ALERT_COOLDOWN)) { playDing(); if (Notification.permission === "granted") { new Notification("🚨 L4VA Arbitrage Detected!", { body: `Spread: ${spread.toFixed(2)}%\n${suggestedActionText}` }); } sendTelegramAlert(`🚨 <b>L4VA Arbitrage Detected!</b>\n\n📈 DEX Spread: <b>${spread.toFixed(2)}%</b>\n💡 Route: ${suggestedActionText}\n\n<i>Check dashboard for real-time net profit.</i>`); lastAlertTime = now; } } else { if(dexCard) dexCard.classList.remove('glow-active'); }
+                } else { if(dexCard) dexCard.classList.remove('glow-active'); }
+                let primaryOraclePrice = priceVyfi > 0 ? priceVyfi : priceMin; let voSpread = 0;
+                if (priceVlrmAda > 0 && primaryOraclePrice > 0 && oraclePerVlrmUI > 0) { let valueDirect = priceVlrmAda; let valueCross = oraclePerVlrmUI * primaryOraclePrice; voSpread = ((Math.max(valueDirect, valueCross) - Math.min(valueDirect, valueCross)) / Math.min(valueDirect, valueCross)) * 100; }
+                updateMainChart(spread, bestDeviation, voSpread); recalculateSimulators();
             } catch (error) { console.error("General error:", error); }
         }
 
-        async function startEngine() {
-            initSortable(); 
-            initCharts();   
-            await fetchHistoryFromCloudflare();
-            await fetchAdaData();
-            await fetchDexData();
-            
-            fetchInterval = setInterval(async () => {
-                await fetchAdaData();
-                await fetchDexData();
-            }, 30000);
-        }
-
-        window.onload = () => {
-            if (!userPasskey) {
-                showAuthScreen();
-            } else {
-                startEngine();
-            }
-        };
+        async function startEngine() { initSortable(); initCharts(); await fetchHistoryFromCloudflare(); await fetchAdaData(); await fetchDexData(); fetchInterval = setInterval(async () => { await fetchAdaData(); await fetchDexData(); }, 30000); }
+        window.onload = () => { if (!userPasskey) { showAuthScreen(); } else { startEngine(); } };
     </script>
 </body>
 </html>
