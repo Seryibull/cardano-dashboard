@@ -91,7 +91,6 @@
         h1 { margin: 0; font-weight: 800; font-size: 1.8rem; background: var(--gradient-fire); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -1px; display: flex; align-items: center;}
         .version-badge { color: #ffffff; font-size: 0.8rem; font-weight: 600; margin-left: 8px; opacity: 0.8; letter-spacing: 0; -webkit-text-fill-color: #ffffff; }
 
-        /* Controles de la barra superior */
         .alert-toggle-box { font-size: 0.8rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 8px; color: var(--text-primary); background: rgba(0, 0, 0, 0.6); padding: 8px 16px; border-radius: 30px; border: 1px solid rgba(255, 123, 0, 0.4); transition: 0.3s; backdrop-filter: blur(5px);}
         .alert-toggle-box:hover { border-color: var(--neon-orange); background: rgba(255, 123, 0, 0.2); }
         .alert-toggle-box input { accent-color: var(--neon-orange); transform: scale(1.2); }
@@ -123,39 +122,39 @@
         /* 🎨 EFECTO FOCO SUPERIOR Y SOMBRAS DIAGONALES */
         .card-ada { 
             box-shadow: -10px 10px 40px rgba(0, 0, 0, 0.5); 
-            background: radial-gradient(250px circle at top right, rgba(66, 133, 244, 0.08), transparent), rgba(8, 10, 16, 0.98); 
+            background: radial-gradient(250px circle at top right, rgba(66, 133, 244, 0.05), transparent), rgba(8, 10, 16, 0.98); 
         }
         .card-ada:hover { 
             box-shadow: -15px 15px 50px rgba(0, 0, 0, 0.7), 0 0 20px rgba(66, 133, 244, 0.15); 
-            background: radial-gradient(250px circle at top right, rgba(66, 133, 244, 0.15), transparent), rgba(12, 15, 24, 1); 
+            background: radial-gradient(250px circle at top right, rgba(66, 133, 244, 0.1), transparent), rgba(12, 15, 24, 1); 
         }
         
         .card-vault { 
             box-shadow: -10px 10px 40px rgba(0, 0, 0, 0.5); 
-            background: radial-gradient(250px circle at top right, rgba(252, 211, 77, 0.08), transparent), rgba(14, 10, 4, 0.98); 
+            background: radial-gradient(250px circle at top right, rgba(252, 211, 77, 0.05), transparent), rgba(14, 10, 4, 0.98); 
         }
         .card-vault:hover { 
             box-shadow: -15px 15px 50px rgba(0, 0, 0, 0.7), 0 0 20px rgba(252, 211, 77, 0.15); 
-            background: radial-gradient(250px circle at top right, rgba(252, 211, 77, 0.15), transparent), rgba(18, 12, 5, 1); 
+            background: radial-gradient(250px circle at top right, rgba(252, 211, 77, 0.1), transparent), rgba(18, 12, 5, 1); 
         }
         
         .card-orange { 
             box-shadow: -10px 10px 40px rgba(0, 0, 0, 0.5); 
-            background: radial-gradient(250px circle at top right, rgba(255, 123, 0, 0.08), transparent), rgba(14, 6, 2, 0.98); 
+            background: radial-gradient(250px circle at top right, rgba(255, 123, 0, 0.05), transparent), rgba(14, 6, 2, 0.98); 
         }
         .card-orange:hover { 
             box-shadow: -15px 15px 50px rgba(0, 0, 0, 0.7), 0 0 20px rgba(255, 123, 0, 0.15); 
-            background: radial-gradient(250px circle at top right, rgba(255, 123, 0, 0.15), transparent), rgba(18, 8, 3, 1); 
+            background: radial-gradient(250px circle at top right, rgba(255, 123, 0, 0.1), transparent), rgba(18, 8, 3, 1); 
         }
 
-        /* 🎨 GRÁFICA PRINCIPAL: Sombra diagonal y FOCO SUPERIOR INTENSIFICADO */
+        /* 🎨 GRÁFICA PRINCIPAL: Nivelada exactamente a la misma intensidad de brillo (0.05) */
         [gs-id="card-chart"] .card {
             box-shadow: -10px 10px 40px rgba(0, 0, 0, 0.5); 
-            background: radial-gradient(500px circle at top right, rgba(255, 255, 255, 0.10), transparent), rgba(8, 10, 16, 0.98);
+            background: radial-gradient(350px circle at top right, rgba(255, 255, 255, 0.05), transparent), rgba(8, 10, 16, 0.98);
         }
         [gs-id="card-chart"] .card:hover {
-            box-shadow: -15px 15px 50px rgba(0, 0, 0, 0.7), 0 0 20px rgba(255, 255, 255, 0.1); 
-            background: radial-gradient(500px circle at top right, rgba(255, 255, 255, 0.15), transparent), rgba(10, 12, 20, 1);
+            box-shadow: -15px 15px 50px rgba(0, 0, 0, 0.7), 0 0 20px rgba(255, 255, 255, 0.05); 
+            background: radial-gradient(350px circle at top right, rgba(255, 255, 255, 0.1), transparent), rgba(10, 12, 20, 1);
         }
 
         /* EFECTO: RESPLANDOR VERDE (ALERTAS Y PROFIT) */
@@ -163,15 +162,17 @@
             0% { box-shadow: -10px 10px 40px rgba(16, 185, 129, 0.3), inset 0 0 10px rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.4); }
             100% { box-shadow: -15px 15px 60px rgba(16, 185, 129, 0.9), inset 0 0 20px rgba(16, 185, 129, 0.3); border-color: rgba(16, 185, 129, 0.9); }
         }
-        .glow-active { animation: greenAlertPulse 1.5s infinite alternate ease-in-out !important; border-color: rgba(16, 185, 129, 0.8) !important; background: radial-gradient(250px circle at top right, rgba(16, 185, 129, 0.08), transparent), rgba(10, 15, 15, 0.98) !important; }
+        .glow-active { animation: greenAlertPulse 1.5s infinite alternate ease-in-out !important; border-color: rgba(16, 185, 129, 0.8) !important; background: radial-gradient(250px circle at top right, rgba(16, 185, 129, 0.05), transparent), rgba(10, 15, 15, 0.98) !important; }
 
         /* =========================================
-           🛠️ SOLUCIÓN ABSOLUTA GRÁFICAS: CÁRCEL CSS
+           🛡️ ESCUDO INFALIBLE PARA LAS GRÁFICAS
            ========================================= */
         .spark-wrapper {
             position: relative;
             width: 100%;
-            flex-shrink: 0;
+            display: block;
+            overflow: hidden;
+            flex-shrink: 0; /* Evita que Flexbox aplaste la gráfica a 0px */
         }
         .spark-wrapper canvas {
             position: absolute !important;
@@ -179,6 +180,7 @@
             left: 0 !important;
             width: 100% !important;
             height: 100% !important;
+            display: block;
         }
 
         .card-title { font-size: 1.05rem; font-weight: 600; margin-bottom: 15px; color: var(--neon-orange); display: flex; justify-content: space-between; align-items: center;}
@@ -345,7 +347,7 @@
                 <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: auto; padding-bottom: 20px;">
                     <div class="data-row" style="margin: 0;">
                         <div style="display: flex; align-items: center;">
-                            <input type="number" id="sim-ada-input" class="sim-input" oninput="updateSimConfig('sim-ada-input')"> 
+                            <input type="number" id="sim-ada-input" class="sim-input" oninput="syncSimulators('sim-ada-input')"> 
                             <span style="font-size: 0.9rem; font-weight: bold; color: var(--text-primary);">ADA</span>
                         </div>
                     </div>
@@ -370,7 +372,7 @@
                 <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: auto; padding-bottom: 20px;">
                     <div class="data-row" style="margin: 0;">
                         <div style="display: flex; align-items: center;">
-                            <input type="number" id="sim-tri-input" class="sim-input" oninput="updateSimConfig('sim-tri-input')"> 
+                            <input type="number" id="sim-tri-input" class="sim-input" oninput="syncSimulators('sim-tri-input')"> 
                             <span style="font-size: 0.9rem; font-weight: bold; color: var(--text-primary);">ADA</span>
                         </div>
                     </div>
@@ -466,18 +468,18 @@
                         <div>
                             <h3 class="dex-subtitle"><span class="badge bg-vyfi">VYFI</span></h3>
                             <div class="data-row"><span class="data-label">Price:</span><span class="data-value"><span id="oracle-vyfi-price">-</span> <span id="oracle-vyfi-price-change-24h" class="change-badge"></span></span></div>
-                            <div class="spark-wrapper" style="height: 40px; margin-bottom: 25px;"><canvas id="spark-oracle-vyfi-price"></canvas></div>
+                            <div class="spark-wrapper" style="height: 35px; margin-bottom: 25px;"><canvas id="spark-oracle-vyfi-price"></canvas></div>
                             
                             <div class="data-row"><span class="data-label">Liquidity:</span><span class="data-value"><span id="oracle-vyfi-liq">-</span> <span id="oracle-vyfi-change-24h" class="change-badge"></span></span></div>
-                            <div class="spark-wrapper" style="height: 40px;"><canvas id="spark-oracle-vyfi"></canvas></div>
+                            <div class="spark-wrapper" style="height: 35px;"><canvas id="spark-oracle-vyfi"></canvas></div>
                         </div>
                         <div style="border-left: 2px solid rgba(255,255,255,0.05); padding-left: 20px;">
                             <h3 class="dex-subtitle"><span class="badge bg-minswap">MINSWAP</span></h3>
                             <div class="data-row"><span class="data-label">Price:</span><span class="data-value"><span id="oracle-min-price">-</span> <span id="oracle-min-price-change-24h" class="change-badge"></span></span></div>
-                            <div class="spark-wrapper" style="height: 40px; margin-bottom: 25px;"><canvas id="spark-oracle-min-price"></canvas></div>
+                            <div class="spark-wrapper" style="height: 35px; margin-bottom: 25px;"><canvas id="spark-oracle-min-price"></canvas></div>
                             
                             <div class="data-row"><span class="data-label">Liquidity:</span><span class="data-value"><span id="oracle-min-liq">-</span> <span id="oracle-min-change-24h" class="change-badge"></span></span></div>
-                            <div class="spark-wrapper" style="height: 40px;"><canvas id="spark-oracle-min"></canvas></div>
+                            <div class="spark-wrapper" style="height: 35px;"><canvas id="spark-oracle-min"></canvas></div>
                         </div>
                     </div>
                 </div>
@@ -489,7 +491,7 @@
                             <span id="oracle-total-liq">-</span> <span id="total-liq-change-24h" class="change-badge" style="font-size: 0.9rem;"></span>
                         </div>
                     </div>
-                    <div class="spark-wrapper" style="height: 35px; width: 95%; margin: 0 auto;">
+                    <div class="spark-wrapper" style="height: 25px !important; max-height: 25px !important; width: 90%; margin: 0 auto 10px auto;">
                         <canvas id="spark-total-liq"></canvas>
                     </div>
                 </div>
@@ -728,21 +730,25 @@
             recalculateSimulators();
         }
 
-        function updateSimConfig(sourceId) {
+        // ESCRITURA SEDA: SINCRONIZACIÓN SUAVE DE SIMULADORES
+        function syncSimulators(sourceId) {
             let el = document.getElementById(sourceId);
             let rawVal = el.value;
-            if (rawVal === "") return; 
-            let val = parseFloat(rawVal);
-            if (isNaN(val)) return;
-
-            conf.sim = val;
-            localStorage.setItem('l4va_config', JSON.stringify(conf));
             
             let targetId = sourceId === 'sim-ada-input' ? 'sim-tri-input' : 'sim-ada-input';
             let targetEl = document.getElementById(targetId);
+            
+            // Solo sincronizamos el otro si no lo estás tocando
             if (document.activeElement !== targetEl) {
                 targetEl.value = rawVal;
             }
+
+            let val = parseFloat(rawVal);
+            if (!isNaN(val) && val >= 0) {
+                conf.sim = val;
+                localStorage.setItem('l4va_config', JSON.stringify(conf));
+            }
+            
             recalculateSimulators();
         }
 
@@ -753,7 +759,6 @@
             try { await fetch(`https://api.telegram.org/bot${conf.tgBot}/sendMessage`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ chat_id: conf.tgChat, text: message, parse_mode: 'HTML' }) }); } catch (e) {}
         }
 
-        // --- PLUGIN MAGICO: BANDA TOLERANCIA Y LINEA CERO ---
         const drawToleranceBandPlugin = {
             id: 'drawToleranceBandPlugin',
             beforeDraw: (chart) => {
@@ -860,11 +865,16 @@
         function recalculateSimulators() { recalculateDexSimulator(); recalculateTriSimulator(); }
 
         function recalculateDexSimulator() {
-            const investAda = parseFloat(document.getElementById('sim-ada-input').value) || 0;
+            const rawInput = document.getElementById('sim-ada-input').value;
+            const investAda = parseFloat(rawInput);
             const simEl = document.getElementById('sim-profit'); const optEl = document.getElementById('optimizer-result');
             const cardEl = document.querySelector('[gs-id="card-sim-oracle"] .card');
             
-            if(currentPools.vyfi.price <= 0 || currentPools.minswap.price <= 0) { simEl.innerText = "0.00 ADA"; updateSlippageUI('sim-slippage-bar', 'sim-slippage-label', 0); if(cardEl) cardEl.classList.remove('glow-active'); return; }
+            if(isNaN(investAda) || investAda <= 0 || currentPools.vyfi.price <= 0 || currentPools.minswap.price <= 0) { 
+                simEl.innerText = "0.00 ADA"; updateSlippageUI('sim-slippage-bar', 'sim-slippage-label', 0); 
+                if(cardEl) cardEl.classList.remove('glow-active'); return; 
+            }
+            
             const networkFee = conf.feeNet; const minFixed = conf.feeMin; const vyfiFixed = conf.feeVyfi;
             let poolBuy, poolSell, fixedFeeBuy, fixedFeeSell, lpBuy, lpSell;
             if (currentPools.minswap.price < currentPools.vyfi.price) { poolBuy = currentPools.minswap; poolSell = currentPools.vyfi; fixedFeeBuy = minFixed; fixedFeeSell = vyfiFixed; lpBuy = conf.lpFeeMin; lpSell = conf.lpFeeVyfi; }
@@ -921,12 +931,19 @@
         }
 
         function recalculateTriSimulator() {
-            const investAda = parseFloat(document.getElementById('sim-tri-input').value) || 0;
+            const rawInput = document.getElementById('sim-tri-input').value;
+            const investAda = parseFloat(rawInput);
             const simEl = document.getElementById('sim-tri-profit'); const optEl = document.getElementById('tri-optimizer-result');
             const cardEl = document.querySelector('[gs-id="card-sim-tri"] .card');
+            
+            if(isNaN(investAda) || investAda <= 0) { 
+                simEl.innerText = "0.00 ADA"; updateSlippageUI('sim-tri-slippage-bar', 'sim-tri-slippage-label', 0); 
+                if(cardEl) cardEl.classList.remove('glow-active'); return; 
+            }
+
             let currentData = calcTriNetDetails(investAda); let netProfit = currentData.netProfit;
             updateSlippageUI('sim-tri-slippage-bar', 'sim-tri-slippage-label', currentData.maxImpact);
-            if(investAda <= 0 || netProfit === -Infinity) { simEl.innerText = "Insufficient"; simEl.className = "data-value profit-negative"; } 
+            if(netProfit === -Infinity) { simEl.innerText = "Insufficient"; simEl.className = "data-value profit-negative"; } 
             else { let sign = netProfit > 0 ? "+" : ""; let usdStr = currentAdaUsd > 0 ? `<span class="usd-profit">(~$${(Math.abs(netProfit)*currentAdaUsd).toFixed(2)})</span>` : ""; simEl.innerHTML = `${sign}${netProfit.toFixed(2)} ADA ${usdStr}`; simEl.className = netProfit > 0 ? "data-value profit-positive" : "data-value profit-negative"; }
             let bestProfit = -Infinity; let optimalInvest = 0; let optimalRoute = null; let bestPercent = 0;
             for(let i = 10; i <= 5000; i += 10) {
@@ -962,14 +979,14 @@
                         }
                     }
                     
-                    // TASK 3: RELLENO INTELIGENTE CON NULL PARA GRÁFICAS REALISTAS
+                    // RELLENO INTELIGENTE PARA QUE LA GRÁFICA NO QUEDE PLANA SI FALTAN DATOS
                     const missingPoints = MAX_CHART_POINTS - expandedHistory.labels.length;
                     if (missingPoints > 0) {
                         const emptyLabels = Array(missingPoints).fill(cloudHistory.labels[0] || '00:00'); expandedHistory.labels = [...emptyLabels, ...expandedHistory.labels];
                         const keys = Object.keys(expandedHistory);
                         for (let key of keys) { 
                             if (key === 'labels') continue; 
-                            const padArr = Array(missingPoints).fill(null); // NULL EVITA EL EFECTO LINEA PLANA
+                            const padArr = Array(missingPoints).fill(null); 
                             expandedHistory[key] = [...padArr, ...expandedHistory[key]]; 
                         }
                     }
@@ -993,12 +1010,13 @@
             } catch (e) { console.error("Error loading history:", e); }
         }
 
-        // T2: MOTOR DE PRECIOS ADA A TRAVÉS DE BINANCE API
+        // MOTOR FIABLE CON CORS 100% ABIERTO (CryptoCompare) PARA ADA
         async function fetchAdaData() {
             try {
-                const response = await fetch('https://api.binance.com/api/v3/klines?symbol=ADAUSDT&interval=15m&limit=96');
+                const response = await fetch('https://min-api.cryptocompare.com/data/v2/histohour?fsym=ADA&tsym=USD&limit=24');
                 const data = await response.json();
-                const prices = data.map(p => parseFloat(p[4]));
+                if(data.Response !== "Success") return null;
+                const prices = data.Data.Data.map(p => p.close);
                 currentAdaUsd = prices[prices.length - 1]; 
                 const oldestAda = prices[0]; 
                 const adaChange = ((currentAdaUsd - oldestAda) / oldestAda) * 100;
