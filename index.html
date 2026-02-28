@@ -91,7 +91,6 @@
         h1 { margin: 0; font-weight: 800; font-size: 1.8rem; background: var(--gradient-fire); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -1px; display: flex; align-items: center;}
         .version-badge { color: #ffffff; font-size: 0.8rem; font-weight: 600; margin-left: 8px; opacity: 0.8; letter-spacing: 0; -webkit-text-fill-color: #ffffff; }
 
-        /* Controles de la barra superior */
         .alert-toggle-box { font-size: 0.8rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 8px; color: var(--text-primary); background: rgba(0, 0, 0, 0.6); padding: 8px 16px; border-radius: 30px; border: 1px solid rgba(255, 123, 0, 0.4); transition: 0.3s; backdrop-filter: blur(5px);}
         .alert-toggle-box:hover { border-color: var(--neon-orange); background: rgba(255, 123, 0, 0.2); }
         .alert-toggle-box input { accent-color: var(--neon-orange); transform: scale(1.2); }
@@ -354,7 +353,7 @@
                     </div>
                     <div class="data-row" style="margin-top: 15px;"><span class="data-label" style="font-size: 0.75rem;">Last Updated:</span><span class="data-value" style="font-size: 0.75rem;" id="ada-time">-</span></div>
                 </div>
-                <div style="flex-grow: 1; min-height: 0; position: relative; margin-top: 15px;">
+                <div style="height: 55px; width: 100%; position: relative; margin-top: auto; flex-shrink: 0;">
                     <canvas id="spark-ada"></canvas>
                 </div>
             </div>
@@ -373,7 +372,7 @@
                     </div>
                     <div class="data-row"><span class="data-label">Fair price:</span><span class="data-value" id="vault-fair-price">-</span></div>
                 </div>
-                <div style="flex-grow: 1; min-height: 0; position: relative; margin-top: 15px;">
+                <div style="height: 55px; width: 100%; position: relative; margin-top: auto; flex-shrink: 0;">
                     <canvas id="spark-vault"></canvas>
                 </div>
             </div>
@@ -381,33 +380,33 @@
 
         <div class="grid-stack-item drag-item" gs-id="card-vlrm-ada" gs-w="3" gs-h="2" gs-x="6" gs-y="3">
             <div class="grid-stack-item-content card card-orange">
-                <div class="card-title" style="color: var(--neon-orange);">VLRM / ADA <span class="badge bg-vyfi" style="margin-left:auto;">VyFi</span></div>
-                <div class="data-row">
+                <div class="card-title" style="color: var(--neon-orange); flex-shrink: 0;">VLRM / ADA <span class="badge bg-vyfi" style="margin-left:auto;">VyFi</span></div>
+                <div class="data-row" style="flex-shrink: 0;">
                     <span class="data-label">Price:</span>
                     <span class="data-value"><span id="vlrm-price-ada"><span class="loading">Connecting...</span></span> <span id="vlrm-price-change-24h" class="change-badge"></span></span>
                 </div>
-                <div style="flex-grow: 1; min-height: 0; position: relative; margin-bottom: 10px;"><canvas id="spark-vlrm-ada-price"></canvas></div>
-                <div class="data-row" style="margin-top: auto;">
+                <div style="height: 45px; margin-bottom: 10px; position: relative; flex-shrink: 0;"><canvas id="spark-vlrm-ada-price"></canvas></div>
+                <div class="data-row" style="margin-top: auto; flex-shrink: 0;">
                     <span class="data-label">Liquidity:</span>
                     <span class="data-value"><span id="vlrm-liq-ada">-</span> <span id="vlrm-ada-change-24h" class="change-badge"></span></span>
                 </div>
-                <div style="flex-grow: 1; min-height: 0; position: relative;"><canvas id="spark-vlrm-ada"></canvas></div>
+                <div style="height: 45px; position: relative; flex-shrink: 0;"><canvas id="spark-vlrm-ada"></canvas></div>
             </div>
         </div>
 
         <div class="grid-stack-item drag-item" gs-id="card-vlrm-oracle" gs-w="3" gs-h="2" gs-x="9" gs-y="3">
             <div class="grid-stack-item-content card card-orange">
-                <div class="card-title" style="color: var(--neon-orange);">VLRM / ORACLE <span class="badge bg-vyfi" style="margin-left:auto;">VyFi</span></div>
-                <div class="data-row">
+                <div class="card-title" style="color: var(--neon-orange); flex-shrink: 0;">VLRM / ORACLE <span class="badge bg-vyfi" style="margin-left:auto;">VyFi</span></div>
+                <div class="data-row" style="flex-shrink: 0;">
                     <span class="data-label">Price:</span>
                     <span class="data-value"><span id="vlrm-oracle-price"><span class="loading">Waiting...</span></span> <span id="vlrm-oracle-price-change-24h" class="change-badge"></span></span>
                 </div>
-                <div style="flex-grow: 1; min-height: 0; position: relative; margin-bottom: 10px;"><canvas id="spark-vlrm-oracle-price"></canvas></div>
-                <div class="data-row" style="margin-top: auto;">
+                <div style="height: 45px; margin-bottom: 10px; position: relative; flex-shrink: 0;"><canvas id="spark-vlrm-oracle-price"></canvas></div>
+                <div class="data-row" style="margin-top: auto; flex-shrink: 0;">
                     <span class="data-label">Liquidity:</span>
                     <span class="data-value"><span id="vlrm-oracle-liq-ada">-</span> <span id="vlrm-oracle-change-24h" class="change-badge"></span></span>
                 </div>
-                <div style="flex-grow: 1; min-height: 0; position: relative;"><canvas id="spark-vlrm-oracle"></canvas></div>
+                <div style="height: 45px; position: relative; flex-shrink: 0;"><canvas id="spark-vlrm-oracle"></canvas></div>
             </div>
         </div>
 
@@ -435,14 +434,14 @@
                     </div>
                 </div>
                 
-                <div style="margin-top: auto; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; flex-grow: 1; min-height: 0;">
+                <div style="margin-top: auto; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column;">
                     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; flex-shrink: 0;">
                         <h3 class="dex-subtitle" style="color: var(--text-secondary); font-size: 1rem; text-transform: uppercase; margin:0;">Total Combined Liquidity</h3>
                         <div class="data-value" style="font-size: 2rem; color: #ffffff; text-shadow: 0 2px 10px rgba(0,0,0,0.5);">
                             <span id="oracle-total-liq">-</span> <span id="total-liq-change-24h" class="change-badge" style="font-size: 1rem;"></span>
                         </div>
                     </div>
-                    <div style="flex: 0 0 50px; height: 50px; max-height: 50px; width: 100%; position: relative; margin-top: 15px; overflow: hidden;">
+                    <div style="flex: 0 0 35px; height: 35px; max-height: 35px; width: 100%; position: relative; margin-top: 10px; overflow: hidden;">
                         <canvas id="spark-total-liq"></canvas>
                     </div>
                 </div>
@@ -512,7 +511,6 @@
 
         let defaultConf = { alert: 15, vaultAlert: 20, sim: 1000, tgBot: "", tgChat: "", feeNet: 0.2, feeMin: 0.7, feeVyfi: 1.9, lpFeeMin: 0.3, lpFeeVyfi: 0.3 };
         let savedConf = JSON.parse(localStorage.getItem('l4va_config')) || {};
-        // Mezclamos la guardada con los defectos para evitar borrados
         let conf = { ...defaultConf, ...savedConf }; 
         let userPasskey = localStorage.getItem('l4va_passkey') || "";
 
@@ -694,8 +692,33 @@
             try { await fetch(`https://api.telegram.org/bot${conf.tgBot}/sendMessage`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ chat_id: conf.tgChat, text: message, parse_mode: 'HTML' }) }); } catch (e) {}
         }
 
+        // --- PLUGIN MAGICO DE CHART.JS PARA FORZAR LA LINEA 0 ---
+        const drawZeroLinePlugin = {
+            id: 'drawZeroLinePlugin',
+            beforeDraw: (chart) => {
+                if (chart.canvas.id !== 'arbitrageChart') return;
+                const ctx = chart.ctx;
+                const yAxis = chart.scales.y;
+                const zeroY = yAxis.getPixelForValue(0);
+                
+                if (zeroY >= yAxis.top && zeroY <= yAxis.bottom) {
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.moveTo(chart.chartArea.left, zeroY);
+                    ctx.lineTo(chart.chartArea.right, zeroY);
+                    ctx.lineWidth = 3;
+                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)'; // Blanco al 40%
+                    ctx.stroke();
+                    ctx.restore();
+                }
+            }
+        };
+
         function initCharts() {
             const ctx = document.getElementById('arbitrageChart').getContext('2d');
+            
+            Chart.register(drawZeroLinePlugin); // Registramos el plugin mágico
+
             chartInstance = new Chart(ctx, {
                 type: 'line',
                 data: { labels: chartHistory.labels, datasets: [
@@ -708,16 +731,12 @@
                     scales: { 
                         x: { display: true, grid: { display: false }, ticks: { color: '#a0a0c0', maxTicksLimit: 8, maxRotation: 0 } }, 
                         y: { 
-                            // FORZAMOS LA LÍNEA DEL CERO Y SU VISIBILIDAD
-                            beginAtZero: true,
-                            suggestedMin: -5,
-                            suggestedMax: 5,
-                            border: { display: false }, 
                             grid: { 
-                                color: (ctx) => { return (ctx.tick && ctx.tick.value === 0) ? '#ffffff' : 'rgba(255, 255, 255, 0.05)'; },
-                                lineWidth: (ctx) => { return (ctx.tick && ctx.tick.value === 0) ? 2 : 1; }
+                                color: 'rgba(255, 255, 255, 0.05)'
                             }, 
-                            ticks: { color: '#a0a0c0', stepSize: 5 } 
+                            ticks: { 
+                                color: '#a0a0c0'
+                            } 
                         } 
                     }, 
                     plugins: { legend: { display: true, labels: { color: '#ffffff', boxWidth: 10 } } } 
@@ -1295,7 +1314,7 @@
         async function startEngine() {
             initSortable(); 
             
-            // LA MAGIA: Cargar la configuración DESPUÉS de que GridStack monte las tarjetas
+            // LA MAGIA: Cargamos el valor de configuración justo tras construir las cajas
             document.getElementById('sim-ada-input').value = conf.sim;
             document.getElementById('sim-tri-input').value = conf.sim;
 
