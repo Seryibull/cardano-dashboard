@@ -201,7 +201,6 @@
         input[type="number"].sim-input::-webkit-outer-spin-button, input[type="number"].sim-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
         input[type="number"].sim-input { -moz-appearance: textfield; }
         
-        /* FIJADO: Input con tamaño estricto para no aplastar el texto */
         .sim-input { 
             width: 90px; 
             background: rgba(0,0,0,0.6); 
@@ -235,7 +234,6 @@
         .tri-svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;}
         .tri-line-bg { fill: none; stroke: rgba(255,255,255,0.05); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round;}
         
-        /* Línea continua con resplandor fuerte */
         .tri-line-active { 
             fill: none; 
             stroke: #10b981; 
@@ -514,7 +512,7 @@
                             <span id="oracle-total-liq">-</span> <span id="total-liq-change-24h" class="change-badge" style="font-size: 0.9rem;"></span>
                         </div>
                     </div>
-                    <div class="spark-wrapper" style="height: 55px; width: 100%; margin-top: 10px;">
+                    <div class="spark-wrapper" style="height: 35px; width: 95%; margin: 0 auto 5px auto;">
                         <canvas id="spark-total-liq"></canvas>
                     </div>
                 </div>
@@ -562,7 +560,7 @@
         <div class="grid-stack-item drag-item" gs-id="card-chart" gs-w="12" gs-h="2" gs-x="0" gs-y="9">
             <div class="grid-stack-item-content card">
                 <div class="card-title" style="margin-bottom: 10px; font-size: 0.9rem; color: #ffffff; text-transform: none; flex-shrink: 0;">Spread & vault discrepancy (last 24h %)</div>
-                <div class="spark-wrapper" style="flex-grow: 1; height: 100%;">
+                <div class="spark-wrapper" style="flex-grow: 1; height: auto;">
                     <canvas id="arbitrageChart"></canvas>
                 </div>
             </div>
@@ -582,7 +580,7 @@
         const VYFI_LINK = "https://app.vyfi.io/dex?tokenA=lovelace&tokenB=328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b27393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
         const MINSWAP_LINK = "https://minswap.org/swap?cA=&tA=&cB=328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b2&tB=7393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
 
-        // VERSIÓN DEL LAYOUT (Al cambiar este valor, el navegador limpia los bloques rotos guardados en caché)
+        // TACTICA DE VERSIONADO (Vuelve a limpiar posiciones antiguas)
         const LAYOUT_VERSION = "v1.2"; 
 
         let defaultConf = { alert: 15, vaultAlert: 20, simDex: 1000, simTri: 1000, tgBot: "", tgChat: "", feeNet: 0.2, feeMin: 0.7, feeVyfi: 1.9, lpFeeMin: 0.3, lpFeeVyfi: 0.3 };
@@ -683,9 +681,14 @@
             document.getElementById('sim-ada-input').value = conf.simDex;
             document.getElementById('sim-tri-input').value = conf.simTri;
 
-            grid.on('change', function(event, items) {
-                if(chartInstance) chartInstance.resize();
-                Object.values(sparkInstances).forEach(chart => chart.resize());
+            // FIX RE-DIBUJADO ANTI-FANTASMA DE CHART.JS AL MOVER TARJETAS
+            grid.on('change dragstop resizestop', function(event, items) {
+                setTimeout(() => {
+                    if(chartInstance) chartInstance.resize();
+                    Object.values(sparkInstances).forEach(chart => {
+                        if (chart) chart.resize();
+                    });
+                }, 200);
                 document.getElementById('sim-ada-input').value = conf.simDex;
                 document.getElementById('sim-tri-input').value = conf.simTri;
             });
@@ -713,6 +716,14 @@
                 dash.classList.remove('edit-mode-active');
                 grid.enableMove(false);
                 saveLayout();
+                
+                // Repintado de seguridad al cerrar el candado
+                setTimeout(() => {
+                    if(chartInstance) chartInstance.resize();
+                    Object.values(sparkInstances).forEach(chart => {
+                        if (chart) chart.resize();
+                    });
+                }, 200);
             }
         }
 
@@ -762,17 +773,19 @@
         }
 
         function updateSimConfig(sourceId, confKey) {
-            let rawVal = document.getElementById(sourceId).value;
-            let val = parseFloat(rawVal);
+            let el = document.getElementById(sourceId);
+            let rawVal = el.value;
             
+            let targetId = sourceId === 'sim-ada-input' ? 'sim-tri-input' : 'sim-ada-input';
+            let targetEl = document.getElementById(targetId);
+            if (document.activeElement !== targetEl) { targetEl.value = rawVal; }
+
+            let val = parseFloat(rawVal);
             if (!isNaN(val) && val >= 0) {
                 conf[confKey] = val;
                 localStorage.setItem('l4va_config', JSON.stringify(conf));
             }
-            
-            // Calculamos usando el valor temporal (o 0 si ha borrado la casilla), pero sin borrar la config final
-            if (confKey === 'simDex') recalculateDexSimulator(isNaN(val) ? 0 : val);
-            if (confKey === 'simTri') recalculateTriSimulator(isNaN(val) ? 0 : val);
+            recalculateSimulators();
         }
 
         function playDing() { try { const ctx = new (window.AudioContext || window.webkitAudioContext)(); const osc = ctx.createOscillator(); const gainNode = ctx.createGain(); osc.type = 'sine'; osc.frequency.setValueAtTime(880, ctx.currentTime); gainNode.gain.setValueAtTime(0.1, ctx.currentTime); osc.connect(gainNode); gainNode.connect(ctx.destination); osc.start(); gainNode.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.5); osc.stop(ctx.currentTime + 0.5); } catch (e) {} }
@@ -1029,11 +1042,18 @@
         // MOTOR ADA FIABLE
         async function fetchAdaData() {
             try {
-                const response = await fetch('https://min-api.cryptocompare.com/data/v2/histohour?fsym=ADA&tsym=USD&limit=24');
-                const data = await response.json();
-                if(data.Response !== "Success") throw new Error("API Limitada");
+                let prices = [];
+                try {
+                    const response = await fetch('https://api.binance.com/api/v3/klines?symbol=ADAUSDT&interval=15m&limit=96');
+                    if(!response.ok) throw new Error("Binance API Falló");
+                    const data = await response.json();
+                    prices = data.map(p => parseFloat(p[4]));
+                } catch(e) {
+                    const response = await fetch('https://min-api.cryptocompare.com/data/v2/histohour?fsym=ADA&tsym=USD&limit=24');
+                    const data = await response.json();
+                    prices = data.Data.Data.map(p => p.close);
+                }
                 
-                const prices = data.Data.Data.map(p => p.close);
                 currentAdaUsd = prices[prices.length - 1]; 
                 const oldestAda = prices[0]; 
                 const adaChange = ((currentAdaUsd - oldestAda) / oldestAda) * 100;
@@ -1086,7 +1106,7 @@
                     const spreadEl = document.getElementById('arbitrage-spread'); const actionEl = document.getElementById('arbitrage-action');
                     spreadEl.innerText = `${spread.toFixed(2)}%`;
                     if (spread < 0.5) { spreadEl.style.color = "rgba(255, 255, 255, 0.5)"; actionEl.innerHTML = `<span style="color: rgba(255, 255, 255, 0.6);">Low spread</span>`; } 
-                    else { spreadEl.style.color = "#ffffff"; if (priceVyfi > priceMin) { actionEl.innerHTML = `<a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Buy Minswap</a> <a href="${VYFI_LINK}" target="_blank" class="badge-dark">Sell VyFi</a>`; } else { actionEl.innerHTML = `<a href="${VYFI_LINK}" target="_blank" class="badge-dark">Buy VyFi</a> <a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Sell Minswap</a>`; } }
+                    else { spreadEl.style.color = "#ffffff"; if (priceVyfi > priceMin) { actionEl.innerHTML = `<a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Buy Min</a> <a href="${VYFI_LINK}" target="_blank" class="badge-dark">Sell VyFi</a>`; } else { actionEl.innerHTML = `<a href="${VYFI_LINK}" target="_blank" class="badge-dark">Buy VyFi</a> <a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Sell Min</a>`; } }
                     if (spread >= conf.alert) { if(dexCard) dexCard.classList.add('glow-active'); const alertToggle = document.getElementById('alert-toggle'); const now = Date.now(); if (alertToggle && alertToggle.checked && (now - lastAlertTime > ALERT_COOLDOWN)) { playDing(); if (Notification.permission === "granted") { new Notification("🚨 L4VA Arbitrage Detected!", { body: `Spread: ${spread.toFixed(2)}%\n${suggestedActionText}` }); } sendTelegramAlert(`🚨 <b>L4VA Arbitrage Detected!</b>\n\n📈 DEX Spread: <b>${spread.toFixed(2)}%</b>\n💡 Route: ${suggestedActionText}\n\n<i>Check dashboard for real-time net profit.</i>`); lastAlertTime = now; } } else { if(dexCard) dexCard.classList.remove('glow-active'); }
                 } else { if(dexCard) dexCard.classList.remove('glow-active'); }
                 let primaryOraclePrice = priceVyfi > 0 ? priceVyfi : priceMin; let voSpread = 0;
