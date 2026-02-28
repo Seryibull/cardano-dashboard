@@ -119,47 +119,50 @@
         .card-compact { padding: 15px 25px !important; justify-content: center !important;}
         @media (min-width: 768px) { .card-compact .card-title { margin-bottom: 5px; font-size: 0.95rem; } }
 
-        /* FONDOS CON FOCO SUPERIOR SUTIL Y SOMBRAS DIAGONALES */
+        /* 🎨 EFECTO FOCO SUPERIOR REDUCIDO Y SOMBRAS DIAGONALES */
         .card-ada { 
             box-shadow: -10px 10px 40px rgba(0, 0, 0, 0.5); 
-            background: radial-gradient(200px circle at top right, rgba(66, 133, 244, 0.08), transparent), rgba(8, 10, 16, 0.98); 
+            background: radial-gradient(250px circle at top right, rgba(66, 133, 244, 0.05), transparent), rgba(8, 10, 16, 0.98); 
         }
         .card-ada:hover { 
-            box-shadow: -15px 15px 50px rgba(0, 0, 0, 0.7), 0 0 20px rgba(66, 133, 244, 0.2); 
-            background: radial-gradient(200px circle at top right, rgba(66, 133, 244, 0.15), transparent), rgba(12, 15, 24, 1); 
+            box-shadow: -15px 15px 50px rgba(0, 0, 0, 0.7), 0 0 20px rgba(66, 133, 244, 0.15); 
+            background: radial-gradient(250px circle at top right, rgba(66, 133, 244, 0.1), transparent), rgba(12, 15, 24, 1); 
         }
         
         .card-vault { 
             box-shadow: -10px 10px 40px rgba(0, 0, 0, 0.5); 
-            background: radial-gradient(200px circle at top right, rgba(252, 211, 77, 0.08), transparent), rgba(14, 10, 4, 0.98); 
+            background: radial-gradient(250px circle at top right, rgba(252, 211, 77, 0.05), transparent), rgba(14, 10, 4, 0.98); 
         }
         .card-vault:hover { 
-            box-shadow: -15px 15px 50px rgba(0, 0, 0, 0.7), 0 0 20px rgba(252, 211, 77, 0.2); 
-            background: radial-gradient(200px circle at top right, rgba(252, 211, 77, 0.15), transparent), rgba(18, 12, 5, 1); 
+            box-shadow: -15px 15px 50px rgba(0, 0, 0, 0.7), 0 0 20px rgba(252, 211, 77, 0.15); 
+            background: radial-gradient(250px circle at top right, rgba(252, 211, 77, 0.1), transparent), rgba(18, 12, 5, 1); 
         }
         
         .card-orange { 
             box-shadow: -10px 10px 40px rgba(0, 0, 0, 0.5); 
-            background: radial-gradient(200px circle at top right, rgba(255, 123, 0, 0.08), transparent), rgba(14, 6, 2, 0.98); 
+            background: radial-gradient(250px circle at top right, rgba(255, 123, 0, 0.05), transparent), rgba(14, 6, 2, 0.98); 
         }
         .card-orange:hover { 
-            box-shadow: -15px 15px 50px rgba(0, 0, 0, 0.7), 0 0 20px rgba(255, 123, 0, 0.2); 
-            background: radial-gradient(200px circle at top right, rgba(255, 123, 0, 0.15), transparent), rgba(18, 8, 3, 1); 
+            box-shadow: -15px 15px 50px rgba(0, 0, 0, 0.7), 0 0 20px rgba(255, 123, 0, 0.15); 
+            background: radial-gradient(250px circle at top right, rgba(255, 123, 0, 0.1), transparent), rgba(18, 8, 3, 1); 
         }
 
+        /* 🎨 GRÁFICA INFERIOR: Sombra diagonal y fondo sutil institucional */
         [gs-id="card-chart"] .card {
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); 
-            background: rgba(8, 10, 16, 0.98);
+            box-shadow: -10px 10px 40px rgba(0, 0, 0, 0.5); 
+            background: radial-gradient(400px circle at top right, rgba(255, 255, 255, 0.03), transparent), rgba(8, 10, 16, 0.98);
         }
         [gs-id="card-chart"] .card:hover {
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6); 
+            box-shadow: -15px 15px 50px rgba(0, 0, 0, 0.7), 0 0 20px rgba(255, 255, 255, 0.05); 
+            background: radial-gradient(400px circle at top right, rgba(255, 255, 255, 0.06), transparent), rgba(10, 12, 20, 1);
         }
 
+        /* EFECTO: RESPLANDOR VERDE (ALERTAS Y PROFIT) */
         @keyframes greenAlertPulse {
-            0% { box-shadow: 0 0 15px rgba(16, 185, 129, 0.3), inset 0 0 10px rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.4); }
-            100% { box-shadow: 0 0 50px rgba(16, 185, 129, 0.9), inset 0 0 20px rgba(16, 185, 129, 0.3); border-color: rgba(16, 185, 129, 0.9); }
+            0% { box-shadow: -10px 10px 40px rgba(16, 185, 129, 0.3), inset 0 0 10px rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.4); }
+            100% { box-shadow: -15px 15px 60px rgba(16, 185, 129, 0.9), inset 0 0 20px rgba(16, 185, 129, 0.3); border-color: rgba(16, 185, 129, 0.9); }
         }
-        .glow-active { animation: greenAlertPulse 1.5s infinite alternate ease-in-out !important; border-color: rgba(16, 185, 129, 0.8) !important; background: radial-gradient(200px circle at top right, rgba(16, 185, 129, 0.08), transparent), rgba(10, 15, 15, 0.98) !important; }
+        .glow-active { animation: greenAlertPulse 1.5s infinite alternate ease-in-out !important; border-color: rgba(16, 185, 129, 0.8) !important; background: radial-gradient(250px circle at top right, rgba(16, 185, 129, 0.08), transparent), rgba(10, 15, 15, 0.98) !important; }
 
         .card-title { font-size: 1.05rem; font-weight: 600; margin-bottom: 15px; color: var(--neon-orange); display: flex; justify-content: space-between; align-items: center;}
         .card-title.ada-title { color: var(--ada-color); text-shadow: 0 0 10px rgba(66, 133, 244, 0.3);}
@@ -381,7 +384,7 @@
                     </div>
                     <div class="data-row" style="margin-top: 15px;"><span class="data-label" style="font-size: 0.75rem;">Last Updated:</span><span class="data-value" style="font-size: 0.75rem;" id="ada-time">-</span></div>
                 </div>
-                <div style="height: 50px; position: relative; margin-top: auto; width: 100%;">
+                <div style="position: relative; height: 50px; width: 100%; margin-top: auto; flex-shrink: 0;">
                     <canvas id="spark-ada"></canvas>
                 </div>
             </div>
@@ -400,7 +403,7 @@
                     </div>
                     <div class="data-row"><span class="data-label">Fair price:</span><span class="data-value" id="vault-fair-price">-</span></div>
                 </div>
-                <div style="height: 50px; position: relative; margin-top: auto; width: 100%;">
+                <div style="position: relative; height: 50px; width: 100%; margin-top: auto; flex-shrink: 0;">
                     <canvas id="spark-vault"></canvas>
                 </div>
             </div>
@@ -413,12 +416,12 @@
                     <span class="data-label">Price:</span>
                     <span class="data-value"><span id="vlrm-price-ada"><span class="loading">Connecting...</span></span> <span id="vlrm-price-change-24h" class="change-badge"></span></span>
                 </div>
-                <div style="height: 40px; position: relative; margin-bottom: 10px;"><canvas id="spark-vlrm-ada-price"></canvas></div>
+                <div style="position: relative; height: 35px; width: 100%; margin-bottom: 10px; flex-shrink: 0;"><canvas id="spark-vlrm-ada-price"></canvas></div>
                 <div class="data-row" style="margin-top: auto; flex-shrink: 0;">
                     <span class="data-label">Liquidity:</span>
                     <span class="data-value"><span id="vlrm-liq-ada">-</span> <span id="vlrm-ada-change-24h" class="change-badge"></span></span>
                 </div>
-                <div style="height: 40px; position: relative;"><canvas id="spark-vlrm-ada"></canvas></div>
+                <div style="position: relative; height: 35px; width: 100%; flex-shrink: 0;"><canvas id="spark-vlrm-ada"></canvas></div>
             </div>
         </div>
 
@@ -429,47 +432,47 @@
                     <span class="data-label">Price:</span>
                     <span class="data-value"><span id="vlrm-oracle-price"><span class="loading">Waiting...</span></span> <span id="vlrm-oracle-price-change-24h" class="change-badge"></span></span>
                 </div>
-                <div style="height: 40px; position: relative; margin-bottom: 10px;"><canvas id="spark-vlrm-oracle-price"></canvas></div>
+                <div style="position: relative; height: 35px; width: 100%; margin-bottom: 10px; flex-shrink: 0;"><canvas id="spark-vlrm-oracle-price"></canvas></div>
                 <div class="data-row" style="margin-top: auto; flex-shrink: 0;">
                     <span class="data-label">Liquidity:</span>
                     <span class="data-value"><span id="vlrm-oracle-liq-ada">-</span> <span id="vlrm-oracle-change-24h" class="change-badge"></span></span>
                 </div>
-                <div style="height: 40px; position: relative;"><canvas id="spark-vlrm-oracle"></canvas></div>
+                <div style="position: relative; height: 35px; width: 100%; flex-shrink: 0;"><canvas id="spark-vlrm-oracle"></canvas></div>
             </div>
         </div>
 
         <div class="grid-stack-item drag-item" gs-id="card-oracle-ada" gs-w="6" gs-h="4" gs-x="0" gs-y="5">
             <div class="grid-stack-item-content card card-vault" style="display: flex; flex-direction: column;">
                 <div style="flex-shrink: 0;">
-                    <div class="card-title" style="color: var(--vault-color); margin-bottom: 20px;">ORACLE / ADA</div>
+                    <div class="card-title" style="color: var(--vault-color); margin-bottom: 15px;">ORACLE / ADA</div>
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 20px;">
                         <div>
                             <h3 class="dex-subtitle"><span class="badge bg-vyfi">VYFI</span></h3>
                             <div class="data-row"><span class="data-label">Price:</span><span class="data-value"><span id="oracle-vyfi-price">-</span> <span id="oracle-vyfi-price-change-24h" class="change-badge"></span></span></div>
-                            <div style="height: 40px; margin-bottom: 25px; position: relative;"><canvas id="spark-oracle-vyfi-price"></canvas></div>
+                            <div style="position: relative; height: 35px; width: 100%; margin-bottom: 15px;"><canvas id="spark-oracle-vyfi-price"></canvas></div>
                             
                             <div class="data-row"><span class="data-label">Liquidity:</span><span class="data-value"><span id="oracle-vyfi-liq">-</span> <span id="oracle-vyfi-change-24h" class="change-badge"></span></span></div>
-                            <div style="height: 40px; position: relative;"><canvas id="spark-oracle-vyfi"></canvas></div>
+                            <div style="position: relative; height: 35px; width: 100%;"><canvas id="spark-oracle-vyfi"></canvas></div>
                         </div>
                         <div style="border-left: 2px solid rgba(255,255,255,0.05); padding-left: 20px;">
                             <h3 class="dex-subtitle"><span class="badge bg-minswap">MINSWAP</span></h3>
                             <div class="data-row"><span class="data-label">Price:</span><span class="data-value"><span id="oracle-min-price">-</span> <span id="oracle-min-price-change-24h" class="change-badge"></span></span></div>
-                            <div style="height: 40px; margin-bottom: 25px; position: relative;"><canvas id="spark-oracle-min-price"></canvas></div>
+                            <div style="position: relative; height: 35px; width: 100%; margin-bottom: 15px;"><canvas id="spark-oracle-min-price"></canvas></div>
                             
                             <div class="data-row"><span class="data-label">Liquidity:</span><span class="data-value"><span id="oracle-min-liq">-</span> <span id="oracle-min-change-24h" class="change-badge"></span></span></div>
-                            <div style="height: 40px; position: relative;"><canvas id="spark-oracle-min"></canvas></div>
+                            <div style="position: relative; height: 35px; width: 100%;"><canvas id="spark-oracle-min"></canvas></div>
                         </div>
                     </div>
                 </div>
                 
-                <div style="margin-top: auto; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.05);">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                <div style="margin-top: auto; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; flex-shrink: 0;">
                         <h3 class="dex-subtitle" style="color: var(--text-secondary); font-size: 1rem; text-transform: uppercase; margin:0;">Total Combined Liquidity</h3>
                         <div class="data-value" style="font-size: 1.8rem; color: #ffffff; text-shadow: 0 2px 10px rgba(0,0,0,0.5);">
                             <span id="oracle-total-liq">-</span> <span id="total-liq-change-24h" class="change-badge" style="font-size: 0.9rem;"></span>
                         </div>
                     </div>
-                    <div style="height: 40px; width: 95%; margin: 0 auto; position: relative;">
+                    <div style="height: 30px; width: 90%; position: relative; margin: 0 auto 5px auto; flex-shrink: 0;">
                         <canvas id="spark-total-liq"></canvas>
                     </div>
                 </div>
@@ -515,7 +518,7 @@
         </div>
 
         <div class="grid-stack-item drag-item" gs-id="card-chart" gs-w="12" gs-h="2" gs-x="0" gs-y="9">
-            <div class="grid-stack-item-content card" style="background: rgba(8, 10, 16, 0.98);">
+            <div class="grid-stack-item-content card">
                 <div class="card-title" style="margin-bottom: 10px; font-size: 0.9rem; color: #ffffff; text-transform: none;">Spread & vault discrepancy (last 24h %)</div>
                 <div style="flex-grow: 1; width: 100%; position: relative; min-height: 0;">
                     <canvas id="arbitrageChart"></canvas>
@@ -628,9 +631,15 @@
                 grid.load(savedLayout);
             }
 
+            document.getElementById('sim-ada-input').value = conf.sim;
+            document.getElementById('sim-tri-input').value = conf.sim;
+
             grid.on('change', function(event, items) {
                 if(chartInstance) chartInstance.resize();
                 Object.values(sparkInstances).forEach(chart => chart.resize());
+                
+                document.getElementById('sim-ada-input').value = conf.sim;
+                document.getElementById('sim-tri-input').value = conf.sim;
             });
         }
 
@@ -702,13 +711,10 @@
             recalculateSimulators();
         }
 
-        // TASK 1: FIX ESCRITURA EN SIMULADOR
         function updateSimConfig(sourceId) {
             let el = document.getElementById(sourceId);
             let rawVal = el.value;
-            
-            if (rawVal === "") return; // Evita que se sobreescriba con 0 y arruine la escritura
-
+            if (rawVal === "") return; 
             let val = parseFloat(rawVal);
             if (isNaN(val)) return;
 
@@ -717,12 +723,9 @@
             
             let targetId = sourceId === 'sim-ada-input' ? 'sim-tri-input' : 'sim-ada-input';
             let targetEl = document.getElementById(targetId);
-            
-            // Solo actualiza el input opuesto si el usuario no lo está tocando
             if (document.activeElement !== targetEl) {
                 targetEl.value = rawVal;
             }
-            
             recalculateSimulators();
         }
 
@@ -733,7 +736,7 @@
             try { await fetch(`https://api.telegram.org/bot${conf.tgBot}/sendMessage`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ chat_id: conf.tgChat, text: message, parse_mode: 'HTML' }) }); } catch (e) {}
         }
 
-        // --- PLUGIN: DIBUJA EL TÚNEL DE TOLERANCIA Y LA LÍNEA 0% ABSOLUTA ---
+        // --- PLUGIN MAGICO: BANDA TOLERANCIA Y LINEA CERO ---
         const drawToleranceBandPlugin = {
             id: 'drawToleranceBandPlugin',
             beforeDraw: (chart) => {
@@ -941,14 +944,31 @@
                             expandedHistory.vlrmOracleSpread.push(voSpread); expandedHistory.vlrmAda.push(cloudHistory.vlrmAda[i]); expandedHistory.vlrmOracle.push(cloudHistory.vlrmOracle[i]); expandedHistory.oracleVyfi.push(cloudHistory.oracleVyfi[i]); expandedHistory.oracleMin.push(cloudHistory.oracleMin[i]); expandedHistory.vault.push(cloudHistory.vault[i]); expandedHistory.totalLiq.push((cloudHistory.oracleVyfi[i] || 0) + (cloudHistory.oracleMin[i] || 0)); expandedHistory.pVlrmAda.push(vPrice); expandedHistory.pVlrmOracle.push(voRatio); expandedHistory.pOracleVyfi.push(oPriceVy); expandedHistory.pOracleMin.push(oPriceMin);
                         }
                     }
+                    
+                    // TASK 3: RELLENAR VACÍOS DE PRECIOS CON NULL PARA QUE CHART.JS ESCALE PERFECTO Y LA GRÁFICA NO QUEDE PLANA
                     const missingPoints = MAX_CHART_POINTS - expandedHistory.labels.length;
                     if (missingPoints > 0) {
                         const emptyLabels = Array(missingPoints).fill(cloudHistory.labels[0] || '00:00'); expandedHistory.labels = [...emptyLabels, ...expandedHistory.labels];
                         const keys = Object.keys(expandedHistory);
-                        for (let key of keys) { if (key === 'labels') continue; let firstVal = expandedHistory[key].find(v => v !== null && v !== undefined && !isNaN(v)); if (firstVal === undefined) firstVal = 0; const padArr = Array(missingPoints).fill(firstVal); expandedHistory[key] = [...padArr, ...expandedHistory[key]]; }
+                        for (let key of keys) { 
+                            if (key === 'labels') continue; 
+                            const padArr = Array(missingPoints).fill(null); 
+                            expandedHistory[key] = [...padArr, ...expandedHistory[key]]; 
+                        }
                     }
+
                     const keysFill = Object.keys(expandedHistory);
-                    for (let key of keysFill) { if (key === 'labels') continue; let lastGood = 0; for (let k = 0; k < expandedHistory[key].length; k++) { let val = expandedHistory[key][k]; if (val !== null && val !== undefined && !isNaN(val)) { lastGood = val; } else { expandedHistory[key][k] = lastGood; } } }
+                    for (let key of keysFill) { 
+                        if (key === 'labels') continue; 
+                        let lastGood = null; 
+                        for (let k = 0; k < expandedHistory[key].length; k++) { 
+                            let val = expandedHistory[key][k]; 
+                            if (val === 0 && key.startsWith('p')) val = null; // Filtramos ceros de precios
+                            if (val !== null && val !== undefined && !isNaN(val)) { lastGood = val; } 
+                            else { expandedHistory[key][k] = lastGood; } 
+                        } 
+                    }
+
                     if (expandedHistory.labels.length > MAX_CHART_POINTS) { const diff = expandedHistory.labels.length - MAX_CHART_POINTS; Object.keys(expandedHistory).forEach(key => { expandedHistory[key] = expandedHistory[key].slice(diff); }); }
                     chartHistory = expandedHistory; chartInstance.data.labels = chartHistory.labels; chartInstance.data.datasets[0].data = chartHistory.spread; chartInstance.data.datasets[1].data = chartHistory.discrepancy; chartInstance.data.datasets[2].data = chartHistory.vlrmOracleSpread; chartInstance.update('none');
                     sparkInstances.vlrmAda.data.labels = chartHistory.labels; sparkInstances.vlrmAda.data.datasets[0].data = chartHistory.vlrmAda; sparkInstances.vlrmAda.update('none'); sparkInstances.vlrmOracle.data.labels = chartHistory.labels; sparkInstances.vlrmOracle.data.datasets[0].data = chartHistory.vlrmOracle; sparkInstances.vlrmOracle.update('none'); sparkInstances.oracleVyfi.data.labels = chartHistory.labels; sparkInstances.oracleVyfi.data.datasets[0].data = chartHistory.oracleVyfi; sparkInstances.oracleVyfi.update('none'); sparkInstances.oracleMin.data.labels = chartHistory.labels; sparkInstances.oracleMin.data.datasets[0].data = chartHistory.oracleMin; sparkInstances.oracleMin.update('none'); sparkInstances.vault.data.labels = chartHistory.labels; sparkInstances.vault.data.datasets[0].data = chartHistory.vault; sparkInstances.vault.update('none'); sparkInstances.totalLiq.data.labels = chartHistory.labels; sparkInstances.totalLiq.data.datasets[0].data = chartHistory.totalLiq; sparkInstances.totalLiq.update('none'); sparkInstances.pVlrmAda.data.labels = chartHistory.labels; sparkInstances.pVlrmAda.data.datasets[0].data = chartHistory.pVlrmAda; sparkInstances.pVlrmAda.update('none'); sparkInstances.pVlrmOracle.data.labels = chartHistory.labels; sparkInstances.pVlrmOracle.data.datasets[0].data = chartHistory.pVlrmOracle; sparkInstances.pVlrmOracle.update('none'); sparkInstances.pOracleVyfi.data.labels = chartHistory.labels; sparkInstances.pOracleVyfi.data.datasets[0].data = chartHistory.pOracleVyfi; sparkInstances.pOracleVyfi.update('none'); sparkInstances.pOracleMin.data.labels = chartHistory.labels; sparkInstances.pOracleMin.data.datasets[0].data = chartHistory.pOracleMin; sparkInstances.pOracleMin.update('none');
@@ -956,22 +976,21 @@
             } catch (e) { console.error("Error loading history:", e); }
         }
 
-        // TASK 2: API DE BINANCE (100% INMUNE A LÍMITES)
+        // T2: MOTOR DE PRECIOS ADA A TRAVÉS DE BINANCE API (Sin límites)
         async function fetchAdaData() {
             try {
                 const response = await fetch('https://api.binance.com/api/v3/klines?symbol=ADAUSDT&interval=15m&limit=96');
-                const data = await response.json(); 
-                const prices = data.map(p => parseFloat(p[4])); 
+                const data = await response.json();
+                const prices = data.map(p => parseFloat(p[4]));
                 currentAdaUsd = prices[prices.length - 1]; 
                 const oldestAda = prices[0]; 
                 const adaChange = ((currentAdaUsd - oldestAda) / oldestAda) * 100;
 
                 const priceEl = document.getElementById('ada-price-usd'); priceEl.innerHTML = `$${currentAdaUsd.toFixed(4)} <span id="ada-change-24h" class="change-badge"></span>`;
                 const changeEl = document.getElementById('ada-change-24h'); if (adaChange > 0) { changeEl.innerText = `+${adaChange.toFixed(2)}%`; changeEl.style.color = "#10b981"; } else { changeEl.innerText = `${adaChange.toFixed(2)}%`; changeEl.style.color = "var(--neon-red)"; }
-                document.getElementById('ada-time').innerText = new Date().toLocaleTimeString(); 
+                document.getElementById('ada-time').innerText = new Date().toLocaleTimeString();
                 
-                sparkInstances.ada.data.labels = Array(prices.length).fill(''); sparkInstances.ada.data.datasets[0].data = prices; sparkInstances.ada.update('none'); 
-                return currentAdaUsd;
+                sparkInstances.ada.data.labels = Array(prices.length).fill(''); sparkInstances.ada.data.datasets[0].data = prices; sparkInstances.ada.update('none'); return currentAdaUsd;
             } catch (error) { console.error("Error cargando ADA:", error); return null; }
         }
 
@@ -1024,27 +1043,8 @@
             } catch (error) { console.error("General error:", error); }
         }
 
-        async function startEngine() {
-            initSortable(); 
-            document.getElementById('sim-ada-input').value = conf.sim;
-            document.getElementById('sim-tri-input').value = conf.sim;
-            initCharts();   
-            await fetchHistoryFromCloudflare();
-            await fetchAdaData();
-            await fetchDexData();
-            fetchInterval = setInterval(async () => {
-                await fetchAdaData();
-                await fetchDexData();
-            }, 30000);
-        }
-
-        window.onload = () => {
-            if (!userPasskey) {
-                showAuthScreen();
-            } else {
-                startEngine();
-            }
-        };
+        async function startEngine() { initSortable(); initCharts(); await fetchHistoryFromCloudflare(); await fetchAdaData(); await fetchDexData(); fetchInterval = setInterval(async () => { await fetchAdaData(); await fetchDexData(); }, 30000); }
+        window.onload = () => { if (!userPasskey) { showAuthScreen(); } else { startEngine(); } };
     </script>
 </body>
 </html>
