@@ -90,7 +90,7 @@
            🔘 PESTAÑAS DE NAVEGACIÓN (TABS)
            ========================================= */
         .tabs-container { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;}
-        .tab-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--text-secondary); padding: 8px 15px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: 0.3s; display: flex; align-items: center; gap: 5px;}
+        .tab-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--text-secondary); padding: 6px 15px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: 0.3s; display: flex; align-items: center; gap: 5px; font-size: 0.85rem;}
         .tab-btn:hover { background: rgba(255,255,255,0.1); color: white; }
         .tab-btn.active { background: rgba(255, 123, 0, 0.2); border-color: var(--neon-orange); color: white; box-shadow: 0 0 15px rgba(255, 123, 0, 0.3); }
 
@@ -122,45 +122,44 @@
         .card-compact { padding: 15px 25px !important; justify-content: center !important;}
         @media (min-width: 768px) { .card-compact .card-title { margin-bottom: 5px; font-size: 0.95rem; } }
 
-        /* 🎨 FONDOS SOLIDOS SUTILES (SIN FOCO) */
+        /* 🎨 FONDOS SÓLIDOS SUTILES (SIN FOCO) - OSCURECIDOS UN 30% MÁS */
         .card-ada { 
             box-shadow: -10px 10px 40px rgba(0, 0, 0, 0.4); 
-            background: rgba(12, 14, 22, 0.98); 
+            background: rgba(10, 11, 16, 0.98); 
         }
         .card-ada:hover { 
-            box-shadow: -15px 15px 50px rgba(0, 0, 0, 0.6), 0 0 20px rgba(66, 133, 244, 0.14); 
-            background: rgba(16, 18, 30, 1); 
+            box-shadow: -15px 15px 50px rgba(0, 0, 0, 0.6); 
+            background: rgba(14, 15, 24, 1); 
         }
         
         .card-vault { 
             box-shadow: -10px 10px 40px rgba(0, 0, 0, 0.4); 
-            background: rgba(16, 14, 10, 0.98); 
+            background: rgba(13, 11, 8, 0.98); 
         }
         .card-vault:hover { 
-            box-shadow: -15px 15px 50px rgba(0, 0, 0, 0.6), 0 0 20px rgba(252, 211, 77, 0.14); 
-            background: rgba(20, 18, 12, 1); 
+            box-shadow: -15px 15px 50px rgba(0, 0, 0, 0.6); 
+            background: rgba(18, 15, 10, 1); 
         }
         
         .card-orange { 
             box-shadow: -10px 10px 40px rgba(0, 0, 0, 0.4); 
-            background: rgba(18, 10, 8, 0.98); 
+            background: rgba(14, 8, 6, 0.98); 
         }
         .card-orange:hover { 
-            box-shadow: -15px 15px 50px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 123, 0, 0.14); 
-            background: rgba(22, 12, 10, 1); 
+            box-shadow: -15px 15px 50px rgba(0, 0, 0, 0.6); 
+            background: rgba(18, 10, 8, 1); 
         }
 
-        /* GRÁFICA PRINCIPAL: Fondo sólido exacto al resto */
         [gs-id="card-chart"] .card {
             box-shadow: -10px 10px 40px rgba(0, 0, 0, 0.4); 
-            background: rgba(12, 14, 22, 0.98);
+            background: rgba(10, 11, 16, 0.98);
         }
         [gs-id="card-chart"] .card:hover {
-            box-shadow: -15px 15px 50px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 255, 255, 0.14); 
-            background: rgba(16, 18, 30, 1);
+            box-shadow: -15px 15px 50px rgba(0, 0, 0, 0.6); 
+            background: rgba(14, 15, 24, 1);
         }
 
-        /* EFECTO: RESPLANDOR VERDE (ALERTAS Y PROFIT) - Modificado para sin gradiente */
+        /* EFECTO: RESPLANDOR VERDE (ALERTAS Y PROFIT) - SIN FOCO BLANCO */
         @keyframes greenAlertPulse {
             0% { box-shadow: -10px 10px 40px rgba(16, 185, 129, 0.3), inset 0 0 10px rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.4); }
             100% { box-shadow: -15px 15px 60px rgba(16, 185, 129, 0.9), inset 0 0 20px rgba(16, 185, 129, 0.3); border-color: rgba(16, 185, 129, 0.9); }
@@ -276,30 +275,34 @@
         </div>
     </div>
 
-    <header style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 25px; max-width: 1200px; margin-left: auto; margin-right: auto;">
+    <header style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 25px; max-width: 1200px; margin-left: auto; margin-right: auto; flex-wrap: wrap; gap: 15px;">
         
-        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; flex-wrap: wrap; gap: 15px;">
-            <div style="display: flex; align-items: center; gap: 15px;">
-                <div class="brand-logo">🔥</div>
-                <h1>L4VA Protocol <span style="color: var(--text-secondary); font-weight: 400;">| Arbitrage</span> <span class="version-badge">V 1.0</span></h1>
-            </div>
-            
-            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: flex-end;">
-                <label class="alert-toggle-box" style="margin-right: 5px;">
-                    <input type="checkbox" id="alert-toggle" checked> 🔔 Alerts ON
-                </label>
-                <div class="header-btn" onclick="toggleRadarPanel()" title="Opportunity Radar Log">📜</div>
-                <div class="header-btn" onclick="toggleFullScreen()" title="Cinema / Wall Street Mode">🖵</div>
-                <div class="header-btn" id="edit-mode-btn" onclick="toggleEditMode()" title="Unlock Dashboard Layout">🔒</div>
-                <div class="header-btn settings-btn" onclick="openSettings()" title="Settings">⚙️</div>
+        <div style="display: flex; gap: 15px; align-items: flex-start;">
+            <div class="brand-logo" style="margin-top: 2px;">🔥</div>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+                <h1 style="margin: 0; display: flex; align-items: center; font-size: 1.6rem;">
+                    L4VA Protocol 
+                    <span style="color: var(--text-secondary); font-weight: 400; margin-left: 8px;">| Arbitrage</span> 
+                    <span class="version-badge">V 1.0</span>
+                </h1>
+                
+                <div class="tabs-container" style="margin: 0; padding: 0; border: none;">
+                    <button id="tab-oracle" class="tab-btn active" onclick="switchEcosystem('oracle')">🔥 VLRM / ORACLE</button>
+                    <button id="tab-vyfi" class="tab-btn" onclick="switchEcosystem('vyfi')">💧 VYFI / xVYFI</button>
+                </div>
             </div>
         </div>
 
-        <div class="tabs-container" style="margin-left: 0; padding-left: 0; border-left: none;">
-            <button id="tab-oracle" class="tab-btn active" onclick="switchEcosystem('oracle')">🔥 VLRM / ORACLE</button>
-            <button id="tab-vyfi" class="tab-btn" onclick="switchEcosystem('vyfi')">💧 VYFI / xVYFI</button>
+        <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: flex-end; margin-top: 5px;">
+            <label class="alert-toggle-box" style="margin-right: 5px;">
+                <input type="checkbox" id="alert-toggle" checked> 🔔 Alerts ON
+            </label>
+            <div class="header-btn" onclick="toggleRadarPanel()" title="Opportunity Radar Log">📜</div>
+            <div class="header-btn" onclick="toggleFullScreen()" title="Cinema / Wall Street Mode">🖵</div>
+            <div class="header-btn" id="edit-mode-btn" onclick="toggleEditMode()" title="Unlock Dashboard Layout">🔒</div>
+            <div class="header-btn settings-btn" onclick="openSettings()" title="Settings">⚙️</div>
         </div>
-        
+
     </header>
 
     <div id="settings-modal" class="modal-overlay">
@@ -624,9 +627,9 @@
         const VYFI_LINK = "https://app.vyfi.io/dex?tokenA=lovelace&tokenB=328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b27393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
         const MINSWAP_LINK = "https://minswap.org/swap?cA=&tA=&cB=328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b2&tB=7393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
 
-        // TOKENS NUEVOS (Ecosistema VyFi)
-        const TOKEN_VYFI = "804f5530198154628ce71b6bd5a889410ea9036c64188597af2f21bc56594649";
-        const TOKEN_XVYFI = "a004ebbc9d51184be5e364eb25e7d5df4b6b69db9fbf8de684d0b1d07856594649";
+        // TOKENS NUEVOS (Ecosistema VyFi) - HASHES EXACTOS
+        const TOKEN_VYFI = "804f5544c1962a40546827cab750a88404dc7108c0f588b72964754f56594649";
+        const TOKEN_XVYFI_HEX = "7856594649"; 
 
         const LAYOUT_VERSION = "v1.6"; 
 
@@ -1068,9 +1071,12 @@
                     if(vaultRes.ok) { const vData = await vaultRes.json(); let liveTvl = vData.tvl || vData.fdv || vData.totalValueLocked || (vData.data && vData.data.tvl) || vaultTvlData; if(liveTvl > 0) vaultTvlData = liveTvl; }
                 } catch(e) {}
 
-                // --- NUEVO: EXTRAER VYFI Y xVYFI (COPIA EXACTA DEL MÉTODO VLRM) ---
+                // --- EXTRAER VYFI Y xVYFI CON EL MISMO MÉTODO INFALIBLE QUE VLRM ---
                 try {
-                    const allVyfiPools = data.vyfiPools.filter(p => p.unitsPair && p.unitsPair.includes('lovelace') && p.unitsPair.includes(TOKEN_VYFI));
+                    const vyfiPoolsList = data.vyfiPools || [];
+
+                    // 1. Buscar VYFI (Usando el Hash exacto copiado)
+                    const allVyfiPools = vyfiPoolsList.filter(p => p.unitsPair && p.unitsPair.includes('lovelace') && p.unitsPair.includes(TOKEN_VYFI));
                     if (allVyfiPools.length > 0) {
                         const vyfiDexPool = allVyfiPools.sort((a,b) => (b.tvl||0) - (a.tvl||0))[0];
                         let pVyfiDex = vyfiDexPool.tokenA.unit === 'lovelace' ? vyfiDexPool.tokenB.lpRatio[vyfiDexPool.unitsPair].priceRatioAB : vyfiDexPool.tokenA.lpRatio[vyfiDexPool.unitsPair].priceRatioBA;
@@ -1094,10 +1100,9 @@
                             document.getElementById('vyfi-arbitrage-spread').style.color = vyfiSpread > 0.5 ? "#10b981" : "rgba(255,255,255,0.5)";
                         }
                     }
-                } catch(e) { console.error("Error VYFI:", e); }
 
-                try {
-                    const allXvyfiPools = data.vyfiPools.filter(p => p.unitsPair && p.unitsPair.includes('lovelace') && p.unitsPair.includes(TOKEN_XVYFI));
+                    // 2. Buscar xVYFI (Buscando su cadena Hexadecimal directamente)
+                    const allXvyfiPools = vyfiPoolsList.filter(p => p.unitsPair && p.unitsPair.includes('lovelace') && p.unitsPair.includes(TOKEN_XVYFI_HEX));
                     if (allXvyfiPools.length > 0) {
                         const xvyfiDexPool = allXvyfiPools.sort((a,b) => (b.tvl||0) - (a.tvl||0))[0];
                         let pXvyfiDex = xvyfiDexPool.tokenA.unit === 'lovelace' ? xvyfiDexPool.tokenB.lpRatio[xvyfiDexPool.unitsPair].priceRatioAB : xvyfiDexPool.tokenA.lpRatio[xvyfiDexPool.unitsPair].priceRatioBA;
@@ -1106,7 +1111,10 @@
                         document.getElementById('xvyfi-price').classList.remove('loading');
                         document.getElementById('xvyfi-tvl').innerText = `₳ ${Math.round(xvyfiDexPool.tvl || 0).toLocaleString()}`;
                     }
-                } catch(e) { console.error("Error xVYFI:", e); }
+
+                } catch(e) {
+                    console.error("Error localizando tokens VYFI:", e);
+                }
                 // --------------------------------------------------------------------
 
                 let priceVlrmAda = 0; let vlrmVyfiAdaReserve = 0; let vlrmVyfiTokReserve = 0; let vlrmAdaTvl = 0;
