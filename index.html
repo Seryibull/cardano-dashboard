@@ -122,50 +122,50 @@
         .card-compact { padding: 15px 25px !important; justify-content: center !important;}
         @media (min-width: 768px) { .card-compact .card-title { margin-bottom: 5px; font-size: 0.95rem; } }
 
-        /* 🎨 EFECTO FOCO SUPERIOR ALINEADO (TARJETAS OSCURAS CON FOCO BRILLANTE) */
+        /* 🎨 FONDOS SOLIDOS SUTILES (SIN FOCO) */
         .card-ada { 
             box-shadow: -10px 10px 40px rgba(0, 0, 0, 0.4); 
-            background: radial-gradient(250px circle at top right, rgba(66, 133, 244, 0.09), transparent), rgba(12, 14, 22, 0.98); 
+            background: rgba(12, 14, 22, 0.98); 
         }
         .card-ada:hover { 
             box-shadow: -15px 15px 50px rgba(0, 0, 0, 0.6), 0 0 20px rgba(66, 133, 244, 0.14); 
-            background: radial-gradient(250px circle at top right, rgba(66, 133, 244, 0.14), transparent), rgba(16, 18, 30, 1); 
+            background: rgba(16, 18, 30, 1); 
         }
         
         .card-vault { 
             box-shadow: -10px 10px 40px rgba(0, 0, 0, 0.4); 
-            background: radial-gradient(250px circle at top right, rgba(252, 211, 77, 0.09), transparent), rgba(16, 14, 10, 0.98); 
+            background: rgba(16, 14, 10, 0.98); 
         }
         .card-vault:hover { 
             box-shadow: -15px 15px 50px rgba(0, 0, 0, 0.6), 0 0 20px rgba(252, 211, 77, 0.14); 
-            background: radial-gradient(250px circle at top right, rgba(252, 211, 77, 0.14), transparent), rgba(20, 18, 12, 1); 
+            background: rgba(20, 18, 12, 1); 
         }
         
         .card-orange { 
             box-shadow: -10px 10px 40px rgba(0, 0, 0, 0.4); 
-            background: radial-gradient(250px circle at top right, rgba(255, 123, 0, 0.09), transparent), rgba(18, 10, 8, 0.98); 
+            background: rgba(18, 10, 8, 0.98); 
         }
         .card-orange:hover { 
             box-shadow: -15px 15px 50px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 123, 0, 0.14); 
-            background: radial-gradient(250px circle at top right, rgba(255, 123, 0, 0.14), transparent), rgba(22, 12, 10, 1); 
+            background: rgba(22, 12, 10, 1); 
         }
 
-        /* GRÁFICA PRINCIPAL: Brillo exacto al resto */
+        /* GRÁFICA PRINCIPAL: Fondo sólido exacto al resto */
         [gs-id="card-chart"] .card {
             box-shadow: -10px 10px 40px rgba(0, 0, 0, 0.4); 
-            background: radial-gradient(250px circle at top right, rgba(255, 255, 255, 0.09), transparent), rgba(12, 14, 22, 0.98);
+            background: rgba(12, 14, 22, 0.98);
         }
         [gs-id="card-chart"] .card:hover {
             box-shadow: -15px 15px 50px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 255, 255, 0.14); 
-            background: radial-gradient(250px circle at top right, rgba(255, 255, 255, 0.14), transparent), rgba(16, 18, 30, 1);
+            background: rgba(16, 18, 30, 1);
         }
 
-        /* EFECTO: RESPLANDOR VERDE (ALERTAS Y PROFIT) */
+        /* EFECTO: RESPLANDOR VERDE (ALERTAS Y PROFIT) - Modificado para sin gradiente */
         @keyframes greenAlertPulse {
             0% { box-shadow: -10px 10px 40px rgba(16, 185, 129, 0.3), inset 0 0 10px rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.4); }
             100% { box-shadow: -15px 15px 60px rgba(16, 185, 129, 0.9), inset 0 0 20px rgba(16, 185, 129, 0.3); border-color: rgba(16, 185, 129, 0.9); }
         }
-        .glow-active { animation: greenAlertPulse 1.5s infinite alternate ease-in-out !important; border-color: rgba(16, 185, 129, 0.8) !important; background: radial-gradient(250px circle at top right, rgba(16, 185, 129, 0.08), transparent), rgba(10, 15, 15, 0.98) !important; }
+        .glow-active { animation: greenAlertPulse 1.5s infinite alternate ease-in-out !important; border-color: rgba(16, 185, 129, 0.8) !important; background: rgba(10, 15, 15, 0.98) !important; }
 
         /* =========================================
            🛡️ LA CÁRCEL DE CHART.JS
@@ -1056,22 +1056,6 @@
             } catch (error) { console.error("Error cargando ADA:", error); return null; }
         }
 
-        // FUNCIÓN AYUDANTE PARA EXTRAER PRECIO SEGURO DE VYFI
-        function getSafeVyfiPrice(pool) {
-            if(!pool) return 0;
-            try {
-                if (pool.tokenA && pool.tokenA.unit === 'lovelace' && pool.tokenB && pool.tokenB.lpRatio) {
-                    return pool.tokenB.lpRatio[pool.unitsPair].priceRatioAB;
-                } else if (pool.tokenB && pool.tokenB.unit === 'lovelace' && pool.tokenA && pool.tokenA.lpRatio) {
-                    return pool.tokenA.lpRatio[pool.unitsPair].priceRatioBA;
-                } else if (pool.tokenA && pool.tokenB && pool.tokenA.quantity && pool.tokenB.quantity) {
-                    if(pool.tokenA.unit === 'lovelace') return pool.tokenA.quantity / pool.tokenB.quantity;
-                    if(pool.tokenB.unit === 'lovelace') return pool.tokenB.quantity / pool.tokenA.quantity;
-                }
-            } catch(e) { return 0; }
-            return 0;
-        }
-
         async function fetchDexData() {
             try {
                 const response = await fetch(PROXY_URL, { headers: { "X-Terminal-Key": userPasskey } });
@@ -1084,50 +1068,45 @@
                     if(vaultRes.ok) { const vData = await vaultRes.json(); let liveTvl = vData.tvl || vData.fdv || vData.totalValueLocked || (vData.data && vData.data.tvl) || vaultTvlData; if(liveTvl > 0) vaultTvlData = liveTvl; }
                 } catch(e) {}
 
-                // --- NUEVO: EXTRAER VYFI Y xVYFI (LÓGICA BLINDADA Y SIMPLIFICADA) ---
-                const vyfiPoolsList = data.vyfiPools || [];
+                // --- NUEVO: EXTRAER VYFI Y xVYFI (COPIA EXACTA DEL MÉTODO VLRM) ---
+                try {
+                    const allVyfiPools = data.vyfiPools.filter(p => p.unitsPair && p.unitsPair.includes('lovelace') && p.unitsPair.includes(TOKEN_VYFI));
+                    if (allVyfiPools.length > 0) {
+                        const vyfiDexPool = allVyfiPools.sort((a,b) => (b.tvl||0) - (a.tvl||0))[0];
+                        let pVyfiDex = vyfiDexPool.tokenA.unit === 'lovelace' ? vyfiDexPool.tokenB.lpRatio[vyfiDexPool.unitsPair].priceRatioAB : vyfiDexPool.tokenA.lpRatio[vyfiDexPool.unitsPair].priceRatioBA;
+                        
+                        document.getElementById('vyfi-dex-price').innerText = `₳ ${pVyfiDex.toFixed(6)}`;
+                        document.getElementById('vyfi-dex-price').classList.remove('loading');
 
-                // 1. Buscar VYFI
-                let vyfiPoolsMatched = vyfiPoolsList.filter(p => p.unitsPair && p.unitsPair.includes(TOKEN_VYFI) && p.unitsPair.includes('lovelace'));
-                if(vyfiPoolsMatched.length === 0) vyfiPoolsMatched = vyfiPoolsList.filter(p => (p.tokenA && p.tokenA.unit === TOKEN_VYFI) || (p.tokenB && p.tokenB.unit === TOKEN_VYFI));
-                
-                const vyfiDexPool = vyfiPoolsMatched.sort((a,b) => (b.tvl||0) - (a.tvl||0))[0];
-                let pVyfiDex = getSafeVyfiPrice(vyfiDexPool);
-                
-                if (pVyfiDex > 0) {
-                    document.getElementById('vyfi-dex-price').innerText = `₳ ${pVyfiDex.toFixed(6)}`;
-                    document.getElementById('vyfi-dex-price').classList.remove('loading');
-                }
+                        let priceMinVyfi = 0;
+                        if (data.minVyfiPrice && data.minVyfiPrice.length > 0 && data.minVyfiPrice[0].close) { 
+                            priceMinVyfi = parseFloat(data.minVyfiPrice[0].close); 
+                            document.getElementById('minswap-vyfi-price').innerText = `₳ ${priceMinVyfi.toFixed(6)}`;
+                            document.getElementById('minswap-vyfi-price').classList.remove('loading');
+                        }
 
-                // 2. Buscar xVYFI
-                let xvyfiPoolsMatched = vyfiPoolsList.filter(p => p.unitsPair && p.unitsPair.includes(TOKEN_XVYFI) && p.unitsPair.includes('lovelace'));
-                if(xvyfiPoolsMatched.length === 0) xvyfiPoolsMatched = vyfiPoolsList.filter(p => (p.tokenA && p.tokenA.unit === TOKEN_XVYFI) || (p.tokenB && p.tokenB.unit === TOKEN_XVYFI));
-                
-                const xvyfiDexPool = xvyfiPoolsMatched.sort((a,b) => (b.tvl||0) - (a.tvl||0))[0];
-                let pXvyfiDex = getSafeVyfiPrice(xvyfiDexPool);
-                
-                if (pXvyfiDex > 0) {
-                    document.getElementById('xvyfi-price').innerText = `₳ ${pXvyfiDex.toFixed(6)}`;
-                    document.getElementById('xvyfi-price').classList.remove('loading');
-                    document.getElementById('xvyfi-tvl').innerText = `₳ ${Math.round(xvyfiDexPool.tvl || 0).toLocaleString()}`;
-                }
+                        if (pVyfiDex > 0 && priceMinVyfi > 0) {
+                            const highestPrice = Math.max(pVyfiDex, priceMinVyfi); 
+                            const lowestPrice = Math.min(pVyfiDex, priceMinVyfi); 
+                            let vyfiSpread = ((highestPrice - lowestPrice) / lowestPrice) * 100;
+                            
+                            document.getElementById('vyfi-arbitrage-spread').innerText = vyfiSpread.toFixed(2) + '%';
+                            document.getElementById('vyfi-arbitrage-spread').style.color = vyfiSpread > 0.5 ? "#10b981" : "rgba(255,255,255,0.5)";
+                        }
+                    }
+                } catch(e) { console.error("Error VYFI:", e); }
 
-                // 3. Buscar MINSWAP y calcular SPREAD
-                let priceMinVyfi = 0;
-                if (data.minVyfiPrice && data.minVyfiPrice.length > 0 && data.minVyfiPrice[0].close) { 
-                    priceMinVyfi = parseFloat(data.minVyfiPrice[0].close); 
-                    document.getElementById('minswap-vyfi-price').innerText = `₳ ${priceMinVyfi.toFixed(6)}`;
-                    document.getElementById('minswap-vyfi-price').classList.remove('loading');
-                }
+                try {
+                    const allXvyfiPools = data.vyfiPools.filter(p => p.unitsPair && p.unitsPair.includes('lovelace') && p.unitsPair.includes(TOKEN_XVYFI));
+                    if (allXvyfiPools.length > 0) {
+                        const xvyfiDexPool = allXvyfiPools.sort((a,b) => (b.tvl||0) - (a.tvl||0))[0];
+                        let pXvyfiDex = xvyfiDexPool.tokenA.unit === 'lovelace' ? xvyfiDexPool.tokenB.lpRatio[xvyfiDexPool.unitsPair].priceRatioAB : xvyfiDexPool.tokenA.lpRatio[xvyfiDexPool.unitsPair].priceRatioBA;
 
-                if (pVyfiDex > 0 && priceMinVyfi > 0) {
-                    const highestPrice = Math.max(pVyfiDex, priceMinVyfi); 
-                    const lowestPrice = Math.min(pVyfiDex, priceMinVyfi); 
-                    let vyfiSpread = ((highestPrice - lowestPrice) / lowestPrice) * 100;
-                    
-                    document.getElementById('vyfi-arbitrage-spread').innerText = vyfiSpread.toFixed(2) + '%';
-                    document.getElementById('vyfi-arbitrage-spread').style.color = vyfiSpread > 0.5 ? "#10b981" : "rgba(255,255,255,0.5)";
-                }
+                        document.getElementById('xvyfi-price').innerText = `₳ ${pXvyfiDex.toFixed(6)}`;
+                        document.getElementById('xvyfi-price').classList.remove('loading');
+                        document.getElementById('xvyfi-tvl').innerText = `₳ ${Math.round(xvyfiDexPool.tvl || 0).toLocaleString()}`;
+                    }
+                } catch(e) { console.error("Error xVYFI:", e); }
                 // --------------------------------------------------------------------
 
                 let priceVlrmAda = 0; let vlrmVyfiAdaReserve = 0; let vlrmVyfiTokReserve = 0; let vlrmAdaTvl = 0;
