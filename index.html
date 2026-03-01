@@ -125,42 +125,42 @@
         .card-compact { padding: 15px 25px !important; justify-content: center !important;}
         @media (min-width: 768px) { .card-compact .card-title { margin-bottom: 5px; font-size: 0.95rem; } }
 
-        /* 🎨 EFECTO FOCO SUPERIOR ALINEADO (TODAS AL 0.08) Y SOMBRAS DIAGONALES */
+        /* 🎨 EFECTO FOCO SUPERIOR ALINEADO Y FONDOS MÁS CLAROS */
         .card-ada { 
-            box-shadow: -10px 10px 40px rgba(0, 0, 0, 0.5); 
-            background: radial-gradient(250px circle at top right, rgba(66, 133, 244, 0.08), transparent), rgba(8, 10, 16, 0.98); 
+            box-shadow: -10px 10px 40px rgba(0, 0, 0, 0.4); 
+            background: radial-gradient(250px circle at top right, rgba(66, 133, 244, 0.15), transparent), rgba(22, 26, 42, 0.95); 
         }
         .card-ada:hover { 
-            box-shadow: -15px 15px 50px rgba(0, 0, 0, 0.7), 0 0 20px rgba(66, 133, 244, 0.15); 
-            background: radial-gradient(250px circle at top right, rgba(66, 133, 244, 0.15), transparent), rgba(12, 15, 24, 1); 
+            box-shadow: -15px 15px 50px rgba(0, 0, 0, 0.6), 0 0 20px rgba(66, 133, 244, 0.25); 
+            background: radial-gradient(250px circle at top right, rgba(66, 133, 244, 0.22), transparent), rgba(28, 32, 50, 1); 
         }
         
         .card-vault { 
-            box-shadow: -10px 10px 40px rgba(0, 0, 0, 0.5); 
-            background: radial-gradient(250px circle at top right, rgba(252, 211, 77, 0.08), transparent), rgba(14, 10, 4, 0.98); 
+            box-shadow: -10px 10px 40px rgba(0, 0, 0, 0.4); 
+            background: radial-gradient(250px circle at top right, rgba(252, 211, 77, 0.15), transparent), rgba(30, 26, 18, 0.95); 
         }
         .card-vault:hover { 
-            box-shadow: -15px 15px 50px rgba(0, 0, 0, 0.7), 0 0 20px rgba(252, 211, 77, 0.15); 
-            background: radial-gradient(250px circle at top right, rgba(252, 211, 77, 0.15), transparent), rgba(18, 12, 5, 1); 
+            box-shadow: -15px 15px 50px rgba(0, 0, 0, 0.6), 0 0 20px rgba(252, 211, 77, 0.25); 
+            background: radial-gradient(250px circle at top right, rgba(252, 211, 77, 0.22), transparent), rgba(36, 30, 22, 1); 
         }
         
         .card-orange { 
-            box-shadow: -10px 10px 40px rgba(0, 0, 0, 0.5); 
-            background: radial-gradient(250px circle at top right, rgba(255, 123, 0, 0.08), transparent), rgba(14, 6, 2, 0.98); 
+            box-shadow: -10px 10px 40px rgba(0, 0, 0, 0.4); 
+            background: radial-gradient(250px circle at top right, rgba(255, 123, 0, 0.15), transparent), rgba(32, 20, 16, 0.95); 
         }
         .card-orange:hover { 
-            box-shadow: -15px 15px 50px rgba(0, 0, 0, 0.7), 0 0 20px rgba(255, 123, 0, 0.15); 
-            background: radial-gradient(250px circle at top right, rgba(255, 123, 0, 0.15), transparent), rgba(18, 8, 3, 1); 
+            box-shadow: -15px 15px 50px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 123, 0, 0.25); 
+            background: radial-gradient(250px circle at top right, rgba(255, 123, 0, 0.22), transparent), rgba(38, 24, 18, 1); 
         }
 
         /* GRÁFICA PRINCIPAL: Brillo exacto al resto */
         [gs-id="card-chart"] .card {
-            box-shadow: -10px 10px 40px rgba(0, 0, 0, 0.5); 
-            background: radial-gradient(250px circle at top right, rgba(255, 255, 255, 0.08), transparent), rgba(8, 10, 16, 0.98);
+            box-shadow: -10px 10px 40px rgba(0, 0, 0, 0.4); 
+            background: radial-gradient(250px circle at top right, rgba(255, 255, 255, 0.12), transparent), rgba(22, 26, 42, 0.95);
         }
         [gs-id="card-chart"] .card:hover {
-            box-shadow: -15px 15px 50px rgba(0, 0, 0, 0.7), 0 0 20px rgba(255, 255, 255, 0.05); 
-            background: radial-gradient(250px circle at top right, rgba(255, 255, 255, 0.15), transparent), rgba(10, 12, 20, 1);
+            box-shadow: -15px 15px 50px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 255, 255, 0.15); 
+            background: radial-gradient(250px circle at top right, rgba(255, 255, 255, 0.2), transparent), rgba(28, 32, 50, 1);
         }
 
         /* EFECTO: RESPLANDOR VERDE (ALERTAS Y PROFIT) */
@@ -1075,29 +1075,33 @@
                     if(vaultRes.ok) { const vData = await vaultRes.json(); let liveTvl = vData.tvl || vData.fdv || vData.totalValueLocked || (vData.data && vData.data.tvl) || vaultTvlData; if(liveTvl > 0) vaultTvlData = liveTvl; }
                 } catch(e) {}
 
-                // --- EXTRAER VYFI Y xVYFI DEL DEX DE VYFINANCE ---
-                const vyfiDexPool = data.vyfiPools.find(p => p.unitsPair.includes('lovelace') && p.unitsPair.includes(TOKEN_VYFI));
-                if (vyfiDexPool) { 
+                // --- EXTRAER VYFI Y xVYFI DEL DEX DE VYFINANCE (CON FILTRO DE TVL) ---
+                const allVyfiPools = data.vyfiPools.filter(p => p.unitsPair.includes('lovelace') && p.unitsPair.includes(TOKEN_VYFI));
+                const vyfiDexPool = allVyfiPools.sort((a, b) => b.tvl - a.tvl)[0]; // Cogemos el de mayor liquidez
+                
+                if (vyfiDexPool && vyfiDexPool.tokenB.lpRatio) { 
                     let pVyfiDex = vyfiDexPool.tokenA.unit === 'lovelace' ? vyfiDexPool.tokenB.lpRatio[vyfiDexPool.unitsPair].priceRatioAB : vyfiDexPool.tokenA.lpRatio[vyfiDexPool.unitsPair].priceRatioBA; 
-                    document.getElementById('vyfi-dex-price').innerText = `₳ ${pVyfiDex.toFixed(6)}`; 
+                    document.getElementById('vyfi-dex-price').innerText = `₳ ${(pVyfiDex || 0).toFixed(6)}`; 
                 }
 
-                const xvyfiDexPool = data.vyfiPools.find(p => p.unitsPair.includes('lovelace') && p.unitsPair.includes(TOKEN_XVYFI));
-                if (xvyfiDexPool) { 
+                const allXvyfiPools = data.vyfiPools.filter(p => p.unitsPair.includes('lovelace') && p.unitsPair.includes(TOKEN_XVYFI));
+                const xvyfiDexPool = allXvyfiPools.sort((a, b) => b.tvl - a.tvl)[0]; // Cogemos el de mayor liquidez
+                
+                if (xvyfiDexPool && xvyfiDexPool.tokenB.lpRatio) { 
                     let pXvyfiDex = xvyfiDexPool.tokenA.unit === 'lovelace' ? xvyfiDexPool.tokenB.lpRatio[xvyfiDexPool.unitsPair].priceRatioAB : xvyfiDexPool.tokenA.lpRatio[xvyfiDexPool.unitsPair].priceRatioBA; 
-                    document.getElementById('xvyfi-price').innerText = `₳ ${pXvyfiDex.toFixed(6)}`; 
-                    document.getElementById('xvyfi-tvl').innerText = `₳ ${Math.round(xvyfiDexPool.tvl).toLocaleString()}`;
+                    document.getElementById('xvyfi-price').innerText = `₳ ${(pXvyfiDex || 0).toFixed(6)}`; 
+                    document.getElementById('xvyfi-tvl').innerText = `₳ ${Math.round(xvyfiDexPool.tvl || 0).toLocaleString()}`;
                 }
 
                 // --- CAPTURAR MINSWAP VYFI Y CALCULAR SPREAD ---
                 let priceMinVyfi = 0;
-                if (data.minVyfiPrice && data.minVyfiPrice.length > 0) { 
+                if (data.minVyfiPrice && data.minVyfiPrice.length > 0 && data.minVyfiPrice[0].close) { 
                     priceMinVyfi = parseFloat(data.minVyfiPrice[0].close); 
                     document.getElementById('minswap-vyfi-price').innerText = `₳ ${priceMinVyfi.toFixed(6)}`;
                     document.getElementById('minswap-vyfi-price').classList.remove('loading');
                 }
 
-                if (vyfiDexPool && priceMinVyfi > 0) {
+                if (vyfiDexPool && vyfiDexPool.tokenB.lpRatio && priceMinVyfi > 0) {
                     let pVyfiDex = vyfiDexPool.tokenA.unit === 'lovelace' ? vyfiDexPool.tokenB.lpRatio[vyfiDexPool.unitsPair].priceRatioAB : vyfiDexPool.tokenA.lpRatio[vyfiDexPool.unitsPair].priceRatioBA;
                     const highestPrice = Math.max(pVyfiDex, priceMinVyfi); 
                     const lowestPrice = Math.min(pVyfiDex, priceMinVyfi); 
