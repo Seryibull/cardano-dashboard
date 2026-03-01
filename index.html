@@ -583,7 +583,7 @@
                     </div>
                     <div style="border-left: 2px solid rgba(255,255,255,0.05); padding-left: 20px;">
                         <h3 class="dex-subtitle"><span class="badge bg-minswap">MINSWAP</span></h3>
-                        <div class="data-row"><span class="data-label">Price:</span><span class="data-value"><span id="minswap-vyfi-price" class="loading">Backend Req.</span></span></div>
+                        <div class="data-row"><span class="data-label">Price:</span><span class="data-value"><span id="minswap-vyfi-price" class="loading">Loading...</span></span></div>
                     </div>
                 </div>
                 <div style="margin-top: auto; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.05);">
@@ -738,7 +738,7 @@
             grid = gridOracle;
 
             const savedLayout = JSON.parse(localStorage.getItem(`l4va_grid_layout_${LAYOUT_VERSION}`));
-            if (savedLayout && savedLayout.length > 0) { gridOracle.load(savedLayout); } // Nota: aquí solo cargamos en oracle. En el futuro separaremos el guardado por grid
+            if (savedLayout && savedLayout.length > 0) { gridOracle.load(savedLayout); } 
             
             document.getElementById('sim-ada-input').value = conf.simDex;
             document.getElementById('sim-tri-input').value = conf.simTri;
@@ -793,12 +793,10 @@
             closeModals(); recalculateSimulators();
         }
 
-        // ESCRITURA SEDA - SINCRONIZADORES 100% INDEPENDIENTES
         function updateSimConfig(sourceId, confKey) {
             let el = document.getElementById(sourceId); 
             let rawVal = el.value;
             
-            // Si el input está vacío o con signo negativo, esperamos pacientemente.
             if (rawVal === "") {
                 if (confKey === 'simDex') recalculateDexSimulator(0);
                 if (confKey === 'simTri') recalculateTriSimulator(0);
@@ -1077,7 +1075,7 @@
                     if(vaultRes.ok) { const vData = await vaultRes.json(); let liveTvl = vData.tvl || vData.fdv || vData.totalValueLocked || (vData.data && vData.data.tvl) || vaultTvlData; if(liveTvl > 0) vaultTvlData = liveTvl; }
                 } catch(e) {}
 
-                // --- NUEVO: EXTRAER VYFI Y xVYFI DEL DEX DE VYFINANCE ---
+                // --- EXTRAER VYFI Y xVYFI DEL DEX DE VYFINANCE ---
                 const vyfiDexPool = data.vyfiPools.find(p => p.unitsPair.includes('lovelace') && p.unitsPair.includes(TOKEN_VYFI));
                 if (vyfiDexPool) { 
                     let pVyfiDex = vyfiDexPool.tokenA.unit === 'lovelace' ? vyfiDexPool.tokenB.lpRatio[vyfiDexPool.unitsPair].priceRatioAB : vyfiDexPool.tokenA.lpRatio[vyfiDexPool.unitsPair].priceRatioBA; 
@@ -1089,6 +1087,24 @@
                     let pXvyfiDex = xvyfiDexPool.tokenA.unit === 'lovelace' ? xvyfiDexPool.tokenB.lpRatio[xvyfiDexPool.unitsPair].priceRatioAB : xvyfiDexPool.tokenA.lpRatio[xvyfiDexPool.unitsPair].priceRatioBA; 
                     document.getElementById('xvyfi-price').innerText = `₳ ${pXvyfiDex.toFixed(6)}`; 
                     document.getElementById('xvyfi-tvl').innerText = `₳ ${Math.round(xvyfiDexPool.tvl).toLocaleString()}`;
+                }
+
+                // --- CAPTURAR MINSWAP VYFI Y CALCULAR SPREAD ---
+                let priceMinVyfi = 0;
+                if (data.minVyfiPrice && data.minVyfiPrice.length > 0) { 
+                    priceMinVyfi = parseFloat(data.minVyfiPrice[0].close); 
+                    document.getElementById('minswap-vyfi-price').innerText = `₳ ${priceMinVyfi.toFixed(6)}`;
+                    document.getElementById('minswap-vyfi-price').classList.remove('loading');
+                }
+
+                if (vyfiDexPool && priceMinVyfi > 0) {
+                    let pVyfiDex = vyfiDexPool.tokenA.unit === 'lovelace' ? vyfiDexPool.tokenB.lpRatio[vyfiDexPool.unitsPair].priceRatioAB : vyfiDexPool.tokenA.lpRatio[vyfiDexPool.unitsPair].priceRatioBA;
+                    const highestPrice = Math.max(pVyfiDex, priceMinVyfi); 
+                    const lowestPrice = Math.min(pVyfiDex, priceMinVyfi); 
+                    let vyfiSpread = ((highestPrice - lowestPrice) / lowestPrice) * 100;
+                    
+                    document.getElementById('vyfi-arbitrage-spread').innerText = vyfiSpread.toFixed(2) + '%';
+                    document.getElementById('vyfi-arbitrage-spread').style.color = vyfiSpread > 0.5 ? "#10b981" : "rgba(255,255,255,0.5)";
                 }
                 // --------------------------------------------------------
 
