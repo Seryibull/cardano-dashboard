@@ -125,42 +125,42 @@
         .card-compact { padding: 15px 25px !important; justify-content: center !important;}
         @media (min-width: 768px) { .card-compact .card-title { margin-bottom: 5px; font-size: 0.95rem; } }
 
-        /* 🎨 EFECTO FOCO SUPERIOR ALINEADO Y FONDOS MÁS CLAROS */
+        /* 🎨 EFECTO FOCO SUPERIOR ALINEADO Y FONDOS SUTILES (Reducidos a la mitad) */
         .card-ada { 
             box-shadow: -10px 10px 40px rgba(0, 0, 0, 0.4); 
-            background: radial-gradient(250px circle at top right, rgba(66, 133, 244, 0.15), transparent), rgba(22, 26, 42, 0.95); 
+            background: radial-gradient(250px circle at top right, rgba(66, 133, 244, 0.04), transparent), rgba(22, 26, 42, 0.95); 
         }
         .card-ada:hover { 
-            box-shadow: -15px 15px 50px rgba(0, 0, 0, 0.6), 0 0 20px rgba(66, 133, 244, 0.25); 
-            background: radial-gradient(250px circle at top right, rgba(66, 133, 244, 0.22), transparent), rgba(28, 32, 50, 1); 
+            box-shadow: -15px 15px 50px rgba(0, 0, 0, 0.6), 0 0 20px rgba(66, 133, 244, 0.08); 
+            background: radial-gradient(250px circle at top right, rgba(66, 133, 244, 0.08), transparent), rgba(28, 32, 50, 1); 
         }
         
         .card-vault { 
             box-shadow: -10px 10px 40px rgba(0, 0, 0, 0.4); 
-            background: radial-gradient(250px circle at top right, rgba(252, 211, 77, 0.15), transparent), rgba(30, 26, 18, 0.95); 
+            background: radial-gradient(250px circle at top right, rgba(252, 211, 77, 0.04), transparent), rgba(30, 26, 18, 0.95); 
         }
         .card-vault:hover { 
-            box-shadow: -15px 15px 50px rgba(0, 0, 0, 0.6), 0 0 20px rgba(252, 211, 77, 0.25); 
-            background: radial-gradient(250px circle at top right, rgba(252, 211, 77, 0.22), transparent), rgba(36, 30, 22, 1); 
+            box-shadow: -15px 15px 50px rgba(0, 0, 0, 0.6), 0 0 20px rgba(252, 211, 77, 0.08); 
+            background: radial-gradient(250px circle at top right, rgba(252, 211, 77, 0.08), transparent), rgba(36, 30, 22, 1); 
         }
         
         .card-orange { 
             box-shadow: -10px 10px 40px rgba(0, 0, 0, 0.4); 
-            background: radial-gradient(250px circle at top right, rgba(255, 123, 0, 0.15), transparent), rgba(32, 20, 16, 0.95); 
+            background: radial-gradient(250px circle at top right, rgba(255, 123, 0, 0.04), transparent), rgba(32, 20, 16, 0.95); 
         }
         .card-orange:hover { 
-            box-shadow: -15px 15px 50px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 123, 0, 0.25); 
-            background: radial-gradient(250px circle at top right, rgba(255, 123, 0, 0.22), transparent), rgba(38, 24, 18, 1); 
+            box-shadow: -15px 15px 50px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 123, 0, 0.08); 
+            background: radial-gradient(250px circle at top right, rgba(255, 123, 0, 0.08), transparent), rgba(38, 24, 18, 1); 
         }
 
         /* GRÁFICA PRINCIPAL: Brillo exacto al resto */
         [gs-id="card-chart"] .card {
             box-shadow: -10px 10px 40px rgba(0, 0, 0, 0.4); 
-            background: radial-gradient(250px circle at top right, rgba(255, 255, 255, 0.12), transparent), rgba(22, 26, 42, 0.95);
+            background: radial-gradient(250px circle at top right, rgba(255, 255, 255, 0.04), transparent), rgba(22, 26, 42, 0.95);
         }
         [gs-id="card-chart"] .card:hover {
-            box-shadow: -15px 15px 50px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 255, 255, 0.15); 
-            background: radial-gradient(250px circle at top right, rgba(255, 255, 255, 0.2), transparent), rgba(28, 32, 50, 1);
+            box-shadow: -15px 15px 50px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 255, 255, 0.08); 
+            background: radial-gradient(250px circle at top right, rgba(255, 255, 255, 0.08), transparent), rgba(28, 32, 50, 1);
         }
 
         /* EFECTO: RESPLANDOR VERDE (ALERTAS Y PROFIT) */
@@ -579,7 +579,7 @@
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 20px;">
                     <div>
                         <h3 class="dex-subtitle"><span class="badge bg-vyfi">VYFI DEX</span></h3>
-                        <div class="data-row"><span class="data-label">Price:</span><span class="data-value"><span id="vyfi-dex-price">-</span></span></div>
+                        <div class="data-row"><span class="data-label">Price:</span><span class="data-value"><span id="vyfi-dex-price" class="loading">Loading...</span></span></div>
                     </div>
                     <div style="border-left: 2px solid rgba(255,255,255,0.05); padding-left: 20px;">
                         <h3 class="dex-subtitle"><span class="badge bg-minswap">MINSWAP</span></h3>
@@ -600,7 +600,7 @@
                 <div class="card-title" style="color: var(--vault-color);">xVYFI / ADA <span class="badge bg-vyfi" style="margin-left:auto;">VyFi</span></div>
                 <div class="data-row">
                     <span class="data-label">Price:</span>
-                    <span class="data-value"><span id="xvyfi-price">-</span></span>
+                    <span class="data-value"><span id="xvyfi-price" class="loading">Loading...</span></span>
                 </div>
                 <div class="data-row" style="margin-top: 15px;">
                     <span class="data-label">TVL (Liquidity):</span>
@@ -1075,51 +1075,85 @@
                     if(vaultRes.ok) { const vData = await vaultRes.json(); let liveTvl = vData.tvl || vData.fdv || vData.totalValueLocked || (vData.data && vData.data.tvl) || vaultTvlData; if(liveTvl > 0) vaultTvlData = liveTvl; }
                 } catch(e) {}
 
-                // --- EXTRAER VYFI Y xVYFI DEL DEX DE VYFINANCE (CON FILTRO DE TVL) ---
-                const allVyfiPools = data.vyfiPools.filter(p => p.unitsPair.includes('lovelace') && p.unitsPair.includes(TOKEN_VYFI));
-                const vyfiDexPool = allVyfiPools.sort((a, b) => b.tvl - a.tvl)[0]; // Cogemos el de mayor liquidez
-                
-                if (vyfiDexPool && vyfiDexPool.tokenB.lpRatio) { 
-                    let pVyfiDex = vyfiDexPool.tokenA.unit === 'lovelace' ? vyfiDexPool.tokenB.lpRatio[vyfiDexPool.unitsPair].priceRatioAB : vyfiDexPool.tokenA.lpRatio[vyfiDexPool.unitsPair].priceRatioBA; 
-                    document.getElementById('vyfi-dex-price').innerText = `₳ ${(pVyfiDex || 0).toFixed(6)}`; 
-                }
+                // --- EXTRAER VYFI Y xVYFI DEL DEX DE VYFINANCE (LÓGICA BLINDADA) ---
+                try {
+                    const vyfiPoolsList = data.vyfiPools || [];
 
-                const allXvyfiPools = data.vyfiPools.filter(p => p.unitsPair.includes('lovelace') && p.unitsPair.includes(TOKEN_XVYFI));
-                const xvyfiDexPool = allXvyfiPools.sort((a, b) => b.tvl - a.tvl)[0]; // Cogemos el de mayor liquidez
-                
-                if (xvyfiDexPool && xvyfiDexPool.tokenB.lpRatio) { 
-                    let pXvyfiDex = xvyfiDexPool.tokenA.unit === 'lovelace' ? xvyfiDexPool.tokenB.lpRatio[xvyfiDexPool.unitsPair].priceRatioAB : xvyfiDexPool.tokenA.lpRatio[xvyfiDexPool.unitsPair].priceRatioBA; 
-                    document.getElementById('xvyfi-price').innerText = `₳ ${(pXvyfiDex || 0).toFixed(6)}`; 
-                    document.getElementById('xvyfi-tvl').innerText = `₳ ${Math.round(xvyfiDexPool.tvl || 0).toLocaleString()}`;
-                }
-
-                // --- CAPTURAR MINSWAP VYFI Y CALCULAR SPREAD ---
-                let priceMinVyfi = 0;
-                if (data.minVyfiPrice && data.minVyfiPrice.length > 0 && data.minVyfiPrice[0].close) { 
-                    priceMinVyfi = parseFloat(data.minVyfiPrice[0].close); 
-                    document.getElementById('minswap-vyfi-price').innerText = `₳ ${priceMinVyfi.toFixed(6)}`;
-                    document.getElementById('minswap-vyfi-price').classList.remove('loading');
-                }
-
-                if (vyfiDexPool && vyfiDexPool.tokenB.lpRatio && priceMinVyfi > 0) {
-                    let pVyfiDex = vyfiDexPool.tokenA.unit === 'lovelace' ? vyfiDexPool.tokenB.lpRatio[vyfiDexPool.unitsPair].priceRatioAB : vyfiDexPool.tokenA.lpRatio[vyfiDexPool.unitsPair].priceRatioBA;
-                    const highestPrice = Math.max(pVyfiDex, priceMinVyfi); 
-                    const lowestPrice = Math.min(pVyfiDex, priceMinVyfi); 
-                    let vyfiSpread = ((highestPrice - lowestPrice) / lowestPrice) * 100;
+                    // 1. Buscar VYFI
+                    const allVyfiPools = vyfiPoolsList.filter(p => p.unitsPair && p.unitsPair.includes('lovelace') && p.unitsPair.includes(TOKEN_VYFI));
+                    const vyfiDexPool = allVyfiPools.sort((a, b) => (b.tvl || 0) - (a.tvl || 0))[0]; 
                     
-                    document.getElementById('vyfi-arbitrage-spread').innerText = vyfiSpread.toFixed(2) + '%';
-                    document.getElementById('vyfi-arbitrage-spread').style.color = vyfiSpread > 0.5 ? "#10b981" : "rgba(255,255,255,0.5)";
+                    if (vyfiDexPool) { 
+                        let pVyfiDex = 0;
+                        if (vyfiDexPool.tokenA && vyfiDexPool.tokenA.unit === 'lovelace' && vyfiDexPool.tokenB && vyfiDexPool.tokenB.lpRatio) {
+                            pVyfiDex = vyfiDexPool.tokenB.lpRatio[vyfiDexPool.unitsPair].priceRatioAB;
+                        } else if (vyfiDexPool.tokenA && vyfiDexPool.tokenA.lpRatio) {
+                            pVyfiDex = vyfiDexPool.tokenA.lpRatio[vyfiDexPool.unitsPair].priceRatioBA;
+                        } else if (vyfiDexPool.priceRatio) {
+                            pVyfiDex = vyfiDexPool.priceRatio; 
+                        }
+                        document.getElementById('vyfi-dex-price').innerText = `₳ ${(pVyfiDex || 0).toFixed(6)}`; 
+                        document.getElementById('vyfi-dex-price').classList.remove('loading');
+                    }
+
+                    // 2. Buscar xVYFI
+                    const allXvyfiPools = vyfiPoolsList.filter(p => p.unitsPair && p.unitsPair.includes('lovelace') && p.unitsPair.includes(TOKEN_XVYFI));
+                    const xvyfiDexPool = allXvyfiPools.sort((a, b) => (b.tvl || 0) - (a.tvl || 0))[0];
+                    
+                    if (xvyfiDexPool) { 
+                        let pXvyfiDex = 0;
+                        if (xvyfiDexPool.tokenA && xvyfiDexPool.tokenA.unit === 'lovelace' && xvyfiDexPool.tokenB && xvyfiDexPool.tokenB.lpRatio) {
+                            pXvyfiDex = xvyfiDexPool.tokenB.lpRatio[xvyfiDexPool.unitsPair].priceRatioAB;
+                        } else if (xvyfiDexPool.tokenA && xvyfiDexPool.tokenA.lpRatio) {
+                            pXvyfiDex = xvyfiDexPool.tokenA.lpRatio[xvyfiDexPool.unitsPair].priceRatioBA;
+                        } else if (xvyfiDexPool.priceRatio) {
+                            pXvyfiDex = xvyfiDexPool.priceRatio;
+                        }
+                        document.getElementById('xvyfi-price').innerText = `₳ ${(pXvyfiDex || 0).toFixed(6)}`; 
+                        document.getElementById('xvyfi-price').classList.remove('loading');
+                        document.getElementById('xvyfi-tvl').innerText = `₳ ${Math.round(xvyfiDexPool.tvl || 0).toLocaleString()}`;
+                    }
+
+                    // 3. Buscar MINSWAP y calcular SPREAD
+                    let priceMinVyfi = 0;
+                    if (data.minVyfiPrice && data.minVyfiPrice.length > 0 && data.minVyfiPrice[0].close) { 
+                        priceMinVyfi = parseFloat(data.minVyfiPrice[0].close); 
+                        document.getElementById('minswap-vyfi-price').innerText = `₳ ${priceMinVyfi.toFixed(6)}`;
+                        document.getElementById('minswap-vyfi-price').classList.remove('loading');
+                    }
+
+                    if (vyfiDexPool && priceMinVyfi > 0) {
+                        let pVyfiDex = 0;
+                        if (vyfiDexPool.tokenA.unit === 'lovelace' && vyfiDexPool.tokenB.lpRatio) {
+                            pVyfiDex = vyfiDexPool.tokenB.lpRatio[vyfiDexPool.unitsPair].priceRatioAB;
+                        } else if (vyfiDexPool.tokenA.lpRatio) {
+                            pVyfiDex = vyfiDexPool.tokenA.lpRatio[vyfiDexPool.unitsPair].priceRatioBA;
+                        } else if (vyfiDexPool.priceRatio) {
+                            pVyfiDex = vyfiDexPool.priceRatio; 
+                        }
+
+                        if (pVyfiDex > 0) {
+                            const highestPrice = Math.max(pVyfiDex, priceMinVyfi); 
+                            const lowestPrice = Math.min(pVyfiDex, priceMinVyfi); 
+                            let vyfiSpread = ((highestPrice - lowestPrice) / lowestPrice) * 100;
+                            
+                            document.getElementById('vyfi-arbitrage-spread').innerText = vyfiSpread.toFixed(2) + '%';
+                            document.getElementById('vyfi-arbitrage-spread').style.color = vyfiSpread > 0.5 ? "#10b981" : "rgba(255,255,255,0.5)";
+                        }
+                    }
+                } catch(e) {
+                    console.error("Error localizando tokens VYFI:", e);
                 }
                 // --------------------------------------------------------
 
                 let priceVlrmAda = 0; let vlrmVyfiAdaReserve = 0; let vlrmVyfiTokReserve = 0; let vlrmAdaTvl = 0;
-                const vlrmVyfiPool = data.vyfiPools.find(p => p.unitsPair.includes('lovelace') && p.unitsPair.includes(VLRM));
+                const vlrmVyfiPool = data.vyfiPools.find(p => p.unitsPair && p.unitsPair.includes('lovelace') && p.unitsPair.includes(VLRM));
                 if (vlrmVyfiPool) { priceVlrmAda = vlrmVyfiPool.tokenA.unit === 'lovelace' ? vlrmVyfiPool.tokenB.lpRatio[vlrmVyfiPool.unitsPair].priceRatioAB : vlrmVyfiPool.tokenA.lpRatio[vlrmVyfiPool.unitsPair].priceRatioBA; vlrmAdaTvl = vlrmVyfiPool.tvl; document.getElementById('vlrm-price-ada').innerText = `₳ ${priceVlrmAda.toFixed(6)}`; document.getElementById('vlrm-liq-ada').innerText = `₳ ${Math.round(vlrmAdaTvl).toLocaleString()}`; vlrmVyfiAdaReserve = vlrmAdaTvl / 2; vlrmVyfiTokReserve = vlrmVyfiAdaReserve / priceVlrmAda; }
                 let crossVlrmReserve = 0; let crossOracleReserve = 0; let crossTvl = 0; let rawCrossRatio = 0; let oraclePerVlrmUI = 0;
-                const crossPool = data.vyfiPools.find(p => p.unitsPair.includes(VLRM) && p.unitsPair.includes(ORACLE));
+                const crossPool = data.vyfiPools.find(p => p.unitsPair && p.unitsPair.includes(VLRM) && p.unitsPair.includes(ORACLE));
                 if (crossPool) { crossTvl = crossPool.tvl; rawCrossRatio = crossPool.tokenA.unit.includes(VLRM) ? crossPool.tokenB.lpRatio[crossPool.unitsPair].priceRatioAB : crossPool.tokenA.lpRatio[crossPool.unitsPair].priceRatioBA; crossVlrmReserve = (crossTvl / 2) / priceVlrmAda; crossOracleReserve = crossVlrmReserve / rawCrossRatio; if (crossVlrmReserve > 0) { oraclePerVlrmUI = crossOracleReserve / crossVlrmReserve; } document.getElementById('vlrm-oracle-price').innerText = `${oraclePerVlrmUI.toFixed(4)}`; document.getElementById('vlrm-oracle-liq-ada').innerText = `₳ ${Math.round(crossTvl).toLocaleString()}`; }
                 let totalOracleLiqAda = 0, priceVyfi = 0, priceMin = 0; let vyfiTvLAda = 0, minTvlAda = 0;
-                const oracleVyfiPool = data.vyfiPools.find(p => p.unitsPair.includes('lovelace') && p.unitsPair.includes(ORACLE));
+                const oracleVyfiPool = data.vyfiPools.find(p => p.unitsPair && p.unitsPair.includes('lovelace') && p.unitsPair.includes(ORACLE));
                 if (oracleVyfiPool) { priceVyfi = oracleVyfiPool.tokenA.unit === 'lovelace' ? oracleVyfiPool.tokenB.lpRatio[oracleVyfiPool.unitsPair].priceRatioAB : oracleVyfiPool.tokenA.lpRatio[oracleVyfiPool.unitsPair].priceRatioBA; vyfiTvLAda = oracleVyfiPool.tvl; totalOracleLiqAda += vyfiTvLAda; document.getElementById('oracle-vyfi-price').innerText = `₳ ${priceVyfi.toFixed(6)}`; document.getElementById('oracle-vyfi-liq').innerText = `₳ ${Math.round(vyfiTvLAda).toLocaleString()}`; }
                 if (data.minPrice && data.minPrice.length > 0) { priceMin = parseFloat(data.minPrice[0].close); document.getElementById('oracle-min-price').innerText = `₳ ${priceMin.toFixed(6)}`; if (data.minTvl && data.minTvl.length > 0) { minTvlAda = parseFloat(data.minTvl[data.minTvl.length - 1].value); totalOracleLiqAda += minTvlAda; document.getElementById('oracle-min-liq').innerText = `₳ ${Math.round(minTvlAda).toLocaleString()}`; } }
                 document.getElementById('oracle-total-liq').innerText = `₳ ${Math.round(totalOracleLiqAda).toLocaleString()}`;
@@ -1151,7 +1185,7 @@
 
                     if (spread < 0.5) { document.getElementById('arbitrage-spread').style.color = "rgba(255, 255, 255, 0.5)"; actionEl.innerHTML = `<span style="color: rgba(255, 255, 255, 0.6);">Low spread</span>`; } 
                     else { document.getElementById('arbitrage-spread').style.color = "#ffffff"; if (priceVyfi > priceMin) { actionEl.innerHTML = `<a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Buy Minswap</a> <a href="${VYFI_LINK}" target="_blank" class="badge-dark">Sell VyFi</a>`; } else { actionEl.innerHTML = `<a href="${VYFI_LINK}" target="_blank" class="badge-dark">Buy VyFi</a> <a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Sell Minswap</a>`; } }
-                    if (spread >= conf.alert) { if(dexCard) dexCard.classList.add('glow-active'); const alertToggle = document.getElementById('alert-toggle'); const now = Date.now(); if (alertToggle && alertToggle.checked && (now - lastAlertTime > ALERT_COOLDOWN)) { playDing(); if (Notification.permission === "granted") { new Notification("🚨 L4VA Arbitrage Detected!", { body: `Spread: ${spread.toFixed(2)}%\n${suggestedActionText}` }); } sendTelegramAlert(`🚨 <b>L4VA Arbitrage Detected!</b>\n\n📈 DEX Spread: <b>${spread.toFixed(2)}%</b>\n💡 Route: ${suggestedActionText}\n\n<i>Check dashboard for real-time net profit.</i>`); lastAlertTime = now; } } else { if(dexCard) dexCard.classList.remove('glow-active'); }
+                    if (spread >= conf.alert) { if(dexCard) dexCard.classList.add('glow-active'); const alertToggle = document.getElementById('alert-toggle'); const now = Date.now(); if (alertToggle && alertToggle.checked && (now - lastAlertTime > ALERT_COOLDOWN)) { playDing(); if (Notification.permission === "granted") { new Notification("🚨 L4VA Arbitrage Detected!", { body: `Spread: ${spread.toFixed(2)}%\nRoute: ${priceVyfi > priceMin ? 'Buy Minswap, Sell Vyfi' : 'Buy Vyfi, Sell Minswap'}` }); } sendTelegramAlert(`🚨 <b>L4VA Arbitrage Detected!</b>\n\n📈 DEX Spread: <b>${spread.toFixed(2)}%</b>\n💡 Route: ${priceVyfi > priceMin ? 'Buy Minswap, Sell Vyfi' : 'Buy Vyfi, Sell Minswap'}\n\n<i>Check dashboard for real-time net profit.</i>`); lastAlertTime = now; } } else { if(dexCard) dexCard.classList.remove('glow-active'); }
                 } else { if(dexCard) dexCard.classList.remove('glow-active'); }
                 let primaryOraclePrice = priceVyfi > 0 ? priceVyfi : priceMin; let voSpread = 0;
                 if (priceVlrmAda > 0 && primaryOraclePrice > 0 && oraclePerVlrmUI > 0) { let valueDirect = priceVlrmAda; let valueCross = oraclePerVlrmUI * primaryOraclePrice; voSpread = ((Math.max(valueDirect, valueCross) - Math.min(valueDirect, valueCross)) / Math.min(valueDirect, valueCross)) * 100; }
