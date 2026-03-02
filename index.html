@@ -788,8 +788,16 @@
                 if (testNet > bestProfit) { bestProfit = testNet; optimalInvest = i; } 
             }
             if(optEl) {
-                if (bestProfit > 0) { optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> Max profit <b>+${bestProfit.toFixed(2)} ADA</b> (Invest <b>${optimalInvest} ADA</b>)`; optEl.style.color = '#10b981'; }
-                else { optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> No profitable route (fees > spread).`; optEl.style.color = 'var(--text-secondary)'; }
+                if (bestProfit > 0) { 
+                    optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> Max profit <b>+${bestProfit.toFixed(2)} ADA</b> (Invest <b>${optimalInvest} ADA</b>)`; 
+                    optEl.style.color = '#10b981'; 
+                    if(cardEl) cardEl.classList.add('glow-active'); 
+                }
+                else { 
+                    optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> No profitable route (fees > spread).`; 
+                    optEl.style.color = 'var(--text-secondary)'; 
+                    if(cardEl) cardEl.classList.remove('glow-active'); 
+                }
             }
         }
 
@@ -849,13 +857,17 @@
             if(rA) rA.className = "route-inactive"; if(rB) rB.className = "route-inactive"; if(triAnim) triAnim.style.display = "none";
             if(optEl) {
                 if (bestProfit > 0) { 
-                    optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> Max profit <b>+${bestProfit.toFixed(2)} ADA</b> (Invest <b>${optimalInvest} ADA</b>)`; optEl.style.color = '#10b981';
+                    optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> Max profit <b>+${bestProfit.toFixed(2)} ADA</b> (Invest <b>${optimalInvest} ADA</b>)`; 
+                    optEl.style.color = '#10b981'; 
+                    if(cardEl) cardEl.classList.add('glow-active');
                     if(triEl) { triEl.innerText = `+${bestPercent.toFixed(2)}%`; triEl.style.color = "#10b981"; }
                     if(triAnim) triAnim.style.display = "block";
                     if (optimalRoute === 'A') { if(rA) rA.className = "route-active"; if(triAnim) triAnim.className = "tri-line-active"; }
                     if (optimalRoute === 'B') { if(rB) rB.className = "route-active"; if(triAnim) triAnim.className = "tri-line-active route-reverse"; }
                 } else { 
-                    optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> No profitable route (fees > spread).`; optEl.style.color = 'var(--text-secondary)'; 
+                    optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> No profitable route (fees > spread).`; 
+                    optEl.style.color = 'var(--text-secondary)'; 
+                    if(cardEl) cardEl.classList.remove('glow-active');
                     if(triEl) { triEl.innerText = "0.00%"; triEl.style.color = "var(--text-secondary)"; }
                 }
             }
@@ -982,11 +994,19 @@
                 const response = await fetch(PROXY_URL, { headers: { "X-Terminal-Key": userPasskey } });
                 if(response.status === 401) { showAuthScreen(); return; }
                 const data = await response.json(); if (data.error) throw new Error(data.error);
-                let vaultTvlData = 0; if (data.vaultTvl && data.vaultTvl > 0) { vaultTvlData = data.vaultTvl; }
                 
+                let vaultTvlData = parseFloat(data.vaultTvl) || 0;
+                
+                // Fetch directo de seguridad para mantener el tiempo real al milisegundo
                 try {
                     const vaultRes = await fetch(`https://app.l4va.org/api/v1/vaults/5ac2ac4f-9079-40cb-94ae-a265bfba3bcd?t=${Date.now()}`);
-                    if(vaultRes.ok) { const vData = await vaultRes.json(); let liveTvl = vData.tvl || vData.fdv || vData.totalValueLocked || (vData.data && vData.data.tvl) || vaultTvlData; if(liveTvl > 0) vaultTvlData = liveTvl; }
+                    if(vaultRes.ok) { 
+                        const vJson = await vaultRes.json(); 
+                        let val = vJson.tvl ?? vJson.fdv ?? vJson.totalValueLocked ?? vJson.locked ?? vJson.TVL;
+                        if (val === undefined && vJson.data) val = vJson.data.tvl ?? vJson.data.fdv ?? vJson.data.totalValueLocked ?? vJson.data.locked ?? vJson.data.TVL;
+                        let liveTvl = parseFloat(val) || 0;
+                        if(liveTvl > 0) vaultTvlData = liveTvl; 
+                    }
                 } catch(e) {}
 
                 const vyfiPoolsList = data.vyfiPools || [];
@@ -1022,9 +1042,10 @@
                 
                 let bestDeviation = 0; let targetDexForVault = "";
                 try {
-                    const vaultCard = document.querySelector('[gs-id="card-arb-vault"] .card');
                     if (vaultTvlData > 0) {
-                        const fairPrice = vaultTvlData / ORACLE_TOTAL_SUPPLY; updateDOM('vault-tvl', `₳ ${Math.round(vaultTvlData).toLocaleString()}`); updateDOM('vault-fair-price', `₳ ${fairPrice.toFixed(6)}`);
+                        const fairPrice = vaultTvlData / ORACLE_TOTAL_SUPPLY; 
+                        updateDOM('vault-tvl', `₳ ${Math.round(vaultTvlData).toLocaleString()}`); 
+                        updateDOM('vault-fair-price', `₳ ${fairPrice.toFixed(6)}`);
                         let validPrices = []; if (priceVyfi > 0) validPrices.push({ dex: "VyFi", price: priceVyfi }); if (priceMin > 0) validPrices.push({ dex: "Minswap", price: priceMin });
                         if (validPrices.length > 0) {
                             validPrices.forEach(p => { let deviation = ((p.price - fairPrice) / fairPrice) * 100; if (Math.abs(deviation) > Math.abs(bestDeviation)) { bestDeviation = deviation; targetDexForVault = p.dex; } });
@@ -1034,12 +1055,8 @@
                             let targetLink = targetDexForVault === "Minswap" ? MINSWAP_LINK : VYFI_LINK; 
                             if (Math.abs(bestDeviation) < 0.5) { updateDOM('vault-banner-discrepancy', undefined, "rgba(255, 255, 255, 0.5)"); if(vaultActionEl) vaultActionEl.innerHTML = `<span style="color: rgba(255, 255, 255, 0.6);">Balanced</span>`; } 
                             else { if (bestDeviation > 0) { updateDOM('vault-banner-discrepancy', undefined, "#10b981"); if(vaultActionEl) vaultActionEl.innerHTML = `<a href="${targetLink}" target="_blank" class="badge-dark">Sell ${targetDexForVault}</a>`; } else { updateDOM('vault-banner-discrepancy', undefined, "var(--neon-red)"); if(vaultActionEl) vaultActionEl.innerHTML = `<a href="${targetLink}" target="_blank" class="badge-dark">Buy ${targetDexForVault}</a>`; } }
-                            
-                            // Efecto visual silencioso en web
-                            if (Math.abs(bestDeviation) >= 5) { if(vaultCard) vaultCard.classList.add('glow-active'); } 
-                            else { if(vaultCard) vaultCard.classList.remove('glow-active'); }
                         }
-                    } else { if(vaultCard) vaultCard.classList.remove('glow-active'); updateDOM('vault-tvl', `<span class="loading">API Offline</span>`); updateDOM('vault-fair-price', `-`); updateDOM('vault-banner-discrepancy', `-%`, "rgba(255, 255, 255, 0.5)"); updateDOM('vault-arbitrage-action', `<span style="color: rgba(255, 255, 255, 0.6);">Offline</span>`); }
+                    } else { updateDOM('vault-tvl', `<span class="loading">API Offline</span>`); updateDOM('vault-fair-price', `-`); updateDOM('vault-banner-discrepancy', `-%`, "rgba(255, 255, 255, 0.5)"); updateDOM('vault-arbitrage-action', `<span style="color: rgba(255, 255, 255, 0.6);">Offline</span>`); }
                 } catch(e) { console.error("Error Vault", e); }
                 
                 let spread = 0; let voSpread = 0;
@@ -1047,8 +1064,6 @@
                     if (priceVyfi > 0 && priceMin > 0) {
                         const highestPrice = Math.max(priceVyfi, priceMin); const lowestPrice = Math.min(priceVyfi, priceMin); spread = ((highestPrice - lowestPrice) / lowestPrice) * 100;
                         const oracleCardActionEl = document.getElementById('oracle-card-arbitrage-action');
-                        const dexCard = document.querySelector('[gs-id="card-oracle-ada"] .card');
-                        
                         const oracleCardSpread = document.getElementById('oracle-card-arbitrage-spread');
                         if (oracleCardSpread) {
                             animateValue('spread', 'oracle-card-arbitrage-spread', spread, val => val.toFixed(2) + '%');
@@ -1064,10 +1079,6 @@
                             else { actionHTML = `<a href="${VYFI_LINK}" target="_blank" class="badge-dark">Buy VyFi</a> <a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Sell Minswap</a>`; }
                             if(oracleCardActionEl) oracleCardActionEl.innerHTML = actionHTML;
                         }
-
-                        // Efecto visual silencioso en web
-                        if (spread >= 5) { if(dexCard) dexCard.classList.add('glow-active'); } 
-                        else { if(dexCard) dexCard.classList.remove('glow-active'); }
                     }
                     
                     let primaryOraclePrice = priceVyfi > 0 ? priceVyfi : priceMin; 
