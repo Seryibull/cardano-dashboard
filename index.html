@@ -875,12 +875,43 @@
                     let expandedHistory = { 
                         labels: [], spread: [], discrepancy: [], vlrmOracleSpread: [], vlrmAda: [], vlrmOracle: [], oracleVyfi: [], oracleMin: [], vault: [], totalLiq: [], pVlrmAda: [], pVlrmOracle: [], pOracleVyfi: [], pOracleMin: []
                     };
+                    
+                    // ==========================================
+                    // PROTECCIÓN DE KV (Ternarios de seguridad)
+                    // ==========================================
                     for (let i = 0; i < cloudHistory.labels.length; i++) {
                         for(let j=0; j<30; j++) {
-                            expandedHistory.labels.push(cloudHistory.labels[i]); expandedHistory.spread.push(cloudHistory.spread[i]); expandedHistory.discrepancy.push(cloudHistory.discrepancy[i]);
-                            let vPrice = cloudHistory.pVlrmAda ? cloudHistory.pVlrmAda[i] : null; let oPriceVy = cloudHistory.pOracleVyfi ? cloudHistory.pOracleVyfi[i] : null; let oPriceMin = cloudHistory.pOracleMin ? cloudHistory.pOracleMin[i] : null; let oPrice = (oPriceVy && oPriceVy > 0) ? oPriceVy : oPriceMin; let voRatio = cloudHistory.pVlrmOracle ? cloudHistory.pVlrmOracle[i] : null;
-                            let voSpread = null; if (vPrice !== null && oPrice !== null && voRatio !== null && vPrice > 0 && oPrice > 0) { let valueDirect = vPrice; let valueCross = voRatio * oPrice; voSpread = ((Math.max(valueDirect, valueCross) - Math.min(valueDirect, valueCross)) / Math.min(valueDirect, valueCross)) * 100; }
-                            expandedHistory.vlrmOracleSpread.push(voSpread); expandedHistory.vlrmAda.push(cloudHistory.vlrmAda[i]); expandedHistory.vlrmOracle.push(cloudHistory.vlrmOracle[i]); expandedHistory.oracleVyfi.push(cloudHistory.oracleVyfi[i]); expandedHistory.oracleMin.push(cloudHistory.oracleMin[i]); expandedHistory.vault.push(cloudHistory.vault[i]); expandedHistory.totalLiq.push((cloudHistory.oracleVyfi[i] || 0) + (cloudHistory.oracleMin[i] || 0)); expandedHistory.pVlrmAda.push(vPrice); expandedHistory.pVlrmOracle.push(voRatio); expandedHistory.pOracleVyfi.push(oPriceVy); expandedHistory.pOracleMin.push(oPriceMin);
+                            expandedHistory.labels.push(cloudHistory.labels ? cloudHistory.labels[i] : '00:00'); 
+                            expandedHistory.spread.push(cloudHistory.spread ? cloudHistory.spread[i] : null); 
+                            expandedHistory.discrepancy.push(cloudHistory.discrepancy ? cloudHistory.discrepancy[i] : null);
+                            
+                            let vPrice = (cloudHistory.pVlrmAda && cloudHistory.pVlrmAda[i]) ? cloudHistory.pVlrmAda[i] : null; 
+                            let oPriceVy = (cloudHistory.pOracleVyfi && cloudHistory.pOracleVyfi[i]) ? cloudHistory.pOracleVyfi[i] : null; 
+                            let oPriceMin = (cloudHistory.pOracleMin && cloudHistory.pOracleMin[i]) ? cloudHistory.pOracleMin[i] : null; 
+                            let oPrice = (oPriceVy && oPriceVy > 0) ? oPriceVy : oPriceMin; 
+                            let voRatio = (cloudHistory.pVlrmOracle && cloudHistory.pVlrmOracle[i]) ? cloudHistory.pVlrmOracle[i] : null;
+                            
+                            let voSpread = null; 
+                            if (vPrice !== null && oPrice !== null && voRatio !== null && vPrice > 0 && oPrice > 0) { 
+                                let valueDirect = vPrice; let valueCross = voRatio * oPrice; 
+                                voSpread = ((Math.max(valueDirect, valueCross) - Math.min(valueDirect, valueCross)) / Math.min(valueDirect, valueCross)) * 100; 
+                            }
+                            
+                            expandedHistory.vlrmOracleSpread.push(voSpread); 
+                            expandedHistory.vlrmAda.push(cloudHistory.vlrmAda ? cloudHistory.vlrmAda[i] : null); 
+                            expandedHistory.vlrmOracle.push(cloudHistory.vlrmOracle ? cloudHistory.vlrmOracle[i] : null); 
+                            expandedHistory.oracleVyfi.push(cloudHistory.oracleVyfi ? cloudHistory.oracleVyfi[i] : null); 
+                            expandedHistory.oracleMin.push(cloudHistory.oracleMin ? cloudHistory.oracleMin[i] : null); 
+                            expandedHistory.vault.push(cloudHistory.vault ? cloudHistory.vault[i] : null); 
+                            
+                            let liqVyfi = cloudHistory.oracleVyfi ? (cloudHistory.oracleVyfi[i] || 0) : 0;
+                            let liqMin = cloudHistory.oracleMin ? (cloudHistory.oracleMin[i] || 0) : 0;
+                            expandedHistory.totalLiq.push(liqVyfi + liqMin); 
+                            
+                            expandedHistory.pVlrmAda.push(vPrice); 
+                            expandedHistory.pVlrmOracle.push(voRatio); 
+                            expandedHistory.pOracleVyfi.push(oPriceVy); 
+                            expandedHistory.pOracleMin.push(oPriceMin);
                         }
                     }
                     
@@ -960,9 +991,6 @@
 
                 const vyfiPoolsList = data.vyfiPools || [];
 
-                // =========================================================================
-                // SISTEMA ORIGINAL (ORACLE / VLRM) BLINDADO
-                // =========================================================================
                 let priceVlrmAda = 0; let vlrmVyfiAdaReserve = 0; let vlrmVyfiTokReserve = 0; let vlrmAdaTvl = 0;
                 try {
                     const vlrmVyfiPool = vyfiPoolsList.find(p => p.unitsPair && p.unitsPair.includes('lovelace') && p.unitsPair.includes(VLRM));
@@ -1007,7 +1035,7 @@
                             if (Math.abs(bestDeviation) < 0.5) { updateDOM('vault-banner-discrepancy', undefined, "rgba(255, 255, 255, 0.5)"); if(vaultActionEl) vaultActionEl.innerHTML = `<span style="color: rgba(255, 255, 255, 0.6);">Balanced</span>`; } 
                             else { if (bestDeviation > 0) { updateDOM('vault-banner-discrepancy', undefined, "#10b981"); if(vaultActionEl) vaultActionEl.innerHTML = `<a href="${targetLink}" target="_blank" class="badge-dark">Sell ${targetDexForVault}</a>`; } else { updateDOM('vault-banner-discrepancy', undefined, "var(--neon-red)"); if(vaultActionEl) vaultActionEl.innerHTML = `<a href="${targetLink}" target="_blank" class="badge-dark">Buy ${targetDexForVault}</a>`; } }
                             
-                            // Resplandor visual si pasa de 5%
+                            // Efecto visual silencioso en web
                             if (Math.abs(bestDeviation) >= 5) { if(vaultCard) vaultCard.classList.add('glow-active'); } 
                             else { if(vaultCard) vaultCard.classList.remove('glow-active'); }
                         }
@@ -1037,7 +1065,7 @@
                             if(oracleCardActionEl) oracleCardActionEl.innerHTML = actionHTML;
                         }
 
-                        // Resplandor visual si pasa de 5%
+                        // Efecto visual silencioso en web
                         if (spread >= 5) { if(dexCard) dexCard.classList.add('glow-active'); } 
                         else { if(dexCard) dexCard.classList.remove('glow-active'); }
                     }
