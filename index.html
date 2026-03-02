@@ -117,8 +117,11 @@
         .grid-stack-placeholder > .placeholder-content { border: 2px dashed rgba(255, 123, 0, 0.4) !important; background: rgba(10, 8, 20, 0.4) !important; border-radius: 20px !important; }
         .grid-stack-item.ui-draggable-dragging > .grid-stack-item-content { box-shadow: 0 30px 60px rgba(0, 0, 0, 0.9), 0 0 40px rgba(255, 123, 0, 0.4) !important; transform: scale(1.02) rotate(1deg) !important; border: 2px solid var(--neon-orange) !important; opacity: 0.95 !important; z-index: 99999 !important; }
 
-        .card { border-radius: 20px; padding: 15px 20px; position: absolute; top: 0; left: 0; right: 0; bottom: 0; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); transition: background 0.3s ease, box-shadow 0.3s ease; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; }
+        .card { border-radius: 20px; padding: 20px 25px; position: absolute; top: 0; left: 0; right: 0; bottom: 0; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); transition: background 0.3s ease, box-shadow 0.3s ease; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; }
         
+        .card-compact { padding: 15px 25px !important; justify-content: center !important;}
+        @media (min-width: 768px) { .card-compact .card-title { margin-bottom: 5px; font-size: 0.95rem; } }
+
         /* 🎨 FONDOS SÓLIDOS Y OSCURECIDOS AL 30% (SIN FOCO NINGUNO) */
         .card-ada { 
             box-shadow: -10px 10px 40px rgba(0, 0, 0, 0.4); 
@@ -182,9 +185,9 @@
             display: block;
         }
 
-        .card-title { font-size: 1.05rem; font-weight: 600; margin-bottom: 10px; color: var(--neon-orange); display: flex; justify-content: space-between; align-items: center;}
+        .card-title { font-size: 1.05rem; font-weight: 600; margin-bottom: 15px; color: var(--neon-orange); display: flex; justify-content: space-between; align-items: center;}
         .card-title.ada-title { color: var(--ada-color); text-shadow: 0 0 10px rgba(66, 133, 244, 0.3);}
-        .data-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; font-size: 0.95rem; }
+        .data-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 0.95rem; }
         .data-label { color: var(--text-secondary); font-weight: 500; }
         .data-value { font-weight: 800; font-size: 1.1rem; color: var(--text-primary); display: flex; align-items: center; gap: 8px;}
         .change-badge { font-size: 0.75rem; font-weight: 800; }
@@ -192,33 +195,33 @@
         .bg-vyfi { background: var(--badge-vyfi-bg); color: var(--badge-vyfi-text); border-color: var(--badge-vyfi-text); }
         .bg-minswap { background: var(--badge-min-bg); color: var(--badge-min-text); border-color: var(--badge-min-text); }
         .arbitrage-label { color: rgba(255, 255, 255, 0.75); font-size: 0.75rem; text-transform: uppercase; font-weight: 800; margin-bottom: 5px; letter-spacing: 0.5px;}
-        .arbitrage-big-value { font-size: 1.4rem; font-weight: 900; color: #ffffff; text-shadow: 0 2px 10px rgba(0,0,0,0.5); transition: none; }
+        .arbitrage-big-value { font-size: 1.5rem; font-weight: 900; color: #ffffff; text-shadow: 0 2px 10px rgba(0,0,0,0.5); transition: none; }
         .loading { color: inherit; opacity: 0.6; font-style: italic; font-weight: normal; font-size: 0.9rem;}
         .badge-dark { background: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.2); font-size: 0.75rem; padding: 4px 10px; border-radius: 20px; font-weight: 700; display: inline-block; margin: 0 2px; text-decoration: none; transition: 0.2s ease; }
         a.badge-dark:hover { transform: translateY(-2px); background: var(--neon-orange); border-color: var(--neon-orange); color: var(--text-on-fire); box-shadow: 0 0 15px rgba(255, 123, 0, 0.4);}
         
         input[type="number"].sim-input::-webkit-outer-spin-button, input[type="number"].sim-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
         input[type="number"].sim-input { -moz-appearance: textfield; }
-        .sim-input { width: 75px; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 8px; font-weight: bold; text-align: center; margin-right: 5px; font-family: 'Inter', sans-serif; font-size: 0.95rem; padding: 4px 8px; }
+        .sim-input { width: 90px; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 10px; font-weight: bold; text-align: center; margin-right: 5px; font-family: 'Inter', sans-serif; font-size: 1rem; padding: 6px 10px; }
         .sim-input:focus { outline: none; border-color: var(--neon-orange); box-shadow: 0 0 10px rgba(255, 123, 0, 0.2);}
         
         .profit-positive { color: #10b981; text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
         .profit-negative { color: var(--neon-red); text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
         .optimizer-text { font-size: 0.75rem; color: var(--text-secondary); font-weight: 600;}
-        .usd-profit { font-size: 0.85rem; color: rgba(255,255,255,0.6); font-weight: 600; text-shadow: none; display: inline-block; margin-left: 8px;}
+        .usd-profit { font-size: 0.9rem; color: rgba(255,255,255,0.6); font-weight: 600; text-shadow: none; display: inline-block; margin-left: 8px;}
 
-        .slippage-container { width: 100%; height: 6px; background: rgba(0,0,0,0.4); border-radius: 4px; overflow: hidden; position: relative; border: 1px solid rgba(255,255,255,0.1);}
+        .slippage-container { width: 100%; height: 8px; background: rgba(0,0,0,0.4); border-radius: 4px; overflow: hidden; position: relative; border: 1px solid rgba(255,255,255,0.1);}
         .slippage-bar { height: 100%; width: 0%; border-radius: 4px; transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); box-shadow: 0 0 10px currentColor;}
         .slippage-label { font-size: 0.7rem; color: var(--text-secondary); text-align: right; font-weight: 600;}
 
-        /* TRIANGULO: Ajuste de proporciones para no deformarse */
-        .tri-wrapper { position: relative; width: 100%; max-width: 180px; height: 90px; min-height: 90px; margin: 10px auto; flex-grow: 0; flex-shrink: 0; }
-        .tri-node { position: absolute; width: 44px; height: 44px; background: rgba(18, 15, 36, 0.9); border: 2px solid rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: bold; color: white; z-index: 2; box-shadow: 0 0 15px rgba(0,0,0,0.8); backdrop-filter: blur(5px);}
-        .node-ada { top: -10px; left: calc(50% - 22px); border-color: var(--ada-color); color: var(--ada-color);}
-        .node-vlrm { bottom: -5px; right: -10px; border-color: var(--neon-orange); color: var(--neon-orange);}
-        .node-oracle { bottom: -5px; left: -10px; border-color: var(--vault-color); color: var(--vault-color);}
-        .node-vyfi { bottom: -5px; right: -10px; border-color: var(--badge-vyfi-text); color: var(--badge-vyfi-text);}
-        .node-xvyfi { bottom: -5px; left: -10px; border-color: var(--neon-orange); color: var(--neon-orange);}
+        /* TRIANGULO: Ajuste de proporciones fijas para no deformarse nunca */
+        .tri-wrapper { position: relative; width: 100%; max-width: 240px; height: 130px; min-height: 130px; margin: 10px auto; flex-grow: 0; flex-shrink: 0; }
+        .tri-node { position: absolute; width: 50px; height: 50px; background: rgba(18, 15, 36, 0.9); border: 2px solid rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: bold; color: white; z-index: 2; box-shadow: 0 0 15px rgba(0,0,0,0.8); backdrop-filter: blur(5px);}
+        .node-ada { top: -10px; left: calc(50% - 25px); border-color: var(--ada-color); color: var(--ada-color);}
+        .node-vlrm { bottom: -5px; right: -5px; border-color: var(--neon-orange); color: var(--neon-orange);}
+        .node-oracle { bottom: -5px; left: -5px; border-color: var(--vault-color); color: var(--vault-color);}
+        .node-vyfi { bottom: -5px; right: -5px; border-color: var(--badge-vyfi-text); color: var(--badge-vyfi-text);}
+        .node-xvyfi { bottom: -5px; left: -5px; border-color: var(--neon-orange); color: var(--neon-orange);}
         .tri-svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;}
         .tri-line-bg { fill: none; stroke: rgba(255,255,255,0.05); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round;}
         
@@ -336,12 +339,12 @@
 
     <div class="grid-stack grid-container" id="dashboard-oracle">
         
-        <div class="grid-stack-item drag-item" gs-id="card-ada" gs-w="2" gs-h="2" gs-x="0" gs-y="0">
+        <div class="grid-stack-item drag-item" gs-id="card-ada" gs-w="5" gs-h="2" gs-x="0" gs-y="0">
             <div class="grid-stack-item-content card card-ada">
                 <div style="flex-shrink: 0;">
                     <div class="card-title ada-title">ADA</div>
                     <div class="data-row">
-                        <span class="data-value" id="ada-price-usd-oracle" style="font-size: 1rem;">
+                        <span class="data-value" id="ada-price-usd-oracle" style="font-size: 1.1rem;">
                             <span class="loading">Loading...</span> <span id="ada-change-24h-oracle" class="change-badge"></span>
                         </span>
                     </div>
@@ -352,7 +355,7 @@
             </div>
         </div>
 
-        <div class="grid-stack-item drag-item" gs-id="card-vlrm-ada" gs-w="3" gs-h="2" gs-x="2" gs-y="0">
+        <div class="grid-stack-item drag-item" gs-id="card-vlrm-ada" gs-w="4" gs-h="2" gs-x="5" gs-y="0">
             <div class="grid-stack-item-content card card-orange">
                 <div class="card-title" style="color: var(--neon-orange); flex-shrink: 0;">VLRM / ADA <span class="badge bg-vyfi" style="margin-left:auto;">VyFi</span></div>
                 <div class="data-row" style="flex-shrink: 0;">
@@ -368,7 +371,7 @@
             </div>
         </div>
 
-        <div class="grid-stack-item drag-item" gs-id="card-vlrm-oracle" gs-w="3" gs-h="2" gs-x="5" gs-y="0">
+        <div class="grid-stack-item drag-item" gs-id="card-vlrm-oracle" gs-w="3" gs-h="2" gs-x="9" gs-y="0">
             <div class="grid-stack-item-content card card-orange">
                 <div class="card-title" style="color: var(--neon-orange); flex-shrink: 0;">VLRM / ORACLE <span class="badge bg-vyfi" style="margin-left:auto;">VyFi</span></div>
                 <div class="data-row" style="flex-shrink: 0;">
@@ -384,7 +387,7 @@
             </div>
         </div>
 
-        <div class="grid-stack-item drag-item" gs-id="card-arb-vault" gs-w="4" gs-h="2" gs-x="8" gs-y="0">
+        <div class="grid-stack-item drag-item" gs-id="card-arb-vault" gs-w="6" gs-h="2" gs-x="0" gs-y="2">
             <div class="grid-stack-item-content card card-vault">
                 <div style="flex-shrink: 0;">
                     <div class="card-title" style="color: var(--vault-color);">Vault relics fair price ORACLE</div>
@@ -403,7 +406,7 @@
             </div>
         </div>
 
-        <div class="grid-stack-item drag-item" gs-id="card-oracle-ada" gs-w="6" gs-h="4" gs-x="0" gs-y="2">
+        <div class="grid-stack-item drag-item" gs-id="card-oracle-ada" gs-w="6" gs-h="4" gs-x="0" gs-y="4">
             <div class="grid-stack-item-content card card-vault" style="display: flex; flex-direction: column;">
                 <div style="flex-shrink: 0;">
                     <div class="card-title" style="color: var(--vault-color); margin-bottom: 10px;">ORACLE / ADA Arbitrage</div>
@@ -427,25 +430,15 @@
                     </div>
                 </div>
                 
-                <div style="margin-top: auto; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; flex-shrink: 0;">
-                        <h3 class="dex-subtitle" style="color: var(--text-secondary); margin:0;">Total Combined Liquidity</h3>
-                        <div class="data-value" style="font-size: 1.2rem; color: #ffffff; text-shadow: 0 2px 10px rgba(0,0,0,0.5);">
-                            <span id="oracle-total-liq">-</span> <span id="total-liq-change-24h" class="change-badge" style="font-size: 0.8rem;"></span>
-                        </div>
-                    </div>
-                    <div class="spark-wrapper" style="height: 30px !important; min-height: 30px !important; max-height: 30px !important; width: 95%; margin: 0 auto;">
-                        <canvas id="spark-total-liq"></canvas>
-                    </div>
-                    
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 10px;">
+                <div style="display: flex; flex-direction: column; flex-grow: 1; justify-content: flex-end;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 5px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 10px;">
                         <div class="data-row" style="margin: 0;">
                             <span class="data-label" style="margin-right: 10px;">Spread:</span>
-                            <span class="data-value arbitrage-big-value" id="oracle-card-arbitrage-spread" style="font-size: 1.3rem;">-%</span>
+                            <span class="data-value arbitrage-big-value" id="oracle-card-arbitrage-spread" style="font-size: 1.2rem;">-%</span>
                         </div>
                         <div class="data-row" style="margin: 0;">
                             <span class="data-label" style="margin-right: 10px;">Action Route:</span>
-                            <span id="oracle-card-arbitrage-action" style="font-size: 0.85rem; font-weight: bold; color: white;">...</span>
+                            <span id="oracle-card-arbitrage-action" style="font-size: 0.8rem; font-weight: bold; color: white;">...</span>
                         </div>
                     </div>
 
@@ -466,27 +459,26 @@
                         </div>
                         <div class="slippage-container" style="margin-top: 5px;"><div id="sim-slippage-bar" class="slippage-bar" style="background: #10b981;"></div></div>
                     </div>
-
                 </div>
             </div>
         </div>
 
-        <div class="grid-stack-item drag-item" gs-id="card-triangular" gs-w="6" gs-h="4" gs-x="6" gs-y="2">
+        <div class="grid-stack-item drag-item" gs-id="card-triangular" gs-w="6" gs-h="4" gs-x="6" gs-y="4">
             <div class="grid-stack-item-content card card-orange" style="display: flex; flex-direction: column;">
                 <div class="card-title" style="color: var(--neon-orange); margin-bottom: 5px;">▲VLRM ORACLE ADA▼ triangular arbitrage</div>
                 
                 <div class="tri-wrapper">
-                    <svg class="tri-svg" viewBox="0 0 200 100" preserveAspectRatio="xMidYMid meet">
-                        <polygon points="100,15 180,85 20,85" class="tri-line-bg" />
-                        <polygon id="tri-anim-path" points="100,15 180,85 20,85" class="tri-line-active" style="display:none;" />
+                    <svg class="tri-svg" viewBox="0 0 240 130" preserveAspectRatio="xMidYMid meet">
+                        <polygon points="120,15 210,115 30,115" class="tri-line-bg" />
+                        <polygon id="tri-anim-path" points="120,15 210,115 30,115" class="tri-line-active" style="display:none;" />
                     </svg>
-                    <div class="tri-node node-ada" style="top: -5px; left: calc(50% - 25px);">ADA</div>
+                    <div class="tri-node node-ada" style="top: -5px; left: calc(50% - 22px);">ADA</div>
                     <div class="tri-node node-vlrm" style="bottom: -5px; right: -5px;">VLRM</div>
                     <div class="tri-node node-oracle" style="bottom: -5px; left: -5px;">ORAC</div>
                 </div>
 
-                <div style="margin-top: auto; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; justify-content: center;">
-                    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 10px;">
+                <div style="display: flex; flex-direction: column; flex-grow: 1; justify-content: flex-end;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 5px;">
                         <div class="arbitrage-label" style="margin-bottom: 0;">Optimal Net Discrepancy</div>
                         <div class="arbitrage-big-value" id="tri-arb-spread" style="font-size: 1.5rem; line-height: 1;"><span class="loading">Scanning...</span></div>
                     </div>
@@ -502,7 +494,7 @@
                         </div>
                     </div>
                     
-                    <div style="margin-top: 15px; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 15px;">
+                    <div style="margin-top: 10px; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 10px;">
                         <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 5px;">
                             <div style="display: flex; align-items: center;">
                                 <input type="number" id="sim-tri-input" class="sim-input" oninput="updateSimConfig('sim-tri-input', 'simTri')"> 
@@ -523,7 +515,7 @@
             </div>
         </div>
 
-        <div class="grid-stack-item drag-item" gs-id="card-chart" gs-w="12" gs-h="2" gs-x="0" gs-y="6">
+        <div class="grid-stack-item drag-item" gs-id="card-chart" gs-w="12" gs-h="2" gs-x="0" gs-y="8">
             <div class="grid-stack-item-content card">
                 <div class="card-title" style="margin-bottom: 10px; font-size: 0.9rem; color: #ffffff; text-transform: none; flex-shrink: 0;">Spread & vault discrepancy (last 24h %)</div>
                 <div class="spark-wrapper" style="flex-grow: 1; height: auto;">
@@ -536,33 +528,33 @@
 
     <div class="grid-stack grid-container" id="dashboard-vyfi" style="display: none;">
         
-        <div class="grid-stack-item drag-item" gs-id="card-ada-vyfi" gs-w="2" gs-h="2" gs-x="0" gs-y="0">
+        <div class="grid-stack-item drag-item" gs-id="card-ada-vyfi" gs-w="5" gs-h="2" gs-x="0" gs-y="0">
             <div class="grid-stack-item-content card card-ada">
                 <div style="flex-shrink: 0;">
                     <div class="card-title ada-title">ADA</div>
                     <div class="data-row">
-                        <span class="data-value" id="ada-price-usd-vyfi" style="font-size: 1rem;">
+                        <span class="data-value" id="ada-price-usd-vyfi" style="font-size: 1.1rem;">
                             <span class="loading">Loading...</span> <span id="ada-change-24h-vyfi" class="change-badge"></span>
                         </span>
                     </div>
                 </div>
-                <div class="spark-wrapper" style="height: 60px !important; min-height: 60px !important; max-height: 60px !important; margin-top: auto;">
+                <div class="spark-wrapper" style="height: 50px !important; min-height: 50px !important; max-height: 50px !important; margin-top: auto;">
                     <canvas id="spark-ada-vyfi"></canvas>
                 </div>
             </div>
         </div>
 
-        <div class="grid-stack-item drag-item" gs-id="card-xvyfi-ada" gs-w="4" gs-h="2" gs-x="2" gs-y="0">
+        <div class="grid-stack-item drag-item" gs-id="card-xvyfi-ada" gs-w="4" gs-h="2" gs-x="5" gs-y="0">
             <div class="grid-stack-item-content card card-vault">
                 <div class="card-title" style="color: var(--vault-color); flex-shrink: 0;">xVYFI / ADA <span class="badge bg-vyfi" style="margin-left:auto;">VyFi</span></div>
                 <div class="data-row" style="flex-shrink: 0;">
                     <span class="data-label">Price:</span>
-                    <span class="data-value"><span id="xvyfi-price" class="loading">Loading...</span> <span id="xvyfi-price-change-24h" class="change-badge"></span></span>
+                    <span class="data-value"><span id="xvyfi-price" class="loading">...</span> <span id="xvyfi-price-change-24h" class="change-badge"></span></span>
                 </div>
                 <div class="spark-wrapper" style="height: 35px !important; min-height: 35px !important; margin-bottom: 5px;"><canvas id="spark-xvyfi-price"></canvas></div>
                 <div class="data-row" style="margin-top: auto; flex-shrink: 0;">
                     <span class="data-label">Liquidity:</span>
-                    <span class="data-value"><span id="xvyfi-tvl" class="loading">...</span> <span id="xvyfi-tvl-change-24h" class="change-badge"></span></span>
+                    <span class="data-value"><span id="xvyfi-tvl" class="loading">-</span> <span id="xvyfi-tvl-change-24h" class="change-badge"></span></span>
                 </div>
                 <div class="spark-wrapper" style="height: 35px !important; min-height: 35px !important;"><canvas id="spark-xvyfi-tvl"></canvas></div>
             </div>
@@ -592,16 +584,7 @@
                     </div>
                 </div>
                 
-                <div style="margin-top: auto; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; flex-shrink: 0;">
-                        <h3 class="dex-subtitle" style="color: var(--text-secondary); font-size: 1rem; text-transform: uppercase; margin:0;">Total Combined Liquidity</h3>
-                        <div class="data-value" style="font-size: 1.5rem; color: #ffffff; text-shadow: 0 2px 10px rgba(0,0,0,0.5);">
-                            <span id="vyfi-total-liq">-</span> <span id="vyfi-total-liq-change-24h" class="change-badge" style="font-size: 0.9rem;"></span>
-                        </div>
-                    </div>
-                    <div class="spark-wrapper" style="height: 35px !important; min-height: 35px !important; max-height: 35px !important; width: 95%; margin: 0 auto;">
-                        <canvas id="spark-vyfi-total-liq"></canvas>
-                    </div>
+                <div style="display: flex; flex-direction: column; flex-grow: 1; justify-content: flex-end;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 10px;">
                         <div class="data-row" style="margin: 0;">
                             <span class="data-label" style="margin-right: 15px;">Spread:</span>
@@ -621,16 +604,16 @@
                 <div class="card-title" style="color: var(--neon-orange); margin-bottom: 5px;">▲VYFI xVYFI ADA▼ triangular arbitrage</div>
                 
                 <div class="tri-wrapper">
-                    <svg class="tri-svg" viewBox="0 0 200 100" preserveAspectRatio="xMidYMid meet">
-                        <polygon points="100,15 180,85 20,85" class="tri-line-bg" />
-                        <polygon id="vyfi-tri-anim-path" points="100,15 180,85 20,85" class="tri-line-active" style="display:none;" />
+                    <svg class="tri-svg" viewBox="0 0 240 130" preserveAspectRatio="xMidYMid meet">
+                        <polygon points="120,15 210,115 30,115" class="tri-line-bg" />
+                        <polygon id="vyfi-tri-anim-path" points="120,15 210,115 30,115" class="tri-line-active" style="display:none;" />
                     </svg>
-                    <div class="tri-node node-ada" style="top: -5px; left: calc(50% - 25px);">ADA</div>
+                    <div class="tri-node node-ada" style="top: -5px; left: calc(50% - 22px);">ADA</div>
                     <div class="tri-node node-vyfi" style="border-color: var(--badge-vyfi-text); color: var(--badge-vyfi-text); bottom: -5px; right: -5px;">VYFI</div>
                     <div class="tri-node node-xvyfi" style="border-color: var(--vault-color); color: var(--vault-color); bottom: -5px; left: -5px;">xVYF</div>
                 </div>
 
-                <div style="margin-top: auto; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; justify-content: center;">
+                <div style="display: flex; flex-direction: column; flex-grow: 1; justify-content: flex-end;">
                     <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 10px;">
                         <div class="arbitrage-label" style="margin-bottom: 0;">Optimal Net Discrepancy</div>
                         <div class="arbitrage-big-value" id="vyfi-tri-arb-spread" style="font-size: 1.5rem; line-height: 1;"><span class="loading">Scanning...</span></div>
@@ -664,11 +647,11 @@
         const VYFI_LINK = "https://app.vyfi.io/dex?tokenA=lovelace&tokenB=328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b27393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
         const MINSWAP_LINK = "https://minswap.org/swap?cA=&tA=&cB=328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b2&tB=7393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
 
-        // TOKENS NUEVOS (Hash de búsqueda para find directo en unidades de VyFi)
+        // TOKENS NUEVOS (Fórmula original 100% estricta)
         const TOKEN_VYFI = "804f5530198154628ce71b6bd5a889410ea9036c64188597af2f21bc56594649";
         const TOKEN_XVYFI = "a004ebbc9d51184be5e364eb25e7d5df4b6b69db9fbf8de684d0b1d07856594649";
 
-        const LAYOUT_VERSION = "v2.0"; 
+        const LAYOUT_VERSION = "v2.1"; 
 
         let defaultConf = { alert: 15, vaultAlert: 20, simDex: 1000, simTri: 1000, tgBot: "", tgChat: "", feeNet: 0.2, feeMin: 0.7, feeVyfi: 1.9, lpFeeMin: 0.3, lpFeeVyfi: 0.3 };
         let savedConf = JSON.parse(localStorage.getItem('l4va_config')) || {};
@@ -1054,6 +1037,7 @@
             }
         }
 
+        // MOTOR TRIANGULAR PARA VYFI / xVYFI
         function recalculateVyfiTriSimulator() {
             let bestProfit = -Infinity; let optimalRoute = null; let bestPercent = 0;
             
@@ -1196,13 +1180,8 @@
                 updateDOM('ada-price-usd-vyfi', `$${currentAdaUsd.toFixed(4)} <span id="ada-change-24h-vyfi" class="change-badge" style="color:${changeColor}">${changeText}</span>`);
                 updateDOM('ada-time', new Date().toLocaleTimeString());
 
-                sparkInstances.adaOracle.data.labels = Array(prices.length).fill(''); 
-                sparkInstances.adaOracle.data.datasets[0].data = prices; 
-                sparkInstances.adaOracle.update('none');
-
-                sparkInstances.adaVyfi.data.labels = Array(prices.length).fill(''); 
-                sparkInstances.adaVyfi.data.datasets[0].data = prices; 
-                sparkInstances.adaVyfi.update('none'); 
+                if(sparkInstances.adaOracle) { sparkInstances.adaOracle.data.labels = Array(prices.length).fill(''); sparkInstances.adaOracle.data.datasets[0].data = prices; sparkInstances.adaOracle.update('none'); }
+                if(sparkInstances.adaVyfi) { sparkInstances.adaVyfi.data.labels = Array(prices.length).fill(''); sparkInstances.adaVyfi.data.datasets[0].data = prices; sparkInstances.adaVyfi.update('none'); }
 
                 return currentAdaUsd;
             } catch (error) { console.error("Error cargando ADA:", error); return null; }
@@ -1223,7 +1202,7 @@
                 const vyfiPoolsList = data.vyfiPools || [];
 
                 // =========================================================================
-                // EXTRACCIÓN VYFI Y xVYFI (FÓRMULA ORIGINAL DE VLRM)
+                // EXTRACCIÓN VYFI Y xVYFI (FÓRMULA ORIGINAL 100% ESTRICTA)
                 // =========================================================================
                 let pVyfiDex = 0; let vyfiDexTvl = 0; let pXvyfiDex = 0; let xvyfiDexTvl = 0; let priceMinVyfi = 0; let minVyfiTvl = 0;
                 
