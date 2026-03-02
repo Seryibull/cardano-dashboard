@@ -112,15 +112,15 @@
 
         .card { border-radius: 20px; padding: 20px 25px; position: absolute; top: 0; left: 0; right: 0; bottom: 0; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); transition: background 0.3s ease, box-shadow 0.3s ease; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; }
         
-        /* SOMBRAS CENTRALES Y MÁS OSCURAS */
-        .card-ada { box-shadow: 0 0 30px rgba(0, 0, 0, 0.6); background: rgba(10, 11, 16, 0.98); }
-        .card-ada:hover { box-shadow: 0 0 40px rgba(0, 0, 0, 0.8); background: rgba(14, 15, 24, 1); }
-        .card-vault { box-shadow: 0 0 30px rgba(0, 0, 0, 0.6); background: rgba(13, 11, 8, 0.98); }
-        .card-vault:hover { box-shadow: 0 0 40px rgba(0, 0, 0, 0.8); background: rgba(18, 15, 10, 1); }
-        .card-orange { box-shadow: 0 0 30px rgba(0, 0, 0, 0.6); background: rgba(14, 8, 6, 0.98); }
-        .card-orange:hover { box-shadow: 0 0 40px rgba(0, 0, 0, 0.8); background: rgba(18, 10, 8, 1); }
-        [gs-id="card-chart"] .card { box-shadow: 0 0 30px rgba(0, 0, 0, 0.6); background: rgba(10, 11, 16, 0.98); }
-        [gs-id="card-chart"] .card:hover { box-shadow: 0 0 40px rgba(0, 0, 0, 0.8); background: rgba(14, 15, 24, 1); }
+        /* SOMBRAS CENTRALES INCREMENTADAS UN 10% (+ tamaño y + opacidad) */
+        .card-ada { box-shadow: 0 0 33px rgba(0, 0, 0, 0.66); background: rgba(10, 11, 16, 0.98); }
+        .card-ada:hover { box-shadow: 0 0 44px rgba(0, 0, 0, 0.88); background: rgba(14, 15, 24, 1); }
+        .card-vault { box-shadow: 0 0 33px rgba(0, 0, 0, 0.66); background: rgba(13, 11, 8, 0.98); }
+        .card-vault:hover { box-shadow: 0 0 44px rgba(0, 0, 0, 0.88); background: rgba(18, 15, 10, 1); }
+        .card-orange { box-shadow: 0 0 33px rgba(0, 0, 0, 0.66); background: rgba(14, 8, 6, 0.98); }
+        .card-orange:hover { box-shadow: 0 0 44px rgba(0, 0, 0, 0.88); background: rgba(18, 10, 8, 1); }
+        [gs-id="card-chart"] .card { box-shadow: 0 0 33px rgba(0, 0, 0, 0.66); background: rgba(10, 11, 16, 0.98); }
+        [gs-id="card-chart"] .card:hover { box-shadow: 0 0 44px rgba(0, 0, 0, 0.88); background: rgba(14, 15, 24, 1); }
 
         /* EFECTO: RESPLANDOR VERDE */
         @keyframes greenAlertPulse {
@@ -218,7 +218,7 @@
                     <span class="version-badge">V 1.0</span>
                 </h1>
                 <div class="tabs-container" style="margin: 0; padding: 0; border: none;">
-                    <button id="tab-oracle" class="tab-btn active" onclick="switchEcosystem('oracle')">🔥 VLRM / ORACLE</button>
+                    <button id="tab-oracle" class="tab-btn active" onclick="switchEcosystem('oracle')">🔥 ORACLE / VLRM</button>
                 </div>
             </div>
         </div>
@@ -359,7 +359,7 @@
             <div class="grid-stack-item-content card card-orange" style="display: flex; flex-direction: column; justify-content: space-between;">
                 
                 <div style="flex-shrink: 0;">
-                    <div class="card-title" style="color: var(--neon-orange); margin-bottom: 15px; font-size: 1.2rem;">▲VLRM ORACLE ADA▼ triangular arbitrage</div>
+                    <div class="card-title" style="color: var(--neon-orange); margin-bottom: 15px; font-size: 1.2rem;">▲ORACLE VLRM ADA▼ triangular arbitrage</div>
                     
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin-bottom: 15px;">
                         <div>
@@ -370,7 +370,7 @@
                             <div class="spark-wrapper" style="height: 45px !important; min-height: 45px !important;"><canvas id="spark-vlrm-ada"></canvas></div>
                         </div>
                         <div style="border-left: 2px solid rgba(255,255,255,0.05); padding-left: 15px;">
-                            <h3 class="dex-subtitle" style="color: var(--neon-orange);">VLRM / ORACLE <span class="badge bg-vyfi" style="font-size: 0.65rem;">VyFi</span></h3>
+                            <h3 class="dex-subtitle" style="color: var(--neon-orange);">ORACLE / VLRM <span class="badge bg-vyfi" style="font-size: 0.65rem;">VyFi</span></h3>
                             <div class="data-row"><span class="data-label">Price:</span><span class="data-value" style="font-size: 1.15rem;"><span id="vlrm-oracle-price" class="loading">...</span> <span id="vlrm-oracle-price-change-24h" class="change-badge"></span></span></div>
                             <div class="spark-wrapper" style="height: 45px !important; min-height: 45px !important; margin-bottom: 15px;"><canvas id="spark-vlrm-oracle-price"></canvas></div>
                             <div class="data-row"><span class="data-label">Liquidity:</span><span class="data-value" style="font-size: 1.15rem;"><span id="vlrm-oracle-liq-ada">-</span> <span id="vlrm-oracle-change-24h" class="change-badge"></span></span></div>
@@ -647,7 +647,7 @@
                 data: { labels: chartHistory.labels, datasets: [
                     { label: 'ORACLE / ADA spread %', data: chartHistory.spread, borderColor: '#4285f4', tension: 0.4, borderWidth: 2, pointRadius: 0, spanGaps: true },
                     { label: 'Vault Discrepancy %', data: chartHistory.discrepancy, borderColor: '#fcd34d', tension: 0.4, borderWidth: 2, pointRadius: 0, spanGaps: true },
-                    { label: 'VLRM / ORACLE spread %', data: chartHistory.vlrmOracleSpread, borderColor: '#ff7b00', tension: 0.4, borderWidth: 2, pointRadius: 0, spanGaps: true }
+                    { label: 'ORACLE / VLRM spread %', data: chartHistory.vlrmOracleSpread, borderColor: '#ff7b00', tension: 0.4, borderWidth: 2, pointRadius: 0, spanGaps: true }
                 ]},
                 options: { responsive: true, maintainAspectRatio: false, scales: { x: { display: true, grid: { display: false }, ticks: { color: '#a0a0c0', maxTicksLimit: 8, maxRotation: 0 } }, y: { suggestedMin: -5, suggestedMax: 5, grid: { color: 'rgba(255, 255, 255, 0.05)', drawBorder: false }, ticks: { color: '#a0a0c0', stepSize: 5 } } }, plugins: { legend: { display: true, labels: { color: '#ffffff', boxWidth: 10 } } } }
             });
@@ -676,7 +676,7 @@
         }
         
         function updateSparklines(vAdaTvl, vOraTvl, oVyfiTvl, oMinTvl, vaultTvl, pVAda, pVOra, pOVyfi, pOMin) {
-            chartHistory.vlrmAda.push(vAdaTvl); chartHistory.vlrmOracle.push(vOraTvl); chartHistory.oracleVyfi.push(oVyfiTvl); chartHistory.oracleMin.push(oMinTvl); chartHistory.vault.push(vaultTvl); chartHistory.totalLiq.push(oVyfiTvl + oMinTvl); chartHistory.pVlrmAda.push(pVAda); chartHistory.pVlrmOracle.push(pVOra); chartHistory.pOracleVyfi.push(pOVyfi); chartHistory.pOracleMin.push(pOMin);
+            chartHistory.vlrmAda.push(vAdaTvl); chartHistory.vlrmOracle.push(vOraTvl); chartHistory.oracleVyfi.push(oVyfiTvl); chartHistory.oracleMin.push(oMinTvl); chartHistory.vault.push(vaultTvl); chartHistory.totalLiq.push((oVyfiTvl !== null && oMinTvl !== null) ? (oVyfiTvl + oMinTvl) : null); chartHistory.pVlrmAda.push(pVAda); chartHistory.pVlrmOracle.push(pVOra); chartHistory.pOracleVyfi.push(pOVyfi); chartHistory.pOracleMin.push(pOMin);
             
             if(chartHistory.vlrmAda.length > MAX_CHART_POINTS) { 
                 chartHistory.vlrmAda.shift(); chartHistory.vlrmOracle.shift(); chartHistory.oracleVyfi.shift(); chartHistory.oracleMin.shift(); chartHistory.vault.shift(); chartHistory.totalLiq.shift(); chartHistory.pVlrmAda.shift(); chartHistory.pVlrmOracle.shift(); chartHistory.pOracleVyfi.shift(); chartHistory.pOracleMin.shift(); 
@@ -889,9 +889,7 @@
                         labels: [], spread: [], discrepancy: [], vlrmOracleSpread: [], vlrmAda: [], vlrmOracle: [], oracleVyfi: [], oracleMin: [], vault: [], totalLiq: [], pVlrmAda: [], pVlrmOracle: [], pOracleVyfi: [], pOracleMin: []
                     };
                     
-                    // ==========================================
-                    // PROTECCIÓN DE KV (Ternarios de seguridad)
-                    // ==========================================
+                    // Expansión a 2880 puntos (30x)
                     for (let i = 0; i < cloudHistory.labels.length; i++) {
                         for(let j=0; j<30; j++) {
                             expandedHistory.labels.push(cloudHistory.labels ? cloudHistory.labels[i] : '00:00'); 
@@ -917,9 +915,13 @@
                             expandedHistory.oracleMin.push(cloudHistory.oracleMin ? cloudHistory.oracleMin[i] : null); 
                             expandedHistory.vault.push(cloudHistory.vault ? cloudHistory.vault[i] : null); 
                             
-                            let liqVyfi = cloudHistory.oracleVyfi ? (cloudHistory.oracleVyfi[i] || 0) : 0;
-                            let liqMin = cloudHistory.oracleMin ? (cloudHistory.oracleMin[i] || 0) : 0;
-                            expandedHistory.totalLiq.push(liqVyfi + liqMin); 
+                            let liqVyfi = (cloudHistory.oracleVyfi && cloudHistory.oracleVyfi[i] !== undefined) ? cloudHistory.oracleVyfi[i] : null; 
+                            let liqMin = (cloudHistory.oracleMin && cloudHistory.oracleMin[i] !== undefined) ? cloudHistory.oracleMin[i] : null; 
+                            if (liqVyfi !== null || liqMin !== null) {
+                                expandedHistory.totalLiq.push((liqVyfi || 0) + (liqMin || 0));
+                            } else {
+                                expandedHistory.totalLiq.push(null);
+                            }
                             
                             expandedHistory.pVlrmAda.push(vPrice); 
                             expandedHistory.pVlrmOracle.push(voRatio); 
@@ -939,15 +941,30 @@
                         }
                     }
 
+                    // BACKFILL UNIFORME PARA TODAS LAS GRÁFICAS
                     const keysFill = Object.keys(expandedHistory);
                     for (let key of keysFill) { 
                         if (key === 'labels') continue; 
-                        let lastGood = null; 
+                        
+                        // 1. Limpiar ceros que deberían ser nulos en los precios para evitar caídas
+                        for (let k = 0; k < expandedHistory[key].length; k++) { 
+                            if (expandedHistory[key][k] === 0 && key.startsWith('p')) {
+                                expandedHistory[key][k] = null;
+                            }
+                        }
+
+                        // 2. Buscar el primer valor real (firstGood)
+                        let firstGood = expandedHistory[key].find(v => v !== null && v !== undefined && !isNaN(v));
+                        let lastGood = firstGood !== undefined ? firstGood : 0; 
+                        
+                        // 3. Rellenar huecos (Backfill + Forwardfill)
                         for (let k = 0; k < expandedHistory[key].length; k++) { 
                             let val = expandedHistory[key][k]; 
-                            if (val === 0 && key.startsWith('p')) val = null; 
-                            if (val !== null && val !== undefined && !isNaN(val)) { lastGood = val; } 
-                            else { expandedHistory[key][k] = lastGood; } 
+                            if (val !== null && val !== undefined && !isNaN(val)) { 
+                                lastGood = val; 
+                            } else { 
+                                expandedHistory[key][k] = lastGood; 
+                            } 
                         } 
                     }
 
@@ -984,7 +1001,16 @@
 
                 updateDOM('ada-price-usd-oracle', `$${currentAdaUsd.toFixed(4)} <span id="ada-change-24h-oracle" class="change-badge" style="color:${changeColor}">${changeText}</span>`);
 
-                if(sparkInstances.adaOracle) { sparkInstances.adaOracle.data.labels = Array(prices.length).fill(''); sparkInstances.adaOracle.data.datasets[0].data = prices; sparkInstances.adaOracle.update('none'); }
+                if(sparkInstances.adaOracle) { 
+                    // Expansión matemática de la gráfica ADA (de 24 a 2880 puntos para que ocupe todo el ancho visual igual que las demás)
+                    let expandedAda = [];
+                    for(let i = 0; i < prices.length; i++) {
+                        for(let j = 0; j < 120; j++) { expandedAda.push(prices[i]); }
+                    }
+                    sparkInstances.adaOracle.data.labels = chartHistory.labels.length > 0 ? chartHistory.labels : Array(2880).fill(''); 
+                    sparkInstances.adaOracle.data.datasets[0].data = expandedAda; 
+                    sparkInstances.adaOracle.update('none'); 
+                }
 
                 return currentAdaUsd;
             } catch (error) { console.error("Error cargando ADA:", error); return null; }
@@ -998,7 +1024,6 @@
                 
                 let vaultTvlData = parseFloat(data.vaultTvl) || 0;
                 
-                // Fetch directo de seguridad para mantener el tiempo real al milisegundo
                 try {
                     const vaultRes = await fetch(`https://app.l4va.org/api/v1/vaults/5ac2ac4f-9079-40cb-94ae-a265bfba3bcd?t=${Date.now()}`);
                     if(vaultRes.ok) { 
