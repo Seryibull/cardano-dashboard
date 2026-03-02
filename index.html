@@ -91,10 +91,6 @@
         .tab-btn:hover { background: rgba(255,255,255,0.1); color: white; }
         .tab-btn.active { background: rgba(255, 123, 0, 0.2); border-color: var(--neon-orange); color: white; box-shadow: 0 0 15px rgba(255, 123, 0, 0.3); }
 
-        .alert-toggle-box { font-size: 0.8rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 8px; color: var(--text-primary); background: rgba(0, 0, 0, 0.6); padding: 8px 16px; border-radius: 30px; border: 1px solid rgba(255, 123, 0, 0.4); transition: 0.3s; backdrop-filter: blur(5px);}
-        .alert-toggle-box:hover { border-color: var(--neon-orange); background: rgba(255, 123, 0, 0.2); }
-        .alert-toggle-box input { accent-color: var(--neon-orange); transform: scale(1.2); }
-
         .header-btn { font-size: 1.5rem; cursor: pointer; background: rgba(255,255,255,0.05); padding: 8px 12px; border-radius: 12px; transition: 0.3s; border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center;}
         .header-btn:hover { background: rgba(255,255,255,0.15); border-color: var(--neon-orange); }
         .settings-btn:hover { transform: rotate(45deg); }
@@ -176,7 +172,6 @@
         .setting-section-title { font-size: 0.75rem; color: var(--neon-orange); margin: 15px 0 10px 0; font-weight: bold; letter-spacing: 1px;}
         .setting-row { margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem;}
         .setting-input { width: 60px; padding: 5px; border-radius: 5px; border: none; background: rgba(255,255,255,0.1); color: white; text-align: center; font-family: 'Inter', sans-serif;}
-        .setting-input-text { width: 130px; padding: 5px; border-radius: 5px; border: none; background: rgba(255,255,255,0.1); color: white; font-family: 'Inter', sans-serif;}
         
         .btn-save { background: var(--gradient-fire); color: white; border: none; padding: 12px; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 15px; transition: transform 0.2s;}
         .btn-save:hover { transform: scale(1.02); }
@@ -227,9 +222,6 @@
             </div>
         </div>
         <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: flex-end; margin-top: 5px;">
-            <label class="alert-toggle-box" style="margin-right: 5px;">
-                <input type="checkbox" id="alert-toggle" checked> 🔔 Alerts ON
-            </label>
             <div class="header-btn" onclick="toggleRadarPanel()" title="Opportunity Radar Log">📜</div>
             <div class="header-btn" onclick="toggleFullScreen()" title="Cinema / Wall Street Mode">🖵</div>
             <div class="header-btn" id="edit-mode-btn" onclick="toggleEditMode()" title="Unlock Dashboard Layout">🔒</div>
@@ -243,9 +235,6 @@
             <div class="setting-section-title">SIMULATORS</div>
             <div class="setting-row"><span>Base ADA (DEX)</span><input type="number" id="set-sim-dex" class="setting-input"></div>
             <div class="setting-row"><span>Base ADA (Triangular)</span><input type="number" id="set-sim-tri" class="setting-input"></div>
-            <div class="setting-section-title">ALERTS</div>
-            <div class="setting-row"><span>Spread Alert (%)</span><input type="number" id="set-alert" class="setting-input"></div>
-            <div class="setting-row"><span>Vault Alert (%)</span><input type="number" id="set-vault-alert" class="setting-input"></div>
             <div class="setting-section-title">DEX FEES (ADA)</div>
             <div class="setting-row"><span>Network (Tx) Fee</span><input type="number" step="0.1" id="set-fee-net" class="setting-input"></div>
             <div class="setting-row"><span>Minswap Batcher</span><input type="number" step="0.1" id="set-fee-min" class="setting-input"></div>
@@ -253,9 +242,6 @@
             <div class="setting-section-title">LP FEES (%)</div>
             <div class="setting-row"><span>Minswap LP Fee</span><input type="number" step="0.1" id="set-lp-min" class="setting-input"></div>
             <div class="setting-row"><span>VyFi LP Fee</span><input type="number" step="0.1" id="set-lp-vyfi" class="setting-input"></div>
-            <div class="setting-section-title">TELEGRAM ALERTS (Optional)</div>
-            <div class="setting-row"><span>Bot Token</span><input type="text" id="set-tg-bot" class="setting-input-text" placeholder="123:ABC..."></div>
-            <div class="setting-row"><span>Chat ID</span><input type="text" id="set-tg-chat" class="setting-input-text" placeholder="12345678"></div>
             <button class="btn-save" onclick="saveSettings()">Save & Apply</button>
             <button class="btn-reset" onclick="resetLayout()">🔄 Restore Default Layout</button>
         </div>
@@ -458,16 +444,14 @@
 
         const LAYOUT_VERSION = "v4.0"; 
 
-        let defaultConf = { alert: 15, vaultAlert: 20, simDex: 1000, simTri: 1000, tgBot: "", tgChat: "", feeNet: 0.2, feeMin: 0.7, feeVyfi: 1.9, lpFeeMin: 0.3, lpFeeVyfi: 0.3 };
+        let defaultConf = { simDex: 1000, simTri: 1000, feeNet: 0.2, feeMin: 0.7, feeVyfi: 1.9, lpFeeMin: 0.3, lpFeeVyfi: 0.3 };
         let savedConf = JSON.parse(localStorage.getItem('l4va_config')) || {};
         let conf = { ...defaultConf, ...savedConf }; 
         if(conf.simDex === undefined) conf.simDex = conf.sim || 1000;
         if(conf.simTri === undefined) conf.simTri = conf.sim || 1000;
 
         let userPasskey = localStorage.getItem('l4va_passkey') || "";
-        let lastAlertTime = 0; let lastVaultAlertTime = 0; 
         let chartInstance = null; let sparkInstances = {}; 
-        const ALERT_COOLDOWN = 5 * 60 * 1000;
         let currentAdaUsd = 0; let fetchInterval = null;
         const MAX_CHART_POINTS = 2880;
         
@@ -602,18 +586,14 @@
         function closeModals() { document.getElementById('settings-modal').style.display = 'none'; }
         
         function openSettings() { 
-            document.getElementById('set-alert').value = conf.alert; document.getElementById('set-vault-alert').value = conf.vaultAlert; 
             document.getElementById('set-sim-dex').value = conf.simDex; document.getElementById('set-sim-tri').value = conf.simTri; 
-            document.getElementById('set-tg-bot').value = conf.tgBot || ""; document.getElementById('set-tg-chat').value = conf.tgChat || ""; 
             document.getElementById('set-fee-net').value = conf.feeNet; document.getElementById('set-fee-min').value = conf.feeMin; document.getElementById('set-fee-vyfi').value = conf.feeVyfi;
             document.getElementById('set-lp-min').value = conf.lpFeeMin; document.getElementById('set-lp-vyfi').value = conf.lpFeeVyfi;
             document.getElementById('settings-modal').style.display = 'flex'; 
         }
 
         function saveSettings() {
-            conf.alert = parseFloat(document.getElementById('set-alert').value); conf.vaultAlert = parseFloat(document.getElementById('set-vault-alert').value); 
             conf.simDex = parseFloat(document.getElementById('set-sim-dex').value) || 0; conf.simTri = parseFloat(document.getElementById('set-sim-tri').value) || 0;
-            conf.tgBot = document.getElementById('set-tg-bot').value.trim(); conf.tgChat = document.getElementById('set-tg-chat').value.trim();
             conf.feeNet = parseFloat(document.getElementById('set-fee-net').value); conf.feeMin = parseFloat(document.getElementById('set-fee-min').value); conf.feeVyfi = parseFloat(document.getElementById('set-fee-vyfi').value);
             conf.lpFeeMin = parseFloat(document.getElementById('set-lp-min').value); conf.lpFeeVyfi = parseFloat(document.getElementById('set-lp-vyfi').value);
             localStorage.setItem('l4va_config', JSON.stringify(conf));
@@ -644,9 +624,6 @@
             if (confKey === 'simDex') recalculateDexSimulator(isNaN(val) ? 0 : val);
             if (confKey === 'simTri') recalculateTriSimulator(isNaN(val) ? 0 : val);
         }
-
-        function playDing() { try { const ctx = new (window.AudioContext || window.webkitAudioContext)(); const osc = ctx.createOscillator(); const gainNode = ctx.createGain(); osc.type = 'sine'; osc.frequency.setValueAtTime(880, ctx.currentTime); gainNode.gain.setValueAtTime(0.1, ctx.currentTime); osc.connect(gainNode); gainNode.connect(ctx.destination); osc.start(); gainNode.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.5); osc.stop(ctx.currentTime + 0.5); } catch (e) {} }
-        async function sendTelegramAlert(message) { if (!conf.tgBot || !conf.tgChat) return; try { await fetch(`https://api.telegram.org/bot${conf.tgBot}/sendMessage`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ chat_id: conf.tgChat, text: message, parse_mode: 'HTML' }) }); } catch (e) {} }
 
         const drawToleranceBandPlugin = {
             id: 'drawToleranceBandPlugin',
@@ -811,8 +788,8 @@
                 if (testNet > bestProfit) { bestProfit = testNet; optimalInvest = i; } 
             }
             if(optEl) {
-                if (bestProfit > 0) { optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> Max profit <b>+${bestProfit.toFixed(2)} ADA</b> (Invest <b>${optimalInvest} ADA</b>)`; optEl.style.color = '#10b981'; if(cardEl) cardEl.classList.add('glow-active'); }
-                else { optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> No profitable route (fees > spread).`; optEl.style.color = 'var(--text-secondary)'; if(cardEl) cardEl.classList.remove('glow-active'); }
+                if (bestProfit > 0) { optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> Max profit <b>+${bestProfit.toFixed(2)} ADA</b> (Invest <b>${optimalInvest} ADA</b>)`; optEl.style.color = '#10b981'; }
+                else { optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> No profitable route (fees > spread).`; optEl.style.color = 'var(--text-secondary)'; }
             }
         }
 
@@ -872,13 +849,13 @@
             if(rA) rA.className = "route-inactive"; if(rB) rB.className = "route-inactive"; if(triAnim) triAnim.style.display = "none";
             if(optEl) {
                 if (bestProfit > 0) { 
-                    optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> Max profit <b>+${bestProfit.toFixed(2)} ADA</b> (Invest <b>${optimalInvest} ADA</b>)`; optEl.style.color = '#10b981'; if(cardEl) cardEl.classList.add('glow-active');
+                    optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> Max profit <b>+${bestProfit.toFixed(2)} ADA</b> (Invest <b>${optimalInvest} ADA</b>)`; optEl.style.color = '#10b981';
                     if(triEl) { triEl.innerText = `+${bestPercent.toFixed(2)}%`; triEl.style.color = "#10b981"; }
                     if(triAnim) triAnim.style.display = "block";
                     if (optimalRoute === 'A') { if(rA) rA.className = "route-active"; if(triAnim) triAnim.className = "tri-line-active"; }
                     if (optimalRoute === 'B') { if(rB) rB.className = "route-active"; if(triAnim) triAnim.className = "tri-line-active route-reverse"; }
                 } else { 
-                    optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> No profitable route (fees > spread).`; optEl.style.color = 'var(--text-secondary)'; if(cardEl) cardEl.classList.remove('glow-active');
+                    optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> No profitable route (fees > spread).`; optEl.style.color = 'var(--text-secondary)'; 
                     if(triEl) { triEl.innerText = "0.00%"; triEl.style.color = "var(--text-secondary)"; }
                 }
             }
@@ -1029,7 +1006,10 @@
                             let targetLink = targetDexForVault === "Minswap" ? MINSWAP_LINK : VYFI_LINK; 
                             if (Math.abs(bestDeviation) < 0.5) { updateDOM('vault-banner-discrepancy', undefined, "rgba(255, 255, 255, 0.5)"); if(vaultActionEl) vaultActionEl.innerHTML = `<span style="color: rgba(255, 255, 255, 0.6);">Balanced</span>`; } 
                             else { if (bestDeviation > 0) { updateDOM('vault-banner-discrepancy', undefined, "#10b981"); if(vaultActionEl) vaultActionEl.innerHTML = `<a href="${targetLink}" target="_blank" class="badge-dark">Sell ${targetDexForVault}</a>`; } else { updateDOM('vault-banner-discrepancy', undefined, "var(--neon-red)"); if(vaultActionEl) vaultActionEl.innerHTML = `<a href="${targetLink}" target="_blank" class="badge-dark">Buy ${targetDexForVault}</a>`; } }
-                            if (Math.abs(bestDeviation) >= conf.vaultAlert) { if(vaultCard) vaultCard.classList.add('glow-active'); const alertToggle = document.getElementById('alert-toggle'); const now = Date.now(); if (alertToggle && alertToggle.checked && (now - lastVaultAlertTime > ALERT_COOLDOWN)) { playDing(); if (Notification.permission === "granted") { new Notification("🏛️ L4VA Vault Alert!", { body: `Discrepancy: ${bestDeviation.toFixed(2)}%\nAction: ${bestDeviation > 0 ? 'Sell' : 'Buy'} on ${targetDexForVault}` }); } sendTelegramAlert(`🏛️ <b>L4VA Vault Alert!</b>\n\n⚖️ Fair Price Discrepancy: <b>${bestDeviation > 0 ? '+' : ''}${bestDeviation.toFixed(2)}%</b>\n💡 Action: ${bestDeviation > 0 ? 'Sell' : 'Buy'} on ${targetDexForVault}\n\n<i>Check dashboard for real-time data.</i>`); lastVaultAlertTime = now; } } else { if(vaultCard) vaultCard.classList.remove('glow-active'); }
+                            
+                            // Resplandor visual si pasa de 5%
+                            if (Math.abs(bestDeviation) >= 5) { if(vaultCard) vaultCard.classList.add('glow-active'); } 
+                            else { if(vaultCard) vaultCard.classList.remove('glow-active'); }
                         }
                     } else { if(vaultCard) vaultCard.classList.remove('glow-active'); updateDOM('vault-tvl', `<span class="loading">API Offline</span>`); updateDOM('vault-fair-price', `-`); updateDOM('vault-banner-discrepancy', `-%`, "rgba(255, 255, 255, 0.5)"); updateDOM('vault-arbitrage-action', `<span style="color: rgba(255, 255, 255, 0.6);">Offline</span>`); }
                 } catch(e) { console.error("Error Vault", e); }
@@ -1057,7 +1037,9 @@
                             if(oracleCardActionEl) oracleCardActionEl.innerHTML = actionHTML;
                         }
 
-                        if (spread >= conf.alert) { if(dexCard) dexCard.classList.add('glow-active'); const alertToggle = document.getElementById('alert-toggle'); const now = Date.now(); if (alertToggle && alertToggle.checked && (now - lastAlertTime > ALERT_COOLDOWN)) { playDing(); if (Notification.permission === "granted") { new Notification("🚨 L4VA Arbitrage Detected!", { body: `Spread: ${spread.toFixed(2)}%\nRoute: ${priceVyfi > priceMin ? 'Buy Minswap, Sell Vyfi' : 'Buy Vyfi, Sell Minswap'}` }); } sendTelegramAlert(`🚨 <b>L4VA Arbitrage Detected!</b>\n\n📈 DEX Spread: <b>${spread.toFixed(2)}%</b>\n💡 Route: ${priceVyfi > priceMin ? 'Buy Minswap, Sell Vyfi' : 'Buy Vyfi, Sell Minswap'}\n\n<i>Check dashboard for real-time net profit.</i>`); lastAlertTime = now; } } else { if(dexCard) dexCard.classList.remove('glow-active'); }
+                        // Resplandor visual si pasa de 5%
+                        if (spread >= 5) { if(dexCard) dexCard.classList.add('glow-active'); } 
+                        else { if(dexCard) dexCard.classList.remove('glow-active'); }
                     }
                     
                     let primaryOraclePrice = priceVyfi > 0 ? priceVyfi : priceMin; 
