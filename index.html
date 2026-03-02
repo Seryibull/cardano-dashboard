@@ -122,7 +122,7 @@
         .card-compact { padding: 15px 25px !important; justify-content: center !important;}
         @media (min-width: 768px) { .card-compact .card-title { margin-bottom: 5px; font-size: 0.95rem; } }
 
-        /* 🎨 FONDOS SÓLIDOS OSCUROS (SIN FOCO) */
+        /* 🎨 FONDOS SÓLIDOS Y OSCUROS (SIN FOCOS) */
         .card-ada { 
             box-shadow: -10px 10px 40px rgba(0, 0, 0, 0.4); 
             background: rgba(10, 11, 16, 0.98); 
@@ -339,39 +339,26 @@
 
     <div class="grid-stack grid-container" id="dashboard-oracle">
         
-        <div class="grid-stack-item drag-item" gs-id="card-arb-dex" gs-w="6" gs-h="1" gs-x="0" gs-y="0">
-            <div class="grid-stack-item-content card card-vault card-compact">
-                <div class="card-title" style="color: var(--vault-color);">ORACLE / ADA dex arbitrage</div>
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto;">
-                    <div class="data-row" style="margin: 0;">
-                        <span class="data-label" style="margin-right: 15px;">Spread:</span>
-                        <span class="data-value arbitrage-big-value" id="arbitrage-spread" style="font-size: 1.5rem;">-%</span>
+        <div class="grid-stack-item drag-item" gs-id="card-arb-vault" gs-w="6" gs-h="2" gs-x="0" gs-y="0">
+            <div class="grid-stack-item-content card card-vault">
+                <div style="flex-shrink: 0;">
+                    <div class="card-title" style="color: var(--vault-color);">Vault relics fair price ORACLE</div>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div class="data-row" style="margin: 0;"><span class="data-label" style="margin-right: 15px;">TVL:</span><span class="data-value"><span id="vault-tvl"><span class="loading">Calculating...</span></span> <span id="vault-change-24h" class="change-badge"></span></span></div>
+                        <div class="data-row" style="margin: 0;"><span class="data-label" style="margin-right: 15px;">Fair price:</span><span class="data-value" id="vault-fair-price">-</span></div>
                     </div>
-                    <div class="data-row" style="margin: 0;">
-                        <span class="data-label" style="margin-right: 15px;">Action Route:</span>
-                        <span id="arbitrage-action" style="font-size: 0.9rem; font-weight: bold; color: white;">...</span>
-                    </div>
+                </div>
+                <div class="spark-wrapper" style="height: 40px !important; min-height: 40px !important; margin: 10px 0;">
+                    <canvas id="spark-vault"></canvas>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 10px;">
+                    <div class="data-row" style="margin: 0;"><span class="data-label" style="margin-right: 15px;">Discrepancy:</span><span class="data-value arbitrage-big-value" id="vault-banner-discrepancy" style="font-size: 1.5rem;">-%</span></div>
+                    <div class="data-row" style="margin: 0;"><span class="data-label" style="margin-right: 15px;">Market Action:</span><span id="vault-arbitrage-action" style="font-size: 0.9rem; font-weight: bold; color: white;">...</span></div>
                 </div>
             </div>
         </div>
 
-        <div class="grid-stack-item drag-item" gs-id="card-arb-vault" gs-w="6" gs-h="1" gs-x="6" gs-y="0">
-            <div class="grid-stack-item-content card card-vault card-compact">
-                <div class="card-title" style="color: var(--vault-color);">Vault relics fair price ORACLE</div>
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto;">
-                    <div class="data-row" style="margin: 0;">
-                        <span class="data-label" style="margin-right: 15px;">Discrepancy:</span>
-                        <span class="data-value arbitrage-big-value" id="vault-banner-discrepancy" style="font-size: 1.5rem;">-%</span>
-                    </div>
-                    <div class="data-row" style="margin: 0;">
-                        <span class="data-label" style="margin-right: 15px;">Market Action:</span>
-                        <span id="vault-arbitrage-action" style="font-size: 0.9rem; font-weight: bold; color: white;">...</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="grid-stack-item drag-item" gs-id="card-sim-oracle" gs-w="6" gs-h="2" gs-x="0" gs-y="1">
+        <div class="grid-stack-item drag-item" gs-id="card-sim-oracle" gs-w="6" gs-h="2" gs-x="0" gs-y="2">
             <div class="grid-stack-item-content card card-vault">
                 <div class="card-title" style="color: var(--vault-color);">ORACLE / ADA net profit simulator</div>
                 <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: auto; padding-bottom: 20px;">
@@ -396,7 +383,7 @@
             </div>
         </div>
 
-        <div class="grid-stack-item drag-item" gs-id="card-sim-tri" gs-w="6" gs-h="2" gs-x="6" gs-y="1">
+        <div class="grid-stack-item drag-item" gs-id="card-sim-tri" gs-w="6" gs-h="2" gs-x="6" gs-y="2">
             <div class="grid-stack-item-content card card-orange">
                 <div class="card-title" style="color: var(--neon-orange);">▲VLRM ORACLE ADA▼ triangular net profit simulator</div>
                 <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: auto; padding-bottom: 20px;">
@@ -421,7 +408,7 @@
             </div>
         </div>
 
-        <div class="grid-stack-item drag-item" gs-id="card-ada" gs-w="3" gs-h="2" gs-x="0" gs-y="3">
+        <div class="grid-stack-item drag-item" gs-id="card-ada" gs-w="4" gs-h="2" gs-x="0" gs-y="4">
             <div class="grid-stack-item-content card card-ada">
                 <div style="flex-shrink: 0;">
                     <div class="card-title ada-title">ADA</div>
@@ -438,27 +425,8 @@
                 </div>
             </div>
         </div>
-        
-        <div class="grid-stack-item drag-item" gs-id="card-vault" gs-w="3" gs-h="2" gs-x="3" gs-y="3">
-            <div class="grid-stack-item-content card card-vault">
-                <div style="flex-shrink: 0;">
-                    <div class="card-title" style="color: var(--vault-color);">Relics vault ORACLE</div>
-                    <div class="data-row">
-                        <span class="data-label">TVL:</span>
-                        <span class="data-value">
-                            <span id="vault-tvl"><span class="loading">Calculating...</span></span>
-                            <span id="vault-change-24h" class="change-badge"></span>
-                        </span>
-                    </div>
-                    <div class="data-row"><span class="data-label">Fair price:</span><span class="data-value" id="vault-fair-price">-</span></div>
-                </div>
-                <div class="spark-wrapper" style="height: 60px !important; min-height: 60px !important; max-height: 60px !important; margin-top: auto;">
-                    <canvas id="spark-vault"></canvas>
-                </div>
-            </div>
-        </div>
 
-        <div class="grid-stack-item drag-item" gs-id="card-vlrm-ada" gs-w="3" gs-h="2" gs-x="6" gs-y="3">
+        <div class="grid-stack-item drag-item" gs-id="card-vlrm-ada" gs-w="4" gs-h="2" gs-x="4" gs-y="4">
             <div class="grid-stack-item-content card card-orange">
                 <div class="card-title" style="color: var(--neon-orange); flex-shrink: 0;">VLRM / ADA <span class="badge bg-vyfi" style="margin-left:auto;">VyFi</span></div>
                 <div class="data-row" style="flex-shrink: 0;">
@@ -474,7 +442,7 @@
             </div>
         </div>
 
-        <div class="grid-stack-item drag-item" gs-id="card-vlrm-oracle" gs-w="3" gs-h="2" gs-x="9" gs-y="3">
+        <div class="grid-stack-item drag-item" gs-id="card-vlrm-oracle" gs-w="4" gs-h="2" gs-x="8" gs-y="4">
             <div class="grid-stack-item-content card card-orange">
                 <div class="card-title" style="color: var(--neon-orange); flex-shrink: 0;">VLRM / ORACLE <span class="badge bg-vyfi" style="margin-left:auto;">VyFi</span></div>
                 <div class="data-row" style="flex-shrink: 0;">
@@ -490,7 +458,7 @@
             </div>
         </div>
 
-        <div class="grid-stack-item drag-item" gs-id="card-oracle-ada" gs-w="6" gs-h="4" gs-x="0" gs-y="5">
+        <div class="grid-stack-item drag-item" gs-id="card-oracle-ada" gs-w="6" gs-h="5" gs-x="6" gs-y="0">
             <div class="grid-stack-item-content card card-vault" style="display: flex; flex-direction: column;">
                 <div style="flex-shrink: 0;">
                     <div class="card-title" style="color: var(--vault-color); margin-bottom: 20px;">ORACLE / ADA</div>
@@ -589,7 +557,7 @@
 
     <div class="grid-stack grid-container" id="dashboard-vyfi" style="display: none;">
         
-        <div class="grid-stack-item drag-item" gs-id="card-vyfi-ada" gs-w="6" gs-h="4" gs-x="0" gs-y="0">
+        <div class="grid-stack-item drag-item" gs-id="card-vyfi-ada" gs-w="6" gs-h="5" gs-x="0" gs-y="0">
             <div class="grid-stack-item-content card card-ada" style="display: flex; flex-direction: column;">
                 <div style="flex-shrink: 0;">
                     <div class="card-title" style="color: var(--ada-color); margin-bottom: 20px;">VYFI / ADA Arbitrage</div>
@@ -653,7 +621,7 @@
             </div>
         </div>
 
-        <div class="grid-stack-item drag-item" gs-id="card-vyfi-tri" gs-w="6" gs-h="4" gs-x="0" gs-y="4">
+        <div class="grid-stack-item drag-item" gs-id="card-vyfi-tri" gs-w="6" gs-h="4" gs-x="0" gs-y="5">
             <div class="grid-stack-item-content card card-orange" style="display: flex; flex-direction: column;">
                 <div class="card-title" style="color: var(--neon-orange); margin-bottom: 5px;">▲VYFI xVYFI ADA▼ triangular arbitrage</div>
                 
@@ -705,9 +673,8 @@
         const VYFI_LINK = "https://app.vyfi.io/dex?tokenA=lovelace&tokenB=328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b27393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
         const MINSWAP_LINK = "https://minswap.org/swap?cA=&tA=&cB=328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b2&tB=7393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
 
-        // TOKENS NUEVOS (Búsqueda en texto libre para VyFi)
-        const TOKEN_VYFI = "VYFI";
-        const TOKEN_XVYFI = "XVYF"; 
+        // TOKENS NUEVOS - Políticas exactas
+        const POLICY_VYFI = "804f5530198154628ce71b6bd5a889410ea9036c64188597af";
 
         const LAYOUT_VERSION = "v1.7"; 
 
@@ -735,6 +702,7 @@
         let activeEcosystem = 'oracle';
         let gridOracle, gridVyfi;
         let grid; 
+        let isEditMode = false; // <- Variable añadida para arreglar el drag and drop
 
         /* 🎬 FULLSCREEN MÁGICO */
         function toggleFullScreen() {
@@ -923,8 +891,10 @@
             const sparkOptions = { responsive: true, maintainAspectRatio: false, scales: { x: { display: false }, y: { display: false } }, plugins: { legend: { display: false }, tooltip: { enabled: false } }, layout: { padding: 0 }, animation: false };
             const createSpark = (id, color, dataArr) => new Chart(document.getElementById(id).getContext('2d'), { type: 'line', data: { labels: chartHistory.labels, datasets: [{ data: dataArr, borderColor: color, borderWidth: 2, tension: 0.4, pointRadius: 0, fill: true, backgroundColor: color.replace('1)', '0.1)'), spanGaps: true }] }, options: sparkOptions });
             
+            // Sparks Oracle
             sparkInstances.vlrmAda = createSpark('spark-vlrm-ada', 'rgba(167, 139, 250, 1)', chartHistory.vlrmAda); sparkInstances.vlrmOracle = createSpark('spark-vlrm-oracle', 'rgba(167, 139, 250, 1)', chartHistory.vlrmOracle); sparkInstances.oracleVyfi = createSpark('spark-oracle-vyfi', 'rgba(167, 139, 250, 1)', chartHistory.oracleVyfi); sparkInstances.oracleMin = createSpark('spark-oracle-min', 'rgba(137, 170, 255, 1)', chartHistory.oracleMin); sparkInstances.vault = createSpark('spark-vault', 'rgba(252, 211, 77, 1)', chartHistory.vault); sparkInstances.totalLiq = createSpark('spark-total-liq', 'rgba(255, 255, 255, 1)', chartHistory.totalLiq); sparkInstances.ada = createSpark('spark-ada', 'rgba(66, 133, 244, 1)', []); sparkInstances.pVlrmAda = createSpark('spark-vlrm-ada-price', 'rgba(255, 255, 255, 1)', chartHistory.pVlrmAda); sparkInstances.pVlrmOracle = createSpark('spark-vlrm-oracle-price', 'rgba(255, 255, 255, 1)', chartHistory.pVlrmOracle); sparkInstances.pOracleVyfi = createSpark('spark-oracle-vyfi-price', 'rgba(255, 255, 255, 1)', chartHistory.pOracleVyfi); sparkInstances.pOracleMin = createSpark('spark-oracle-min-price', 'rgba(255, 255, 255, 1)', chartHistory.pOracleMin); 
             
+            // Sparks Vyfi Ecosystem
             sparkInstances.pVyfiDex = createSpark('spark-vyfi-dex-price', 'rgba(255, 255, 255, 1)', chartHistory.pVyfiDex);
             sparkInstances.pVyfiMin = createSpark('spark-vyfi-min-price', 'rgba(255, 255, 255, 1)', chartHistory.pVyfiMin);
             sparkInstances.tVyfiDex = createSpark('spark-vyfi-dex', 'rgba(167, 139, 250, 1)', chartHistory.tVyfiDex);
@@ -1239,20 +1209,13 @@
 
                 const vyfiPoolsList = data.vyfiPools || [];
 
-                // --- SISTEMA VYFI / xVYFI BÚSQUEDA EXTREMA ---
+                // --- SISTEMA VYFI / xVYFI BÚSQUEDA EXTREMA (MÉTODO VLRM) ---
                 let pVyfiDex = 0; let vyfiDexTvl = 0; let pXvyfiDex = 0; let xvyfiDexTvl = 0; let priceMinVyfi = 0; let minVyfiTvl = 0;
                 
                 try {
                     // 1. Buscar VYFI/ADA
-                    const allVyfiPools = vyfiPoolsList.filter(p => 
-                        p.unitsPair && p.unitsPair.includes('lovelace') && 
-                        (p.unitsPair.includes(TOKEN_VYFI) || 
-                         (p.tokenA && p.tokenA.name && p.tokenA.name.toUpperCase().includes('VYFI')) || 
-                         (p.tokenB && p.tokenB.name && p.tokenB.name.toUpperCase().includes('VYFI')))
-                    );
-                    
-                    if (allVyfiPools.length > 0) {
-                        const vyfiPoolObj = allVyfiPools.sort((a,b) => (b.tvl||0) - (a.tvl||0))[0];
+                    const vyfiPoolObj = vyfiPoolsList.find(p => p.unitsPair && p.unitsPair.includes('lovelace') && p.unitsPair.includes(POLICY_VYFI));
+                    if (vyfiPoolObj) {
                         pVyfiDex = vyfiPoolObj.tokenA.unit === 'lovelace' ? vyfiPoolObj.tokenB.lpRatio[vyfiPoolObj.unitsPair].priceRatioAB : vyfiPoolObj.tokenA.lpRatio[vyfiPoolObj.unitsPair].priceRatioBA;
                         vyfiDexTvl = vyfiPoolObj.tvl;
                         
@@ -1275,20 +1238,19 @@
                         const highestPrice = Math.max(pVyfiDex, priceMinVyfi); const lowestPrice = Math.min(pVyfiDex, priceMinVyfi); 
                         let vyfiSpread = ((highestPrice - lowestPrice) / lowestPrice) * 100;
                         document.getElementById('vyfi-arbitrage-spread').innerText = vyfiSpread.toFixed(2) + '%'; document.getElementById('vyfi-arbitrage-spread').style.color = vyfiSpread > 0.5 ? "#10b981" : "rgba(255,255,255,0.5)";
+                        
+                        let vyfiActionHTML = "";
+                        if (pVyfiDex > priceMinVyfi) { vyfiActionHTML = `<a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Buy Minswap</a> <a href="${VYFI_LINK}" target="_blank" class="badge-dark">Sell VyFi</a>`; } 
+                        else { vyfiActionHTML = `<a href="${VYFI_LINK}" target="_blank" class="badge-dark">Buy VyFi</a> <a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Sell Minswap</a>`; }
+                        const vyfiActionEl = document.getElementById('vyfi-arbitrage-action');
+                        if(vyfiActionEl) vyfiActionEl.innerHTML = vyfiSpread < 0.5 ? `<span style="color: rgba(255, 255, 255, 0.6);">Low spread</span>` : vyfiActionHTML;
                     }
                     let vyfiTotalLiq = vyfiDexTvl + minVyfiTvl;
                     document.getElementById('vyfi-total-liq').innerText = `₳ ${Math.round(vyfiTotalLiq).toLocaleString()}`;
 
                     // 3. Buscar xVYFI/ADA
-                    const allXvyfiPools = vyfiPoolsList.filter(p => 
-                        p.unitsPair && p.unitsPair.includes('lovelace') && 
-                        (p.unitsPair.includes(TOKEN_XVYFI_HEX) || p.unitsPair.includes(TOKEN_XVYFI) ||
-                         (p.tokenA && p.tokenA.name && p.tokenA.name.toUpperCase().includes('XVYFI')) || 
-                         (p.tokenB && p.tokenB.name && p.tokenB.name.toUpperCase().includes('XVYFI')))
-                    );
-                    
-                    if (allXvyfiPools.length > 0) {
-                        const xvyfiPoolObj = allXvyfiPools.sort((a,b) => (b.tvl||0) - (a.tvl||0))[0];
+                    const xvyfiPoolObj = vyfiPoolsList.find(p => p.unitsPair && p.unitsPair.includes('lovelace') && (p.unitsPair.includes('xVYF') || (p.tokenA && p.tokenA.name === 'xVYFI') || (p.tokenB && p.tokenB.name === 'xVYFI')));
+                    if (xvyfiPoolObj) {
                         pXvyfiDex = xvyfiPoolObj.tokenA.unit === 'lovelace' ? xvyfiPoolObj.tokenB.lpRatio[xvyfiPoolObj.unitsPair].priceRatioAB : xvyfiPoolObj.tokenA.lpRatio[xvyfiPoolObj.unitsPair].priceRatioBA;
                         xvyfiDexTvl = xvyfiPoolObj.tvl;
                         
@@ -1305,18 +1267,9 @@
                     calcChangeUI('vyfi-dex-price-change-24h', chartHistory.pVyfiDex, pVyfiDex); calcChangeUI('minswap-vyfi-price-change-24h', chartHistory.pVyfiMin, priceMinVyfi); calcChangeUI('vyfi-dex-change-24h', chartHistory.tVyfiDex, vyfiDexTvl); calcChangeUI('minswap-vyfi-change-24h', chartHistory.tVyfiMin, minVyfiTvl); calcChangeUI('vyfi-total-liq-change-24h', chartHistory.tVyfiTotal, vyfiTotalLiq); calcChangeUI('xvyfi-price-change-24h', chartHistory.pXvyfi, pXvyfiDex); calcChangeUI('xvyfi-tvl-change-24h', chartHistory.tXvyfi, xvyfiDexTvl);
 
                     // 4. Preparar Pools para el Triangular de Vyfi (Cross-Pool VYFI/xVYFI)
-                    let crossVxPools = vyfiPoolsList.filter(p => 
-                        p.unitsPair && !p.unitsPair.includes('lovelace') && 
-                        ((p.tokenA && p.tokenA.name && p.tokenA.name.toUpperCase().includes('VYFI') && p.tokenB && p.tokenB.name && p.tokenB.name.toUpperCase().includes('XVYFI')) || 
-                         (p.tokenA && p.tokenA.name && p.tokenA.name.toUpperCase().includes('XVYFI') && p.tokenB && p.tokenB.name && p.tokenB.name.toUpperCase().includes('VYFI')) ||
-                         (p.unitsPair.includes(TOKEN_VYFI) && p.unitsPair.includes(TOKEN_XVYFI_HEX)))
-                    );
-                    
+                    let crossVxPool = vyfiPoolsList.find(p => p.unitsPair && !p.unitsPair.includes('lovelace') && p.unitsPair.includes(POLICY_VYFI) && (p.unitsPair.includes('xVYF') || (p.tokenA && p.tokenA.name === 'xVYFI') || (p.tokenB && p.tokenB.name === 'xVYFI')));
                     let resVxVyfi = 0; let resVxXvyfi = 0;
-                    if(crossVxPools.length > 0) {
-                        let crossVxPool = crossVxPools.sort((a,b) => (b.tvl||0) - (a.tvl||0))[0];
-                        if(pVyfiDex > 0 && pXvyfiDex > 0) { resVxVyfi = (crossVxPool.tvl/2)/pVyfiDex; resVxXvyfi = (crossVxPool.tvl/2)/pXvyfiDex; }
-                    }
+                    if(crossVxPool && pVyfiDex > 0 && pXvyfiDex > 0) { resVxVyfi = (crossVxPool.tvl/2)/pVyfiDex; resVxXvyfi = (crossVxPool.tvl/2)/pXvyfiDex; }
                     
                     currentPoolsVyfi = {
                         vyfi: { resAda: vyfiDexTvl/2, resTok: (vyfiDexTvl/2)/(pVyfiDex||1) },
@@ -1362,39 +1315,28 @@
                     }
                 } else { if(vaultCard) vaultCard.classList.remove('glow-active'); document.getElementById('vault-tvl').innerText = `API Offline`; document.getElementById('vault-fair-price').innerText = `-`; document.getElementById('vault-banner-discrepancy').innerText = `-%`; document.getElementById('vault-banner-discrepancy').style.color = "rgba(255, 255, 255, 0.5)"; document.getElementById('vault-arbitrage-action').innerHTML = `<span style="color: rgba(255, 255, 255, 0.6);">Offline</span>`; }
                 
-                let spread = 0; const dexCard = document.querySelector('[gs-id="card-arb-dex"] .card');
+                let spread = 0;
                 if (priceVyfi > 0 && priceMin > 0) {
                     const highestPrice = Math.max(priceVyfi, priceMin); const lowestPrice = Math.min(priceVyfi, priceMin); spread = ((highestPrice - lowestPrice) / lowestPrice) * 100;
-                    const actionEl = document.getElementById('arbitrage-action');
                     const oracleCardActionEl = document.getElementById('oracle-card-arbitrage-action');
-                    
-                    animateValue('spread', 'arbitrage-spread', spread, val => val.toFixed(2) + '%');
                     
                     const oracleCardSpread = document.getElementById('oracle-card-arbitrage-spread');
                     if (oracleCardSpread) {
-                        oracleCardSpread.innerText = spread.toFixed(2) + '%';
+                        animateValue('spread', 'oracle-card-arbitrage-spread', spread, val => val.toFixed(2) + '%');
                         oracleCardSpread.style.color = spread > 0.5 ? "#10b981" : "rgba(255,255,255,0.5)";
                     }
 
                     if (spread < 0.5) { 
-                        document.getElementById('arbitrage-spread').style.color = "rgba(255, 255, 255, 0.5)"; 
-                        actionEl.innerHTML = `<span style="color: rgba(255, 255, 255, 0.6);">Low spread</span>`; 
                         if(oracleCardActionEl) oracleCardActionEl.innerHTML = `<span style="color: rgba(255, 255, 255, 0.6);">Low spread</span>`;
                     } 
                     else { 
-                        document.getElementById('arbitrage-spread').style.color = "#ffffff"; 
                         let actionHTML = "";
-                        if (priceVyfi > priceMin) { 
-                            actionHTML = `<a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Buy Minswap</a> <a href="${VYFI_LINK}" target="_blank" class="badge-dark">Sell VyFi</a>`; 
-                        } else { 
-                            actionHTML = `<a href="${VYFI_LINK}" target="_blank" class="badge-dark">Buy VyFi</a> <a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Sell Minswap</a>`; 
-                        }
-                        actionEl.innerHTML = actionHTML;
+                        if (priceVyfi > priceMin) { actionHTML = `<a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Buy Minswap</a> <a href="${VYFI_LINK}" target="_blank" class="badge-dark">Sell VyFi</a>`; } 
+                        else { actionHTML = `<a href="${VYFI_LINK}" target="_blank" class="badge-dark">Buy VyFi</a> <a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Sell Minswap</a>`; }
                         if(oracleCardActionEl) oracleCardActionEl.innerHTML = actionHTML;
                     }
-
-                    if (spread >= conf.alert) { if(dexCard) dexCard.classList.add('glow-active'); const alertToggle = document.getElementById('alert-toggle'); const now = Date.now(); if (alertToggle && alertToggle.checked && (now - lastAlertTime > ALERT_COOLDOWN)) { playDing(); if (Notification.permission === "granted") { new Notification("🚨 L4VA Arbitrage Detected!", { body: `Spread: ${spread.toFixed(2)}%\nRoute: ${priceVyfi > priceMin ? 'Buy Minswap, Sell Vyfi' : 'Buy Vyfi, Sell Minswap'}` }); } sendTelegramAlert(`🚨 <b>L4VA Arbitrage Detected!</b>\n\n📈 DEX Spread: <b>${spread.toFixed(2)}%</b>\n💡 Route: ${priceVyfi > priceMin ? 'Buy Minswap, Sell Vyfi' : 'Buy Vyfi, Sell Minswap'}\n\n<i>Check dashboard for real-time net profit.</i>`); lastAlertTime = now; } } else { if(dexCard) dexCard.classList.remove('glow-active'); }
-                } else { if(dexCard) dexCard.classList.remove('glow-active'); }
+                }
+                
                 let primaryOraclePrice = priceVyfi > 0 ? priceVyfi : priceMin; let voSpread = 0;
                 if (priceVlrmAda > 0 && primaryOraclePrice > 0 && oraclePerVlrmUI > 0) { let valueDirect = priceVlrmAda; let valueCross = oraclePerVlrmUI * primaryOraclePrice; voSpread = ((Math.max(valueDirect, valueCross) - Math.min(valueDirect, valueCross)) / Math.min(valueDirect, valueCross)) * 100; }
                 updateMainChart(spread, bestDeviation, voSpread); recalculateSimulators();
