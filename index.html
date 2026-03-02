@@ -41,7 +41,6 @@
             color: var(--text-primary); margin: 0; padding: 20px 20px; min-height: 100vh; 
         }
 
-        /* Cine Mode nativo */
         :fullscreen { background-color: #0a0814; padding: 40px 20px; overflow-y: auto; }
         :-webkit-full-screen { background-color: #0a0814; padding: 40px 20px; overflow-y: auto;}
 
@@ -86,9 +85,6 @@
         h1 { margin: 0; font-weight: 800; font-size: 1.8rem; background: var(--gradient-fire); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -1px; display: flex; align-items: center;}
         .version-badge { color: #ffffff; font-size: 0.8rem; font-weight: 600; margin-left: 8px; opacity: 0.8; letter-spacing: 0; -webkit-text-fill-color: #ffffff; }
 
-        /* =========================================
-           🔘 PESTAÑAS DE NAVEGACIÓN (TABS)
-           ========================================= */
         .tabs-container { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;}
         .tab-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--text-secondary); padding: 6px 15px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: 0.3s; display: flex; align-items: center; gap: 5px; font-size: 0.85rem;}
         .tab-btn:hover { background: rgba(255,255,255,0.1); color: white; }
@@ -122,7 +118,7 @@
         .card-compact { padding: 15px 25px !important; justify-content: center !important;}
         @media (min-width: 768px) { .card-compact .card-title { margin-bottom: 5px; font-size: 0.95rem; } }
 
-        /* 🎨 FONDOS SÓLIDOS Y OSCURECIDOS AL 30% (SIN FOCO NINGUNO) */
+        /* 🎨 FONDOS SÓLIDOS Y OSCUROS (SIN FOCO NINGUNO) */
         .card-ada { 
             box-shadow: -10px 10px 40px rgba(0, 0, 0, 0.4); 
             background: rgba(10, 11, 16, 0.98); 
@@ -159,7 +155,7 @@
             background: rgba(14, 15, 24, 1);
         }
 
-        /* EFECTO: RESPLANDOR VERDE (ALERTAS Y PROFIT) - SIN FOCO BLANCO */
+        /* EFECTO: RESPLANDOR VERDE (ALERTAS Y PROFIT) */
         @keyframes greenAlertPulse {
             0% { box-shadow: -10px 10px 40px rgba(16, 185, 129, 0.3), inset 0 0 10px rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.4); }
             100% { box-shadow: -15px 15px 60px rgba(16, 185, 129, 0.9), inset 0 0 20px rgba(16, 185, 129, 0.3); border-color: rgba(16, 185, 129, 0.9); }
@@ -195,7 +191,7 @@
         .bg-vyfi { background: var(--badge-vyfi-bg); color: var(--badge-vyfi-text); border-color: var(--badge-vyfi-text); }
         .bg-minswap { background: var(--badge-min-bg); color: var(--badge-min-text); border-color: var(--badge-min-text); }
         .arbitrage-label { color: rgba(255, 255, 255, 0.75); font-size: 0.75rem; text-transform: uppercase; font-weight: 800; margin-bottom: 5px; letter-spacing: 0.5px;}
-        .arbitrage-big-value { font-size: 1.5rem; font-weight: 900; color: #ffffff; text-shadow: 0 2px 10px rgba(0,0,0,0.5); transition: none; }
+        .arbitrage-big-value { font-size: 1.6rem; font-weight: 900; color: #ffffff; text-shadow: 0 2px 10px rgba(0,0,0,0.5); transition: none; }
         .loading { color: inherit; opacity: 0.6; font-style: italic; font-weight: normal; font-size: 0.9rem;}
         .badge-dark { background: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.2); font-size: 0.75rem; padding: 4px 10px; border-radius: 20px; font-weight: 700; display: inline-block; margin: 0 2px; text-decoration: none; transition: 0.2s ease; }
         a.badge-dark:hover { transform: translateY(-2px); background: var(--neon-orange); border-color: var(--neon-orange); color: var(--text-on-fire); box-shadow: 0 0 15px rgba(255, 123, 0, 0.4);}
@@ -214,10 +210,10 @@
         .slippage-bar { height: 100%; width: 0%; border-radius: 4px; transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); box-shadow: 0 0 10px currentColor;}
         .slippage-label { font-size: 0.7rem; color: var(--text-secondary); text-align: right; font-weight: 600;}
 
-        /* TRIANGULO: Ajuste de proporciones fijas para no deformarse nunca */
-        .tri-wrapper { position: relative; width: 100%; max-width: 240px; height: 130px; min-height: 130px; margin: 10px auto; flex-grow: 0; flex-shrink: 0; }
-        .tri-node { position: absolute; width: 50px; height: 50px; background: rgba(18, 15, 36, 0.9); border: 2px solid rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: bold; color: white; z-index: 2; box-shadow: 0 0 15px rgba(0,0,0,0.8); backdrop-filter: blur(5px);}
-        .node-ada { top: -10px; left: calc(50% - 25px); border-color: var(--ada-color); color: var(--ada-color);}
+        /* TRIANGULO: Ajuste de proporciones fijas y perfectas */
+        .tri-wrapper { position: relative; width: 100%; max-width: 250px; height: 110px; min-height: 110px; margin: 10px auto; flex-grow: 0; flex-shrink: 0; }
+        .tri-node { position: absolute; width: 44px; height: 44px; background: rgba(18, 15, 36, 0.9); border: 2px solid rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: bold; color: white; z-index: 2; box-shadow: 0 0 15px rgba(0,0,0,0.8); backdrop-filter: blur(5px);}
+        .node-ada { top: -10px; left: calc(50% - 22px); border-color: var(--ada-color); color: var(--ada-color);}
         .node-vlrm { bottom: -5px; right: -5px; border-color: var(--neon-orange); color: var(--neon-orange);}
         .node-oracle { bottom: -5px; left: -5px; border-color: var(--vault-color); color: var(--vault-color);}
         .node-vyfi { bottom: -5px; right: -5px; border-color: var(--badge-vyfi-text); color: var(--badge-vyfi-text);}
@@ -278,7 +274,6 @@
     </div>
 
     <header style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; max-width: 1200px; margin-left: auto; margin-right: auto; flex-wrap: wrap; gap: 15px;">
-        
         <div style="display: flex; gap: 15px; align-items: flex-start;">
             <div class="brand-logo" style="margin-top: 2px;">🔥</div>
             <div style="display: flex; flex-direction: column; gap: 8px;">
@@ -287,7 +282,6 @@
                     <span style="color: var(--text-secondary); font-weight: 400; margin-left: 8px;">| Arbitrage</span> 
                     <span class="version-badge">V 1.0</span>
                 </h1>
-                
                 <div class="tabs-container" style="margin: 0; padding: 0; border: none;">
                     <button id="tab-oracle" class="tab-btn active" onclick="switchEcosystem('oracle')">🔥 VLRM / ORACLE</button>
                     <button id="tab-vyfi" class="tab-btn" onclick="switchEcosystem('vyfi')">💧 VYFI / xVYFI</button>
@@ -304,7 +298,6 @@
             <div class="header-btn" id="edit-mode-btn" onclick="toggleEditMode()" title="Unlock Dashboard Layout">🔒</div>
             <div class="header-btn settings-btn" onclick="openSettings()" title="Settings">⚙️</div>
         </div>
-
     </header>
 
     <div id="settings-modal" class="modal-overlay">
@@ -339,13 +332,13 @@
 
     <div class="grid-stack grid-container" id="dashboard-oracle">
         
-        <div class="grid-stack-item drag-item" gs-id="card-ada" gs-w="5" gs-h="2" gs-x="0" gs-y="0">
+        <div class="grid-stack-item drag-item" gs-id="card-ada-oracle" gs-w="4" gs-h="2" gs-x="0" gs-y="0">
             <div class="grid-stack-item-content card card-ada">
                 <div style="flex-shrink: 0;">
                     <div class="card-title ada-title">ADA</div>
                     <div class="data-row">
                         <span class="data-value" id="ada-price-usd-oracle" style="font-size: 1.1rem;">
-                            <span class="loading">Loading...</span> <span id="ada-change-24h-oracle" class="change-badge"></span>
+                            <span class="loading">Loading...</span>
                         </span>
                     </div>
                 </div>
@@ -355,7 +348,7 @@
             </div>
         </div>
 
-        <div class="grid-stack-item drag-item" gs-id="card-vlrm-ada" gs-w="4" gs-h="2" gs-x="5" gs-y="0">
+        <div class="grid-stack-item drag-item" gs-id="card-vlrm-ada" gs-w="4" gs-h="2" gs-x="4" gs-y="0">
             <div class="grid-stack-item-content card card-orange">
                 <div class="card-title" style="color: var(--neon-orange); flex-shrink: 0;">VLRM / ADA <span class="badge bg-vyfi" style="margin-left:auto;">VyFi</span></div>
                 <div class="data-row" style="flex-shrink: 0;">
@@ -371,7 +364,7 @@
             </div>
         </div>
 
-        <div class="grid-stack-item drag-item" gs-id="card-vlrm-oracle" gs-w="3" gs-h="2" gs-x="9" gs-y="0">
+        <div class="grid-stack-item drag-item" gs-id="card-vlrm-oracle" gs-w="4" gs-h="2" gs-x="8" gs-y="0">
             <div class="grid-stack-item-content card card-orange">
                 <div class="card-title" style="color: var(--neon-orange); flex-shrink: 0;">VLRM / ORACLE <span class="badge bg-vyfi" style="margin-left:auto;">VyFi</span></div>
                 <div class="data-row" style="flex-shrink: 0;">
@@ -387,7 +380,7 @@
             </div>
         </div>
 
-        <div class="grid-stack-item drag-item" gs-id="card-arb-vault" gs-w="6" gs-h="2" gs-x="0" gs-y="2">
+        <div class="grid-stack-item drag-item" gs-id="card-arb-vault" gs-w="6" gs-h="2" gs-x="6" gs-y="2">
             <div class="grid-stack-item-content card card-vault">
                 <div style="flex-shrink: 0;">
                     <div class="card-title" style="color: var(--vault-color);">Vault relics fair price ORACLE</div>
@@ -406,8 +399,9 @@
             </div>
         </div>
 
-        <div class="grid-stack-item drag-item" gs-id="card-oracle-ada" gs-w="6" gs-h="4" gs-x="0" gs-y="4">
+        <div class="grid-stack-item drag-item" gs-id="card-oracle-ada" gs-w="6" gs-h="5" gs-x="0" gs-y="4">
             <div class="grid-stack-item-content card card-vault" style="display: flex; flex-direction: column;">
+                
                 <div style="flex-shrink: 0;">
                     <div class="card-title" style="color: var(--vault-color); margin-bottom: 10px;">ORACLE / ADA Arbitrage</div>
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px;">
@@ -431,50 +425,65 @@
                 </div>
                 
                 <div style="display: flex; flex-direction: column; flex-grow: 1; justify-content: flex-end;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 5px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 10px;">
+                    
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; margin-top: 15px;">
+                        <h3 class="dex-subtitle" style="color: var(--text-secondary); margin:0;">Total Combined Liquidity</h3>
+                        <div class="data-value" style="font-size: 1.2rem; color: #ffffff; text-shadow: 0 2px 10px rgba(0,0,0,0.5);">
+                            <span id="oracle-total-liq">-</span> <span id="total-liq-change-24h" class="change-badge" style="font-size: 0.8rem;"></span>
+                        </div>
+                    </div>
+                    <div class="spark-wrapper" style="height: 30px !important; min-height: 30px !important; max-height: 30px !important; width: 100%;">
+                        <canvas id="spark-total-liq"></canvas>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 10px;">
                         <div class="data-row" style="margin: 0;">
                             <span class="data-label" style="margin-right: 10px;">Spread:</span>
-                            <span class="data-value arbitrage-big-value" id="oracle-card-arbitrage-spread" style="font-size: 1.2rem;">-%</span>
+                            <span class="data-value arbitrage-big-value" id="oracle-card-arbitrage-spread" style="font-size: 1.3rem;">-%</span>
                         </div>
                         <div class="data-row" style="margin: 0;">
                             <span class="data-label" style="margin-right: 10px;">Action Route:</span>
-                            <span id="oracle-card-arbitrage-action" style="font-size: 0.8rem; font-weight: bold; color: white;">...</span>
+                            <span id="oracle-card-arbitrage-action" style="font-size: 0.85rem; font-weight: bold; color: white;">...</span>
                         </div>
                     </div>
 
                     <div style="margin-top: 10px; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 10px;">
                         <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 5px;">
                             <div style="display: flex; align-items: center;">
-                                <input type="number" id="sim-ada-input" class="sim-input" oninput="updateSimConfig('sim-ada-input', 'simDex')"> 
+                                <input type="number" id="sim-ada-input-oracle" class="sim-input" oninput="updateSimConfig('sim-ada-input-oracle', 'simDex')"> 
                                 <span style="font-size: 0.8rem; font-weight: bold; color: var(--text-primary);">ADA</span>
                             </div>
                             <div style="text-align: right;">
                                 <span class="data-label" style="font-size: 0.65rem; opacity: 0.6; display: block; margin-bottom: 2px;">Net Return (2 Hops):</span>
-                                <span class="data-value arbitrage-big-value" id="sim-profit" style="font-size: 1.1rem;">- ADA</span>
+                                <span class="data-value arbitrage-big-value" id="sim-profit-oracle" style="font-size: 1.1rem;">- ADA</span>
                             </div>
                         </div>
                         <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <div id="optimizer-result" class="optimizer-text" style="margin: 0; padding: 0;">💡 <b>Auto-Optimizer:</b> Calculating...</div>
-                            <div id="sim-slippage-label" class="slippage-label" style="margin: 0;">Impact: 0.00%</div>
+                            <div id="optimizer-result-oracle" class="optimizer-text" style="margin: 0; padding: 0;">💡 <b>Auto-Optimizer:</b> Calculating...</div>
+                            <div id="sim-slippage-label-oracle" class="slippage-label" style="margin: 0;">Impact: 0.00%</div>
                         </div>
-                        <div class="slippage-container" style="margin-top: 5px;"><div id="sim-slippage-bar" class="slippage-bar" style="background: #10b981;"></div></div>
+                        <div class="slippage-container" style="margin-top: 5px;"><div id="sim-slippage-bar-oracle" class="slippage-bar" style="background: #10b981;"></div></div>
                     </div>
+
                 </div>
             </div>
         </div>
 
-        <div class="grid-stack-item drag-item" gs-id="card-triangular" gs-w="6" gs-h="4" gs-x="6" gs-y="4">
+        <div class="grid-stack-item drag-item" gs-id="card-triangular-oracle" gs-w="6" gs-h="4" gs-x="6" gs-y="4">
             <div class="grid-stack-item-content card card-orange" style="display: flex; flex-direction: column;">
-                <div class="card-title" style="color: var(--neon-orange); margin-bottom: 5px;">▲VLRM ORACLE ADA▼ triangular arbitrage</div>
                 
-                <div class="tri-wrapper">
-                    <svg class="tri-svg" viewBox="0 0 240 130" preserveAspectRatio="xMidYMid meet">
-                        <polygon points="120,15 210,115 30,115" class="tri-line-bg" />
-                        <polygon id="tri-anim-path" points="120,15 210,115 30,115" class="tri-line-active" style="display:none;" />
-                    </svg>
-                    <div class="tri-node node-ada" style="top: -5px; left: calc(50% - 22px);">ADA</div>
-                    <div class="tri-node node-vlrm" style="bottom: -5px; right: -5px;">VLRM</div>
-                    <div class="tri-node node-oracle" style="bottom: -5px; left: -5px;">ORAC</div>
+                <div class="card-title" style="color: var(--neon-orange); margin-bottom: 5px; flex-shrink: 0;">▲VLRM ORACLE ADA▼ triangular arbitrage</div>
+                
+                <div style="display: flex; justify-content: center; align-items: center; width: 100%; margin-top: 5px; margin-bottom: 5px;">
+                    <div class="tri-wrapper" style="margin: 0;">
+                        <svg class="tri-svg" viewBox="0 0 280 140" preserveAspectRatio="xMidYMid meet">
+                            <polygon points="140,20 250,120 30,120" class="tri-line-bg" />
+                            <polygon id="tri-anim-path" points="140,20 250,120 30,120" class="tri-line-active" style="display:none;" />
+                        </svg>
+                        <div class="tri-node node-ada" style="top: -5px; left: calc(50% - 22px);">ADA</div>
+                        <div class="tri-node node-vlrm" style="bottom: 5px; right: 5px;">VLRM</div>
+                        <div class="tri-node node-oracle" style="bottom: 5px; left: 5px;">ORAC</div>
+                    </div>
                 </div>
 
                 <div style="display: flex; flex-direction: column; flex-grow: 1; justify-content: flex-end;">
@@ -497,25 +506,25 @@
                     <div style="margin-top: 10px; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 10px;">
                         <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 5px;">
                             <div style="display: flex; align-items: center;">
-                                <input type="number" id="sim-tri-input" class="sim-input" oninput="updateSimConfig('sim-tri-input', 'simTri')"> 
+                                <input type="number" id="sim-tri-input-oracle" class="sim-input" oninput="updateSimConfig('sim-tri-input-oracle', 'simTri')"> 
                                 <span style="font-size: 0.8rem; font-weight: bold; color: var(--text-primary);">ADA</span>
                             </div>
                             <div style="text-align: right;">
                                 <span class="data-label" style="font-size: 0.65rem; opacity: 0.6; display: block; margin-bottom: 2px;">Net Return (3 Hops):</span>
-                                <span class="data-value arbitrage-big-value" id="sim-tri-profit" style="font-size: 1.1rem;">- ADA</span>
+                                <span class="data-value arbitrage-big-value" id="sim-tri-profit-oracle" style="font-size: 1.1rem;">- ADA</span>
                             </div>
                         </div>
                         <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <div id="tri-optimizer-result" class="optimizer-text" style="margin: 0; padding: 0;">💡 <b>Auto-Optimizer:</b> Calculating...</div>
-                            <div id="sim-tri-slippage-label" class="slippage-label" style="margin: 0;">Impact: 0.00%</div>
+                            <div id="tri-optimizer-result-oracle" class="optimizer-text" style="margin: 0; padding: 0;">💡 <b>Auto-Optimizer:</b> Calculating...</div>
+                            <div id="sim-tri-slippage-label-oracle" class="slippage-label" style="margin: 0;">Impact: 0.00%</div>
                         </div>
-                        <div class="slippage-container" style="margin-top: 5px;"><div id="sim-tri-slippage-bar" class="slippage-bar" style="background: #10b981;"></div></div>
+                        <div class="slippage-container" style="margin-top: 5px;"><div id="sim-tri-slippage-bar-oracle" class="slippage-bar" style="background: #10b981;"></div></div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="grid-stack-item drag-item" gs-id="card-chart" gs-w="12" gs-h="2" gs-x="0" gs-y="8">
+        <div class="grid-stack-item drag-item" gs-id="card-chart" gs-w="12" gs-h="2" gs-x="0" gs-y="9">
             <div class="grid-stack-item-content card">
                 <div class="card-title" style="margin-bottom: 10px; font-size: 0.9rem; color: #ffffff; text-transform: none; flex-shrink: 0;">Spread & vault discrepancy (last 24h %)</div>
                 <div class="spark-wrapper" style="flex-grow: 1; height: auto;">
@@ -528,13 +537,13 @@
 
     <div class="grid-stack grid-container" id="dashboard-vyfi" style="display: none;">
         
-        <div class="grid-stack-item drag-item" gs-id="card-ada-vyfi" gs-w="5" gs-h="2" gs-x="0" gs-y="0">
+        <div class="grid-stack-item drag-item" gs-id="card-ada-vyfi" gs-w="4" gs-h="2" gs-x="0" gs-y="0">
             <div class="grid-stack-item-content card card-ada">
                 <div style="flex-shrink: 0;">
                     <div class="card-title ada-title">ADA</div>
                     <div class="data-row">
                         <span class="data-value" id="ada-price-usd-vyfi" style="font-size: 1.1rem;">
-                            <span class="loading">Loading...</span> <span id="ada-change-24h-vyfi" class="change-badge"></span>
+                            <span class="loading">Loading...</span>
                         </span>
                     </div>
                 </div>
@@ -544,7 +553,7 @@
             </div>
         </div>
 
-        <div class="grid-stack-item drag-item" gs-id="card-xvyfi-ada" gs-w="4" gs-h="2" gs-x="5" gs-y="0">
+        <div class="grid-stack-item drag-item" gs-id="card-xvyfi-ada" gs-w="4" gs-h="2" gs-x="4" gs-y="0">
             <div class="grid-stack-item-content card card-vault">
                 <div class="card-title" style="color: var(--vault-color); flex-shrink: 0;">xVYFI / ADA <span class="badge bg-vyfi" style="margin-left:auto;">VyFi</span></div>
                 <div class="data-row" style="flex-shrink: 0;">
@@ -560,7 +569,7 @@
             </div>
         </div>
 
-        <div class="grid-stack-item drag-item" gs-id="card-vyfi-ada" gs-w="6" gs-h="4" gs-x="0" gs-y="2">
+        <div class="grid-stack-item drag-item" gs-id="card-vyfi-ada" gs-w="6" gs-h="5" gs-x="0" gs-y="2">
             <div class="grid-stack-item-content card card-ada" style="display: flex; flex-direction: column;">
                 <div style="flex-shrink: 0;">
                     <div class="card-title" style="color: var(--ada-color); margin-bottom: 10px;">VYFI / ADA Arbitrage</div>
@@ -585,6 +594,15 @@
                 </div>
                 
                 <div style="display: flex; flex-direction: column; flex-grow: 1; justify-content: flex-end;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; margin-top: 15px;">
+                        <h3 class="dex-subtitle" style="color: var(--text-secondary); margin:0;">Total Combined Liquidity</h3>
+                        <div class="data-value" style="font-size: 1.2rem; color: #ffffff; text-shadow: 0 2px 10px rgba(0,0,0,0.5);">
+                            <span id="vyfi-total-liq">-</span> <span id="vyfi-total-liq-change-24h" class="change-badge" style="font-size: 0.8rem;"></span>
+                        </div>
+                    </div>
+                    <div class="spark-wrapper" style="height: 30px !important; min-height: 30px !important; max-height: 30px !important; width: 100%;">
+                        <canvas id="spark-vyfi-total-liq"></canvas>
+                    </div>
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 10px;">
                         <div class="data-row" style="margin: 0;">
                             <span class="data-label" style="margin-right: 15px;">Spread:</span>
@@ -603,14 +621,16 @@
             <div class="grid-stack-item-content card card-orange" style="display: flex; flex-direction: column;">
                 <div class="card-title" style="color: var(--neon-orange); margin-bottom: 5px;">▲VYFI xVYFI ADA▼ triangular arbitrage</div>
                 
-                <div class="tri-wrapper">
-                    <svg class="tri-svg" viewBox="0 0 240 130" preserveAspectRatio="xMidYMid meet">
-                        <polygon points="120,15 210,115 30,115" class="tri-line-bg" />
-                        <polygon id="vyfi-tri-anim-path" points="120,15 210,115 30,115" class="tri-line-active" style="display:none;" />
-                    </svg>
-                    <div class="tri-node node-ada" style="top: -5px; left: calc(50% - 22px);">ADA</div>
-                    <div class="tri-node node-vyfi" style="border-color: var(--badge-vyfi-text); color: var(--badge-vyfi-text); bottom: -5px; right: -5px;">VYFI</div>
-                    <div class="tri-node node-xvyfi" style="border-color: var(--vault-color); color: var(--vault-color); bottom: -5px; left: -5px;">xVYF</div>
+                <div style="display: flex; justify-content: center; align-items: center; width: 100%; margin-top: 5px; margin-bottom: 5px;">
+                    <div class="tri-wrapper" style="margin: 0;">
+                        <svg class="tri-svg" viewBox="0 0 280 140" preserveAspectRatio="xMidYMid meet">
+                            <polygon points="140,20 250,120 30,120" class="tri-line-bg" />
+                            <polygon id="vyfi-tri-anim-path" points="140,20 250,120 30,120" class="tri-line-active" style="display:none;" />
+                        </svg>
+                        <div class="tri-node node-ada" style="top: -5px; left: calc(50% - 22px);">ADA</div>
+                        <div class="tri-node node-vyfi" style="border-color: var(--badge-vyfi-text); color: var(--badge-vyfi-text); bottom: 5px; right: 5px;">VYFI</div>
+                        <div class="tri-node node-xvyfi" style="border-color: var(--vault-color); color: var(--vault-color); bottom: 5px; left: 5px;">xVYF</div>
+                    </div>
                 </div>
 
                 <div style="display: flex; flex-direction: column; flex-grow: 1; justify-content: flex-end;">
@@ -641,17 +661,19 @@
 
     <script>
         const PROXY_URL = 'https://l4va.seryibull.workers.dev';
+        
         const VLRM = "63efb704b7396890e4d9539d030c0e667739043add65c00f96c586c056616c6f72756d";
         const ORACLE = "328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b27393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
-        const ORACLE_TOTAL_SUPPLY = 1000000;
-        const VYFI_LINK = "https://app.vyfi.io/dex?tokenA=lovelace&tokenB=328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b27393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
-        const MINSWAP_LINK = "https://minswap.org/swap?cA=&tA=&cB=328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b2&tB=7393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
-
+        
         // TOKENS NUEVOS (Fórmula original 100% estricta)
         const TOKEN_VYFI = "804f5530198154628ce71b6bd5a889410ea9036c64188597af2f21bc56594649";
         const TOKEN_XVYFI = "a004ebbc9d51184be5e364eb25e7d5df4b6b69db9fbf8de684d0b1d07856594649";
 
-        const LAYOUT_VERSION = "v2.1"; 
+        const ORACLE_TOTAL_SUPPLY = 1000000;
+        const VYFI_LINK = "https://app.vyfi.io/dex?tokenA=lovelace&tokenB=328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b27393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
+        const MINSWAP_LINK = "https://minswap.org/swap?cA=&tA=&cB=328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b2&tB=7393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
+
+        const LAYOUT_VERSION = "v2.2"; 
 
         let defaultConf = { alert: 15, vaultAlert: 20, simDex: 1000, simTri: 1000, tgBot: "", tgChat: "", feeNet: 0.2, feeMin: 0.7, feeVyfi: 1.9, lpFeeMin: 0.3, lpFeeVyfi: 0.3 };
         let savedConf = JSON.parse(localStorage.getItem('l4va_config')) || {};
@@ -679,11 +701,12 @@
         let grid; 
         let isEditMode = false;
 
-        function updateDOM(id, html, color) {
-            let el = document.getElementById(id);
-            if(el) {
-                if(html !== undefined) el.innerHTML = html;
-                if(color !== undefined) el.style.color = color;
+        // Función segura para actualizar el DOM sin crashear si el ID no existe
+        function setSafeText(id, text, color) {
+            const el = document.getElementById(id);
+            if (el) {
+                if (text !== undefined) el.innerHTML = text;
+                if (color !== undefined) el.style.color = color;
             }
         }
 
@@ -766,8 +789,8 @@
             const savedLayout = JSON.parse(localStorage.getItem(`l4va_grid_layout_${LAYOUT_VERSION}`));
             if (savedLayout && savedLayout.length > 0) { gridOracle.load(savedLayout); } 
             
-            document.getElementById('sim-ada-input').value = conf.simDex;
-            document.getElementById('sim-tri-input').value = conf.simTri;
+            let siO = document.getElementById('sim-ada-input-oracle'); if(siO) siO.value = conf.simDex;
+            let stO = document.getElementById('sim-tri-input-oracle'); if(stO) stO.value = conf.simTri;
 
             const redrawCharts = () => { setTimeout(() => { if(chartInstance) chartInstance.resize(); Object.values(sparkInstances).forEach(chart => { if (chart) chart.resize(); }); }, 200); };
             
@@ -815,7 +838,10 @@
             conf.feeNet = parseFloat(document.getElementById('set-fee-net').value); conf.feeMin = parseFloat(document.getElementById('set-fee-min').value); conf.feeVyfi = parseFloat(document.getElementById('set-fee-vyfi').value);
             conf.lpFeeMin = parseFloat(document.getElementById('set-lp-min').value); conf.lpFeeVyfi = parseFloat(document.getElementById('set-lp-vyfi').value);
             localStorage.setItem('l4va_config', JSON.stringify(conf));
-            document.getElementById('sim-ada-input').value = conf.simDex; document.getElementById('sim-tri-input').value = conf.simTri; 
+            
+            let siO = document.getElementById('sim-ada-input-oracle'); if(siO) siO.value = conf.simDex;
+            let stO = document.getElementById('sim-tri-input-oracle'); if(stO) stO.value = conf.simTri;
+            
             closeModals(); recalculateSimulators();
         }
 
@@ -930,12 +956,15 @@
         function recalculateSimulators() { recalculateDexSimulator(null); recalculateTriSimulator(null); recalculateVyfiTriSimulator(); }
 
         function recalculateDexSimulator(forcedVal = null) {
-            const investAda = forcedVal !== null ? forcedVal : (parseFloat(document.getElementById('sim-ada-input').value) || 0);
-            const simEl = document.getElementById('sim-profit'); const optEl = document.getElementById('optimizer-result');
+            const elInput = document.getElementById('sim-ada-input-oracle');
+            if(!elInput) return;
+            const investAda = forcedVal !== null ? forcedVal : (parseFloat(elInput.value) || 0);
+            
+            const simEl = document.getElementById('sim-profit-oracle'); const optEl = document.getElementById('optimizer-result-oracle');
             const cardEl = document.querySelector('[gs-id="card-oracle-ada"] .card');
             
             if(isNaN(investAda) || investAda <= 0 || currentPools.vyfi.price <= 0 || currentPools.minswap.price <= 0) { 
-                if(simEl) simEl.innerText = "0.00 ADA"; updateSlippageUI('sim-slippage-bar', 'sim-slippage-label', 0); 
+                setSafeText('sim-profit-oracle', "0.00 ADA"); updateSlippageUI('sim-slippage-bar-oracle', 'sim-slippage-label-oracle', 0); 
                 if(cardEl) cardEl.classList.remove('glow-active'); animStates['simDex'] = 0; return; 
             }
             const networkFee = conf.feeNet; const minFixed = conf.feeMin; const vyfiFixed = conf.feeVyfi;
@@ -951,12 +980,12 @@
                 let adaGrossReceived = getAmmOut(tokensReceived, poolSell.reserveTok, poolSell.reserveAda, lpSell);
                 netProfit = (adaGrossReceived - fixedFeeSell - networkFee) - investAda;
             }
-            updateSlippageUI('sim-slippage-bar', 'sim-slippage-label', maxImpact);
+            updateSlippageUI('sim-slippage-bar-oracle', 'sim-slippage-label-oracle', maxImpact);
             
             let formattedProfit = val => { let sign = val > 0 ? "+" : ""; let usdStr = currentAdaUsd > 0 ? `<span class="usd-profit">(~$${(Math.abs(val)*currentAdaUsd).toFixed(2)})</span>` : ""; return `${sign}${val.toFixed(2)} ADA ${usdStr}`; };
             
             if (swapAdaAmount <= 0) { if(simEl){ simEl.innerText = "Insufficient ADA"; simEl.className = "data-value profit-negative"; animStates['simDex'] = 0; } } 
-            else { if(simEl){ simEl.className = netProfit > 0 ? "data-value profit-positive" : "data-value profit-negative"; animateValue('simDex', 'sim-profit', netProfit, formattedProfit); } }
+            else { if(simEl){ simEl.className = netProfit > 0 ? "data-value profit-positive" : "data-value profit-negative"; animateValue('simDex', 'sim-profit-oracle', netProfit, formattedProfit); } }
             
             let bestProfit = -Infinity; let optimalInvest = 0;
             for(let i = 10; i <= 5000; i += 10) {
@@ -1000,22 +1029,25 @@
         }
 
         function recalculateTriSimulator(forcedVal = null) {
-            const investAda = forcedVal !== null ? forcedVal : (parseFloat(document.getElementById('sim-tri-input').value) || 0);
-            const simEl = document.getElementById('sim-tri-profit'); const optEl = document.getElementById('tri-optimizer-result');
-            const cardEl = document.querySelector('[gs-id="card-triangular"] .card');
+            const elInput = document.getElementById('sim-tri-input-oracle');
+            if(!elInput) return;
+            const investAda = forcedVal !== null ? forcedVal : (parseFloat(elInput.value) || 0);
+            
+            const simEl = document.getElementById('sim-tri-profit-oracle'); const optEl = document.getElementById('tri-optimizer-result-oracle');
+            const cardEl = document.querySelector('[gs-id="card-triangular-oracle"] .card');
             
             if(isNaN(investAda) || investAda <= 0) { 
-                if(simEl) simEl.innerText = "0.00 ADA"; updateSlippageUI('sim-tri-slippage-bar', 'sim-tri-slippage-label', 0); 
+                if(simEl) simEl.innerText = "0.00 ADA"; updateSlippageUI('sim-tri-slippage-bar-oracle', 'sim-tri-slippage-label-oracle', 0); 
                 if(cardEl) cardEl.classList.remove('glow-active'); animStates['simTri'] = 0; return; 
             }
 
             let currentData = calcTriNetDetails(investAda); let netProfit = currentData.netProfit;
-            updateSlippageUI('sim-tri-slippage-bar', 'sim-tri-slippage-label', currentData.maxImpact);
+            updateSlippageUI('sim-tri-slippage-bar-oracle', 'sim-tri-slippage-label-oracle', currentData.maxImpact);
             
             let formattedProfit = val => { let sign = val > 0 ? "+" : ""; let usdStr = currentAdaUsd > 0 ? `<span class="usd-profit">(~$${(Math.abs(val)*currentAdaUsd).toFixed(2)})</span>` : ""; return `${sign}${val.toFixed(2)} ADA ${usdStr}`; };
             
             if(netProfit === -Infinity) { if(simEl){ simEl.innerText = "Insufficient"; simEl.className = "data-value profit-negative"; animStates['simTri'] = 0;} } 
-            else { if(simEl){ simEl.className = netProfit > 0 ? "data-value profit-positive" : "data-value profit-negative"; animateValue('simTri', 'sim-tri-profit', netProfit, formattedProfit); } }
+            else { if(simEl){ simEl.className = netProfit > 0 ? "data-value profit-positive" : "data-value profit-negative"; animateValue('simTri', 'sim-tri-profit-oracle', netProfit, formattedProfit); } }
             
             let bestProfit = -Infinity; let optimalInvest = 0; let optimalRoute = null; let bestPercent = 0;
             for(let i = 10; i <= 5000; i += 10) {
@@ -1037,7 +1069,6 @@
             }
         }
 
-        // MOTOR TRIANGULAR PARA VYFI / xVYFI
         function recalculateVyfiTriSimulator() {
             let bestProfit = -Infinity; let optimalRoute = null; let bestPercent = 0;
             
@@ -1140,24 +1171,24 @@
                     if (expandedHistory.labels.length > MAX_CHART_POINTS) { const diff = expandedHistory.labels.length - MAX_CHART_POINTS; Object.keys(expandedHistory).forEach(key => { expandedHistory[key] = expandedHistory[key].slice(diff); }); }
                     chartHistory = expandedHistory; chartInstance.data.labels = chartHistory.labels; chartInstance.data.datasets[0].data = chartHistory.spread; chartInstance.data.datasets[1].data = chartHistory.discrepancy; chartInstance.data.datasets[2].data = chartHistory.vlrmOracleSpread; chartInstance.update('none');
                     
-                    sparkInstances.vlrmAda.data.labels = chartHistory.labels; sparkInstances.vlrmAda.data.datasets[0].data = chartHistory.vlrmAda; sparkInstances.vlrmAda.update('none'); 
-                    sparkInstances.vlrmOracle.data.labels = chartHistory.labels; sparkInstances.vlrmOracle.data.datasets[0].data = chartHistory.vlrmOracle; sparkInstances.vlrmOracle.update('none'); 
-                    sparkInstances.oracleVyfi.data.labels = chartHistory.labels; sparkInstances.oracleVyfi.data.datasets[0].data = chartHistory.oracleVyfi; sparkInstances.oracleVyfi.update('none'); 
-                    sparkInstances.oracleMin.data.labels = chartHistory.labels; sparkInstances.oracleMin.data.datasets[0].data = chartHistory.oracleMin; sparkInstances.oracleMin.update('none'); 
-                    sparkInstances.vault.data.labels = chartHistory.labels; sparkInstances.vault.data.datasets[0].data = chartHistory.vault; sparkInstances.vault.update('none'); 
-                    sparkInstances.totalLiq.data.labels = chartHistory.labels; sparkInstances.totalLiq.data.datasets[0].data = chartHistory.totalLiq; sparkInstances.totalLiq.update('none'); 
-                    sparkInstances.pVlrmAda.data.labels = chartHistory.labels; sparkInstances.pVlrmAda.data.datasets[0].data = chartHistory.pVlrmAda; sparkInstances.pVlrmAda.update('none'); 
-                    sparkInstances.pVlrmOracle.data.labels = chartHistory.labels; sparkInstances.pVlrmOracle.data.datasets[0].data = chartHistory.pVlrmOracle; sparkInstances.pVlrmOracle.update('none'); 
-                    sparkInstances.pOracleVyfi.data.labels = chartHistory.labels; sparkInstances.pOracleVyfi.data.datasets[0].data = chartHistory.pOracleVyfi; sparkInstances.pOracleVyfi.update('none'); 
-                    sparkInstances.pOracleMin.data.labels = chartHistory.labels; sparkInstances.pOracleMin.data.datasets[0].data = chartHistory.pOracleMin; sparkInstances.pOracleMin.update('none');
+                    if(sparkInstances.vlrmAda) { sparkInstances.vlrmAda.data.labels = chartHistory.labels; sparkInstances.vlrmAda.data.datasets[0].data = chartHistory.vlrmAda; sparkInstances.vlrmAda.update('none'); }
+                    if(sparkInstances.vlrmOracle) { sparkInstances.vlrmOracle.data.labels = chartHistory.labels; sparkInstances.vlrmOracle.data.datasets[0].data = chartHistory.vlrmOracle; sparkInstances.vlrmOracle.update('none'); }
+                    if(sparkInstances.oracleVyfi) { sparkInstances.oracleVyfi.data.labels = chartHistory.labels; sparkInstances.oracleVyfi.data.datasets[0].data = chartHistory.oracleVyfi; sparkInstances.oracleVyfi.update('none'); }
+                    if(sparkInstances.oracleMin) { sparkInstances.oracleMin.data.labels = chartHistory.labels; sparkInstances.oracleMin.data.datasets[0].data = chartHistory.oracleMin; sparkInstances.oracleMin.update('none'); }
+                    if(sparkInstances.vault) { sparkInstances.vault.data.labels = chartHistory.labels; sparkInstances.vault.data.datasets[0].data = chartHistory.vault; sparkInstances.vault.update('none'); }
+                    if(sparkInstances.totalLiq) { sparkInstances.totalLiq.data.labels = chartHistory.labels; sparkInstances.totalLiq.data.datasets[0].data = chartHistory.totalLiq; sparkInstances.totalLiq.update('none'); }
+                    if(sparkInstances.pVlrmAda) { sparkInstances.pVlrmAda.data.labels = chartHistory.labels; sparkInstances.pVlrmAda.data.datasets[0].data = chartHistory.pVlrmAda; sparkInstances.pVlrmAda.update('none'); }
+                    if(sparkInstances.pVlrmOracle) { sparkInstances.pVlrmOracle.data.labels = chartHistory.labels; sparkInstances.pVlrmOracle.data.datasets[0].data = chartHistory.pVlrmOracle; sparkInstances.pVlrmOracle.update('none'); }
+                    if(sparkInstances.pOracleVyfi) { sparkInstances.pOracleVyfi.data.labels = chartHistory.labels; sparkInstances.pOracleVyfi.data.datasets[0].data = chartHistory.pOracleVyfi; sparkInstances.pOracleVyfi.update('none'); }
+                    if(sparkInstances.pOracleMin) { sparkInstances.pOracleMin.data.labels = chartHistory.labels; sparkInstances.pOracleMin.data.datasets[0].data = chartHistory.pOracleMin; sparkInstances.pOracleMin.update('none'); }
                     
-                    sparkInstances.pVyfiDex.data.labels = chartHistory.labels; sparkInstances.pVyfiDex.data.datasets[0].data = chartHistory.pVyfiDex; sparkInstances.pVyfiDex.update('none');
-                    sparkInstances.pVyfiMin.data.labels = chartHistory.labels; sparkInstances.pVyfiMin.data.datasets[0].data = chartHistory.pVyfiMin; sparkInstances.pVyfiMin.update('none');
-                    sparkInstances.tVyfiDex.data.labels = chartHistory.labels; sparkInstances.tVyfiDex.data.datasets[0].data = chartHistory.tVyfiDex; sparkInstances.tVyfiDex.update('none');
-                    sparkInstances.tVyfiMin.data.labels = chartHistory.labels; sparkInstances.tVyfiMin.data.datasets[0].data = chartHistory.tVyfiMin; sparkInstances.tVyfiMin.update('none');
-                    sparkInstances.tVyfiTotal.data.labels = chartHistory.labels; sparkInstances.tVyfiTotal.data.datasets[0].data = chartHistory.tVyfiTotal; sparkInstances.tVyfiTotal.update('none');
-                    sparkInstances.pXvyfi.data.labels = chartHistory.labels; sparkInstances.pXvyfi.data.datasets[0].data = chartHistory.pXvyfi; sparkInstances.pXvyfi.update('none');
-                    sparkInstances.tXvyfi.data.labels = chartHistory.labels; sparkInstances.tXvyfi.data.datasets[0].data = chartHistory.tXvyfi; sparkInstances.tXvyfi.update('none');
+                    if(sparkInstances.pVyfiDex) { sparkInstances.pVyfiDex.data.labels = chartHistory.labels; sparkInstances.pVyfiDex.data.datasets[0].data = chartHistory.pVyfiDex; sparkInstances.pVyfiDex.update('none'); }
+                    if(sparkInstances.pVyfiMin) { sparkInstances.pVyfiMin.data.labels = chartHistory.labels; sparkInstances.pVyfiMin.data.datasets[0].data = chartHistory.pVyfiMin; sparkInstances.pVyfiMin.update('none'); }
+                    if(sparkInstances.tVyfiDex) { sparkInstances.tVyfiDex.data.labels = chartHistory.labels; sparkInstances.tVyfiDex.data.datasets[0].data = chartHistory.tVyfiDex; sparkInstances.tVyfiDex.update('none'); }
+                    if(sparkInstances.tVyfiMin) { sparkInstances.tVyfiMin.data.labels = chartHistory.labels; sparkInstances.tVyfiMin.data.datasets[0].data = chartHistory.tVyfiMin; sparkInstances.tVyfiMin.update('none'); }
+                    if(sparkInstances.tVyfiTotal) { sparkInstances.tVyfiTotal.data.labels = chartHistory.labels; sparkInstances.tVyfiTotal.data.datasets[0].data = chartHistory.tVyfiTotal; sparkInstances.tVyfiTotal.update('none'); }
+                    if(sparkInstances.pXvyfi) { sparkInstances.pXvyfi.data.labels = chartHistory.labels; sparkInstances.pXvyfi.data.datasets[0].data = chartHistory.pXvyfi; sparkInstances.pXvyfi.update('none'); }
+                    if(sparkInstances.tXvyfi) { sparkInstances.tXvyfi.data.labels = chartHistory.labels; sparkInstances.tXvyfi.data.datasets[0].data = chartHistory.tXvyfi; sparkInstances.tXvyfi.update('none'); }
                 }
             } catch (e) { console.error("Error loading history:", e); }
         }
@@ -1208,8 +1239,9 @@
                 
                 try {
                     // 1. Buscar VYFI
-                    const vyfiDexPool = vyfiPoolsList.find(p => p.unitsPair && p.unitsPair.includes('lovelace') && p.unitsPair.includes(TOKEN_VYFI));
-                    if (vyfiDexPool) {
+                    const allVyfiPools = vyfiPoolsList.filter(p => p.unitsPair && p.unitsPair.includes('lovelace') && p.unitsPair.includes(TOKEN_VYFI));
+                    if (allVyfiPools.length > 0) {
+                        const vyfiDexPool = allVyfiPools.sort((a,b) => (b.tvl||0) - (a.tvl||0))[0];
                         pVyfiDex = vyfiDexPool.tokenA.unit === 'lovelace' ? vyfiDexPool.tokenB.lpRatio[vyfiDexPool.unitsPair].priceRatioAB : vyfiDexPool.tokenA.lpRatio[vyfiDexPool.unitsPair].priceRatioBA;
                         vyfiDexTvl = vyfiDexPool.tvl;
                         
@@ -1242,8 +1274,9 @@
                     updateDOM('vyfi-total-liq', `₳ ${Math.round(vyfiTotalLiq).toLocaleString()}`);
 
                     // 3. Buscar xVYFI/ADA
-                    const xvyfiDexPool = vyfiPoolsList.find(p => p.unitsPair && p.unitsPair.includes('lovelace') && p.unitsPair.includes(TOKEN_XVYFI));
-                    if (xvyfiDexPool) {
+                    const allXvyfiPools = vyfiPoolsList.filter(p => p.unitsPair && p.unitsPair.includes('lovelace') && p.unitsPair.includes(TOKEN_XVYFI));
+                    if (allXvyfiPools.length > 0) {
+                        const xvyfiDexPool = allXvyfiPools.sort((a,b) => (b.tvl||0) - (a.tvl||0))[0];
                         pXvyfiDex = xvyfiDexPool.tokenA.unit === 'lovelace' ? xvyfiDexPool.tokenB.lpRatio[xvyfiDexPool.unitsPair].priceRatioAB : xvyfiDexPool.tokenA.lpRatio[xvyfiDexPool.unitsPair].priceRatioBA;
                         xvyfiDexTvl = xvyfiDexPool.tvl;
                         
@@ -1255,14 +1288,23 @@
                     chartHistory.pVyfiDex.push(pVyfiDex); chartHistory.pVyfiMin.push(priceMinVyfi); chartHistory.tVyfiDex.push(vyfiDexTvl); chartHistory.tVyfiMin.push(minVyfiTvl); chartHistory.tVyfiTotal.push(vyfiTotalLiq); chartHistory.pXvyfi.push(pXvyfiDex); chartHistory.tXvyfi.push(xvyfiDexTvl);
                     if(chartHistory.pVyfiDex.length > MAX_CHART_POINTS) { chartHistory.pVyfiDex.shift(); chartHistory.pVyfiMin.shift(); chartHistory.tVyfiDex.shift(); chartHistory.tVyfiMin.shift(); chartHistory.tVyfiTotal.shift(); chartHistory.pXvyfi.shift(); chartHistory.tXvyfi.shift(); }
                     
-                    sparkInstances.pVyfiDex.update('none'); sparkInstances.pVyfiMin.update('none'); sparkInstances.tVyfiDex.update('none'); sparkInstances.tVyfiMin.update('none'); sparkInstances.tVyfiTotal.update('none'); sparkInstances.pXvyfi.update('none'); sparkInstances.tXvyfi.update('none');
+                    if(sparkInstances.pVyfiDex) sparkInstances.pVyfiDex.update('none'); 
+                    if(sparkInstances.pVyfiMin) sparkInstances.pVyfiMin.update('none'); 
+                    if(sparkInstances.tVyfiDex) sparkInstances.tVyfiDex.update('none'); 
+                    if(sparkInstances.tVyfiMin) sparkInstances.tVyfiMin.update('none'); 
+                    if(sparkInstances.tVyfiTotal) sparkInstances.tVyfiTotal.update('none'); 
+                    if(sparkInstances.pXvyfi) sparkInstances.pXvyfi.update('none'); 
+                    if(sparkInstances.tXvyfi) sparkInstances.tXvyfi.update('none');
                     
                     calcChangeUI('vyfi-dex-price-change-24h', chartHistory.pVyfiDex, pVyfiDex); calcChangeUI('minswap-vyfi-price-change-24h', chartHistory.pVyfiMin, priceMinVyfi); calcChangeUI('vyfi-dex-change-24h', chartHistory.tVyfiDex, vyfiDexTvl); calcChangeUI('minswap-vyfi-change-24h', chartHistory.tVyfiMin, minVyfiTvl); calcChangeUI('vyfi-total-liq-change-24h', chartHistory.tVyfiTotal, vyfiTotalLiq); calcChangeUI('xvyfi-price-change-24h', chartHistory.pXvyfi, pXvyfiDex); calcChangeUI('xvyfi-tvl-change-24h', chartHistory.tXvyfi, xvyfiDexTvl);
 
                     // 4. Preparar Pools para el Triangular de Vyfi (Cross-Pool VYFI/xVYFI)
-                    const crossVxPool = vyfiPoolsList.find(p => p.unitsPair && p.unitsPair.includes(TOKEN_VYFI) && p.unitsPair.includes(TOKEN_XVYFI));
+                    const allCrossVxPools = vyfiPoolsList.filter(p => p.unitsPair && p.unitsPair.includes(TOKEN_VYFI) && p.unitsPair.includes(TOKEN_XVYFI));
                     let resVxVyfi = 0; let resVxXvyfi = 0;
-                    if(crossVxPool && pVyfiDex > 0 && pXvyfiDex > 0) { resVxVyfi = (crossVxPool.tvl/2)/pVyfiDex; resVxXvyfi = (crossVxPool.tvl/2)/pXvyfiDex; }
+                    if(allCrossVxPools.length > 0) {
+                        const crossVxPool = allCrossVxPools.sort((a,b) => (b.tvl||0) - (a.tvl||0))[0];
+                        if(pVyfiDex > 0 && pXvyfiDex > 0) { resVxVyfi = (crossVxPool.tvl/2)/pVyfiDex; resVxXvyfi = (crossVxPool.tvl/2)/pXvyfiDex; }
+                    }
                     
                     currentPoolsVyfi = {
                         vyfi: { resAda: vyfiDexTvl/2, resTok: (vyfiDexTvl/2)/(pVyfiDex||1) },
@@ -1301,8 +1343,8 @@
                         animateValue('discrepancy', 'vault-banner-discrepancy', bestDeviation, val => (val>0?'+':'') + val.toFixed(2) + '%');
 
                         let targetLink = targetDexForVault === "Minswap" ? MINSWAP_LINK : VYFI_LINK; 
-                        if (Math.abs(bestDeviation) < 0.5) { updateDOM('vault-banner-discrepancy', undefined, "rgba(255, 255, 255, 0.5)"); vaultActionEl.innerHTML = `<span style="color: rgba(255, 255, 255, 0.6);">Balanced</span>`; } 
-                        else { if (bestDeviation > 0) { updateDOM('vault-banner-discrepancy', undefined, "#10b981"); vaultActionEl.innerHTML = `<a href="${targetLink}" target="_blank" class="badge-dark">Sell ${targetDexForVault}</a>`; } else { updateDOM('vault-banner-discrepancy', undefined, "var(--neon-red)"); vaultActionEl.innerHTML = `<a href="${targetLink}" target="_blank" class="badge-dark">Buy ${targetDexForVault}</a>`; } }
+                        if (Math.abs(bestDeviation) < 0.5) { updateDOM('vault-banner-discrepancy', undefined, "rgba(255, 255, 255, 0.5)"); if(vaultActionEl) vaultActionEl.innerHTML = `<span style="color: rgba(255, 255, 255, 0.6);">Balanced</span>`; } 
+                        else { if (bestDeviation > 0) { updateDOM('vault-banner-discrepancy', undefined, "#10b981"); if(vaultActionEl) vaultActionEl.innerHTML = `<a href="${targetLink}" target="_blank" class="badge-dark">Sell ${targetDexForVault}</a>`; } else { updateDOM('vault-banner-discrepancy', undefined, "var(--neon-red)"); if(vaultActionEl) vaultActionEl.innerHTML = `<a href="${targetLink}" target="_blank" class="badge-dark">Buy ${targetDexForVault}</a>`; } }
                         if (Math.abs(bestDeviation) >= conf.vaultAlert) { if(vaultCard) vaultCard.classList.add('glow-active'); const alertToggle = document.getElementById('alert-toggle'); const now = Date.now(); if (alertToggle && alertToggle.checked && (now - lastVaultAlertTime > ALERT_COOLDOWN)) { playDing(); if (Notification.permission === "granted") { new Notification("🏛️ L4VA Vault Alert!", { body: `Discrepancy: ${bestDeviation.toFixed(2)}%\nAction: ${bestDeviation > 0 ? 'Sell' : 'Buy'} on ${targetDexForVault}` }); } sendTelegramAlert(`🏛️ <b>L4VA Vault Alert!</b>\n\n⚖️ Fair Price Discrepancy: <b>${bestDeviation > 0 ? '+' : ''}${bestDeviation.toFixed(2)}%</b>\n💡 Action: ${bestDeviation > 0 ? 'Sell' : 'Buy'} on ${targetDexForVault}\n\n<i>Check dashboard for real-time data.</i>`); lastVaultAlertTime = now; } } else { if(vaultCard) vaultCard.classList.remove('glow-active'); }
                     }
                 } else { if(vaultCard) vaultCard.classList.remove('glow-active'); updateDOM('vault-tvl', `API Offline`); updateDOM('vault-fair-price', `-`); updateDOM('vault-banner-discrepancy', `-%`, "rgba(255, 255, 255, 0.5)"); updateDOM('vault-arbitrage-action', `<span style="color: rgba(255, 255, 255, 0.6);">Offline</span>`); }
