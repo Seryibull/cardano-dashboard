@@ -35,7 +35,7 @@
         }
 
         body { 
-            zoom: 0.9; /* 👈 Escala la web al 90% */
+            zoom: 0.9;
             font-family: 'Inter', sans-serif; 
             background: linear-gradient(rgba(10, 8, 20, 0.4), rgba(10, 8, 20, 0.75)), url('https://app.l4va.org/assets/banner-bg.webp');
             background-size: cover; background-position: center top; background-attachment: fixed;
@@ -164,9 +164,6 @@
         .slippage-bar { height: 100%; width: 0%; border-radius: 4px; transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); box-shadow: 0 0 10px currentColor;}
         .slippage-label { font-size: 0.8rem; color: var(--text-secondary); text-align: right; font-weight: 600;}
 
-        /* ESTILOS DE FUSION INTERNA */
-        .inner-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 15px; flex-grow: 1; display: flex; flex-direction: column;}
-
         .route-active { color: #10b981; transition: 0.3s; }
         .route-active .route-dot { background: #10b981; box-shadow: 0 0 10px #10b981; }
         .route-inactive { color: var(--text-secondary); opacity: 0.5; transition: 0.3s; }
@@ -226,7 +223,7 @@
                 </h1>
                 <div class="tabs-container" style="margin: 0; padding: 0; border: none;">
                     <button id="tab-oracle" class="tab-btn active" onclick="switchEcosystem('oracle')">🔥 VLRM / ORACLE</button>
-                    </div>
+                </div>
             </div>
         </div>
         <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: flex-end; margin-top: 5px;">
@@ -377,19 +374,19 @@
                 <div style="flex-shrink: 0;">
                     <div class="card-title" style="color: var(--neon-orange); margin-bottom: 15px; font-size: 1.2rem;">▲VLRM ORACLE ADA▼ triangular arbitrage</div>
                     
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
-                        <div class="inner-card">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin-bottom: 15px;">
+                        <div>
                             <h3 class="dex-subtitle" style="color: var(--neon-orange);">VLRM / ADA <span class="badge bg-vyfi" style="font-size: 0.65rem;">VyFi</span></h3>
                             <div class="data-row"><span class="data-label">Price:</span><span class="data-value" style="font-size: 1.15rem;"><span id="vlrm-price-ada" class="loading">...</span> <span id="vlrm-price-change-24h" class="change-badge"></span></span></div>
-                            <div class="spark-wrapper" style="height: 35px !important; min-height: 35px !important; margin-bottom: 10px;"><canvas id="spark-vlrm-ada-price"></canvas></div>
-                            <div class="data-row" style="margin-top: auto;"><span class="data-label">Liquidity:</span><span class="data-value" style="font-size: 1.15rem;"><span id="vlrm-liq-ada">-</span> <span id="vlrm-ada-change-24h" class="change-badge"></span></span></div>
+                            <div class="spark-wrapper" style="height: 35px !important; min-height: 35px !important; margin-bottom: 15px;"><canvas id="spark-vlrm-ada-price"></canvas></div>
+                            <div class="data-row"><span class="data-label">Liquidity:</span><span class="data-value" style="font-size: 1.15rem;"><span id="vlrm-liq-ada">-</span> <span id="vlrm-ada-change-24h" class="change-badge"></span></span></div>
                             <div class="spark-wrapper" style="height: 35px !important; min-height: 35px !important;"><canvas id="spark-vlrm-ada"></canvas></div>
                         </div>
-                        <div class="inner-card">
+                        <div style="border-left: 2px solid rgba(255,255,255,0.05); padding-left: 15px;">
                             <h3 class="dex-subtitle" style="color: var(--neon-orange);">VLRM / ORACLE <span class="badge bg-vyfi" style="font-size: 0.65rem;">VyFi</span></h3>
                             <div class="data-row"><span class="data-label">Price:</span><span class="data-value" style="font-size: 1.15rem;"><span id="vlrm-oracle-price" class="loading">...</span> <span id="vlrm-oracle-price-change-24h" class="change-badge"></span></span></div>
-                            <div class="spark-wrapper" style="height: 35px !important; min-height: 35px !important; margin-bottom: 10px;"><canvas id="spark-vlrm-oracle-price"></canvas></div>
-                            <div class="data-row" style="margin-top: auto;"><span class="data-label">Liquidity:</span><span class="data-value" style="font-size: 1.15rem;"><span id="vlrm-oracle-liq-ada">-</span> <span id="vlrm-oracle-change-24h" class="change-badge"></span></span></div>
+                            <div class="spark-wrapper" style="height: 35px !important; min-height: 35px !important; margin-bottom: 15px;"><canvas id="spark-vlrm-oracle-price"></canvas></div>
+                            <div class="data-row"><span class="data-label">Liquidity:</span><span class="data-value" style="font-size: 1.15rem;"><span id="vlrm-oracle-liq-ada">-</span> <span id="vlrm-oracle-change-24h" class="change-badge"></span></span></div>
                             <div class="spark-wrapper" style="height: 35px !important; min-height: 35px !important;"><canvas id="spark-vlrm-oracle"></canvas></div>
                         </div>
                     </div>
