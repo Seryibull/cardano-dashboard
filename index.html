@@ -1003,8 +1003,8 @@
                     const vaultRes = await fetch(`https://app.l4va.org/api/v1/vaults/5ac2ac4f-9079-40cb-94ae-a265bfba3bcd?t=${Date.now()}`);
                     if(vaultRes.ok) { 
                         const vJson = await vaultRes.json(); 
-                        let val = vJson.tvl ?? vJson.fdv ?? vJson.totalValueLocked ?? vJson.locked ?? vJson.TVL;
-                        if (val === undefined && vJson.data) val = vJson.data.tvl ?? vJson.data.fdv ?? vJson.data.totalValueLocked ?? vJson.data.locked ?? vJson.data.TVL;
+                        let val = vJson?.assetsPrices?.totalValueAda ?? vJson.tvl ?? vJson.fdv ?? vJson.totalValueLocked;
+                        if (val === undefined && vJson.data) val = vJson.data?.assetsPrices?.totalValueAda ?? vJson.data.tvl;
                         let liveTvl = parseFloat(val) || 0;
                         if(liveTvl > 0) vaultTvlData = liveTvl; 
                     }
