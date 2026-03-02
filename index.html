@@ -524,6 +524,10 @@
                     <div class="spark-wrapper" style="height: 55px !important; min-height: 55px !important; max-height: 55px !important; width: 95%; margin: 0 auto;">
                         <canvas id="spark-total-liq"></canvas>
                     </div>
+                    <div class="data-row" style="margin: 10px 0 0 0; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 10px;">
+                        <span class="data-label">Spread:</span>
+                        <span class="data-value arbitrage-big-value" id="oracle-card-arbitrage-spread" style="font-size: 1.5rem;">-%</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -689,9 +693,9 @@
         const VYFI_LINK = "https://app.vyfi.io/dex?tokenA=lovelace&tokenB=328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b27393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
         const MINSWAP_LINK = "https://minswap.org/swap?cA=&tA=&cB=328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b2&tB=7393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
 
-        // TOKENS NUEVOS (Hashes EXACTOS corregidos)
-        const TOKEN_VYFI = "804f5530198154628ce71b6bd5a889410ea9036c64188597af2f21bc56594649";
-        const TOKEN_XVYFI = "a004ebbc9d51184be5e364eb25e7d5df4b6b69db9fbf8de684d0b1d07856594649";
+        // TOKENS (Nombres y hashes reales de búsqueda flexible)
+        const TOKEN_VYFI = "804f5530198154628ce71b6bd5a889410ea9036c64188597af";
+        const TOKEN_XVYFI_HEX = "7856594649"; 
 
         const LAYOUT_VERSION = "v1.7"; 
 
@@ -907,8 +911,10 @@
             const sparkOptions = { responsive: true, maintainAspectRatio: false, scales: { x: { display: false }, y: { display: false } }, plugins: { legend: { display: false }, tooltip: { enabled: false } }, layout: { padding: 0 }, animation: false };
             const createSpark = (id, color, dataArr) => new Chart(document.getElementById(id).getContext('2d'), { type: 'line', data: { labels: chartHistory.labels, datasets: [{ data: dataArr, borderColor: color, borderWidth: 2, tension: 0.4, pointRadius: 0, fill: true, backgroundColor: color.replace('1)', '0.1)'), spanGaps: true }] }, options: sparkOptions });
             
+            // Sparks Oracle
             sparkInstances.vlrmAda = createSpark('spark-vlrm-ada', 'rgba(167, 139, 250, 1)', chartHistory.vlrmAda); sparkInstances.vlrmOracle = createSpark('spark-vlrm-oracle', 'rgba(167, 139, 250, 1)', chartHistory.vlrmOracle); sparkInstances.oracleVyfi = createSpark('spark-oracle-vyfi', 'rgba(167, 139, 250, 1)', chartHistory.oracleVyfi); sparkInstances.oracleMin = createSpark('spark-oracle-min', 'rgba(137, 170, 255, 1)', chartHistory.oracleMin); sparkInstances.vault = createSpark('spark-vault', 'rgba(252, 211, 77, 1)', chartHistory.vault); sparkInstances.totalLiq = createSpark('spark-total-liq', 'rgba(255, 255, 255, 1)', chartHistory.totalLiq); sparkInstances.ada = createSpark('spark-ada', 'rgba(66, 133, 244, 1)', []); sparkInstances.pVlrmAda = createSpark('spark-vlrm-ada-price', 'rgba(255, 255, 255, 1)', chartHistory.pVlrmAda); sparkInstances.pVlrmOracle = createSpark('spark-vlrm-oracle-price', 'rgba(255, 255, 255, 1)', chartHistory.pVlrmOracle); sparkInstances.pOracleVyfi = createSpark('spark-oracle-vyfi-price', 'rgba(255, 255, 255, 1)', chartHistory.pOracleVyfi); sparkInstances.pOracleMin = createSpark('spark-oracle-min-price', 'rgba(255, 255, 255, 1)', chartHistory.pOracleMin); 
             
+            // Sparks Vyfi Ecosystem
             sparkInstances.pVyfiDex = createSpark('spark-vyfi-dex-price', 'rgba(255, 255, 255, 1)', chartHistory.pVyfiDex);
             sparkInstances.pVyfiMin = createSpark('spark-vyfi-min-price', 'rgba(255, 255, 255, 1)', chartHistory.pVyfiMin);
             sparkInstances.tVyfiDex = createSpark('spark-vyfi-dex', 'rgba(167, 139, 250, 1)', chartHistory.tVyfiDex);
@@ -1116,6 +1122,24 @@
             }
         }
 
+        function getSafePriceAndLiquidity(pool) {
+            if(!pool) return { price: 0, tvl: 0 };
+            try {
+                let calculatedPrice = 0;
+                if (pool.tokenA && pool.tokenA.unit === 'lovelace' && pool.tokenB && pool.tokenB.lpRatio) {
+                    calculatedPrice = pool.tokenB.lpRatio[pool.unitsPair].priceRatioAB;
+                } else if (pool.tokenB && pool.tokenB.unit === 'lovelace' && pool.tokenA && pool.tokenA.lpRatio) {
+                    calculatedPrice = pool.tokenA.lpRatio[pool.unitsPair].priceRatioBA;
+                } else if (pool.priceRatio) {
+                    calculatedPrice = pool.priceRatio;
+                } else if (pool.tokenA && pool.tokenB && pool.tokenA.quantity && pool.tokenB.quantity) {
+                    if(pool.tokenA.unit === 'lovelace') calculatedPrice = pool.tokenA.quantity / pool.tokenB.quantity;
+                    if(pool.tokenB.unit === 'lovelace') calculatedPrice = pool.tokenB.quantity / pool.tokenA.quantity;
+                }
+                return { price: calculatedPrice, tvl: pool.tvl || 0 };
+            } catch(e) { return { price: 0, tvl: 0 }; }
+        }
+
         async function fetchHistoryFromCloudflare() {
             try {
                 const res = await fetch(PROXY_URL + '?data=history', { headers: { "X-Terminal-Key": userPasskey } });
@@ -1223,16 +1247,22 @@
 
                 const vyfiPoolsList = data.vyfiPools || [];
 
-                // --- SISTEMA VYFI / xVYFI CON HASHES CORREGIDOS ---
+                // --- SISTEMA VYFI / xVYFI BÚSQUEDA POR NOMBRE ---
                 let pVyfiDex = 0; let vyfiDexTvl = 0; let pXvyfiDex = 0; let xvyfiDexTvl = 0; let priceMinVyfi = 0; let minVyfiTvl = 0;
                 
                 try {
                     // 1. Buscar VYFI/ADA
-                    const allVyfiPools = vyfiPoolsList.filter(p => p.unitsPair && p.unitsPair.includes('lovelace') && p.unitsPair.includes(TOKEN_VYFI));
+                    const allVyfiPools = vyfiPoolsList.filter(p => 
+                        p.unitsPair && p.unitsPair.includes('lovelace') && 
+                        (p.unitsPair.includes(TOKEN_VYFI) || 
+                         (p.tokenA && p.tokenA.name === 'VYFI') || 
+                         (p.tokenB && p.tokenB.name === 'VYFI'))
+                    );
+                    
                     if (allVyfiPools.length > 0) {
-                        const vyfiDexPool = allVyfiPools.sort((a,b) => (b.tvl||0) - (a.tvl||0))[0];
-                        pVyfiDex = vyfiDexPool.tokenA.unit === 'lovelace' ? vyfiDexPool.tokenB.lpRatio[vyfiDexPool.unitsPair].priceRatioAB : vyfiDexPool.tokenA.lpRatio[vyfiDexPool.unitsPair].priceRatioBA;
-                        vyfiDexTvl = vyfiDexPool.tvl;
+                        const vyfiPoolObj = allVyfiPools.sort((a,b) => (b.tvl||0) - (a.tvl||0))[0];
+                        const extracted = getSafePriceAndLiquidity(vyfiPoolObj);
+                        pVyfiDex = extracted.price; vyfiDexTvl = extracted.tvl;
                         
                         document.getElementById('vyfi-dex-price').innerText = `₳ ${pVyfiDex.toFixed(6)}`; document.getElementById('vyfi-dex-price').classList.remove('loading');
                         document.getElementById('vyfi-dex-liq').innerText = `₳ ${Math.round(vyfiDexTvl).toLocaleString()}`; document.getElementById('vyfi-dex-liq').classList.remove('loading');
@@ -1258,12 +1288,18 @@
                     document.getElementById('vyfi-total-liq').innerText = `₳ ${Math.round(vyfiTotalLiq).toLocaleString()}`;
 
                     // 3. Buscar xVYFI/ADA
-                    const allXvyfiPools = vyfiPoolsList.filter(p => p.unitsPair && p.unitsPair.includes('lovelace') && p.unitsPair.includes(TOKEN_XVYFI));
+                    const allXvyfiPools = vyfiPoolsList.filter(p => 
+                        p.unitsPair && p.unitsPair.includes('lovelace') && 
+                        (p.unitsPair.includes(TOKEN_XVYFI_HEX) || 
+                         (p.tokenA && p.tokenA.name && p.tokenA.name.toUpperCase() === 'XVYFI') || 
+                         (p.tokenB && p.tokenB.name && p.tokenB.name.toUpperCase() === 'XVYFI'))
+                    );
+                    
                     if (allXvyfiPools.length > 0) {
-                        const xvyfiDexPool = allXvyfiPools.sort((a,b) => (b.tvl||0) - (a.tvl||0))[0];
-                        pXvyfiDex = xvyfiDexPool.tokenA.unit === 'lovelace' ? xvyfiDexPool.tokenB.lpRatio[xvyfiDexPool.unitsPair].priceRatioAB : xvyfiDexPool.tokenA.lpRatio[xvyfiDexPool.unitsPair].priceRatioBA;
-                        xvyfiDexTvl = xvyfiDexPool.tvl;
-
+                        const xvyfiPoolObj = allXvyfiPools.sort((a,b) => (b.tvl||0) - (a.tvl||0))[0];
+                        const extractedX = getSafePriceAndLiquidity(xvyfiPoolObj);
+                        pXvyfiDex = extractedX.price; xvyfiDexTvl = extractedX.tvl;
+                        
                         document.getElementById('xvyfi-price').innerText = `₳ ${pXvyfiDex.toFixed(6)}`; document.getElementById('xvyfi-price').classList.remove('loading');
                         document.getElementById('xvyfi-tvl').innerText = `₳ ${Math.round(xvyfiDexTvl).toLocaleString()}`; document.getElementById('xvyfi-tvl').classList.remove('loading');
                     }
@@ -1277,7 +1313,13 @@
                     calcChangeUI('vyfi-dex-price-change-24h', chartHistory.pVyfiDex, pVyfiDex); calcChangeUI('minswap-vyfi-price-change-24h', chartHistory.pVyfiMin, priceMinVyfi); calcChangeUI('vyfi-dex-change-24h', chartHistory.tVyfiDex, vyfiDexTvl); calcChangeUI('minswap-vyfi-change-24h', chartHistory.tVyfiMin, minVyfiTvl); calcChangeUI('vyfi-total-liq-change-24h', chartHistory.tVyfiTotal, vyfiTotalLiq); calcChangeUI('xvyfi-price-change-24h', chartHistory.pXvyfi, pXvyfiDex); calcChangeUI('xvyfi-tvl-change-24h', chartHistory.tXvyfi, xvyfiDexTvl);
 
                     // 4. Preparar Pools para el Triangular de Vyfi (Cross-Pool VYFI/xVYFI)
-                    let crossVxPools = vyfiPoolsList.filter(p => p.unitsPair && p.unitsPair.includes(TOKEN_VYFI) && p.unitsPair.includes(TOKEN_XVYFI));
+                    let crossVxPools = vyfiPoolsList.filter(p => 
+                        p.unitsPair && !p.unitsPair.includes('lovelace') && 
+                        ((p.tokenA && p.tokenA.name === 'VYFI' && p.tokenB && p.tokenB.name && p.tokenB.name.toUpperCase() === 'XVYFI') || 
+                         (p.tokenA && p.tokenA.name && p.tokenA.name.toUpperCase() === 'XVYFI' && p.tokenB && p.tokenB.name === 'VYFI') ||
+                         (p.unitsPair.includes(TOKEN_VYFI) && p.unitsPair.includes(TOKEN_XVYFI_HEX)))
+                    );
+                    
                     let resVxVyfi = 0; let resVxXvyfi = 0;
                     if(crossVxPools.length > 0) {
                         let crossVxPool = crossVxPools.sort((a,b) => (b.tvl||0) - (a.tvl||0))[0];
@@ -1327,12 +1369,20 @@
                         if (Math.abs(bestDeviation) >= conf.vaultAlert) { if(vaultCard) vaultCard.classList.add('glow-active'); const alertToggle = document.getElementById('alert-toggle'); const now = Date.now(); if (alertToggle && alertToggle.checked && (now - lastVaultAlertTime > ALERT_COOLDOWN)) { playDing(); if (Notification.permission === "granted") { new Notification("🏛️ L4VA Vault Alert!", { body: `Discrepancy: ${bestDeviation.toFixed(2)}%\nAction: ${bestDeviation > 0 ? 'Sell' : 'Buy'} on ${targetDexForVault}` }); } sendTelegramAlert(`🏛️ <b>L4VA Vault Alert!</b>\n\n⚖️ Fair Price Discrepancy: <b>${bestDeviation > 0 ? '+' : ''}${bestDeviation.toFixed(2)}%</b>\n💡 Action: ${bestDeviation > 0 ? 'Sell' : 'Buy'} on ${targetDexForVault}\n\n<i>Check dashboard for real-time data.</i>`); lastVaultAlertTime = now; } } else { if(vaultCard) vaultCard.classList.remove('glow-active'); }
                     }
                 } else { if(vaultCard) vaultCard.classList.remove('glow-active'); document.getElementById('vault-tvl').innerText = `API Offline`; document.getElementById('vault-fair-price').innerText = `-`; document.getElementById('vault-banner-discrepancy').innerText = `-%`; document.getElementById('vault-banner-discrepancy').style.color = "rgba(255, 255, 255, 0.5)"; document.getElementById('vault-arbitrage-action').innerHTML = `<span style="color: rgba(255, 255, 255, 0.6);">Offline</span>`; }
+                
                 let spread = 0; const dexCard = document.querySelector('[gs-id="card-arb-dex"] .card');
                 if (priceVyfi > 0 && priceMin > 0) {
                     const highestPrice = Math.max(priceVyfi, priceMin); const lowestPrice = Math.min(priceVyfi, priceMin); spread = ((highestPrice - lowestPrice) / lowestPrice) * 100;
                     const actionEl = document.getElementById('arbitrage-action');
                     
                     animateValue('spread', 'arbitrage-spread', spread, val => val.toFixed(2) + '%');
+                    
+                    // --- NUEVO: SPREAD EN LA TARJETA INFERIOR ORACLE/ADA ---
+                    const oracleCardSpread = document.getElementById('oracle-card-arbitrage-spread');
+                    if (oracleCardSpread) {
+                        oracleCardSpread.innerText = spread.toFixed(2) + '%';
+                        oracleCardSpread.style.color = spread > 0.5 ? "#10b981" : "rgba(255,255,255,0.5)";
+                    }
 
                     if (spread < 0.5) { document.getElementById('arbitrage-spread').style.color = "rgba(255, 255, 255, 0.5)"; actionEl.innerHTML = `<span style="color: rgba(255, 255, 255, 0.6);">Low spread</span>`; } 
                     else { document.getElementById('arbitrage-spread').style.color = "#ffffff"; if (priceVyfi > priceMin) { actionEl.innerHTML = `<a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Buy Minswap</a> <a href="${VYFI_LINK}" target="_blank" class="badge-dark">Sell VyFi</a>`; } else { actionEl.innerHTML = `<a href="${VYFI_LINK}" target="_blank" class="badge-dark">Buy VyFi</a> <a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Sell Minswap</a>`; } }
