@@ -115,7 +115,7 @@
 
         .card { border-radius: 20px; padding: 20px 25px; position: absolute; top: 0; left: 0; right: 0; bottom: 0; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); transition: background 0.3s ease, box-shadow 0.3s ease; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; }
         
-        /* 🎨 FONDOS SÓLIDOS Y OSCURECIDOS (SIN FOCO) */
+        /* 🎨 FONDOS SÓLIDOS Y OSCURECIDOS (SIN FOCO NINGUNO) */
         .card-ada { box-shadow: -10px 10px 40px rgba(0, 0, 0, 0.4); background: rgba(10, 11, 16, 0.98); }
         .card-ada:hover { box-shadow: -15px 15px 50px rgba(0, 0, 0, 0.6); background: rgba(14, 15, 24, 1); }
         .card-vault { box-shadow: -10px 10px 40px rgba(0, 0, 0, 0.4); background: rgba(13, 11, 8, 0.98); }
@@ -135,11 +135,11 @@
         .spark-wrapper { position: relative; width: 100%; display: block; overflow: hidden; flex-shrink: 0; }
         .spark-wrapper canvas { position: absolute !important; top: 0 !important; left: 0 !important; width: 100% !important; height: 100% !important; display: block; }
 
-        .card-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 15px; color: var(--neon-orange); display: flex; justify-content: space-between; align-items: center;}
+        .card-title { font-size: 1.15rem; font-weight: 600; margin-bottom: 10px; color: var(--neon-orange); display: flex; justify-content: space-between; align-items: center;}
         .card-title.ada-title { color: var(--ada-color); text-shadow: 0 0 10px rgba(66, 133, 244, 0.3);}
-        .data-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 0.95rem; }
+        .data-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 1rem; }
         .data-label { color: var(--text-secondary); font-weight: 500; }
-        .data-value { font-weight: 800; font-size: 1.15rem; color: var(--text-primary); display: flex; align-items: center; gap: 8px;}
+        .data-value { font-weight: 800; font-size: 1.25rem; color: var(--text-primary); display: flex; align-items: center; gap: 8px;}
         .change-badge { font-size: 0.8rem; font-weight: 800; }
         .badge { font-size: 0.75rem; padding: 4px 10px; border-radius: 20px; font-weight: 700; text-transform: uppercase; border: 1px solid transparent; }
         .bg-vyfi { background: var(--badge-vyfi-bg); color: var(--badge-vyfi-text); border-color: var(--badge-vyfi-text); }
@@ -164,40 +164,36 @@
         .slippage-bar { height: 100%; width: 0%; border-radius: 4px; transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); box-shadow: 0 0 10px currentColor;}
         .slippage-label { font-size: 0.8rem; color: var(--text-secondary); text-align: right; font-weight: 600;}
 
-        /* =========================================
-           TRIÁNGULO: MATEMÁTICAS EQUILÁTERAS
-           ========================================= */
+        /* TRIANGULO REDISEÑADO: MATEMÁTICAMENTE EQUILÁTERO SIEMPRE */
         .tri-wrapper { 
             position: relative; 
             width: 100%; 
-            max-width: 250px; 
-            aspect-ratio: 1.1547; /* Bloquea la proporción para que NO se deforme jamás */
+            max-width: 280px; 
+            aspect-ratio: 1.1547; /* Bloquea la proporción geométrica perfecta */
             margin: 5px auto; 
             flex-grow: 0; flex-shrink: 0; 
         }
         
         .tri-node { 
             position: absolute; 
-            width: 50px; height: 50px; 
+            width: 56px; height: 56px; 
             background: rgba(18, 15, 36, 0.9); 
             border: 2px solid rgba(255,255,255,0.2); 
             border-radius: 50%; 
             display: flex; align-items: center; justify-content: center; 
-            font-size: 0.8rem; font-weight: bold; color: white; 
+            font-size: 0.85rem; font-weight: bold; color: white; 
             z-index: 2; 
             box-shadow: 0 0 15px rgba(0,0,0,0.8); 
             backdrop-filter: blur(5px);
-            transform: translate(-50%, -50%); /* Centrado matemático sobre la coordenada */
+            transform: translate(-50%, -50%); /* Centrado estricto sobre su coordenada */
         }
         
-        /* Posicionamiento porcentual estricto para los vértices */
+        /* Coordenadas 100% porcentuales y ancladas a las esquinas del SVG */
         .node-top { top: 5%; left: 50%; }
         .node-bot-right { top: 95%; left: 95%; }
         .node-bot-left { top: 95%; left: 5%; }
 
         .tri-svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; overflow: visible;}
-        
-        /* vector-effect asegura que el trazo no se ensanche al escalar */
         .tri-line-bg, .tri-line-active { fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke;}
         .tri-line-bg { stroke: rgba(255,255,255,0.05); }
         .tri-line-active { stroke: #10b981; filter: drop-shadow(0 0 10px #10b981); transition: all 0.3s ease; stroke-width: 4;}
@@ -370,9 +366,9 @@
         </div>
 
         <div class="grid-stack-item drag-item" gs-id="card-oracle-ada" gs-w="6" gs-h="5" gs-x="0" gs-y="5">
-            <div class="grid-stack-item-content card card-vault" style="display: flex; flex-direction: column;">
+            <div class="grid-stack-item-content card card-vault" style="display: flex; flex-direction: column; justify-content: space-between;">
                 
-                <div style="flex-shrink: 0;">
+                <div>
                     <div class="card-title" style="color: var(--vault-color); margin-bottom: 15px; font-size: 1.2rem;">ORACLE / ADA Arbitrage</div>
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px;">
                         <div>
@@ -395,8 +391,7 @@
                 </div>
                 
                 <div style="display: flex; flex-direction: column; flex-grow: 1; justify-content: flex-end;">
-                    
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; margin-top: 15px;">
                         <h3 class="dex-subtitle" style="color: var(--text-secondary); margin:0; font-size: 1.1rem;">Total Combined Liquidity</h3>
                         <div class="data-value" style="font-size: 2rem; color: #ffffff; text-shadow: 0 2px 10px rgba(0,0,0,0.5);">
                             <span id="oracle-total-liq">-</span> <span id="total-liq-change-24h" class="change-badge" style="font-size: 1rem;"></span>
@@ -434,7 +429,6 @@
                         </div>
                         <div class="slippage-container" style="margin-top: 5px;"><div id="sim-slippage-bar-oracle" class="slippage-bar" style="background: #10b981;"></div></div>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -445,7 +439,7 @@
                 <div class="card-title" style="color: var(--neon-orange); margin-bottom: 5px; flex-shrink: 0; font-size: 1.2rem;">▲VLRM ORACLE ADA▼ triangular arbitrage</div>
                 
                 <div style="flex-grow: 1; display: flex; justify-content: center; align-items: center; width: 100%;">
-                    <div class="tri-wrapper" style="margin: 0;">
+                    <div class="tri-wrapper">
                         <svg class="tri-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
                             <polygon points="50,5 95,95 5,95" class="tri-line-bg" />
                             <polygon id="tri-anim-path" points="50,5 95,95 5,95" class="tri-line-active" style="display:none;" />
@@ -563,18 +557,18 @@
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px;">
                         <div>
                             <h3 class="dex-subtitle"><span class="badge bg-vyfi">VYFI DEX</span></h3>
-                            <div class="data-row" style="font-size: 1.1rem;"><span class="data-label">Price:</span><span class="data-value" style="font-size: 1.25rem;"><span id="vyfi-dex-price" class="loading">...</span> <span id="vyfi-dex-price-change-24h" class="change-badge"></span></span></div>
+                            <div class="data-row" style="font-size: 1.1rem;"><span class="data-label">Price:</span><span class="data-value" style="font-size: 1.3rem;"><span id="vyfi-dex-price" class="loading">...</span> <span id="vyfi-dex-price-change-24h" class="change-badge"></span></span></div>
                             <div class="spark-wrapper" style="height: 45px !important; min-height: 45px !important; margin-bottom: 15px;"><canvas id="spark-vyfi-dex-price"></canvas></div>
                             
-                            <div class="data-row" style="font-size: 1.1rem;"><span class="data-label">Liquidity:</span><span class="data-value" style="font-size: 1.25rem;"><span id="vyfi-dex-liq" class="loading">...</span> <span id="vyfi-dex-change-24h" class="change-badge"></span></span></div>
+                            <div class="data-row" style="font-size: 1.1rem;"><span class="data-label">Liquidity:</span><span class="data-value" style="font-size: 1.3rem;"><span id="vyfi-dex-liq" class="loading">...</span> <span id="vyfi-dex-change-24h" class="change-badge"></span></span></div>
                             <div class="spark-wrapper" style="height: 45px !important; min-height: 45px !important;"><canvas id="spark-vyfi-dex"></canvas></div>
                         </div>
                         <div style="border-left: 2px solid rgba(255,255,255,0.05); padding-left: 15px;">
                             <h3 class="dex-subtitle"><span class="badge bg-minswap">MINSWAP</span></h3>
-                            <div class="data-row" style="font-size: 1.1rem;"><span class="data-label">Price:</span><span class="data-value" style="font-size: 1.25rem;"><span id="minswap-vyfi-price" class="loading">...</span> <span id="minswap-vyfi-price-change-24h" class="change-badge"></span></span></div>
+                            <div class="data-row" style="font-size: 1.1rem;"><span class="data-label">Price:</span><span class="data-value" style="font-size: 1.3rem;"><span id="minswap-vyfi-price" class="loading">...</span> <span id="minswap-vyfi-price-change-24h" class="change-badge"></span></span></div>
                             <div class="spark-wrapper" style="height: 45px !important; min-height: 45px !important; margin-bottom: 15px;"><canvas id="spark-vyfi-min-price"></canvas></div>
                             
-                            <div class="data-row" style="font-size: 1.1rem;"><span class="data-label">Liquidity:</span><span class="data-value" style="font-size: 1.25rem;"><span id="minswap-vyfi-liq" class="loading">...</span> <span id="minswap-vyfi-change-24h" class="change-badge"></span></span></div>
+                            <div class="data-row" style="font-size: 1.1rem;"><span class="data-label">Liquidity:</span><span class="data-value" style="font-size: 1.3rem;"><span id="minswap-vyfi-liq" class="loading">...</span> <span id="minswap-vyfi-change-24h" class="change-badge"></span></span></div>
                             <div class="spark-wrapper" style="height: 45px !important; min-height: 45px !important;"><canvas id="spark-vyfi-min"></canvas></div>
                         </div>
                     </div>
@@ -593,11 +587,11 @@
                     
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 10px;">
                         <div class="data-row" style="margin: 0;">
-                            <span class="data-label" style="margin-right: 10px; font-size: 1rem;">Spread:</span>
+                            <span class="data-label" style="margin-right: 15px;">Spread:</span>
                             <span class="data-value arbitrage-big-value" id="vyfi-arbitrage-spread" style="font-size: 1.8rem;">-%</span>
                         </div>
                         <div class="data-row" style="margin: 0;">
-                            <span class="data-label" style="margin-right: 10px; font-size: 1rem;">Action Route:</span>
+                            <span class="data-label" style="margin-right: 15px;">Action Route:</span>
                             <span id="vyfi-arbitrage-action" style="font-size: 1.1rem; font-weight: bold; color: white;">...</span>
                         </div>
                     </div>
@@ -629,7 +623,7 @@
                 <div>
                     <div class="card-title" style="color: var(--neon-orange); margin-bottom: 5px; flex-shrink: 0; font-size: 1.2rem;">▲VYFI xVYFI ADA▼ triangular arbitrage</div>
                     
-                    <div style="display: flex; justify-content: center; align-items: center; width: 100%;">
+                    <div style="flex-grow: 1; display: flex; justify-content: center; align-items: center; width: 100%;">
                         <div class="tri-wrapper" style="margin: 0;">
                             <svg class="tri-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
                                 <polygon points="50,5 95,95 5,95" class="tri-line-bg" />
@@ -689,17 +683,18 @@
     <script>
         const PROXY_URL = 'https://l4va.seryibull.workers.dev';
         
-        // HASHES ORIGINALES 100% INTOCABLES (Los que funcionaban)
         const VLRM = "63efb704b7396890e4d9539d030c0e667739043add65c00f96c586c056616c6f72756d";
         const ORACLE = "328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b27393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
-        const TOKEN_VYFI = "804f5530198154628ce71b6bd5a889410ea9036c64188597af56594649";
+        const ORACLE_TOTAL_SUPPLY = 1000000;
+        
+        // HASHES ORIGINALES 100% BLINDADOS
+        const TOKEN_VYFI = "804f5530198154628ce71b6bd5a889410ea9036c64188597af2f21bc56594649";
         const TOKEN_XVYFI = "a004ebbc9d51184be5e364eb25e7d5df4b6b69db9fbf8de684d0b1d07856594649";
 
-        const ORACLE_TOTAL_SUPPLY = 1000000;
         const VYFI_LINK = "https://app.vyfi.io/dex?tokenA=lovelace&tokenB=328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b27393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
         const MINSWAP_LINK = "https://minswap.org/swap?cA=&tA=&cB=328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b2&tB=7393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
 
-        const LAYOUT_VERSION = "v2.9"; 
+        const LAYOUT_VERSION = "v3.0"; 
 
         let defaultConf = { alert: 15, vaultAlert: 20, simDex: 1000, simTri: 1000, tgBot: "", tgChat: "", feeNet: 0.2, feeMin: 0.7, feeVyfi: 1.9, lpFeeMin: 0.3, lpFeeVyfi: 0.3 };
         let savedConf = JSON.parse(localStorage.getItem('l4va_config')) || {};
@@ -727,6 +722,7 @@
         let grid; 
         let isEditMode = false;
 
+        // Función segura para actualizar el DOM (evita crasheos si falta una ID)
         function updateDOM(id, html, color) {
             try {
                 let el = document.getElementById(id);
@@ -926,6 +922,7 @@
                 options: { responsive: true, maintainAspectRatio: false, scales: { x: { display: true, grid: { display: false }, ticks: { color: '#a0a0c0', maxTicksLimit: 8, maxRotation: 0 } }, y: { suggestedMin: -5, suggestedMax: 5, grid: { color: 'rgba(255, 255, 255, 0.05)', drawBorder: false }, ticks: { color: '#a0a0c0', stepSize: 5 } } }, plugins: { legend: { display: true, labels: { color: '#ffffff', boxWidth: 10 } } } }
             });
             const sparkOptions = { responsive: true, maintainAspectRatio: false, scales: { x: { display: false }, y: { display: false } }, plugins: { legend: { display: false }, tooltip: { enabled: false } }, layout: { padding: 0 }, animation: false };
+            
             const createSpark = (id, color, dataArr) => {
                 let el = document.getElementById(id);
                 if(!el) return null;
@@ -1023,6 +1020,27 @@
             if (maxImpact < 2) { bar.style.background = "#10b981"; label.style.color = "#10b981"; textShadow = "0 0 10px #10b981"; }
             else if (maxImpact < 5) { bar.style.background = "#fcd34d"; label.style.color = "#fcd34d"; textShadow = "0 0 10px #fcd34d"; }
             else { bar.style.background = "var(--neon-red)"; label.style.color = "var(--neon-red)"; textShadow = "0 0 10px var(--neon-red)"; }
+        }
+
+        // Helper seguro y blindado para extraer datos de los pools
+        function extractVyfiData(poolsList, tokenA, tokenB) {
+            try {
+                const pools = poolsList.filter(p => p.unitsPair && p.unitsPair.includes(tokenA) && p.unitsPair.includes(tokenB));
+                if (!pools || pools.length === 0) return null;
+                
+                const mainPool = pools.sort((a, b) => (b.tvl || 0) - (a.tvl || 0))[0];
+                let price = 0;
+                
+                if (mainPool.tokenA.unit === tokenA || (tokenA === 'lovelace' && mainPool.tokenA.unit === 'lovelace')) {
+                    price = mainPool.tokenB.lpRatio[mainPool.unitsPair].priceRatioAB;
+                } else {
+                    price = mainPool.tokenA.lpRatio[mainPool.unitsPair].priceRatioBA;
+                }
+                
+                return { price: price, tvl: mainPool.tvl, pool: mainPool };
+            } catch (e) {
+                return null;
+            }
         }
 
         function recalculateSimulators() { recalculateDexSimulator(null); recalculateTriSimulator(null); recalculateVyfiTriSimulator(); }
@@ -1308,7 +1326,6 @@
                     if(sparkInstances.tVyfiTotal) { sparkInstances.tVyfiTotal.data.labels = chartHistory.labels; sparkInstances.tVyfiTotal.data.datasets[0].data = chartHistory.tVyfiTotal; sparkInstances.tVyfiTotal.update('none'); }
                     if(sparkInstances.pXvyfi) { sparkInstances.pXvyfi.data.labels = chartHistory.labels; sparkInstances.pXvyfi.data.datasets[0].data = chartHistory.pXvyfi; sparkInstances.pXvyfi.update('none'); }
                     if(sparkInstances.tXvyfi) { sparkInstances.tXvyfi.data.labels = chartHistory.labels; sparkInstances.tXvyfi.data.datasets[0].data = chartHistory.tXvyfi; sparkInstances.tXvyfi.update('none'); }
-                    
                     if(sparkInstances.pVyfiXvyfi) { sparkInstances.pVyfiXvyfi.data.labels = chartHistory.labels; sparkInstances.pVyfiXvyfi.data.datasets[0].data = chartHistory.pVyfiXvyfi; sparkInstances.pVyfiXvyfi.update('none'); }
                     if(sparkInstances.tVyfiXvyfi) { sparkInstances.tVyfiXvyfi.data.labels = chartHistory.labels; sparkInstances.tVyfiXvyfi.data.datasets[0].data = chartHistory.tVyfiXvyfi; sparkInstances.tVyfiXvyfi.update('none'); }
                 }
@@ -1355,21 +1372,18 @@
                 const vyfiPoolsList = data.vyfiPools || [];
 
                 // =========================================================================
-                // EXTRACCIÓN VYFI Y xVYFI (100% BLINDADA)
+                // EXTRACCIÓN VYFI Y xVYFI (HELPER BLINDADO CON FÓRMULA ORIGINAL)
                 // =========================================================================
                 let pVyfiDex = 0; let vyfiDexTvl = 0; let pXvyfiDex = 0; let xvyfiDexTvl = 0; let priceMinVyfi = 0; let minVyfiTvl = 0; let pVyfiXvyfiDex = 0; let vyfiXvyfiTvl = 0;
                 
                 try {
-                    const vyfiDexPool = vyfiPoolsList.find(p => p.unitsPair && p.unitsPair.includes('lovelace') && p.unitsPair.includes(TOKEN_VYFI));
-                    if (vyfiDexPool) {
-                        pVyfiDex = vyfiDexPool.tokenA.unit === 'lovelace' ? vyfiDexPool.tokenB.lpRatio?.[vyfiDexPool.unitsPair]?.priceRatioAB : vyfiDexPool.tokenA.lpRatio?.[vyfiDexPool.unitsPair]?.priceRatioBA;
-                        vyfiDexTvl = vyfiDexPool.tvl;
+                    const vyfiAdaData = extractVyfiData(vyfiPoolsList, 'lovelace', TOKEN_VYFI);
+                    if(vyfiAdaData) {
+                        pVyfiDex = vyfiAdaData.price; vyfiDexTvl = vyfiAdaData.tvl;
                         updateDOM('vyfi-dex-price', `₳ ${(pVyfiDex||0).toFixed(6)}`); document.getElementById('vyfi-dex-price')?.classList.remove('loading');
                         updateDOM('vyfi-dex-liq', `₳ ${Math.round(vyfiDexTvl||0).toLocaleString()}`); document.getElementById('vyfi-dex-liq')?.classList.remove('loading');
                     }
-                } catch(e) { console.error("Error VYFI/ADA", e); }
 
-                try {
                     if (data.minVyfiPrice && data.minVyfiPrice.length > 0 && data.minVyfiPrice[0].close) { 
                         priceMinVyfi = parseFloat(data.minVyfiPrice[0].close); 
                         updateDOM('minswap-vyfi-price', `₳ ${priceMinVyfi.toFixed(6)}`); document.getElementById('minswap-vyfi-price')?.classList.remove('loading');
@@ -1378,9 +1392,7 @@
                             updateDOM('minswap-vyfi-liq', `₳ ${Math.round(minVyfiTvl).toLocaleString()}`); document.getElementById('minswap-vyfi-liq')?.classList.remove('loading');
                         }
                     }
-                } catch(e) { console.error("Error MinVYFI", e); }
 
-                try {
                     if (pVyfiDex > 0 && priceMinVyfi > 0) {
                         const highestPrice = Math.max(pVyfiDex, priceMinVyfi); const lowestPrice = Math.min(pVyfiDex, priceMinVyfi); 
                         let vyfiSpread = ((highestPrice - lowestPrice) / lowestPrice) * 100;
@@ -1392,28 +1404,38 @@
                     }
                     let vyfiTotalLiq = vyfiDexTvl + minVyfiTvl;
                     updateDOM('vyfi-total-liq', `₳ ${Math.round(vyfiTotalLiq).toLocaleString()}`);
-                } catch(e) { console.error("Error Spread VYFI", e); }
 
-                try {
-                    const xvyfiDexPool = vyfiPoolsList.find(p => p.unitsPair && p.unitsPair.includes('lovelace') && p.unitsPair.includes(TOKEN_XVYFI));
-                    if (xvyfiDexPool) {
-                        pXvyfiDex = xvyfiDexPool.tokenA.unit === 'lovelace' ? xvyfiDexPool.tokenB.lpRatio?.[xvyfiDexPool.unitsPair]?.priceRatioAB : xvyfiDexPool.tokenA.lpRatio?.[xvyfiDexPool.unitsPair]?.priceRatioBA;
-                        xvyfiDexTvl = xvyfiDexPool.tvl;
+                    const xvyfiAdaData = extractVyfiData(vyfiPoolsList, 'lovelace', TOKEN_XVYFI);
+                    if(xvyfiAdaData) {
+                        pXvyfiDex = xvyfiAdaData.price; xvyfiDexTvl = xvyfiAdaData.tvl;
                         updateDOM('xvyfi-price', `₳ ${(pXvyfiDex||0).toFixed(6)}`); document.getElementById('xvyfi-price')?.classList.remove('loading');
                         updateDOM('xvyfi-tvl', `₳ ${Math.round(xvyfiDexTvl||0).toLocaleString()}`); document.getElementById('xvyfi-tvl')?.classList.remove('loading');
                     }
-                } catch(e) { console.error("Error xVYFI", e); }
 
-                try {
-                    const crossVxPool = vyfiPoolsList.find(p => p.unitsPair && p.unitsPair.includes(TOKEN_VYFI) && p.unitsPair.includes(TOKEN_XVYFI));
-                    let resVxVyfi = 0; let resVxXvyfi = 0;
-                    if(crossVxPool) {
-                        if(pVyfiDex > 0 && pXvyfiDex > 0) { resVxVyfi = (crossVxPool.tvl/2)/pVyfiDex; resVxXvyfi = (crossVxPool.tvl/2)/pXvyfiDex; }
-                        pVyfiXvyfiDex = crossVxPool.tokenA.unit.includes(TOKEN_VYFI) ? crossVxPool.tokenB.lpRatio?.[crossVxPool.unitsPair]?.priceRatioAB : crossVxPool.tokenA.lpRatio?.[crossVxPool.unitsPair]?.priceRatioBA;
-                        vyfiXvyfiTvl = crossVxPool.tvl;
+                    const crossVyfiData = extractVyfiData(vyfiPoolsList, TOKEN_VYFI, TOKEN_XVYFI);
+                    if(crossVyfiData) {
+                        pVyfiXvyfiDex = crossVyfiData.price; vyfiXvyfiTvl = crossVyfiData.tvl;
                         updateDOM('vyfi-xvyfi-price', `${(pVyfiXvyfiDex||0).toFixed(4)}`); document.getElementById('vyfi-xvyfi-price')?.classList.remove('loading');
                         updateDOM('vyfi-xvyfi-liq', `₳ ${Math.round(vyfiXvyfiTvl||0).toLocaleString()}`); document.getElementById('vyfi-xvyfi-liq')?.classList.remove('loading');
                     }
+
+                    chartHistory.pVyfiDex.push(pVyfiDex); chartHistory.pVyfiMin.push(priceMinVyfi); chartHistory.tVyfiDex.push(vyfiDexTvl); chartHistory.tVyfiMin.push(minVyfiTvl); chartHistory.tVyfiTotal.push(vyfiTotalLiq); chartHistory.pXvyfi.push(pXvyfiDex); chartHistory.tXvyfi.push(xvyfiDexTvl); chartHistory.pVyfiXvyfi.push(pVyfiXvyfiDex); chartHistory.tVyfiXvyfi.push(vyfiXvyfiTvl);
+                    if(chartHistory.pVyfiDex.length > MAX_CHART_POINTS) { chartHistory.pVyfiDex.shift(); chartHistory.pVyfiMin.shift(); chartHistory.tVyfiDex.shift(); chartHistory.tVyfiMin.shift(); chartHistory.tVyfiTotal.shift(); chartHistory.pXvyfi.shift(); chartHistory.tXvyfi.shift(); chartHistory.pVyfiXvyfi.shift(); chartHistory.tVyfiXvyfi.shift(); }
+                    
+                    if(sparkInstances.pVyfiDex) sparkInstances.pVyfiDex.update('none'); 
+                    if(sparkInstances.pVyfiMin) sparkInstances.pVyfiMin.update('none'); 
+                    if(sparkInstances.tVyfiDex) sparkInstances.tVyfiDex.update('none'); 
+                    if(sparkInstances.tVyfiMin) sparkInstances.tVyfiMin.update('none'); 
+                    if(sparkInstances.tVyfiTotal) sparkInstances.tVyfiTotal.update('none'); 
+                    if(sparkInstances.pXvyfi) sparkInstances.pXvyfi.update('none'); 
+                    if(sparkInstances.tXvyfi) sparkInstances.tXvyfi.update('none');
+                    if(sparkInstances.pVyfiXvyfi) sparkInstances.pVyfiXvyfi.update('none'); 
+                    if(sparkInstances.tVyfiXvyfi) sparkInstances.tVyfiXvyfi.update('none');
+                    
+                    calcChangeUI('vyfi-dex-price-change-24h', chartHistory.pVyfiDex, pVyfiDex); calcChangeUI('minswap-vyfi-price-change-24h', chartHistory.pVyfiMin, priceMinVyfi); calcChangeUI('vyfi-dex-change-24h', chartHistory.tVyfiDex, vyfiDexTvl); calcChangeUI('minswap-vyfi-change-24h', chartHistory.tVyfiMin, minVyfiTvl); calcChangeUI('vyfi-total-liq-change-24h', chartHistory.tVyfiTotal, vyfiTotalLiq); calcChangeUI('xvyfi-price-change-24h', chartHistory.pXvyfi, pXvyfiDex); calcChangeUI('xvyfi-tvl-change-24h', chartHistory.tXvyfi, xvyfiDexTvl); calcChangeUI('vyfi-xvyfi-price-change-24h', chartHistory.pVyfiXvyfi, pVyfiXvyfiDex); calcChangeUI('vyfi-xvyfi-liq-change-24h', chartHistory.tVyfiXvyfi, vyfiXvyfiTvl);
+
+                    let resVxVyfi = 0; let resVxXvyfi = 0;
+                    if(crossVyfiData && pVyfiDex > 0 && pXvyfiDex > 0) { resVxVyfi = (crossVyfiData.tvl/2)/pVyfiDex; resVxXvyfi = (crossVyfiData.tvl/2)/pXvyfiDex; }
                     
                     currentPoolsVyfi = {
                         vyfi: { resAda: vyfiDexTvl/2, resTok: (vyfiDexTvl/2)/(pVyfiDex||1) },
@@ -1422,50 +1444,54 @@
                         cross: { resVyfi: resVxVyfi, resXvyfi: resVxXvyfi }
                     };
                     recalculateVyfiTriSimulator();
-                } catch(e) { console.error("Error VYFI-XVYFI", e); }
-
-                try {
-                    chartHistory.pVyfiDex.push(pVyfiDex); chartHistory.pVyfiMin.push(priceMinVyfi); chartHistory.tVyfiDex.push(vyfiDexTvl); chartHistory.tVyfiMin.push(minVyfiTvl); chartHistory.tVyfiTotal.push(vyfiDexTvl + minVyfiTvl); chartHistory.pXvyfi.push(pXvyfiDex); chartHistory.tXvyfi.push(xvyfiDexTvl); chartHistory.pVyfiXvyfi.push(pVyfiXvyfiDex); chartHistory.tVyfiXvyfi.push(vyfiXvyfiTvl);
-                    if(chartHistory.pVyfiDex.length > MAX_CHART_POINTS) { chartHistory.pVyfiDex.shift(); chartHistory.pVyfiMin.shift(); chartHistory.tVyfiDex.shift(); chartHistory.tVyfiMin.shift(); chartHistory.tVyfiTotal.shift(); chartHistory.pXvyfi.shift(); chartHistory.tXvyfi.shift(); chartHistory.pVyfiXvyfi.shift(); chartHistory.tVyfiXvyfi.shift(); }
-                    
-                    if(sparkInstances.pVyfiDex) sparkInstances.pVyfiDex.update('none'); if(sparkInstances.pVyfiMin) sparkInstances.pVyfiMin.update('none'); if(sparkInstances.tVyfiDex) sparkInstances.tVyfiDex.update('none'); if(sparkInstances.tVyfiMin) sparkInstances.tVyfiMin.update('none'); if(sparkInstances.tVyfiTotal) sparkInstances.tVyfiTotal.update('none'); if(sparkInstances.pXvyfi) sparkInstances.pXvyfi.update('none'); if(sparkInstances.tXvyfi) sparkInstances.tXvyfi.update('none'); if(sparkInstances.pVyfiXvyfi) sparkInstances.pVyfiXvyfi.update('none'); if(sparkInstances.tVyfiXvyfi) sparkInstances.tVyfiXvyfi.update('none');
-                    
-                    calcChangeUI('vyfi-dex-price-change-24h', chartHistory.pVyfiDex, pVyfiDex); calcChangeUI('minswap-vyfi-price-change-24h', chartHistory.pVyfiMin, priceMinVyfi); calcChangeUI('vyfi-dex-change-24h', chartHistory.tVyfiDex, vyfiDexTvl); calcChangeUI('minswap-vyfi-change-24h', chartHistory.tVyfiMin, minVyfiTvl); calcChangeUI('vyfi-total-liq-change-24h', chartHistory.tVyfiTotal, vyfiDexTvl + minVyfiTvl); calcChangeUI('xvyfi-price-change-24h', chartHistory.pXvyfi, pXvyfiDex); calcChangeUI('xvyfi-tvl-change-24h', chartHistory.tXvyfi, xvyfiDexTvl); calcChangeUI('vyfi-xvyfi-price-change-24h', chartHistory.pVyfiXvyfi, pVyfiXvyfiDex); calcChangeUI('vyfi-xvyfi-liq-change-24h', chartHistory.tVyfiXvyfi, vyfiXvyfiTvl);
-                } catch(e) { console.error("Error Gráficas VyFi", e); }
-
+                } catch(e) { console.error("Error VYFI Ecosystem:", e); }
 
                 // =========================================================================
-                // SISTEMA ORIGINAL (ORACLE / VLRM) BLINDADO
+                // SISTEMA ORACLE / VLRM (Mismo helper seguro)
                 // =========================================================================
                 let priceVlrmAda = 0; let vlrmVyfiAdaReserve = 0; let vlrmVyfiTokReserve = 0; let vlrmAdaTvl = 0;
                 try {
-                    const vlrmVyfiPool = vyfiPoolsList.find(p => p.unitsPair && p.unitsPair.includes('lovelace') && p.unitsPair.includes(VLRM));
-                    if (vlrmVyfiPool) { priceVlrmAda = vlrmVyfiPool.tokenA.unit === 'lovelace' ? vlrmVyfiPool.tokenB.lpRatio?.[vlrmVyfiPool.unitsPair]?.priceRatioAB : vlrmVyfiPool.tokenA.lpRatio?.[vlrmVyfiPool.unitsPair]?.priceRatioBA; vlrmAdaTvl = vlrmVyfiPool.tvl; updateDOM('vlrm-price-ada', `₳ ${(priceVlrmAda||0).toFixed(6)}`); document.getElementById('vlrm-price-ada')?.classList.remove('loading'); updateDOM('vlrm-liq-ada', `₳ ${Math.round(vlrmAdaTvl||0).toLocaleString()}`); vlrmVyfiAdaReserve = vlrmAdaTvl / 2; vlrmVyfiTokReserve = vlrmVyfiAdaReserve / (priceVlrmAda||1); }
-                } catch(e) { console.error("Error VLRM", e); }
+                    const vlrmAdaData = extractVyfiData(vyfiPoolsList, 'lovelace', VLRM);
+                    if(vlrmAdaData) {
+                        priceVlrmAda = vlrmAdaData.price; vlrmAdaTvl = vlrmAdaData.tvl;
+                        updateDOM('vlrm-price-ada', `₳ ${(priceVlrmAda||0).toFixed(6)}`); document.getElementById('vlrm-price-ada')?.classList.remove('loading');
+                        updateDOM('vlrm-liq-ada', `₳ ${Math.round(vlrmAdaTvl||0).toLocaleString()}`);
+                        vlrmVyfiAdaReserve = vlrmAdaTvl / 2; vlrmVyfiTokReserve = vlrmVyfiAdaReserve / (priceVlrmAda||1);
+                    }
+                } catch(e) { console.error("Error VLRM ADA", e); }
 
-                let crossVlrmReserve = 0; let crossOracleReserve = 0; let crossTvl = 0; let rawCrossRatio = 0; let oraclePerVlrmUI = 0;
+                let crossVlrmReserve = 0; let crossOracleReserve = 0; let crossTvl = 0; let oraclePerVlrmUI = 0;
                 try {
-                    const crossPool = vyfiPoolsList.find(p => p.unitsPair && p.unitsPair.includes(VLRM) && p.unitsPair.includes(ORACLE));
-                    if (crossPool) { crossTvl = crossPool.tvl; rawCrossRatio = crossPool.tokenA.unit.includes(VLRM) ? crossPool.tokenB.lpRatio?.[crossPool.unitsPair]?.priceRatioAB : crossPool.tokenA.lpRatio?.[crossPool.unitsPair]?.priceRatioBA; crossVlrmReserve = (crossTvl / 2) / (priceVlrmAda||1); crossOracleReserve = crossVlrmReserve / (rawCrossRatio||1); if (crossVlrmReserve > 0) { oraclePerVlrmUI = crossOracleReserve / crossVlrmReserve; } updateDOM('vlrm-oracle-price', `${(oraclePerVlrmUI||0).toFixed(4)}`); document.getElementById('vlrm-oracle-price')?.classList.remove('loading'); updateDOM('vlrm-oracle-liq-ada', `₳ ${Math.round(crossTvl||0).toLocaleString()}`); }
-                } catch(e) { console.error("Error VLRM-ORACLE", e); }
+                    const crossOracleData = extractVyfiData(vyfiPoolsList, VLRM, ORACLE);
+                    if(crossOracleData) {
+                        oraclePerVlrmUI = crossOracleData.price; crossTvl = crossOracleData.tvl;
+                        crossVlrmReserve = (crossTvl / 2) / (priceVlrmAda||1); crossOracleReserve = crossVlrmReserve / (oraclePerVlrmUI||1);
+                        updateDOM('vlrm-oracle-price', `${(oraclePerVlrmUI||0).toFixed(4)}`); document.getElementById('vlrm-oracle-price')?.classList.remove('loading');
+                        updateDOM('vlrm-oracle-liq-ada', `₳ ${Math.round(crossTvl||0).toLocaleString()}`);
+                    }
+                } catch(e) { console.error("Error VLRM ORACLE", e); }
 
                 let totalOracleLiqAda = 0, priceVyfi = 0, priceMin = 0; let vyfiTvLAda = 0, minTvlAda = 0;
                 try {
-                    const oracleVyfiPool = vyfiPoolsList.find(p => p.unitsPair && p.unitsPair.includes('lovelace') && p.unitsPair.includes(ORACLE));
-                    if (oracleVyfiPool) { priceVyfi = oracleVyfiPool.tokenA.unit === 'lovelace' ? oracleVyfiPool.tokenB.lpRatio?.[oracleVyfiPool.unitsPair]?.priceRatioAB : oracleVyfiPool.tokenA.lpRatio?.[oracleVyfiPool.unitsPair]?.priceRatioBA; vyfiTvLAda = oracleVyfiPool.tvl; totalOracleLiqAda += vyfiTvLAda; updateDOM('oracle-vyfi-price', `₳ ${(priceVyfi||0).toFixed(6)}`); document.getElementById('oracle-vyfi-price')?.classList.remove('loading'); updateDOM('oracle-vyfi-liq', `₳ ${Math.round(vyfiTvLAda||0).toLocaleString()}`); document.getElementById('oracle-vyfi-liq')?.classList.remove('loading'); }
+                    const oracleVyfiData = extractVyfiData(vyfiPoolsList, 'lovelace', ORACLE);
+                    if(oracleVyfiData) {
+                        priceVyfi = oracleVyfiData.price; vyfiTvLAda = oracleVyfiData.tvl; totalOracleLiqAda += vyfiTvLAda;
+                        updateDOM('oracle-vyfi-price', `₳ ${(priceVyfi||0).toFixed(6)}`); document.getElementById('oracle-vyfi-price')?.classList.remove('loading');
+                        updateDOM('oracle-vyfi-liq', `₳ ${Math.round(vyfiTvLAda||0).toLocaleString()}`);
+                    }
                 } catch(e) { console.error("Error ORACLE Vyfi", e); }
 
                 try {
                     if (data.minPrice && data.minPrice.length > 0) { priceMin = parseFloat(data.minPrice[0].close); updateDOM('oracle-min-price', `₳ ${priceMin.toFixed(6)}`); document.getElementById('oracle-min-price')?.classList.remove('loading'); if (data.minTvl && data.minTvl.length > 0) { minTvlAda = parseFloat(data.minTvl[data.minTvl.length - 1].value); totalOracleLiqAda += minTvlAda; updateDOM('oracle-min-liq', `₳ ${Math.round(minTvlAda).toLocaleString()}`); document.getElementById('oracle-min-liq')?.classList.remove('loading'); } }
                     updateDOM('oracle-total-liq', `₳ ${Math.round(totalOracleLiqAda).toLocaleString()}`);
                 } catch(e) { console.error("Error ORACLE Min", e); }
-                
+
                 try {
-                    updateSparklines(vlrmAdaTvl, crossTvl, vyfiTvLAda, minTvlAda, vaultTvlData, priceVlrmAda, oraclePerVlrmUI, priceVyfi, priceMin);
+                    updateSparklines(vlrmAdaTvl, crossTvl, vyfiTvLAda, minTvlAda, vaultTvlData, priceVlrmAda, oraclePerVlrmUI, priceVyfi, priceMin, pVyfiDex, priceMinVyfi, vyfiDexTvl, minVyfiTvl, vyfiTotalLiq, pXvyfiDex, xvyfiDexTvl, pVyfiXvyfiDex, vyfiXvyfiTvl);
                     calcChangeUI('vlrm-ada-change-24h', chartHistory.vlrmAda, vlrmAdaTvl); calcChangeUI('vlrm-oracle-change-24h', chartHistory.vlrmOracle, crossTvl); calcChangeUI('oracle-vyfi-change-24h', chartHistory.oracleVyfi, vyfiTvLAda); calcChangeUI('oracle-min-change-24h', chartHistory.oracleMin, minTvlAda); calcChangeUI('vault-change-24h', chartHistory.vault, vaultTvlData); calcChangeUI('total-liq-change-24h', chartHistory.totalLiq, totalOracleLiqAda); calcChangeUI('vlrm-price-change-24h', chartHistory.pVlrmAda, priceVlrmAda); calcChangeUI('vlrm-oracle-price-change-24h', chartHistory.pVlrmOracle, oraclePerVlrmUI); calcChangeUI('oracle-vyfi-price-change-24h', chartHistory.pOracleVyfi, priceVyfi); calcChangeUI('oracle-min-price-change-24h', chartHistory.pOracleMin, priceMin);
                     currentPools.vyfi = { price: priceVyfi, reserveAda: priceVyfi > 0 ? (vyfiTvLAda / 2) : 0, reserveTok: priceVyfi > 0 ? (vyfiTvLAda / 2) / priceVyfi : 0 }; currentPools.minswap = { price: priceMin, reserveAda: priceMin > 0 ? (minTvlAda / 2) : 0, reserveTok: priceMin > 0 ? (minTvlAda / 2) / priceMin : 0 }; currentPools.vlrmAda = { resAda: vlrmVyfiAdaReserve, resTok: vlrmVyfiTokReserve }; currentPools.crossVO = { resVlrm: crossVlrmReserve, resOracle: crossOracleReserve };
-                } catch(e) { console.error("Error Gráficas Oracle", e); }
-                
+                } catch(e) { console.error("Error Gráficas", e); }
+
                 let bestDeviation = 0; let targetDexForVault = "";
                 try {
                     const vaultCard = document.querySelector('[gs-id="card-arb-vault"] .card');
