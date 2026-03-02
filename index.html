@@ -112,7 +112,6 @@
 
         .card { border-radius: 20px; padding: 20px 25px; position: absolute; top: 0; left: 0; right: 0; bottom: 0; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); transition: background 0.3s ease, box-shadow 0.3s ease; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; }
         
-        /* SOMBRAS CENTRALES INCREMENTADAS UN 10% (+ tamaño y + opacidad) */
         .card-ada { box-shadow: 0 0 33px rgba(0, 0, 0, 0.66); background: rgba(10, 11, 16, 0.98); }
         .card-ada:hover { box-shadow: 0 0 44px rgba(0, 0, 0, 0.88); background: rgba(14, 15, 24, 1); }
         .card-vault { box-shadow: 0 0 33px rgba(0, 0, 0, 0.66); background: rgba(13, 11, 8, 0.98); }
@@ -889,9 +888,6 @@
                         labels: [], spread: [], discrepancy: [], vlrmOracleSpread: [], vlrmAda: [], vlrmOracle: [], oracleVyfi: [], oracleMin: [], vault: [], totalLiq: [], pVlrmAda: [], pVlrmOracle: [], pOracleVyfi: [], pOracleMin: []
                     };
                     
-                    // ==========================================
-                    // PROTECCIÓN DE KV (Alineación a la derecha)
-                    // ==========================================
                     let totalLen = cloudHistory.labels.length;
                     
                     const getRightAligned = (arr, idx) => {
@@ -951,23 +947,19 @@
                         }
                     }
 
-                    // BACKFILL UNIFORME PARA TODAS LAS GRÁFICAS (SIN DEFORMAR)
                     const keysFill = Object.keys(expandedHistory);
                     for (let key of keysFill) { 
                         if (key === 'labels') continue; 
                         
-                        // Limpiar ceros que deberían ser nulos en los precios
                         for (let k = 0; k < expandedHistory[key].length; k++) { 
                             if (expandedHistory[key][k] === 0 && key.startsWith('p')) {
                                 expandedHistory[key][k] = null;
                             }
                         }
 
-                        // Buscar el primer valor real
                         let firstGood = expandedHistory[key].find(v => v !== null && v !== undefined && !isNaN(v));
                         let lastGood = firstGood !== undefined ? firstGood : 0; 
                         
-                        // Rellenar huecos con el último valor válido (linea plana hacia atrás)
                         for (let k = 0; k < expandedHistory[key].length; k++) { 
                             let val = expandedHistory[key][k]; 
                             if (val !== null && val !== undefined && !isNaN(val)) { 
@@ -997,11 +989,11 @@
 
         async function fetchAdaData() {
             try {
-                const response = await fetch('https://min-api.cryptocompare.com/data/v2/histohour?fsym=ADA&tsym=USD&limit=24');
+                const response = await fetch('https://api.coingecko.com/api/v3/coins/cardano/market_chart?vs_currency=usd&days=1');
                 const data = await response.json();
-                if(data.Response !== "Success") throw new Error("API Limitada");
+                if(!data.prices) throw new Error("API Limitada por CoinGecko");
                 
-                const prices = data.Data.Data.map(p => p.close);
+                const prices = data.prices.map(p => p[1]);
                 currentAdaUsd = prices[prices.length - 1]; 
                 const oldestAda = prices[0]; 
                 const adaChange = ((currentAdaUsd - oldestAda) / oldestAda) * 100;
@@ -1012,11 +1004,13 @@
                 updateDOM('ada-price-usd-oracle', `$${currentAdaUsd.toFixed(4)} <span id="ada-change-24h-oracle" class="change-badge" style="color:${changeColor}">${changeText}</span>`);
 
                 if(sparkInstances.adaOracle) { 
-                    // Expansión matemática a 2880 puntos para uniformidad visual
                     let expandedAda = [];
+                    let multiplier = Math.ceil(2880 / prices.length);
                     for(let i = 0; i < prices.length; i++) {
-                        for(let j = 0; j < 120; j++) { expandedAda.push(prices[i]); }
+                        for(let j = 0; j < multiplier; j++) { expandedAda.push(prices[i]); }
                     }
+                    expandedAda = expandedAda.slice(0, 2880); 
+                    
                     sparkInstances.adaOracle.data.labels = chartHistory.labels.length > 0 ? chartHistory.labels : Array(2880).fill(''); 
                     sparkInstances.adaOracle.data.datasets[0].data = expandedAda; 
                     sparkInstances.adaOracle.update('none'); 
@@ -1034,7 +1028,6 @@
                 
                 let vaultTvlData = parseFloat(data.vaultTvl) || 0;
                 
-                // Fetch directo de seguridad para mantener el tiempo real al milisegundo
                 try {
                     const vaultRes = await fetch(`https://app.l4va.org/api/v1/vaults/5ac2ac4f-9079-40cb-94ae-a265bfba3bcd?t=${Date.now()}`);
                     if(vaultRes.ok) { 
@@ -1079,6 +1072,7 @@
                 
                 let bestDeviation = 0; let targetDexForVault = "";
                 try {
+                    const vaultCard = document.querySelector('[gs-id="card-arb-vault"] .card');
                     if (vaultTvlData > 0) {
                         const fairPrice = vaultTvlData / ORACLE_TOTAL_SUPPLY; 
                         updateDOM('vault-tvl', `₳ ${Math.round(vaultTvlData).toLocaleString()}`); 
