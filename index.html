@@ -889,18 +889,28 @@
                         labels: [], spread: [], discrepancy: [], vlrmOracleSpread: [], vlrmAda: [], vlrmOracle: [], oracleVyfi: [], oracleMin: [], vault: [], totalLiq: [], pVlrmAda: [], pVlrmOracle: [], pOracleVyfi: [], pOracleMin: []
                     };
                     
-                    // Expansión a 2880 puntos (30x)
-                    for (let i = 0; i < cloudHistory.labels.length; i++) {
+                    // ==========================================
+                    // PROTECCIÓN DE KV (Alineación a la derecha)
+                    // ==========================================
+                    let totalLen = cloudHistory.labels.length;
+                    
+                    const getRightAligned = (arr, idx) => {
+                        if (!arr || !Array.isArray(arr)) return null;
+                        let offset = totalLen - arr.length;
+                        return idx >= offset ? arr[idx - offset] : null;
+                    };
+
+                    for (let i = 0; i < totalLen; i++) {
                         for(let j=0; j<30; j++) {
-                            expandedHistory.labels.push(cloudHistory.labels ? cloudHistory.labels[i] : '00:00'); 
-                            expandedHistory.spread.push(cloudHistory.spread ? cloudHistory.spread[i] : null); 
-                            expandedHistory.discrepancy.push(cloudHistory.discrepancy ? cloudHistory.discrepancy[i] : null);
+                            expandedHistory.labels.push(cloudHistory.labels[i] || '00:00'); 
+                            expandedHistory.spread.push(getRightAligned(cloudHistory.spread, i)); 
+                            expandedHistory.discrepancy.push(getRightAligned(cloudHistory.discrepancy, i));
                             
-                            let vPrice = (cloudHistory.pVlrmAda && cloudHistory.pVlrmAda[i]) ? cloudHistory.pVlrmAda[i] : null; 
-                            let oPriceVy = (cloudHistory.pOracleVyfi && cloudHistory.pOracleVyfi[i]) ? cloudHistory.pOracleVyfi[i] : null; 
-                            let oPriceMin = (cloudHistory.pOracleMin && cloudHistory.pOracleMin[i]) ? cloudHistory.pOracleMin[i] : null; 
+                            let vPrice = getRightAligned(cloudHistory.pVlrmAda, i); 
+                            let oPriceVy = getRightAligned(cloudHistory.pOracleVyfi, i); 
+                            let oPriceMin = getRightAligned(cloudHistory.pOracleMin, i); 
                             let oPrice = (oPriceVy && oPriceVy > 0) ? oPriceVy : oPriceMin; 
-                            let voRatio = (cloudHistory.pVlrmOracle && cloudHistory.pVlrmOracle[i]) ? cloudHistory.pVlrmOracle[i] : null;
+                            let voRatio = getRightAligned(cloudHistory.pVlrmOracle, i);
                             
                             let voSpread = null; 
                             if (vPrice !== null && oPrice !== null && voRatio !== null && vPrice > 0 && oPrice > 0) { 
@@ -909,14 +919,14 @@
                             }
                             
                             expandedHistory.vlrmOracleSpread.push(voSpread); 
-                            expandedHistory.vlrmAda.push(cloudHistory.vlrmAda ? cloudHistory.vlrmAda[i] : null); 
-                            expandedHistory.vlrmOracle.push(cloudHistory.vlrmOracle ? cloudHistory.vlrmOracle[i] : null); 
-                            expandedHistory.oracleVyfi.push(cloudHistory.oracleVyfi ? cloudHistory.oracleVyfi[i] : null); 
-                            expandedHistory.oracleMin.push(cloudHistory.oracleMin ? cloudHistory.oracleMin[i] : null); 
-                            expandedHistory.vault.push(cloudHistory.vault ? cloudHistory.vault[i] : null); 
+                            expandedHistory.vlrmAda.push(getRightAligned(cloudHistory.vlrmAda, i)); 
+                            expandedHistory.vlrmOracle.push(getRightAligned(cloudHistory.vlrmOracle, i)); 
+                            expandedHistory.oracleVyfi.push(getRightAligned(cloudHistory.oracleVyfi, i)); 
+                            expandedHistory.oracleMin.push(getRightAligned(cloudHistory.oracleMin, i)); 
+                            expandedHistory.vault.push(getRightAligned(cloudHistory.vault, i)); 
                             
-                            let liqVyfi = (cloudHistory.oracleVyfi && cloudHistory.oracleVyfi[i] !== undefined) ? cloudHistory.oracleVyfi[i] : null; 
-                            let liqMin = (cloudHistory.oracleMin && cloudHistory.oracleMin[i] !== undefined) ? cloudHistory.oracleMin[i] : null; 
+                            let liqVyfi = getRightAligned(cloudHistory.oracleVyfi, i);
+                            let liqMin = getRightAligned(cloudHistory.oracleMin, i);
                             if (liqVyfi !== null || liqMin !== null) {
                                 expandedHistory.totalLiq.push((liqVyfi || 0) + (liqMin || 0));
                             } else {
@@ -941,23 +951,23 @@
                         }
                     }
 
-                    // BACKFILL UNIFORME PARA TODAS LAS GRÁFICAS
+                    // BACKFILL UNIFORME PARA TODAS LAS GRÁFICAS (SIN DEFORMAR)
                     const keysFill = Object.keys(expandedHistory);
                     for (let key of keysFill) { 
                         if (key === 'labels') continue; 
                         
-                        // 1. Limpiar ceros que deberían ser nulos en los precios para evitar caídas
+                        // Limpiar ceros que deberían ser nulos en los precios
                         for (let k = 0; k < expandedHistory[key].length; k++) { 
                             if (expandedHistory[key][k] === 0 && key.startsWith('p')) {
                                 expandedHistory[key][k] = null;
                             }
                         }
 
-                        // 2. Buscar el primer valor real (firstGood)
+                        // Buscar el primer valor real
                         let firstGood = expandedHistory[key].find(v => v !== null && v !== undefined && !isNaN(v));
                         let lastGood = firstGood !== undefined ? firstGood : 0; 
                         
-                        // 3. Rellenar huecos (Backfill + Forwardfill)
+                        // Rellenar huecos con el último valor válido (linea plana hacia atrás)
                         for (let k = 0; k < expandedHistory[key].length; k++) { 
                             let val = expandedHistory[key][k]; 
                             if (val !== null && val !== undefined && !isNaN(val)) { 
@@ -1002,7 +1012,7 @@
                 updateDOM('ada-price-usd-oracle', `$${currentAdaUsd.toFixed(4)} <span id="ada-change-24h-oracle" class="change-badge" style="color:${changeColor}">${changeText}</span>`);
 
                 if(sparkInstances.adaOracle) { 
-                    // Expansión matemática de la gráfica ADA (de 24 a 2880 puntos para que ocupe todo el ancho visual igual que las demás)
+                    // Expansión matemática a 2880 puntos para uniformidad visual
                     let expandedAda = [];
                     for(let i = 0; i < prices.length; i++) {
                         for(let j = 0; j < 120; j++) { expandedAda.push(prices[i]); }
@@ -1024,6 +1034,7 @@
                 
                 let vaultTvlData = parseFloat(data.vaultTvl) || 0;
                 
+                // Fetch directo de seguridad para mantener el tiempo real al milisegundo
                 try {
                     const vaultRes = await fetch(`https://app.l4va.org/api/v1/vaults/5ac2ac4f-9079-40cb-94ae-a265bfba3bcd?t=${Date.now()}`);
                     if(vaultRes.ok) { 
