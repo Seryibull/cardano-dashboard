@@ -112,19 +112,20 @@
 
         .card { border-radius: 20px; padding: 20px 25px; position: absolute; top: 0; left: 0; right: 0; bottom: 0; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); transition: background 0.3s ease, box-shadow 0.3s ease; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; }
         
-        .card-ada { box-shadow: -10px 10px 40px rgba(0, 0, 0, 0.4); background: rgba(10, 11, 16, 0.98); }
-        .card-ada:hover { box-shadow: -15px 15px 50px rgba(0, 0, 0, 0.6); background: rgba(14, 15, 24, 1); }
-        .card-vault { box-shadow: -10px 10px 40px rgba(0, 0, 0, 0.4); background: rgba(13, 11, 8, 0.98); }
-        .card-vault:hover { box-shadow: -15px 15px 50px rgba(0, 0, 0, 0.6); background: rgba(18, 15, 10, 1); }
-        .card-orange { box-shadow: -10px 10px 40px rgba(0, 0, 0, 0.4); background: rgba(14, 8, 6, 0.98); }
-        .card-orange:hover { box-shadow: -15px 15px 50px rgba(0, 0, 0, 0.6); background: rgba(18, 10, 8, 1); }
-        [gs-id="card-chart"] .card { box-shadow: -10px 10px 40px rgba(0, 0, 0, 0.4); background: rgba(10, 11, 16, 0.98); }
-        [gs-id="card-chart"] .card:hover { box-shadow: -15px 15px 50px rgba(0, 0, 0, 0.6); background: rgba(14, 15, 24, 1); }
+        /* SOMBRAS CENTRALES Y MÁS OSCURAS */
+        .card-ada { box-shadow: 0 0 30px rgba(0, 0, 0, 0.6); background: rgba(10, 11, 16, 0.98); }
+        .card-ada:hover { box-shadow: 0 0 40px rgba(0, 0, 0, 0.8); background: rgba(14, 15, 24, 1); }
+        .card-vault { box-shadow: 0 0 30px rgba(0, 0, 0, 0.6); background: rgba(13, 11, 8, 0.98); }
+        .card-vault:hover { box-shadow: 0 0 40px rgba(0, 0, 0, 0.8); background: rgba(18, 15, 10, 1); }
+        .card-orange { box-shadow: 0 0 30px rgba(0, 0, 0, 0.6); background: rgba(14, 8, 6, 0.98); }
+        .card-orange:hover { box-shadow: 0 0 40px rgba(0, 0, 0, 0.8); background: rgba(18, 10, 8, 1); }
+        [gs-id="card-chart"] .card { box-shadow: 0 0 30px rgba(0, 0, 0, 0.6); background: rgba(10, 11, 16, 0.98); }
+        [gs-id="card-chart"] .card:hover { box-shadow: 0 0 40px rgba(0, 0, 0, 0.8); background: rgba(14, 15, 24, 1); }
 
         /* EFECTO: RESPLANDOR VERDE */
         @keyframes greenAlertPulse {
-            0% { box-shadow: -10px 10px 40px rgba(16, 185, 129, 0.3), inset 0 0 10px rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.4); }
-            100% { box-shadow: -15px 15px 60px rgba(16, 185, 129, 0.9), inset 0 0 20px rgba(16, 185, 129, 0.3); border-color: rgba(16, 185, 129, 0.9); }
+            0% { box-shadow: 0 0 40px rgba(16, 185, 129, 0.3), inset 0 0 10px rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.4); }
+            100% { box-shadow: 0 0 60px rgba(16, 185, 129, 0.9), inset 0 0 20px rgba(16, 185, 129, 0.3); border-color: rgba(16, 185, 129, 0.9); }
         }
         .glow-active { animation: greenAlertPulse 1.5s infinite alternate ease-in-out !important; border-color: rgba(16, 185, 129, 0.8) !important; background: rgba(10, 15, 15, 0.98) !important; }
 
