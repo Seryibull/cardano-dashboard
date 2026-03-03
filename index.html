@@ -47,6 +47,17 @@
         :fullscreen { background-color: #0a0814; padding: 40px 20px; overflow-y: auto; }
         :-webkit-full-screen { background-color: #0a0814; padding: 40px 20px; overflow-y: auto;}
 
+        /* ⏱️ BARRA DE PROGRESO DEL SERVER */
+        #refresh-bar { position: fixed; top: 0; left: 0; width: 0%; height: 2px; background: var(--neon-orange); z-index: 10000; box-shadow: 0 0 10px var(--neon-orange); transition: width 1s linear; }
+
+        /* 🟢 LATIDO (HEARTBEAT) */
+        .live-dot { display: inline-block; width: 8px; height: 8px; background-color: #10b981; border-radius: 50%; box-shadow: 0 0 8px #10b981; animation: pulseLive 1.5s infinite; margin-left: 10px; vertical-align: middle; margin-bottom: 2px;}
+        @keyframes pulseLive { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.8); } 100% { opacity: 1; transform: scale(1); } }
+
+        /* 🎯 BOTÓN AUTO-FILL OPTIMIZADOR */
+        .clickable-optimal { cursor: pointer; border-bottom: 1px dashed var(--neon-orange); color: var(--neon-orange); transition: 0.2s; font-weight: 800;}
+        .clickable-optimal:hover { text-shadow: 0 0 10px var(--neon-orange); background: rgba(255,123,0,0.15); padding: 2px 4px; border-radius: 4px; }
+
         /* 🔒 ESTILOS DEL ESCUDO API */
         #auth-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10, 8, 20, 0.95); backdrop-filter: blur(20px); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.5s ease; }
         .auth-box { background: var(--card-bg); padding: 40px; border-radius: 20px; border: 1px solid var(--neon-orange); box-shadow: 0 0 50px rgba(255, 123, 0, 0.2); text-align: center; max-width: 400px; width: 90%; }
@@ -196,6 +207,8 @@
 </head>
 <body>
 
+    <div id="refresh-bar"></div>
+
     <div id="auth-screen">
         <div class="auth-box">
             <div class="auth-title">L4VA TERMINAL</div>
@@ -227,6 +240,7 @@
                     L4VA Protocol 
                     <span style="color: var(--text-secondary); font-weight: 400; margin-left: 8px;">| Arbitrage</span> 
                     <span class="version-badge">V 1.0</span>
+                    <span class="live-dot" title="Live Connection"></span>
                 </h1>
                 <div class="tabs-container" style="margin: 0; padding: 0; border: none;">
                     <button id="tab-oracle" class="tab-btn active" onclick="switchEcosystem('oracle')">🔥 ORACLE / VLRM</button>
@@ -480,11 +494,10 @@
         const ORACLE_TOTAL_SUPPLY = 1000000;
         
         const VYFI_LINK = "https://app.vyfi.io/dex?tokenA=lovelace&tokenB=804f5530198154628ce71b6bd5a889410ea9036c64188597af2f21bc56594649";
-        const MINSWAP_LINK = "https://minswap.org/swap?cA=&tA=&cB=804f5530198154628ce71b6bd5a889410ea9036c64188597af2f21bc56594649";
+        const MINSWAP_LINK = "https://app-monorepo-mainnet-prod.minswap.org/swap?currencySymbolA=&tokenNameA=&currencySymbolB=328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b2&tokenNameB=7393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
 
-        const LAYOUT_VERSION = "v6.1"; 
+        const LAYOUT_VERSION = "v6.0"; 
 
-        // Configuración de Umbrales de Alerta
         let defaultConf = { simDex: 1000, simTri: 1000, feeNet: 0.2, feeMin: 0.7, feeVyfi: 1.9, lpFeeMin: 0.3, lpFeeVyfi: 0.3, targetSpread: 25, targetDisc: 30, targetTri: 5 };
         let savedConf = JSON.parse(localStorage.getItem('l4va_config')) || {};
         let conf = { ...defaultConf, ...savedConf }; 
@@ -509,6 +522,29 @@
         let gridOracle;
         let grid; 
         let isEditMode = false;
+        let timeToRefresh = 30;
+
+        // --- SISTEMA DE LATIDO / PROGRESO ---
+        function startProgressTimer() {
+            setInterval(() => {
+                timeToRefresh--;
+                if(timeToRefresh < 0) timeToRefresh = 30;
+                let pct = ((30 - timeToRefresh) / 30) * 100;
+                let bar = document.getElementById('refresh-bar');
+                if(bar) bar.style.width = pct + '%';
+            }, 1000);
+        }
+
+        // --- FUNCIÓN AUTO-FILL DEL OPTIMIZADOR ---
+        window.applyOptimalInvest = function(amount, inputId, confKey) {
+            let el = document.getElementById(inputId);
+            if(el) {
+                el.value = amount;
+                let range = document.getElementById(inputId.replace('input', 'range'));
+                if (range) range.value = amount > 200 ? 200 : amount;
+                updateSimConfig(inputId, confKey);
+            }
+        };
 
         function updateDOM(id, html, color) {
             try {
@@ -863,7 +899,7 @@
             }
             if(optEl) {
                 if (bestProfit > 0) { 
-                    optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> Max profit <b>+${bestProfit.toFixed(2)} ADA</b> (Invest <b>${optimalInvest} ADA</b>)`; 
+                    optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> Max profit <b>+${bestProfit.toFixed(2)} ADA</b> (Invest <span class="clickable-optimal" onclick="applyOptimalInvest(${optimalInvest}, 'sim-ada-input-oracle', 'simDex')">${optimalInvest} ADA</span>)`; 
                     optEl.style.color = '#10b981'; 
                 }
                 else { 
@@ -929,10 +965,9 @@
             if(rA) rA.className = "route-inactive"; if(rB) rB.className = "route-inactive"; if(triAnim) triAnim.style.display = "none";
             if(optEl) {
                 if (bestProfit > 0) { 
-                    optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> Max profit <b>+${bestProfit.toFixed(2)} ADA</b> (Invest <b>${optimalInvest} ADA</b>)`; 
+                    optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> Max profit <b>+${bestProfit.toFixed(2)} ADA</b> (Invest <span class="clickable-optimal" onclick="applyOptimalInvest(${optimalInvest}, 'sim-tri-input-oracle', 'simTri')">${optimalInvest} ADA</span>)`; 
                     optEl.style.color = '#10b981'; 
                     
-                    // MODIFICADO: Aplicar efecto de brillo si supera el umbral del usuario (Triangular Benefit %)
                     if(cardEl) {
                         if (bestPercent >= conf.targetTri) cardEl.classList.add('glow-active');
                         else cardEl.classList.remove('glow-active');
@@ -1237,6 +1272,10 @@
                     currentPools.vyfi = { price: priceVyfi, reserveAda: priceVyfi > 0 ? (vyfiTvLAda / 2) : 0, reserveTok: priceVyfi > 0 ? (vyfiTvLAda / 2) / priceVyfi : 0 }; currentPools.minswap = { price: priceMin, reserveAda: priceMin > 0 ? (minTvlAda / 2) : 0, reserveTok: priceMin > 0 ? (minTvlAda / 2) / priceMin : 0 }; currentPools.vlrmAda = { resAda: vlrmVyfiAdaReserve, resTok: vlrmVyfiTokReserve }; currentPools.crossVO = { resVlrm: crossVlrmReserve, resOracle: crossOracleReserve };
                 } catch(e) { console.error(e); }
                 
+                // --- Deep Links Config ---
+                let currentInvestAda = document.getElementById('sim-ada-input-oracle') ? document.getElementById('sim-ada-input-oracle').value : "";
+                let dexAmountParam = currentInvestAda ? `&exactIn=${currentInvestAda}` : "";
+
                 let bestDeviation = 0; let targetDexForVault = "";
                 try {
                     if (vaultTvlData > 0) {
@@ -1250,9 +1289,8 @@
                             const vaultCard = document.querySelector('[gs-id="card-arb-vault"] .card');
                             animateValue('discrepancy', 'vault-banner-discrepancy', bestDeviation, val => (val>0?'+':'') + val.toFixed(2) + '%');
 
-                            let targetLink = targetDexForVault === "Minswap" ? MINSWAP_LINK : VYFI_LINK; 
+                            let targetLink = targetDexForVault === "Minswap" ? MINSWAP_LINK + dexAmountParam : VYFI_LINK + dexAmountParam; 
                             
-                            // MODIFICADO: Lógica de umbral e iluminación para Vault Discrepancy
                             if (Math.abs(bestDeviation) < conf.targetDisc) { 
                                 updateDOM('vault-banner-discrepancy', undefined, "rgba(255, 255, 255, 0.5)"); 
                                 if(vaultActionEl) vaultActionEl.innerHTML = `<span style="color: rgba(255, 255, 255, 0.6);">Balanced</span>`; 
@@ -1285,15 +1323,14 @@
                             oracleCardSpread.style.color = spread >= conf.targetSpread ? "#10b981" : "rgba(255,255,255,0.5)";
                         }
 
-                        // MODIFICADO: Lógica de umbral e iluminación para DEX Spread
                         if (spread < conf.targetSpread) { 
                             if(oracleCardActionEl) oracleCardActionEl.innerHTML = `<span style="color: rgba(255, 255, 255, 0.6);">Low spread</span>`;
                             if(dexCard) dexCard.classList.remove('glow-active');
                         } 
                         else { 
                             let actionHTML = "";
-                            if (priceVyfi > priceMin) { actionHTML = `<a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Buy Minswap</a> <a href="${VYFI_LINK}" target="_blank" class="badge-dark">Sell VyFi</a>`; } 
-                            else { actionHTML = `<a href="${VYFI_LINK}" target="_blank" class="badge-dark">Buy VyFi</a> <a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Sell Minswap</a>`; }
+                            if (priceVyfi > priceMin) { actionHTML = `<a href="${MINSWAP_LINK}${dexAmountParam}" target="_blank" class="badge-dark">Buy Minswap</a> <a href="${VYFI_LINK}${dexAmountParam}" target="_blank" class="badge-dark">Sell VyFi</a>`; } 
+                            else { actionHTML = `<a href="${VYFI_LINK}${dexAmountParam}" target="_blank" class="badge-dark">Buy VyFi</a> <a href="${MINSWAP_LINK}${dexAmountParam}" target="_blank" class="badge-dark">Sell Minswap</a>`; }
                             if(oracleCardActionEl) oracleCardActionEl.innerHTML = actionHTML;
                             if(dexCard) dexCard.classList.add('glow-active');
                         }
@@ -1301,12 +1338,28 @@
                     
                     let primaryOraclePrice = priceVyfi > 0 ? priceVyfi : priceMin; 
                     if (priceVlrmAda > 0 && primaryOraclePrice > 0 && oraclePerVlrmUI > 0) { let valueDirect = priceVlrmAda; let valueCross = oraclePerVlrmUI * primaryOraclePrice; voSpread = ((Math.max(valueDirect, valueCross) - Math.min(valueDirect, valueCross)) / Math.min(valueDirect, valueCross)) * 100; }
-                    updateMainChart(spread, bestDeviation, voSpread); recalculateSimulators();
+                    
+                    updateMainChart(spread, bestDeviation, voSpread); 
+                    recalculateSimulators();
+                    
+                    // Reseteo de la barra de progreso
+                    timeToRefresh = 30;
+                    document.getElementById('refresh-bar').style.width = '0%';
                 } catch(e) { console.error("Error Spread", e); }
             } catch (error) { console.error("General error:", error); }
         }
 
-        async function startEngine() { initSortable(); initCharts(); await fetchHistoryFromCloudflare(); await fetchAdaData(); await fetchDexData(); fetchInterval = setInterval(async () => { await fetchAdaData(); await fetchDexData(); }, 30000); }
+        async function startEngine() { 
+            initSortable(); initCharts(); 
+            startProgressTimer(); // Inicia el reloj de latido
+            await fetchHistoryFromCloudflare(); 
+            await fetchAdaData(); 
+            await fetchDexData(); 
+            fetchInterval = setInterval(async () => { 
+                await fetchAdaData(); 
+                await fetchDexData(); 
+            }, 30000); 
+        }
         window.onload = () => { if (!userPasskey) { showAuthScreen(); } else { startEngine(); } };
     </script>
 </body>
