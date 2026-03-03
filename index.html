@@ -37,8 +37,10 @@
         body { 
             zoom: 0.9;
             font-family: 'Inter', sans-serif; 
-            background: linear-gradient(rgba(10, 8, 20, 0.4), rgba(10, 8, 20, 0.75)), url('https://app.l4va.org/assets/banner-bg.webp');
+            /* Se eliminó el gradiente oscurecedor para mostrar el brillo original de la imagen */
+            background: url('https://app.l4va.org/assets/banner-bg.webp');
             background-size: cover; background-position: center top; background-attachment: fixed;
+            background-color: #0a0814;
             color: var(--text-primary); margin: 0; padding: 20px 20px; min-height: 100vh; 
         }
 
@@ -180,7 +182,7 @@
         .setting-row { margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem;}
         .setting-input { width: 60px; padding: 5px; border-radius: 5px; border: none; background: rgba(255,255,255,0.1); color: white; text-align: center; font-family: 'Inter', sans-serif;}
         
-        .btn-save { background: var(--gradient-fire); color: white; border: none; padding: 12px; width: 100%; border-radius: 10px; font-weight: bold; cursor: margin-top: 15px; transition: transform 0.2s;}
+        .btn-save { background: var(--gradient-fire); color: white; border: none; padding: 12px; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 15px; transition: transform 0.2s;}
         .btn-save:hover { transform: scale(1.02); }
         .btn-reset { background: rgba(255, 255, 255, 0.05); color: var(--text-secondary); border: 1px solid rgba(255,255,255,0.1); padding: 10px; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.2s; font-size: 0.85rem;}
         .btn-reset:hover { background: rgba(255, 255, 255, 0.1); color: white; border-color: rgba(255,255,255,0.3); }
@@ -256,23 +258,7 @@
 
     <div class="grid-stack grid-container" id="dashboard-oracle">
         
-        <div class="grid-stack-item drag-item" gs-id="card-ada-oracle" gs-w="4" gs-h="2" gs-x="0" gs-y="0">
-            <div class="grid-stack-item-content card card-ada">
-                <div style="flex-shrink: 0;">
-                    <div class="card-title ada-title">ADA</div>
-                    <div class="data-row">
-                        <span class="data-value" id="ada-price-usd-oracle" style="font-size: 1.25rem;">
-                            <span class="loading">Loading...</span>
-                        </span>
-                    </div>
-                </div>
-                <div class="spark-wrapper" style="height: 55px !important; min-height: 55px !important; max-height: 55px !important; margin-top: auto;">
-                    <canvas id="spark-ada-oracle"></canvas>
-                </div>
-            </div>
-        </div>
-
-        <div class="grid-stack-item drag-item" gs-id="card-arb-vault" gs-w="8" gs-h="2" gs-x="4" gs-y="0">
+        <div class="grid-stack-item drag-item" gs-id="card-arb-vault" gs-w="5" gs-h="2" gs-x="0" gs-y="0">
             <div class="grid-stack-item-content card card-vault">
                 <div style="flex-shrink: 0;">
                     <div class="card-title" style="color: var(--vault-color);">Vault relics fair price ORACLE</div>
@@ -291,11 +277,27 @@
             </div>
         </div>
 
+        <div class="grid-stack-item drag-item" gs-id="card-ada-oracle" gs-w="5" gs-h="2" gs-x="7" gs-y="0">
+            <div class="grid-stack-item-content card card-ada">
+                <div style="flex-shrink: 0;">
+                    <div class="card-title ada-title">ADA</div>
+                    <div class="data-row">
+                        <span class="data-value" id="ada-price-usd-oracle" style="font-size: 1.25rem;">
+                            <span class="loading">Loading...</span>
+                        </span>
+                    </div>
+                </div>
+                <div class="spark-wrapper" style="height: 85px !important; min-height: 85px !important; max-height: 85px !important; margin-top: auto;">
+                    <canvas id="spark-ada-oracle"></canvas>
+                </div>
+            </div>
+        </div>
+
         <div class="grid-stack-item drag-item" gs-id="card-oracle-ada" gs-w="6" gs-h="5" gs-x="0" gs-y="2">
             <div class="grid-stack-item-content card card-vault" style="display: flex; flex-direction: column; justify-content: space-between;">
                 
                 <div style="flex-shrink: 0;">
-                    <div class="card-title" style="color: var(--vault-color); margin-bottom: 15px; font-size: 1.2rem;">ORACLE / ADA <span style="color: #aa8222;">Arbitrage</span></div>
+                    <div class="card-title" style="color: var(--vault-color); margin-bottom: 15px; font-size: 1.2rem;">ORACLE / ADA <span style="color: #8c6a1c;">arbitrage</span></div>
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px;">
                         <div>
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
@@ -374,9 +376,9 @@
             <div class="grid-stack-item-content card card-orange" style="display: flex; flex-direction: column; justify-content: space-between;">
                 
                 <div style="flex-shrink: 0;">
-                    <div class="card-title" style="color: var(--neon-orange); margin-bottom: 5px; font-size: 1.2rem;">▲ORACLE VLRM ADA▼ <span style="color: #e65100;">triangular arbitrage</span></div>
+                    <div class="card-title" style="color: var(--neon-orange); font-size: 1.2rem;">▲ORACLE VLRM ADA▼ <span style="color: #a33900;">triangular arbitrage</span></div>
                     
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin-bottom: 10px;">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin-bottom: 10px; margin-top: 20px;">
                         <div>
                             <div style="margin-bottom: 6px;">
                                 <div style="color: var(--neon-orange); font-size: 0.95rem; font-weight: 800; margin-bottom: 5px;">VLRM / ADA</div>
@@ -473,7 +475,7 @@
         const VYFI_LINK = "https://app.vyfi.io/dex?tokenA=lovelace&tokenB=804f5530198154628ce71b6bd5a889410ea9036c64188597af2f21bc56594649";
         const MINSWAP_LINK = "https://minswap.org/swap?cA=&tA=&cB=804f5530198154628ce71b6bd5a889410ea9036c64188597af2f21bc56594649";
 
-        const LAYOUT_VERSION = "v4.0"; 
+        const LAYOUT_VERSION = "v5.0"; 
 
         let defaultConf = { simDex: 1000, simTri: 1000, feeNet: 0.2, feeMin: 0.7, feeVyfi: 1.9, lpFeeMin: 0.3, lpFeeVyfi: 0.3 };
         let savedConf = JSON.parse(localStorage.getItem('l4va_config')) || {};
