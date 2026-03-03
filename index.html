@@ -37,7 +37,6 @@
         body { 
             zoom: 0.9;
             font-family: 'Inter', sans-serif; 
-            /* Se eliminó el gradiente oscurecedor para mostrar el brillo original de la imagen */
             background: url('https://app.l4va.org/assets/banner-bg.webp');
             background-size: cover; background-position: center top; background-attachment: fixed;
             background-color: #0a0814;
@@ -258,7 +257,7 @@
 
     <div class="grid-stack grid-container" id="dashboard-oracle">
         
-        <div class="grid-stack-item drag-item" gs-id="card-arb-vault" gs-w="5" gs-h="2" gs-x="0" gs-y="0">
+        <div class="grid-stack-item drag-item" gs-id="card-arb-vault" gs-w="6" gs-h="2" gs-x="0" gs-y="0">
             <div class="grid-stack-item-content card card-vault">
                 <div style="flex-shrink: 0;">
                     <div class="card-title" style="color: var(--vault-color);">Vault relics fair price ORACLE</div>
@@ -277,7 +276,7 @@
             </div>
         </div>
 
-        <div class="grid-stack-item drag-item" gs-id="card-ada-oracle" gs-w="5" gs-h="2" gs-x="7" gs-y="0">
+        <div class="grid-stack-item drag-item" gs-id="card-ada-oracle" gs-w="6" gs-h="2" gs-x="6" gs-y="0">
             <div class="grid-stack-item-content card card-ada">
                 <div style="flex-shrink: 0;">
                     <div class="card-title ada-title">ADA</div>
@@ -376,9 +375,9 @@
             <div class="grid-stack-item-content card card-orange" style="display: flex; flex-direction: column; justify-content: space-between;">
                 
                 <div style="flex-shrink: 0;">
-                    <div class="card-title" style="color: var(--neon-orange); font-size: 1.2rem;">▲ORACLE VLRM ADA▼ <span style="color: #a33900;">triangular arbitrage</span></div>
+                    <div class="card-title" style="color: var(--neon-orange); font-size: 1.2rem; margin-bottom: 5px;">▲ORACLE VLRM ADA▼ <span style="color: #a33900;">triangular arbitrage</span></div>
                     
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin-bottom: 10px; margin-top: 20px;">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin-bottom: 10px; margin-top: 25px;">
                         <div>
                             <div style="margin-bottom: 6px;">
                                 <div style="color: var(--neon-orange); font-size: 0.95rem; font-weight: 800; margin-bottom: 5px;">VLRM / ADA</div>
@@ -450,7 +449,7 @@
             </div>
         </div>
 
-        <div class="grid-stack-item drag-item" gs-id="card-chart" gs-w="12" gs-h="2" gs-x="0" gs-y="7">
+        <div class="grid-stack-item drag-item" gs-id="card-chart" gs-w="12" gs-h="3" gs-x="0" gs-y="7">
             <div class="grid-stack-item-content card">
                 <div class="card-title" style="margin-bottom: 10px; font-size: 0.9rem; color: #ffffff; text-transform: none; flex-shrink: 0;">Spread & vault discrepancy (last 24h %)</div>
                 <div class="spark-wrapper" style="flex-grow: 1; height: auto;">
@@ -475,7 +474,7 @@
         const VYFI_LINK = "https://app.vyfi.io/dex?tokenA=lovelace&tokenB=804f5530198154628ce71b6bd5a889410ea9036c64188597af2f21bc56594649";
         const MINSWAP_LINK = "https://minswap.org/swap?cA=&tA=&cB=804f5530198154628ce71b6bd5a889410ea9036c64188597af2f21bc56594649";
 
-        const LAYOUT_VERSION = "v5.0"; 
+        const LAYOUT_VERSION = "v6.0"; 
 
         let defaultConf = { simDex: 1000, simTri: 1000, feeNet: 0.2, feeMin: 0.7, feeVyfi: 1.9, lpFeeMin: 0.3, lpFeeVyfi: 0.3 };
         let savedConf = JSON.parse(localStorage.getItem('l4va_config')) || {};
@@ -1199,6 +1198,7 @@
                     }
                     updateDOM('oracle-total-liq', `₳ ${Math.round(totalOracleLiqAda).toLocaleString()}`);
                     
+                    // Cálculo Minswap APR Exacto
                     let minApr = "-";
                     if(data.minOracleMetrics) {
                         let exactApr = parseFloat(data.minOracleMetrics.trading_fee_apr);
