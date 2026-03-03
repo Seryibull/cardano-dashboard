@@ -141,7 +141,6 @@
         .bg-vyfi { background: var(--badge-vyfi-bg); color: var(--badge-vyfi-text); border-color: var(--badge-vyfi-text); }
         .bg-minswap { background: var(--badge-min-bg); color: var(--badge-min-text); border-color: var(--badge-min-text); }
         
-        /* NUEVO: ETIQUETA APR JUNTO AL NOMBRE DEL POOL */
         .apr-badge { font-size: 0.65rem; color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); background: rgba(16, 185, 129, 0.1); padding: 3px 8px; border-radius: 12px; font-weight: bold; margin-left: auto; letter-spacing: 0.5px;}
         
         .arbitrage-label { color: rgba(255, 255, 255, 0.75); font-size: 0.85rem; text-transform: uppercase; font-weight: 800; margin-bottom: 5px; letter-spacing: 0.5px;}
@@ -155,7 +154,6 @@
         .sim-input { width: 100px; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 10px; font-weight: bold; text-align: center; margin-right: 5px; font-family: 'Inter', sans-serif; font-size: 1.15rem; padding: 6px 10px; }
         .sim-input:focus { outline: none; border-color: var(--neon-orange); box-shadow: 0 0 10px rgba(255, 123, 0, 0.2);}
         
-        /* ESTILOS DEL DESLIZADOR (RANGE SLIDER) */
         .sim-range { -webkit-appearance: none; width: 100px; height: 4px; background: rgba(255,255,255,0.1); border-radius: 5px; outline: none; margin-top: 8px; margin-bottom: 2px; display: block;}
         .sim-range::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 14px; height: 14px; border-radius: 50%; background: var(--neon-orange); cursor: pointer; box-shadow: 0 0 10px var(--neon-orange); }
         .sim-range::-moz-range-thumb { width: 14px; height: 14px; border-radius: 50%; background: var(--neon-orange); cursor: pointer; box-shadow: 0 0 10px var(--neon-orange); border: none; }
@@ -1067,11 +1065,13 @@
             } catch (error) { console.error("Error cargando ADA:", error); return null; }
         }
 
-        // --- FUNCIÓN EXTRACTORA DE APR PARA VYFI ---
+        // --- BUSCADOR ULTRA-AGRESIVO DE APR PARA VYFI ---
         const getVyfiApr = (pool) => {
             if (!pool) return "-";
-            let apr = pool.apr || pool.totalApr || pool.farmingApr || pool.poolApr || 0;
-            return apr > 0 ? parseFloat(apr).toFixed(2) : "-";
+            let apr = pool.apr || pool.totalApr || pool.farmingApr || pool.poolApr || pool.annualPercentageYield || pool.feeApr || 0;
+            if(typeof apr === 'string') apr = parseFloat(apr.replace('%', ''));
+            if (!apr || isNaN(apr) || apr <= 0) return "-";
+            return parseFloat(apr).toFixed(2);
         };
 
         async function fetchDexData() {
@@ -1104,7 +1104,7 @@
                         updateDOM('vlrm-price-ada', `₳ ${(priceVlrmAda||0).toFixed(6)}`); document.getElementById('vlrm-price-ada').classList.remove('loading'); 
                         updateDOM('vlrm-liq-ada', `₳ ${Math.round(vlrmAdaTvl).toLocaleString()}`); 
                         vlrmVyfiAdaReserve = vlrmAdaTvl / 2; vlrmVyfiTokReserve = vlrmVyfiAdaReserve / priceVlrmAda; 
-                        updateDOM('vlrm-ada-apr', getVyfiApr(vlrmVyfiPool)); // Set APR
+                        updateDOM('vlrm-ada-apr', getVyfiApr(vlrmVyfiPool));
                     }
                 } catch(e) { console.error(e); }
 
@@ -1117,7 +1117,7 @@
                         if (crossVlrmReserve > 0) { oraclePerVlrmUI = crossOracleReserve / crossVlrmReserve; } 
                         updateDOM('vlrm-oracle-price', `${(oraclePerVlrmUI||0).toFixed(4)}`); document.getElementById('vlrm-oracle-price').classList.remove('loading'); 
                         updateDOM('vlrm-oracle-liq-ada', `₳ ${Math.round(crossTvl).toLocaleString()}`); 
-                        updateDOM('vlrm-oracle-apr', getVyfiApr(crossPool)); // Set APR
+                        updateDOM('vlrm-oracle-apr', getVyfiApr(crossPool));
                     }
                 } catch(e) { console.error(e); }
 
@@ -1129,7 +1129,7 @@
                         vyfiTvLAda = oracleVyfiPool.tvl; totalOracleLiqAda += vyfiTvLAda; 
                         updateDOM('oracle-vyfi-price', `₳ ${(priceVyfi||0).toFixed(6)}`); document.getElementById('oracle-vyfi-price').classList.remove('loading'); 
                         updateDOM('oracle-vyfi-liq', `₳ ${Math.round(vyfiTvLAda).toLocaleString()}`); document.getElementById('oracle-vyfi-liq').classList.remove('loading'); 
-                        updateDOM('oracle-vyfi-apr', getVyfiApr(oracleVyfiPool)); // Set APR
+                        updateDOM('oracle-vyfi-apr', getVyfiApr(oracleVyfiPool));
                     }
                 } catch(e) { console.error(e); }
 
@@ -1148,7 +1148,7 @@
                     // Cálculo Minswap APR
                     let minApr = "-";
                     if(data.minOracleInfo) {
-                        let farmApr = parseFloat(data.minOracleInfo.farmingApr || 0);
+                        let farmApr = parseFloat(data.minOracleInfo.farmingApr || data.minOracleInfo.farmingApy || 0);
                         let feeApr = parseFloat(data.minOracleInfo.feeApr || data.minOracleInfo.feeApy || 0);
                         let directApr = parseFloat(data.minOracleInfo.apr || data.minOracleInfo.yieldPercentage || 0);
                         let totalMinApr = directApr > 0 ? directApr : (farmApr + feeApr);
@@ -1166,7 +1166,6 @@
                 
                 let bestDeviation = 0; let targetDexForVault = "";
                 try {
-                    const vaultCard = document.querySelector('[gs-id="card-arb-vault"] .card');
                     if (vaultTvlData > 0) {
                         const fairPrice = vaultTvlData / ORACLE_TOTAL_SUPPLY; 
                         updateDOM('vault-tvl', `₳ ${Math.round(vaultTvlData).toLocaleString()}`); 
