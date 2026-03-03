@@ -112,14 +112,14 @@
 
         .card { border-radius: 20px; padding: 20px 25px; position: absolute; top: 0; left: 0; right: 0; bottom: 0; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); transition: background 0.3s ease, box-shadow 0.3s ease; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; }
         
-        .card-ada { box-shadow: 0 0 33px rgba(0, 0, 0, 0.66); background: rgba(10, 11, 16, 0.98); }
-        .card-ada:hover { box-shadow: 0 0 44px rgba(0, 0, 0, 0.88); background: rgba(14, 15, 24, 1); }
-        .card-vault { box-shadow: 0 0 33px rgba(0, 0, 0, 0.66); background: rgba(13, 11, 8, 0.98); }
-        .card-vault:hover { box-shadow: 0 0 44px rgba(0, 0, 0, 0.88); background: rgba(18, 15, 10, 1); }
-        .card-orange { box-shadow: 0 0 33px rgba(0, 0, 0, 0.66); background: rgba(14, 8, 6, 0.98); }
-        .card-orange:hover { box-shadow: 0 0 44px rgba(0, 0, 0, 0.88); background: rgba(18, 10, 8, 1); }
-        [gs-id="card-chart"] .card { box-shadow: 0 0 33px rgba(0, 0, 0, 0.66); background: rgba(10, 11, 16, 0.98); }
-        [gs-id="card-chart"] .card:hover { box-shadow: 0 0 44px rgba(0, 0, 0, 0.88); background: rgba(14, 15, 24, 1); }
+        .card-ada { box-shadow: 0 0 40px rgba(0, 0, 0, 0.8); background: rgba(10, 11, 16, 0.98); }
+        .card-ada:hover { box-shadow: 0 0 53px rgba(0, 0, 0, 1); background: rgba(14, 15, 24, 1); }
+        .card-vault { box-shadow: 0 0 40px rgba(0, 0, 0, 0.8); background: rgba(13, 11, 8, 0.98); }
+        .card-vault:hover { box-shadow: 0 0 53px rgba(0, 0, 0, 1); background: rgba(18, 15, 10, 1); }
+        .card-orange { box-shadow: 0 0 40px rgba(0, 0, 0, 0.8); background: rgba(14, 8, 6, 0.98); }
+        .card-orange:hover { box-shadow: 0 0 53px rgba(0, 0, 0, 1); background: rgba(18, 10, 8, 1); }
+        [gs-id="card-chart"] .card { box-shadow: 0 0 40px rgba(0, 0, 0, 0.8); background: rgba(10, 11, 16, 0.98); }
+        [gs-id="card-chart"] .card:hover { box-shadow: 0 0 53px rgba(0, 0, 0, 1); background: rgba(14, 15, 24, 1); }
 
         /* EFECTO: RESPLANDOR VERDE */
         @keyframes greenAlertPulse {
@@ -1065,7 +1065,7 @@
             } catch (error) { console.error("Error cargando ADA:", error); return null; }
         }
 
-        // --- BUSCADOR ULTRA-AGRESIVO DE APR PARA VYFI ---
+        // --- BUSCADOR ULTRA-AGRESIVO DE APR ---
         const getVyfiApr = (pool) => {
             if (!pool) return "-";
             let apr = pool.apr || pool.totalApr || pool.farmingApr || pool.poolApr || pool.annualPercentageYield || pool.feeApr || 0;
@@ -1086,8 +1086,11 @@
                     const vaultRes = await fetch(`https://app.l4va.org/api/v1/vaults/5ac2ac4f-9079-40cb-94ae-a265bfba3bcd?t=${Date.now()}`);
                     if(vaultRes.ok) { 
                         const vJson = await vaultRes.json(); 
-                        let val = vJson?.assetsPrices?.totalValueAda ?? vJson.tvl ?? vJson.fdv ?? vJson.totalValueLocked;
-                        if (val === undefined && vJson.data) val = vJson.data?.assetsPrices?.totalValueAda ?? vJson.data.tvl;
+                        let val = undefined;
+                        if (vJson && vJson.assetsPrices && vJson.assetsPrices.totalValueAda) val = vJson.assetsPrices.totalValueAda;
+                        else if (vJson && vJson.tvl) val = vJson.tvl;
+                        else if (vJson && vJson.data && vJson.data.assetsPrices && vJson.data.assetsPrices.totalValueAda) val = vJson.data.assetsPrices.totalValueAda;
+                        else if (vJson && vJson.data && vJson.data.tvl) val = vJson.data.tvl;
                         let liveTvl = parseFloat(val) || 0;
                         if(liveTvl > 0) vaultTvlData = liveTvl; 
                     }
