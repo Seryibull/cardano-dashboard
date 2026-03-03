@@ -1065,36 +1065,46 @@
             } catch (error) { console.error("Error cargando ADA:", error); return null; }
         }
 
-        // --- CÁLCULO MATEMÁTICO DE APR PARA VYFI CON RECONOCIMIENTO PROFUNDO DE GRANJAS ---
-        const getVyfiApr = (pool) => {
+        // --- CÁLCULO DE APR MAESTRO (GRANJAS + TRADING) ---
+        const getVyfiApr = (pool, allPools, tokenPrices) => {
             if (!pool) return "-";
             let totalApr = 0;
             
-            // 1. ESCÁNER PROFUNDO DE GRANJAS (Farming APR)
-            if (pool.farm) {
-                let farmApr = 0;
-                const findApr = (obj) => {
-                    if (typeof obj !== 'object' || obj === null) return;
-                    for (let k in obj) {
-                        let lowerK = k.toLowerCase();
-                        if (lowerK === 'apr' || lowerK === 'apy' || lowerK === 'farmingapr' || lowerK === 'farmapr' || lowerK === 'totalapr') {
-                            let v = typeof obj[k] === 'string' ? parseFloat(obj[k].replace('%','')) : parseFloat(obj[k]);
-                            if (!isNaN(v) && v > farmApr && v < 10000) farmApr = v; 
-                        } else if (typeof obj[k] === 'object') {
-                            findApr(obj[k]);
+            // 1. CÁLCULO DE LA GRANJA (Convierte el valor de L4VA/VYFI/VLRM regalados a ADA y luego a %)
+            if (pool.farm && pool.farm.rewards && pool.tvl > 0) {
+                let dailyRewardInAda = 0;
+                
+                pool.farm.rewards.forEach(reward => {
+                    let rewardAmount = parseFloat(reward.rewardQuantityPerDay || 0);
+                    let tokenPriceAda = 0;
+                    
+                    // A. Buscar el precio del token en el mapa de precios directo (si existe)
+                    let unitKey = (reward.policyId || '') + (reward.assetId || '');
+                    if (tokenPrices && tokenPrices[unitKey]) {
+                        tokenPriceAda = parseFloat(tokenPrices[unitKey]);
+                    } 
+                    // B. Si no está en el mapa, buscar el pool ADA/TOKEN para sacar el precio
+                    else if (allPools) {
+                        let targetPool = allPools.find(p => p.unitsPair && p.unitsPair.includes('lovelace') && p.unitsPair.includes(unitKey));
+                        if (targetPool) {
+                            tokenPriceAda = targetPool.tokenA.unit === 'lovelace' 
+                                ? targetPool.tokenB.lpRatio[targetPool.unitsPair].priceRatioAB 
+                                : targetPool.tokenA.lpRatio[targetPool.unitsPair].priceRatioBA;
                         }
                     }
-                };
-                findApr(pool.farm);
-                totalApr += farmApr;
+                    dailyRewardInAda += (rewardAmount * tokenPriceAda);
+                });
+                
+                let farmApr = ((dailyRewardInAda * 365) / pool.tvl) * 100;
+                if (!isNaN(farmApr)) totalApr += farmApr;
             }
             
-            // 2. APR DE COMISIONES (Basado en la media estable de 7 días)
+            // 2. CÁLCULO DE COMISIONES (TRADING)
             let tvl = parseFloat(pool.tvl || 0);
             let vol7d = parseFloat(pool.last7DVolume || 0);
             
             if (tvl > 0 && vol7d > 0) {
-                let feePercentage = 0.002; // Asumimos 0.2% por defecto
+                let feePercentage = 0.002; 
                 if (pool.feesSettings && pool.feesSettings.liqFee) {
                     feePercentage = pool.feesSettings.liqFee / 10000;
                 }
@@ -1125,8 +1135,8 @@
                     }
                 } catch(e) {}
 
-                // La variable de VyFi ahora usa el enlace maestro
                 const vyfiPoolsList = data.vyfiPools || [];
+                const vyfiPricesMap = data.vyfiPrices || {}; // Mapa de precios para calcular granjas
 
                 let priceVlrmAda = 0; let vlrmVyfiAdaReserve = 0; let vlrmVyfiTokReserve = 0; let vlrmAdaTvl = 0;
                 try {
@@ -1138,7 +1148,7 @@
                         updateDOM('vlrm-liq-ada', `₳ ${Math.round(vlrmAdaTvl).toLocaleString()}`); 
                         vlrmVyfiAdaReserve = vlrmAdaTvl / 2; vlrmVyfiTokReserve = vlrmVyfiAdaReserve / priceVlrmAda; 
                         
-                        updateDOM('vlrm-ada-apr', getVyfiApr(vlrmVyfiPool)); 
+                        updateDOM('vlrm-ada-apr', getVyfiApr(vlrmVyfiPool, vyfiPoolsList, vyfiPricesMap)); 
                     }
                 } catch(e) { console.error(e); }
 
@@ -1152,7 +1162,7 @@
                         updateDOM('vlrm-oracle-price', `${(oraclePerVlrmUI||0).toFixed(4)}`); document.getElementById('vlrm-oracle-price').classList.remove('loading'); 
                         updateDOM('vlrm-oracle-liq-ada', `₳ ${Math.round(crossTvl).toLocaleString()}`); 
                         
-                        updateDOM('vlrm-oracle-apr', getVyfiApr(crossPool)); 
+                        updateDOM('vlrm-oracle-apr', getVyfiApr(crossPool, vyfiPoolsList, vyfiPricesMap)); 
                     }
                 } catch(e) { console.error(e); }
 
@@ -1165,7 +1175,7 @@
                         updateDOM('oracle-vyfi-price', `₳ ${(priceVyfi||0).toFixed(6)}`); document.getElementById('oracle-vyfi-price').classList.remove('loading'); 
                         updateDOM('oracle-vyfi-liq', `₳ ${Math.round(vyfiTvLAda).toLocaleString()}`); document.getElementById('oracle-vyfi-liq').classList.remove('loading'); 
                         
-                        updateDOM('oracle-vyfi-apr', getVyfiApr(oracleVyfiPool)); 
+                        updateDOM('oracle-vyfi-apr', getVyfiApr(oracleVyfiPool, vyfiPoolsList, vyfiPricesMap)); 
                     }
                 } catch(e) { console.error(e); }
 
@@ -1183,9 +1193,15 @@
                     
                     let minApr = "-";
                     if(data.minOracleMetrics) {
-                        let exactApr = parseFloat(data.minOracleMetrics.trading_fee_apr);
-                        if (!isNaN(exactApr) && exactApr > 0) {
-                            minApr = exactApr.toFixed(2);
+                        let metrics = Array.isArray(data.minOracleMetrics) ? data.minOracleMetrics[data.minOracleMetrics.length - 1] : data.minOracleMetrics;
+                        if (metrics) {
+                            let farmApr = parseFloat(metrics.farmingApr || metrics.farmingApy || 0);
+                            let feeApr = parseFloat(metrics.feeApr || metrics.feeApy || 0);
+                            let directApr = parseFloat(metrics.apr || metrics.yieldPercentage || metrics.trading_fee_apr || 0);
+                            let totalMinApr = directApr > 0 ? directApr : (farmApr + feeApr);
+                            
+                            if (totalMinApr > 0 && totalMinApr < 1) totalMinApr = totalMinApr * 100;
+                            if(totalMinApr > 0) minApr = totalMinApr.toFixed(2);
                         }
                     }
                     updateDOM('oracle-min-apr', minApr);
