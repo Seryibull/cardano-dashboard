@@ -112,6 +112,7 @@
 
         .card { border-radius: 20px; padding: 20px 25px; position: absolute; top: 0; left: 0; right: 0; bottom: 0; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); transition: background 0.3s ease, box-shadow 0.3s ease; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; }
         
+        /* SOMBRAS CENTRALES INCREMENTADAS UN 10% (+ tamaño y + opacidad) */
         .card-ada { box-shadow: 0 0 33px rgba(0, 0, 0, 0.66); background: rgba(10, 11, 16, 0.98); }
         .card-ada:hover { box-shadow: 0 0 44px rgba(0, 0, 0, 0.88); background: rgba(14, 15, 24, 1); }
         .card-vault { box-shadow: 0 0 33px rgba(0, 0, 0, 0.66); background: rgba(13, 11, 8, 0.98); }
@@ -151,6 +152,11 @@
         .sim-input { width: 100px; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 10px; font-weight: bold; text-align: center; margin-right: 5px; font-family: 'Inter', sans-serif; font-size: 1.15rem; padding: 6px 10px; }
         .sim-input:focus { outline: none; border-color: var(--neon-orange); box-shadow: 0 0 10px rgba(255, 123, 0, 0.2);}
         
+        /* ESTILOS DEL DESLIZADOR (RANGE SLIDER) */
+        .sim-range { -webkit-appearance: none; width: 100px; height: 4px; background: rgba(255,255,255,0.1); border-radius: 5px; outline: none; margin-top: 8px; margin-bottom: 2px; display: block;}
+        .sim-range::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 14px; height: 14px; border-radius: 50%; background: var(--neon-orange); cursor: pointer; box-shadow: 0 0 10px var(--neon-orange); }
+        .sim-range::-moz-range-thumb { width: 14px; height: 14px; border-radius: 50%; background: var(--neon-orange); cursor: pointer; box-shadow: 0 0 10px var(--neon-orange); border: none; }
+
         .profit-positive { color: #10b981; text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
         .profit-negative { color: var(--neon-red); text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
         .optimizer-text { font-size: 0.9rem; color: var(--text-secondary); font-weight: 600;}
@@ -334,9 +340,12 @@
 
                     <div style="margin-top: 15px; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 15px;">
                         <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 5px;">
-                            <div style="display: flex; align-items: center;">
-                                <input type="number" id="sim-ada-input-oracle" class="sim-input" oninput="updateSimConfig('sim-ada-input-oracle', 'simDex')"> 
-                                <span style="font-size: 1.1rem; font-weight: bold; color: var(--text-primary);">ADA</span>
+                            <div style="display: flex; flex-direction: column;">
+                                <div style="display: flex; align-items: center;">
+                                    <input type="number" id="sim-ada-input-oracle" class="sim-input" oninput="updateSimConfig('sim-ada-input-oracle', 'simDex')"> 
+                                    <span style="font-size: 1.1rem; font-weight: bold; color: var(--text-primary);">ADA</span>
+                                </div>
+                                <input type="range" id="sim-ada-range-oracle" min="0" max="200" step="1" class="sim-range" oninput="document.getElementById('sim-ada-input-oracle').value=this.value; updateSimConfig('sim-ada-input-oracle', 'simDex')">
                             </div>
                             <div style="text-align: right;">
                                 <span class="data-label" style="font-size: 0.8rem; opacity: 0.6; display: block; margin-bottom: 2px;">Net Return (2 Hops):</span>
@@ -398,9 +407,12 @@
                     
                     <div style="margin-top: 15px; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 15px;">
                         <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 5px;">
-                            <div style="display: flex; align-items: center;">
-                                <input type="number" id="sim-tri-input-oracle" class="sim-input" oninput="updateSimConfig('sim-tri-input-oracle', 'simTri')"> 
-                                <span style="font-size: 1.1rem; font-weight: bold; color: var(--text-primary);">ADA</span>
+                            <div style="display: flex; flex-direction: column;">
+                                <div style="display: flex; align-items: center;">
+                                    <input type="number" id="sim-tri-input-oracle" class="sim-input" oninput="updateSimConfig('sim-tri-input-oracle', 'simTri')"> 
+                                    <span style="font-size: 1.1rem; font-weight: bold; color: var(--text-primary);">ADA</span>
+                                </div>
+                                <input type="range" id="sim-tri-range-oracle" min="0" max="200" step="1" class="sim-range" oninput="document.getElementById('sim-tri-input-oracle').value=this.value; updateSimConfig('sim-tri-input-oracle', 'simTri')">
                             </div>
                             <div style="text-align: right;">
                                 <span class="data-label" style="font-size: 0.8rem; opacity: 0.6; display: block; margin-bottom: 2px;">Net Return (3 Hops):</span>
@@ -555,7 +567,10 @@
             if (savedLayout && savedLayout.length > 0) { gridOracle.load(savedLayout); } 
             
             let siO = document.getElementById('sim-ada-input-oracle'); if(siO) siO.value = conf.simDex;
+            let srO = document.getElementById('sim-ada-range-oracle'); if(srO) srO.value = conf.simDex > 200 ? 200 : conf.simDex;
+            
             let stO = document.getElementById('sim-tri-input-oracle'); if(stO) stO.value = conf.simTri;
+            let strO = document.getElementById('sim-tri-range-oracle'); if(strO) strO.value = conf.simTri > 200 ? 200 : conf.simTri;
 
             const redrawCharts = () => { setTimeout(() => { if(chartInstance) chartInstance.resize(); Object.values(sparkInstances).forEach(chart => { if (chart) chart.resize(); }); }, 200); };
             
@@ -599,7 +614,10 @@
             localStorage.setItem('l4va_config', JSON.stringify(conf));
             
             let siO = document.getElementById('sim-ada-input-oracle'); if(siO) siO.value = conf.simDex;
+            let srO = document.getElementById('sim-ada-range-oracle'); if(srO) srO.value = conf.simDex > 200 ? 200 : conf.simDex;
+            
             let stO = document.getElementById('sim-tri-input-oracle'); if(stO) stO.value = conf.simTri;
+            let strO = document.getElementById('sim-tri-range-oracle'); if(strO) strO.value = conf.simTri > 200 ? 200 : conf.simTri;
             
             closeModals(); recalculateSimulators();
         }
@@ -610,8 +628,14 @@
             let rawVal = el.value;
             
             if (rawVal === "") {
-                if (confKey === 'simDex') recalculateDexSimulator(0);
-                if (confKey === 'simTri') recalculateTriSimulator(0);
+                if (confKey === 'simDex') {
+                    let r = document.getElementById('sim-ada-range-oracle'); if(r) r.value = 0;
+                    recalculateDexSimulator(0);
+                }
+                if (confKey === 'simTri') {
+                    let r = document.getElementById('sim-tri-range-oracle'); if(r) r.value = 0;
+                    recalculateTriSimulator(0);
+                }
                 return; 
             }
             
@@ -621,8 +645,16 @@
                 localStorage.setItem('l4va_config', JSON.stringify(conf)); 
             }
             
-            if (confKey === 'simDex') recalculateDexSimulator(isNaN(val) ? 0 : val);
-            if (confKey === 'simTri') recalculateTriSimulator(isNaN(val) ? 0 : val);
+            if (confKey === 'simDex') {
+                let range = document.getElementById('sim-ada-range-oracle');
+                if (range) range.value = val > 200 ? 200 : val;
+                recalculateDexSimulator(isNaN(val) ? 0 : val);
+            }
+            if (confKey === 'simTri') {
+                let range = document.getElementById('sim-tri-range-oracle');
+                if (range) range.value = val > 200 ? 200 : val;
+                recalculateTriSimulator(isNaN(val) ? 0 : val);
+            }
         }
 
         const drawToleranceBandPlugin = {
@@ -1072,7 +1104,6 @@
                 
                 let bestDeviation = 0; let targetDexForVault = "";
                 try {
-                    const vaultCard = document.querySelector('[gs-id="card-arb-vault"] .card');
                     if (vaultTvlData > 0) {
                         const fairPrice = vaultTvlData / ORACLE_TOTAL_SUPPLY; 
                         updateDOM('vault-tvl', `₳ ${Math.round(vaultTvlData).toLocaleString()}`); 
