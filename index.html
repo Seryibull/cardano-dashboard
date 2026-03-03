@@ -1065,16 +1065,32 @@
             } catch (error) { console.error("Error cargando ADA:", error); return null; }
         }
 
-        // --- CÁLCULO DE APR DE VYFI DESDE SUS GRANJAS ---
-        const findVyfiApr = (farmsArray, pairName) => {
-            if(!farmsArray || farmsArray.length === 0) return "-";
-            // Busca la granja cuyo par coincida (ej: "ADA/ORACLE" o "VLRM/ADA")
-            let farm = farmsArray.find(f => f.farmName && (f.farmName.includes(pairName) || f.farmName.includes(pairName.split('/').reverse().join('/'))));
-            if (farm && farm.apr) {
-                let aprVal = parseFloat(farm.apr);
-                if (!isNaN(aprVal) && aprVal > 0) return aprVal.toFixed(2);
+        // --- CÁLCULO MATEMÁTICO DE APR PARA VYFI ---
+        const getVyfiApr = (pool) => {
+            if (!pool) return "-";
+            let totalApr = 0;
+            
+            // 1. APR de la granja activa (si la hay)
+            if (pool.farm) {
+                let farmApr = parseFloat(pool.farm.apr || pool.farm.farmingApr || 0);
+                if (!isNaN(farmApr)) totalApr += farmApr;
             }
-            return "-";
+            
+            // 2. APR de Comisiones de Trading (Volumen 24h)
+            let tvl = parseFloat(pool.tvl || 0);
+            let vol24h = parseFloat(pool.last24HVolume || 0);
+            
+            if (tvl > 0 && vol24h > 0) {
+                let feePercentage = 0.002; // Asumimos 0.2% por defecto
+                if (pool.feesSettings && pool.feesSettings.liqFee) {
+                    feePercentage = pool.feesSettings.liqFee / 10000;
+                }
+                let tradingApr = ((vol24h * feePercentage) / tvl) * 365 * 100;
+                totalApr += tradingApr;
+            }
+            
+            if (totalApr <= 0) return "0.00";
+            return totalApr.toFixed(2);
         };
 
         async function fetchDexData() {
@@ -1084,6 +1100,7 @@
                 const data = await response.json(); if (data.error) throw new Error(data.error);
                 
                 let vaultTvlData = parseFloat(data.vaultTvl) || 0;
+                
                 try {
                     const vaultRes = await fetch(`https://app.l4va.org/api/v1/vaults/5ac2ac4f-9079-40cb-94ae-a265bfba3bcd?t=${Date.now()}`);
                     if(vaultRes.ok) { 
@@ -1096,7 +1113,6 @@
                 } catch(e) {}
 
                 const vyfiPoolsList = data.vyfiPools || [];
-                const vyfiFarmsList = data.vyfiFarms || [];
 
                 let priceVlrmAda = 0; let vlrmVyfiAdaReserve = 0; let vlrmVyfiTokReserve = 0; let vlrmAdaTvl = 0;
                 try {
@@ -1108,7 +1124,7 @@
                         updateDOM('vlrm-liq-ada', `₳ ${Math.round(vlrmAdaTvl).toLocaleString()}`); 
                         vlrmVyfiAdaReserve = vlrmAdaTvl / 2; vlrmVyfiTokReserve = vlrmVyfiAdaReserve / priceVlrmAda; 
                         
-                        updateDOM('vlrm-ada-apr', findVyfiApr(vyfiFarmsList, "ADA/VLRM"));
+                        updateDOM('vlrm-ada-apr', getVyfiApr(vlrmVyfiPool)); // Set APR dinámico
                     }
                 } catch(e) { console.error(e); }
 
@@ -1122,7 +1138,7 @@
                         updateDOM('vlrm-oracle-price', `${(oraclePerVlrmUI||0).toFixed(4)}`); document.getElementById('vlrm-oracle-price').classList.remove('loading'); 
                         updateDOM('vlrm-oracle-liq-ada', `₳ ${Math.round(crossTvl).toLocaleString()}`); 
                         
-                        updateDOM('vlrm-oracle-apr', findVyfiApr(vyfiFarmsList, "VLRM/ORACLE"));
+                        updateDOM('vlrm-oracle-apr', getVyfiApr(crossPool)); // Set APR dinámico
                     }
                 } catch(e) { console.error(e); }
 
@@ -1135,7 +1151,7 @@
                         updateDOM('oracle-vyfi-price', `₳ ${(priceVyfi||0).toFixed(6)}`); document.getElementById('oracle-vyfi-price').classList.remove('loading'); 
                         updateDOM('oracle-vyfi-liq', `₳ ${Math.round(vyfiTvLAda).toLocaleString()}`); document.getElementById('oracle-vyfi-liq').classList.remove('loading'); 
                         
-                        updateDOM('oracle-vyfi-apr', findVyfiApr(vyfiFarmsList, "ADA/ORACLE"));
+                        updateDOM('oracle-vyfi-apr', getVyfiApr(oracleVyfiPool)); // Set APR dinámico
                     }
                 } catch(e) { console.error(e); }
 
@@ -1151,7 +1167,7 @@
                     }
                     updateDOM('oracle-total-liq', `₳ ${Math.round(totalOracleLiqAda).toLocaleString()}`);
                     
-                    // Cálculo Minswap APR Exacto
+                    // Cálculo Minswap APR
                     let minApr = "-";
                     if(data.minOracleMetrics) {
                         let exactApr = parseFloat(data.minOracleMetrics.trading_fee_apr);
