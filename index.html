@@ -180,7 +180,7 @@
         .setting-row { margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem;}
         .setting-input { width: 60px; padding: 5px; border-radius: 5px; border: none; background: rgba(255,255,255,0.1); color: white; text-align: center; font-family: 'Inter', sans-serif;}
         
-        .btn-save { background: var(--gradient-fire); color: white; border: none; padding: 12px; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 15px; transition: transform 0.2s;}
+        .btn-save { background: var(--gradient-fire); color: white; border: none; padding: 12px; width: 100%; border-radius: 10px; font-weight: bold; cursor: margin-top: 15px; transition: transform 0.2s;}
         .btn-save:hover { transform: scale(1.02); }
         .btn-reset { background: rgba(255, 255, 255, 0.05); color: var(--text-secondary); border: 1px solid rgba(255,255,255,0.1); padding: 10px; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.2s; font-size: 0.85rem;}
         .btn-reset:hover { background: rgba(255, 255, 255, 0.1); color: white; border-color: rgba(255,255,255,0.3); }
@@ -374,13 +374,16 @@
             <div class="grid-stack-item-content card card-orange" style="display: flex; flex-direction: column; justify-content: space-between;">
                 
                 <div style="flex-shrink: 0;">
-                    <div class="card-title" style="color: var(--neon-orange); margin-bottom: 15px; font-size: 1.2rem;">▲ORACLE VLRM ADA▼ <span style="color: #e65100;">triangular arbitrage</span></div>
+                    <div class="card-title" style="color: var(--neon-orange); margin-bottom: 5px; font-size: 1.2rem;">▲ORACLE VLRM ADA▼ <span style="color: #e65100;">triangular arbitrage</span></div>
                     
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin-bottom: 15px;">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin-bottom: 10px;">
                         <div>
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                                <h3 class="dex-subtitle" style="color: var(--neon-orange); font-size: 0.95rem;">VLRM / ADA <span class="badge bg-vyfi" style="font-size: 0.6rem;">VyFi</span></h3>
-                                <span class="apr-badge">APR <span id="vlrm-ada-apr">-</span>% (7d)</span>
+                            <div style="margin-bottom: 6px;">
+                                <div style="color: var(--neon-orange); font-size: 0.95rem; font-weight: 800; margin-bottom: 5px;">VLRM / ADA</div>
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <span class="badge bg-vyfi">VYFI</span>
+                                    <span class="apr-badge">APR <span id="vlrm-ada-apr">-</span>% (7d)</span>
+                                </div>
                             </div>
                             <div class="data-row"><span class="data-label">Price:</span><span class="data-value" style="font-size: 1.15rem;"><span id="vlrm-price-ada" class="loading">...</span> <span id="vlrm-price-change-24h" class="change-badge"></span></span></div>
                             <div class="spark-wrapper" style="height: 45px !important; min-height: 45px !important; margin-bottom: 15px;"><canvas id="spark-vlrm-ada-price"></canvas></div>
@@ -388,9 +391,12 @@
                             <div class="spark-wrapper" style="height: 45px !important; min-height: 45px !important;"><canvas id="spark-vlrm-ada"></canvas></div>
                         </div>
                         <div style="border-left: 2px solid rgba(255,255,255,0.05); padding-left: 15px;">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                                <h3 class="dex-subtitle" style="color: var(--neon-orange); font-size: 0.95rem;">ORACLE / VLRM <span class="badge bg-vyfi" style="font-size: 0.6rem;">VyFi</span></h3>
-                                <span class="apr-badge">APR <span id="vlrm-oracle-apr">-</span>% (7d)</span>
+                            <div style="margin-bottom: 6px;">
+                                <div style="color: var(--neon-orange); font-size: 0.95rem; font-weight: 800; margin-bottom: 5px;">ORACLE / VLRM</div>
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <span class="badge bg-vyfi">VYFI</span>
+                                    <span class="apr-badge">APR <span id="vlrm-oracle-apr">-</span>% (7d)</span>
+                                </div>
                             </div>
                             <div class="data-row"><span class="data-label">Price:</span><span class="data-value" style="font-size: 1.15rem;"><span id="vlrm-oracle-price" class="loading">...</span> <span id="vlrm-oracle-price-change-24h" class="change-badge"></span></span></div>
                             <div class="spark-wrapper" style="height: 45px !important; min-height: 45px !important; margin-bottom: 15px;"><canvas id="spark-vlrm-oracle-price"></canvas></div>
@@ -1070,7 +1076,7 @@
             if (!pool) return "-";
             let totalApr = 0;
             
-            // 1. CÁLCULO DE LA GRANJA (Convierte el valor de L4VA/VYFI/VLRM regalados a ADA y luego a %)
+            // 1. CÁLCULO DE LA GRANJA (Convierte el valor de VYFI/VLRM regalados a ADA y luego a %)
             if (pool.farm && pool.farm.rewards && pool.tvl > 0) {
                 let dailyRewardInAda = 0;
                 
@@ -1193,15 +1199,9 @@
                     
                     let minApr = "-";
                     if(data.minOracleMetrics) {
-                        let metrics = Array.isArray(data.minOracleMetrics) ? data.minOracleMetrics[data.minOracleMetrics.length - 1] : data.minOracleMetrics;
-                        if (metrics) {
-                            let farmApr = parseFloat(metrics.farmingApr || metrics.farmingApy || 0);
-                            let feeApr = parseFloat(metrics.feeApr || metrics.feeApy || 0);
-                            let directApr = parseFloat(metrics.apr || metrics.yieldPercentage || metrics.trading_fee_apr || 0);
-                            let totalMinApr = directApr > 0 ? directApr : (farmApr + feeApr);
-                            
-                            if (totalMinApr > 0 && totalMinApr < 1) totalMinApr = totalMinApr * 100;
-                            if(totalMinApr > 0) minApr = totalMinApr.toFixed(2);
+                        let exactApr = parseFloat(data.minOracleMetrics.trading_fee_apr);
+                        if (!isNaN(exactApr) && exactApr > 0) {
+                            minApr = exactApr.toFixed(2);
                         }
                     }
                     updateDOM('oracle-min-apr', minApr);
