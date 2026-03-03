@@ -112,15 +112,14 @@
 
         .card { border-radius: 20px; padding: 20px 25px; position: absolute; top: 0; left: 0; right: 0; bottom: 0; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); transition: background 0.3s ease, box-shadow 0.3s ease; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; }
         
-        /* SOMBRAS INCREMENTADAS UN 20% (+ blur y + opacidad) */
-        .card-ada { box-shadow: 0 0 40px rgba(0, 0, 0, 0.8); background: rgba(10, 11, 16, 0.98); }
-        .card-ada:hover { box-shadow: 0 0 53px rgba(0, 0, 0, 1); background: rgba(14, 15, 24, 1); }
-        .card-vault { box-shadow: 0 0 40px rgba(0, 0, 0, 0.8); background: rgba(13, 11, 8, 0.98); }
-        .card-vault:hover { box-shadow: 0 0 53px rgba(0, 0, 0, 1); background: rgba(18, 15, 10, 1); }
-        .card-orange { box-shadow: 0 0 40px rgba(0, 0, 0, 0.8); background: rgba(14, 8, 6, 0.98); }
-        .card-orange:hover { box-shadow: 0 0 53px rgba(0, 0, 0, 1); background: rgba(18, 10, 8, 1); }
-        [gs-id="card-chart"] .card { box-shadow: 0 0 40px rgba(0, 0, 0, 0.8); background: rgba(10, 11, 16, 0.98); }
-        [gs-id="card-chart"] .card:hover { box-shadow: 0 0 53px rgba(0, 0, 0, 1); background: rgba(14, 15, 24, 1); }
+        .card-ada { box-shadow: 0 0 33px rgba(0, 0, 0, 0.66); background: rgba(10, 11, 16, 0.98); }
+        .card-ada:hover { box-shadow: 0 0 44px rgba(0, 0, 0, 0.88); background: rgba(14, 15, 24, 1); }
+        .card-vault { box-shadow: 0 0 33px rgba(0, 0, 0, 0.66); background: rgba(13, 11, 8, 0.98); }
+        .card-vault:hover { box-shadow: 0 0 44px rgba(0, 0, 0, 0.88); background: rgba(18, 15, 10, 1); }
+        .card-orange { box-shadow: 0 0 33px rgba(0, 0, 0, 0.66); background: rgba(14, 8, 6, 0.98); }
+        .card-orange:hover { box-shadow: 0 0 44px rgba(0, 0, 0, 0.88); background: rgba(18, 10, 8, 1); }
+        [gs-id="card-chart"] .card { box-shadow: 0 0 33px rgba(0, 0, 0, 0.66); background: rgba(10, 11, 16, 0.98); }
+        [gs-id="card-chart"] .card:hover { box-shadow: 0 0 44px rgba(0, 0, 0, 0.88); background: rgba(14, 15, 24, 1); }
 
         /* EFECTO: RESPLANDOR VERDE */
         @keyframes greenAlertPulse {
@@ -152,7 +151,6 @@
         .sim-input { width: 100px; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 10px; font-weight: bold; text-align: center; margin-right: 5px; font-family: 'Inter', sans-serif; font-size: 1.15rem; padding: 6px 10px; }
         .sim-input:focus { outline: none; border-color: var(--neon-orange); box-shadow: 0 0 10px rgba(255, 123, 0, 0.2);}
         
-        /* ESTILOS DEL DESLIZADOR (RANGE SLIDER) */
         .sim-range { -webkit-appearance: none; width: 100px; height: 4px; background: rgba(255,255,255,0.1); border-radius: 5px; outline: none; margin-top: 8px; margin-bottom: 2px; display: block;}
         .sim-range::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 14px; height: 14px; border-radius: 50%; background: var(--neon-orange); cursor: pointer; box-shadow: 0 0 10px var(--neon-orange); }
         .sim-range::-moz-range-thumb { width: 14px; height: 14px; border-radius: 50%; background: var(--neon-orange); cursor: pointer; box-shadow: 0 0 10px var(--neon-orange); border: none; }
@@ -367,7 +365,7 @@
             <div class="grid-stack-item-content card card-orange" style="display: flex; flex-direction: column; justify-content: space-between;">
                 
                 <div style="flex-shrink: 0;">
-                    <div class="card-title" style="color: var(--neon-orange); margin-bottom: 15px; font-size: 1.2rem;">▲ORACLE VLRM ADA▼ <span style="color: #b84100;">triangular arbitrage</span></div>
+                    <div class="card-title" style="color: var(--neon-orange); margin-bottom: 15px; font-size: 1.2rem;">▲ORACLE VLRM ADA▼ <span style="color: #e65100;">triangular arbitrage</span></div>
                     
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin-bottom: 15px;">
                         <div>
@@ -857,7 +855,7 @@
                 let imp3Min = (vlrmOutMin*feeVy)/(pVA.resTok + vlrmOutMin*feeVy)*100; let finalMinVy = getAmmOut(vlrmOutMin, pVA.resTok, pVA.resAda, lpVy) - fVy - fVy;
                 if (finalVyVy > finalMinVy) { outB = finalVyVy; impactB = Math.max(imp1Vy, imp2Vy, imp3Vy); } else { outB = finalMinVy; impactB = Math.max(imp1Min, imp2Min, imp3Min); }
             }
-            if (outA > outB) return { netProfit: outA - investAda, route: null, maxImpact: impactA }; else return { netProfit: outB - investAda, route: null, maxImpact: impactB }; 
+            if (outA > outB) return { netProfit: outA - investAda, route: 'A', maxImpact: impactA }; else return { netProfit: outB - investAda, route: 'B', maxImpact: impactB }; 
         }
 
         function recalculateTriSimulator(forcedVal = null) {
