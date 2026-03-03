@@ -286,7 +286,7 @@
                         </span>
                     </div>
                 </div>
-                <div class="spark-wrapper" style="height: 85px !important; min-height: 85px !important; max-height: 85px !important; margin-top: auto;">
+                <div class="spark-wrapper" style="flex-grow: 1; height: auto; margin-top: 15px;">
                     <canvas id="spark-ada-oracle"></canvas>
                 </div>
             </div>
@@ -296,8 +296,8 @@
             <div class="grid-stack-item-content card card-vault" style="display: flex; flex-direction: column; justify-content: space-between;">
                 
                 <div style="flex-shrink: 0;">
-                    <div class="card-title" style="color: var(--vault-color); margin-bottom: 15px; font-size: 1.2rem;">ORACLE / ADA <span style="color: #8c6a1c;">arbitrage</span></div>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px;">
+                    <div class="card-title" style="color: var(--vault-color); font-size: 1.2rem; margin-bottom: 5px;">ORACLE / ADA <span style="color: #8c6a1c;">arbitrage</span></div>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin-bottom: 10px; margin-top: 25px;">
                         <div>
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                                 <h3 class="dex-subtitle"><span class="badge bg-vyfi">VYFI</span></h3>
@@ -375,7 +375,7 @@
             <div class="grid-stack-item-content card card-orange" style="display: flex; flex-direction: column; justify-content: space-between;">
                 
                 <div style="flex-shrink: 0;">
-                    <div class="card-title" style="color: var(--neon-orange); font-size: 1.2rem; margin-bottom: 5px;">▲ORACLE VLRM ADA▼ <span style="color: #a33900;">triangular arbitrage</span></div>
+                    <div class="card-title" style="color: var(--neon-orange); font-size: 1.2rem; margin-bottom: 5px;">VLRM / ORACLE / ADA <span style="color: #a33900;">triangular arbitrage</span></div>
                     
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin-bottom: 10px; margin-top: 25px;">
                         <div>
@@ -393,7 +393,7 @@
                         </div>
                         <div style="border-left: 2px solid rgba(255,255,255,0.05); padding-left: 15px;">
                             <div style="margin-bottom: 6px;">
-                                <div style="color: var(--neon-orange); font-size: 0.95rem; font-weight: 800; margin-bottom: 5px;">ORACLE / VLRM</div>
+                                <div style="color: var(--neon-orange); font-size: 0.95rem; font-weight: 800; margin-bottom: 5px;">VLRM / ORACLE</div>
                                 <div style="display: flex; justify-content: space-between; align-items: center;">
                                     <span class="badge bg-vyfi">VYFI</span>
                                     <span class="apr-badge">APR <span id="vlrm-oracle-apr">-</span>% (7d)</span>
@@ -1198,7 +1198,6 @@
                     }
                     updateDOM('oracle-total-liq', `₳ ${Math.round(totalOracleLiqAda).toLocaleString()}`);
                     
-                    // Cálculo Minswap APR Exacto
                     let minApr = "-";
                     if(data.minOracleMetrics) {
                         let exactApr = parseFloat(data.minOracleMetrics.trading_fee_apr);
