@@ -32,7 +32,6 @@
             --badge-vyfi-text: #a78bfa;
             --badge-min-bg: rgba(137, 170, 255, 0.15); 
             --badge-min-text: #89aaff; 
-            /* MODIFICADO: Textura de cráter 10% más visible (opacity='0.17') */
             --crater-texture: url("data:image/svg+xml,%3Csvg viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.17'/%3E%3C/svg%3E");
         }
 
@@ -115,7 +114,6 @@
 
         .card { border-radius: 20px; padding: 20px 25px; position: absolute; top: 0; left: 0; right: 0; bottom: 0; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); transition: background 0.3s ease, box-shadow 0.3s ease; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; }
         
-        /* 🌋 MODIFICADO: Aplicación de la textura de cráter y aumento de sombra (+10%) */
         .card-ada { box-shadow: 0 0 44px rgba(0, 0, 0, 0.88); background: var(--crater-texture), rgba(10, 11, 16, 0.98); background-blend-mode: soft-light, normal; }
         .card-ada:hover { box-shadow: 0 0 58px rgba(0, 0, 0, 1); background: var(--crater-texture), rgba(14, 15, 24, 1); background-blend-mode: soft-light, normal; }
         
@@ -125,7 +123,6 @@
         .card-orange { box-shadow: 0 0 44px rgba(0, 0, 0, 0.88); background: var(--crater-texture), rgba(14, 8, 6, 0.98); background-blend-mode: soft-light, normal; }
         .card-orange:hover { box-shadow: 0 0 58px rgba(0, 0, 0, 1); background: var(--crater-texture), rgba(18, 10, 8, 1); background-blend-mode: soft-light, normal; }
         
-        /* MODIFICADO: Tarjeta Spread (Excluida de la textura, pero aumentada sombra 10%) */
         [gs-id="card-chart"] .card { box-shadow: 0 0 44px rgba(0, 0, 0, 0.88); background: rgba(10, 11, 16, 0.98); }
         [gs-id="card-chart"] .card:hover { box-shadow: 0 0 58px rgba(0, 0, 0, 1); background: rgba(14, 15, 24, 1); }
 
@@ -247,6 +244,10 @@
     <div id="settings-modal" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-title"><span>⚙️ Preferences</span><span style="cursor:pointer;" onclick="closeModals()">✕</span></div>
+            <div class="setting-section-title">ALERT THRESHOLDS (%)</div>
+            <div class="setting-row"><span>Min. DEX Spread</span><input type="number" step="0.1" id="set-target-spread" class="setting-input"></div>
+            <div class="setting-row"><span>Min. Vault Discrepancy</span><input type="number" step="0.1" id="set-target-disc" class="setting-input"></div>
+            <div class="setting-row"><span>Min. Triangular Benefit</span><input type="number" step="0.1" id="set-target-tri" class="setting-input"></div>
             <div class="setting-section-title">SIMULATORS</div>
             <div class="setting-row"><span>Base ADA (DEX)</span><input type="number" id="set-sim-dex" class="setting-input"></div>
             <div class="setting-row"><span>Base ADA (Triangular)</span><input type="number" id="set-sim-tri" class="setting-input"></div>
@@ -481,13 +482,17 @@
         const VYFI_LINK = "https://app.vyfi.io/dex?tokenA=lovelace&tokenB=804f5530198154628ce71b6bd5a889410ea9036c64188597af2f21bc56594649";
         const MINSWAP_LINK = "https://minswap.org/swap?cA=&tA=&cB=804f5530198154628ce71b6bd5a889410ea9036c64188597af2f21bc56594649";
 
-        const LAYOUT_VERSION = "v6.0"; 
+        const LAYOUT_VERSION = "v6.1"; 
 
-        let defaultConf = { simDex: 1000, simTri: 1000, feeNet: 0.2, feeMin: 0.7, feeVyfi: 1.9, lpFeeMin: 0.3, lpFeeVyfi: 0.3 };
+        // Configuración de Umbrales de Alerta
+        let defaultConf = { simDex: 1000, simTri: 1000, feeNet: 0.2, feeMin: 0.7, feeVyfi: 1.9, lpFeeMin: 0.3, lpFeeVyfi: 0.3, targetSpread: 25, targetDisc: 30, targetTri: 5 };
         let savedConf = JSON.parse(localStorage.getItem('l4va_config')) || {};
         let conf = { ...defaultConf, ...savedConf }; 
         if(conf.simDex === undefined) conf.simDex = conf.sim || 1000;
         if(conf.simTri === undefined) conf.simTri = conf.sim || 1000;
+        if(conf.targetSpread === undefined) conf.targetSpread = 25;
+        if(conf.targetDisc === undefined) conf.targetDisc = 30;
+        if(conf.targetTri === undefined) conf.targetTri = 5;
 
         let userPasskey = localStorage.getItem('l4va_passkey') || "";
         let chartInstance = null; let sparkInstances = {}; 
@@ -628,6 +633,10 @@
         function closeModals() { document.getElementById('settings-modal').style.display = 'none'; }
         
         function openSettings() { 
+            document.getElementById('set-target-spread').value = conf.targetSpread;
+            document.getElementById('set-target-disc').value = conf.targetDisc;
+            document.getElementById('set-target-tri').value = conf.targetTri;
+
             document.getElementById('set-sim-dex').value = conf.simDex; document.getElementById('set-sim-tri').value = conf.simTri; 
             document.getElementById('set-fee-net').value = conf.feeNet; document.getElementById('set-fee-min').value = conf.feeMin; document.getElementById('set-fee-vyfi').value = conf.feeVyfi;
             document.getElementById('set-lp-min').value = conf.lpFeeMin; document.getElementById('set-lp-vyfi').value = conf.lpFeeVyfi;
@@ -635,6 +644,10 @@
         }
 
         function saveSettings() {
+            conf.targetSpread = parseFloat(document.getElementById('set-target-spread').value) || 0;
+            conf.targetDisc = parseFloat(document.getElementById('set-target-disc').value) || 0;
+            conf.targetTri = parseFloat(document.getElementById('set-target-tri').value) || 0;
+
             conf.simDex = parseFloat(document.getElementById('set-sim-dex').value) || 0; conf.simTri = parseFloat(document.getElementById('set-sim-tri').value) || 0;
             conf.feeNet = parseFloat(document.getElementById('set-fee-net').value); conf.feeMin = parseFloat(document.getElementById('set-fee-min').value); conf.feeVyfi = parseFloat(document.getElementById('set-fee-vyfi').value);
             conf.lpFeeMin = parseFloat(document.getElementById('set-lp-min').value); conf.lpFeeVyfi = parseFloat(document.getElementById('set-lp-vyfi').value);
@@ -646,7 +659,9 @@
             let stO = document.getElementById('sim-tri-input-oracle'); if(stO) stO.value = conf.simTri;
             let strO = document.getElementById('sim-tri-range-oracle'); if(strO) strO.value = conf.simTri > 200 ? 200 : conf.simTri;
             
-            closeModals(); recalculateSimulators();
+            closeModals(); 
+            recalculateSimulators();
+            fetchDexData(); 
         }
 
         function updateSimConfig(sourceId, confKey) {
@@ -806,7 +821,7 @@
             
             if(isNaN(investAda) || investAda <= 0 || !poolsToUse.vyfi || !poolsToUse.minswap) { 
                 updateDOM(simElId, "0.00 ADA"); updateSlippageUI(barId, labelId, 0); 
-                if(cardEl) cardEl.classList.remove('glow-active'); animStates['simDex'] = 0; return; 
+                return; 
             }
 
             let pVyfi = { price: 0, resAda: 0, resTok: 0 };
@@ -850,12 +865,10 @@
                 if (bestProfit > 0) { 
                     optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> Max profit <b>+${bestProfit.toFixed(2)} ADA</b> (Invest <b>${optimalInvest} ADA</b>)`; 
                     optEl.style.color = '#10b981'; 
-                    if(cardEl) cardEl.classList.add('glow-active'); 
                 }
                 else { 
                     optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> No profitable route (fees > spread).`; 
                     optEl.style.color = 'var(--text-secondary)'; 
-                    if(cardEl) cardEl.classList.remove('glow-active'); 
                 }
             }
         }
@@ -918,7 +931,13 @@
                 if (bestProfit > 0) { 
                     optEl.innerHTML = `💡 <b>Auto-Optimizer:</b> Max profit <b>+${bestProfit.toFixed(2)} ADA</b> (Invest <b>${optimalInvest} ADA</b>)`; 
                     optEl.style.color = '#10b981'; 
-                    if(cardEl) cardEl.classList.add('glow-active');
+                    
+                    // MODIFICADO: Aplicar efecto de brillo si supera el umbral del usuario (Triangular Benefit %)
+                    if(cardEl) {
+                        if (bestPercent >= conf.targetTri) cardEl.classList.add('glow-active');
+                        else cardEl.classList.remove('glow-active');
+                    }
+
                     if(triEl) { triEl.innerText = `+${bestPercent.toFixed(2)}%`; triEl.style.color = "#10b981"; }
                     if(triAnim) triAnim.style.display = "block";
                     if (optimalRoute === 'A') { if(rA) rA.className = "route-active"; if(triAnim) triAnim.className = "tri-line-active"; }
@@ -1084,7 +1103,6 @@
             if (!pool) return "-";
             let totalApr = 0;
             
-            // 1. CÁLCULO DE LA GRANJA (Convierte el valor de VYFI/VLRM regalados a ADA y luego a %)
             if (pool.farm && pool.farm.rewards && pool.tvl > 0) {
                 let dailyRewardInAda = 0;
                 
@@ -1092,12 +1110,10 @@
                     let rewardAmount = parseFloat(reward.rewardQuantityPerDay || 0);
                     let tokenPriceAda = 0;
                     
-                    // A. Buscar el precio del token en el mapa de precios directo (si existe)
                     let unitKey = (reward.policyId || '') + (reward.assetId || '');
                     if (tokenPrices && tokenPrices[unitKey]) {
                         tokenPriceAda = parseFloat(tokenPrices[unitKey]);
                     } 
-                    // B. Si no está en el mapa, buscar el pool ADA/TOKEN para sacar el precio
                     else if (allPools) {
                         let targetPool = allPools.find(p => p.unitsPair && p.unitsPair.includes('lovelace') && p.unitsPair.includes(unitKey));
                         if (targetPool) {
@@ -1113,7 +1129,6 @@
                 if (!isNaN(farmApr)) totalApr += farmApr;
             }
             
-            // 2. CÁLCULO DE COMISIONES (TRADING)
             let tvl = parseFloat(pool.tvl || 0);
             let vol7d = parseFloat(pool.last7DVolume || 0);
             
@@ -1150,7 +1165,7 @@
                 } catch(e) {}
 
                 const vyfiPoolsList = data.vyfiPools || [];
-                const vyfiPricesMap = data.vyfiPrices || {}; // Mapa de precios para calcular granjas
+                const vyfiPricesMap = data.vyfiPrices || {}; 
 
                 let priceVlrmAda = 0; let vlrmVyfiAdaReserve = 0; let vlrmVyfiTokReserve = 0; let vlrmAdaTvl = 0;
                 try {
@@ -1232,11 +1247,27 @@
                         if (validPrices.length > 0) {
                             validPrices.forEach(p => { let deviation = ((p.price - fairPrice) / fairPrice) * 100; if (Math.abs(deviation) > Math.abs(bestDeviation)) { bestDeviation = deviation; targetDexForVault = p.dex; } });
                             const vaultActionEl = document.getElementById('vault-arbitrage-action');
+                            const vaultCard = document.querySelector('[gs-id="card-arb-vault"] .card');
                             animateValue('discrepancy', 'vault-banner-discrepancy', bestDeviation, val => (val>0?'+':'') + val.toFixed(2) + '%');
 
                             let targetLink = targetDexForVault === "Minswap" ? MINSWAP_LINK : VYFI_LINK; 
-                            if (Math.abs(bestDeviation) < 0.5) { updateDOM('vault-banner-discrepancy', undefined, "rgba(255, 255, 255, 0.5)"); if(vaultActionEl) vaultActionEl.innerHTML = `<span style="color: rgba(255, 255, 255, 0.6);">Balanced</span>`; } 
-                            else { if (bestDeviation > 0) { updateDOM('vault-banner-discrepancy', undefined, "#10b981"); if(vaultActionEl) vaultActionEl.innerHTML = `<a href="${targetLink}" target="_blank" class="badge-dark">Sell ${targetDexForVault}</a>`; } else { updateDOM('vault-banner-discrepancy', undefined, "var(--neon-red)"); if(vaultActionEl) vaultActionEl.innerHTML = `<a href="${targetLink}" target="_blank" class="badge-dark">Buy ${targetDexForVault}</a>`; } }
+                            
+                            // MODIFICADO: Lógica de umbral e iluminación para Vault Discrepancy
+                            if (Math.abs(bestDeviation) < conf.targetDisc) { 
+                                updateDOM('vault-banner-discrepancy', undefined, "rgba(255, 255, 255, 0.5)"); 
+                                if(vaultActionEl) vaultActionEl.innerHTML = `<span style="color: rgba(255, 255, 255, 0.6);">Balanced</span>`; 
+                                if(vaultCard) vaultCard.classList.remove('glow-active');
+                            } 
+                            else { 
+                                if (bestDeviation > 0) { 
+                                    updateDOM('vault-banner-discrepancy', undefined, "#10b981"); 
+                                    if(vaultActionEl) vaultActionEl.innerHTML = `<a href="${targetLink}" target="_blank" class="badge-dark">Sell ${targetDexForVault}</a>`; 
+                                } else { 
+                                    updateDOM('vault-banner-discrepancy', undefined, "var(--neon-red)"); 
+                                    if(vaultActionEl) vaultActionEl.innerHTML = `<a href="${targetLink}" target="_blank" class="badge-dark">Buy ${targetDexForVault}</a>`; 
+                                }
+                                if(vaultCard) vaultCard.classList.add('glow-active');
+                            }
                         }
                     } else { updateDOM('vault-tvl', `<span class="loading">API Offline</span>`); updateDOM('vault-fair-price', `-`); updateDOM('vault-banner-discrepancy', `-%`, "rgba(255, 255, 255, 0.5)"); updateDOM('vault-arbitrage-action', `<span style="color: rgba(255, 255, 255, 0.6);">Offline</span>`); }
                 } catch(e) { console.error("Error Vault", e); }
@@ -1247,19 +1278,24 @@
                         const highestPrice = Math.max(priceVyfi, priceMin); const lowestPrice = Math.min(priceVyfi, priceMin); spread = ((highestPrice - lowestPrice) / lowestPrice) * 100;
                         const oracleCardActionEl = document.getElementById('oracle-card-arbitrage-action');
                         const oracleCardSpread = document.getElementById('oracle-card-arbitrage-spread');
+                        const dexCard = document.querySelector('[gs-id="card-oracle-ada"] .card');
+
                         if (oracleCardSpread) {
                             animateValue('spread', 'oracle-card-arbitrage-spread', spread, val => val.toFixed(2) + '%');
-                            oracleCardSpread.style.color = spread > 0.5 ? "#10b981" : "rgba(255,255,255,0.5)";
+                            oracleCardSpread.style.color = spread >= conf.targetSpread ? "#10b981" : "rgba(255,255,255,0.5)";
                         }
 
-                        if (spread < 0.5) { 
+                        // MODIFICADO: Lógica de umbral e iluminación para DEX Spread
+                        if (spread < conf.targetSpread) { 
                             if(oracleCardActionEl) oracleCardActionEl.innerHTML = `<span style="color: rgba(255, 255, 255, 0.6);">Low spread</span>`;
+                            if(dexCard) dexCard.classList.remove('glow-active');
                         } 
                         else { 
                             let actionHTML = "";
                             if (priceVyfi > priceMin) { actionHTML = `<a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Buy Minswap</a> <a href="${VYFI_LINK}" target="_blank" class="badge-dark">Sell VyFi</a>`; } 
                             else { actionHTML = `<a href="${VYFI_LINK}" target="_blank" class="badge-dark">Buy VyFi</a> <a href="${MINSWAP_LINK}" target="_blank" class="badge-dark">Sell Minswap</a>`; }
                             if(oracleCardActionEl) oracleCardActionEl.innerHTML = actionHTML;
+                            if(dexCard) dexCard.classList.add('glow-active');
                         }
                     }
                     
