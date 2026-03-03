@@ -300,7 +300,7 @@
                         <div>
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                                 <h3 class="dex-subtitle"><span class="badge bg-vyfi">VYFI</span></h3>
-                                <span class="apr-badge">APR <span id="oracle-vyfi-apr">-</span>%</span>
+                                <span class="apr-badge">APR <span id="oracle-vyfi-apr">-</span>% (7d)</span>
                             </div>
                             <div class="data-row" style="font-size: 1.1rem;"><span class="data-label">Price:</span><span class="data-value" style="font-size: 1.25rem;"><span id="oracle-vyfi-price" class="loading">...</span> <span id="oracle-vyfi-price-change-24h" class="change-badge"></span></span></div>
                             <div class="spark-wrapper" style="height: 45px !important; min-height: 45px !important; margin-bottom: 15px;"><canvas id="spark-oracle-vyfi-price"></canvas></div>
@@ -311,7 +311,7 @@
                         <div style="border-left: 2px solid rgba(255,255,255,0.05); padding-left: 15px;">
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                                 <h3 class="dex-subtitle"><span class="badge bg-minswap">MINSWAP</span></h3>
-                                <span class="apr-badge">APR <span id="oracle-min-apr">-</span>%</span>
+                                <span class="apr-badge">APR <span id="oracle-min-apr">-</span>% (30d)</span>
                             </div>
                             <div class="data-row" style="font-size: 1.1rem;"><span class="data-label">Price:</span><span class="data-value" style="font-size: 1.25rem;"><span id="oracle-min-price" class="loading">...</span> <span id="oracle-min-price-change-24h" class="change-badge"></span></span></div>
                             <div class="spark-wrapper" style="height: 45px !important; min-height: 45px !important; margin-bottom: 15px;"><canvas id="spark-oracle-min-price"></canvas></div>
@@ -380,7 +380,7 @@
                         <div>
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                                 <h3 class="dex-subtitle" style="color: var(--neon-orange); font-size: 0.95rem;">VLRM / ADA <span class="badge bg-vyfi" style="font-size: 0.6rem;">VyFi</span></h3>
-                                <span class="apr-badge">APR <span id="vlrm-ada-apr">-</span>%</span>
+                                <span class="apr-badge">APR <span id="vlrm-ada-apr">-</span>% (7d)</span>
                             </div>
                             <div class="data-row"><span class="data-label">Price:</span><span class="data-value" style="font-size: 1.15rem;"><span id="vlrm-price-ada" class="loading">...</span> <span id="vlrm-price-change-24h" class="change-badge"></span></span></div>
                             <div class="spark-wrapper" style="height: 45px !important; min-height: 45px !important; margin-bottom: 15px;"><canvas id="spark-vlrm-ada-price"></canvas></div>
@@ -390,7 +390,7 @@
                         <div style="border-left: 2px solid rgba(255,255,255,0.05); padding-left: 15px;">
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                                 <h3 class="dex-subtitle" style="color: var(--neon-orange); font-size: 0.95rem;">ORACLE / VLRM <span class="badge bg-vyfi" style="font-size: 0.6rem;">VyFi</span></h3>
-                                <span class="apr-badge">APR <span id="vlrm-oracle-apr">-</span>%</span>
+                                <span class="apr-badge">APR <span id="vlrm-oracle-apr">-</span>% (7d)</span>
                             </div>
                             <div class="data-row"><span class="data-label">Price:</span><span class="data-value" style="font-size: 1.15rem;"><span id="vlrm-oracle-price" class="loading">...</span> <span id="vlrm-oracle-price-change-24h" class="change-badge"></span></span></div>
                             <div class="spark-wrapper" style="height: 45px !important; min-height: 45px !important; margin-bottom: 15px;"><canvas id="spark-vlrm-oracle-price"></canvas></div>
@@ -1065,32 +1065,27 @@
             } catch (error) { console.error("Error cargando ADA:", error); return null; }
         }
 
-        // --- CÁLCULO MATEMÁTICO DE APR PARA VYFI ---
+        // --- CÁLCULO MATEMÁTICO DE APR PARA VYFI BASADO EXCLUSIVAMENTE EN 7 DÍAS ---
         const getVyfiApr = (pool) => {
             if (!pool) return "-";
             let totalApr = 0;
             
-            // 1. APR de la granja activa (si la hay)
             if (pool.farm) {
                 let farmApr = parseFloat(pool.farm.apr || pool.farm.farmingApr || 0);
                 if (!isNaN(farmApr)) totalApr += farmApr;
             }
             
-            // 2. APR de Comisiones de Trading
             let tvl = parseFloat(pool.tvl || 0);
-            let vol24h = parseFloat(pool.last24HVolume || 0);
+            let vol7d = parseFloat(pool.last7DVolume || 0);
             
-            // ¡EL SECRETO!: Si el vol de 24h es 0, usamos la media de 7 días.
-            if (vol24h === 0 && pool.last7DVolume) {
-                vol24h = parseFloat(pool.last7DVolume) / 7;
-            }
-            
-            if (tvl > 0 && vol24h > 0) {
-                let feePercentage = 0.002; // Asumimos 0.2% por defecto
+            if (tvl > 0 && vol7d > 0) {
+                let feePercentage = 0.002; 
                 if (pool.feesSettings && pool.feesSettings.liqFee) {
                     feePercentage = pool.feesSettings.liqFee / 10000;
                 }
-                let tradingApr = ((vol24h * feePercentage) / tvl) * 365 * 100;
+                // Media diaria del volumen de los últimos 7 días
+                let dailyVol = vol7d / 7;
+                let tradingApr = ((dailyVol * feePercentage) / tvl) * 365 * 100;
                 totalApr += tradingApr;
             }
             
