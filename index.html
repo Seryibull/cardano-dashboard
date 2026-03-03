@@ -1065,11 +1065,33 @@
             } catch (error) { console.error("Error cargando ADA:", error); return null; }
         }
 
-        // --- BUSCADOR ULTRA-AGRESIVO DE APR ---
-        const getVyfiApr = (pool) => {
-            if (!pool) return "-";
-            let apr = pool.apr || pool.totalApr || pool.farmingApr || pool.poolApr || pool.annualPercentageYield || pool.feeApr || 0;
-            if(typeof apr === 'string') apr = parseFloat(apr.replace('%', ''));
+        // --- BUSCADOR RECURSIVO Y AGRESIVO DE APR ---
+        const extractApr = (poolObj, metricsObj) => {
+            let apr = 0;
+            // 1. Busca en el objeto de métricas (si existe)
+            if (metricsObj) {
+                const findApr = (obj) => {
+                    if (typeof obj !== 'object' || obj === null) return;
+                    for (let k in obj) {
+                        let lowerK = k.toLowerCase();
+                        if (lowerK === 'apr' || lowerK === 'poolapr' || lowerK === 'feeapr' || lowerK === 'totalapr' || lowerK === 'farmingapr') {
+                            let v = parseFloat(obj[k]);
+                            if (!isNaN(v) && v > apr && v < 1000) apr = v; 
+                        } else if (typeof obj[k] === 'object') {
+                            findApr(obj[k]);
+                        }
+                    }
+                };
+                findApr(metricsObj);
+            }
+            
+            // 2. Si no encuentra nada, busca en el objeto del pool general
+            if (apr === 0 && poolObj) {
+                let poolApr = poolObj.apr || poolObj.totalApr || poolObj.farmingApr || poolObj.poolApr || poolObj.annualPercentageYield || poolObj.feeApr || 0;
+                if(typeof poolApr === 'string') poolApr = parseFloat(poolApr.replace('%', ''));
+                if(!isNaN(poolApr) && poolApr > 0) apr = poolApr;
+            }
+
             if (!apr || isNaN(apr) || apr <= 0) return "-";
             return parseFloat(apr).toFixed(2);
         };
@@ -1081,16 +1103,12 @@
                 const data = await response.json(); if (data.error) throw new Error(data.error);
                 
                 let vaultTvlData = parseFloat(data.vaultTvl) || 0;
-                
                 try {
                     const vaultRes = await fetch(`https://app.l4va.org/api/v1/vaults/5ac2ac4f-9079-40cb-94ae-a265bfba3bcd?t=${Date.now()}`);
                     if(vaultRes.ok) { 
                         const vJson = await vaultRes.json(); 
-                        let val = undefined;
-                        if (vJson && vJson.assetsPrices && vJson.assetsPrices.totalValueAda) val = vJson.assetsPrices.totalValueAda;
-                        else if (vJson && vJson.tvl) val = vJson.tvl;
-                        else if (vJson && vJson.data && vJson.data.assetsPrices && vJson.data.assetsPrices.totalValueAda) val = vJson.data.assetsPrices.totalValueAda;
-                        else if (vJson && vJson.data && vJson.data.tvl) val = vJson.data.tvl;
+                        let val = vJson?.assetsPrices?.totalValueAda ?? vJson.tvl ?? vJson.fdv ?? vJson.totalValueLocked;
+                        if (val === undefined && vJson.data) val = vJson.data?.assetsPrices?.totalValueAda ?? vJson.data.tvl;
                         let liveTvl = parseFloat(val) || 0;
                         if(liveTvl > 0) vaultTvlData = liveTvl; 
                     }
@@ -1107,7 +1125,8 @@
                         updateDOM('vlrm-price-ada', `₳ ${(priceVlrmAda||0).toFixed(6)}`); document.getElementById('vlrm-price-ada').classList.remove('loading'); 
                         updateDOM('vlrm-liq-ada', `₳ ${Math.round(vlrmAdaTvl).toLocaleString()}`); 
                         vlrmVyfiAdaReserve = vlrmAdaTvl / 2; vlrmVyfiTokReserve = vlrmVyfiAdaReserve / priceVlrmAda; 
-                        updateDOM('vlrm-ada-apr', getVyfiApr(vlrmVyfiPool));
+                        
+                        updateDOM('vlrm-ada-apr', extractApr(vlrmVyfiPool, data.vyfiVlrmAdaMetrics));
                     }
                 } catch(e) { console.error(e); }
 
@@ -1120,7 +1139,8 @@
                         if (crossVlrmReserve > 0) { oraclePerVlrmUI = crossOracleReserve / crossVlrmReserve; } 
                         updateDOM('vlrm-oracle-price', `${(oraclePerVlrmUI||0).toFixed(4)}`); document.getElementById('vlrm-oracle-price').classList.remove('loading'); 
                         updateDOM('vlrm-oracle-liq-ada', `₳ ${Math.round(crossTvl).toLocaleString()}`); 
-                        updateDOM('vlrm-oracle-apr', getVyfiApr(crossPool));
+                        
+                        updateDOM('vlrm-oracle-apr', extractApr(crossPool, data.vyfiOraVlrmMetrics));
                     }
                 } catch(e) { console.error(e); }
 
@@ -1132,7 +1152,8 @@
                         vyfiTvLAda = oracleVyfiPool.tvl; totalOracleLiqAda += vyfiTvLAda; 
                         updateDOM('oracle-vyfi-price', `₳ ${(priceVyfi||0).toFixed(6)}`); document.getElementById('oracle-vyfi-price').classList.remove('loading'); 
                         updateDOM('oracle-vyfi-liq', `₳ ${Math.round(vyfiTvLAda).toLocaleString()}`); document.getElementById('oracle-vyfi-liq').classList.remove('loading'); 
-                        updateDOM('oracle-vyfi-apr', getVyfiApr(oracleVyfiPool));
+                        
+                        updateDOM('oracle-vyfi-apr', extractApr(oracleVyfiPool, data.vyfiOraAdaMetrics));
                     }
                 } catch(e) { console.error(e); }
 
@@ -1148,14 +1169,22 @@
                     }
                     updateDOM('oracle-total-liq', `₳ ${Math.round(totalOracleLiqAda).toLocaleString()}`);
                     
-                    // Cálculo Minswap APR
+                    // Cálculo Minswap APR robusto
                     let minApr = "-";
-                    if(data.minOracleInfo) {
-                        let farmApr = parseFloat(data.minOracleInfo.farmingApr || data.minOracleInfo.farmingApy || 0);
-                        let feeApr = parseFloat(data.minOracleInfo.feeApr || data.minOracleInfo.feeApy || 0);
-                        let directApr = parseFloat(data.minOracleInfo.apr || data.minOracleInfo.yieldPercentage || 0);
-                        let totalMinApr = directApr > 0 ? directApr : (farmApr + feeApr);
-                        if(totalMinApr > 0) minApr = totalMinApr.toFixed(2);
+                    if(data.minOracleMetrics) {
+                        // A veces minswap devuelve un array histórico, tomamos el último
+                        let metrics = Array.isArray(data.minOracleMetrics) ? data.minOracleMetrics[data.minOracleMetrics.length - 1] : data.minOracleMetrics;
+                        if (metrics) {
+                            let farmApr = parseFloat(metrics.farmingApr || metrics.farmingApy || 0);
+                            let feeApr = parseFloat(metrics.feeApr || metrics.feeApy || 0);
+                            let directApr = parseFloat(metrics.apr || metrics.yieldPercentage || 0);
+                            let totalMinApr = directApr > 0 ? directApr : (farmApr + feeApr);
+                            
+                            // Si devuelve 0.05, lo multiplicamos a 5%
+                            if (totalMinApr > 0 && totalMinApr < 1) totalMinApr = totalMinApr * 100;
+                            
+                            if(totalMinApr > 0) minApr = totalMinApr.toFixed(2);
+                        }
                     }
                     updateDOM('oracle-min-apr', minApr);
 
