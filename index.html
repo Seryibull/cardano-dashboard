@@ -153,7 +153,8 @@
         .data-label { color: var(--text-secondary); font-weight: 500; }
         .data-value { font-weight: 800; font-size: 1.25rem; color: var(--text-primary); display: flex; align-items: center; gap: 8px;}
         .change-badge { font-size: 0.8rem; font-weight: 800; }
-        .badge { font-size: 0.75rem; padding: 4px 10px; border-radius: 20px; font-weight: 700; text-transform: uppercase; border: 1px solid transparent; }
+        .badge { font-size: 0.75rem; padding: 4px 10px; border-radius: 20px; font-weight: 700; text-transform: uppercase; border: 1px solid transparent; transition: 0.2s; }
+        .badge:hover { transform: scale(1.05); }
         .bg-vyfi { background: var(--badge-vyfi-bg); color: var(--badge-vyfi-text); border-color: var(--badge-vyfi-text); }
         .bg-minswap { background: var(--badge-min-bg); color: var(--badge-min-text); border-color: var(--badge-min-text); }
         
@@ -322,7 +323,9 @@
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin-bottom: 10px; margin-top: 25px;">
                         <div>
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                                <h3 class="dex-subtitle"><span class="badge bg-vyfi">VYFI</span></h3>
+                                <h3 class="dex-subtitle">
+                                    <a href="https://app.vyfi.io/dex?tokenA=328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b27393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4&tokenB=lovelace" target="_blank" style="text-decoration:none;"><span class="badge bg-vyfi" title="Open Pair in VyFi">VYFI ↗</span></a>
+                                </h3>
                                 <span class="apr-badge">APR <span id="oracle-vyfi-apr">-</span>% (7d)</span>
                             </div>
                             <div class="data-row" style="font-size: 1.1rem;"><span class="data-label">Price:</span><span class="data-value" style="font-size: 1.25rem;"><span id="oracle-vyfi-price" class="loading">...</span> <span id="oracle-vyfi-price-change-24h" class="change-badge"></span></span></div>
@@ -333,7 +336,9 @@
                         </div>
                         <div style="border-left: 2px solid rgba(255,255,255,0.05); padding-left: 15px;">
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                                <h3 class="dex-subtitle"><span class="badge bg-minswap">MINSWAP</span></h3>
+                                <h3 class="dex-subtitle">
+                                    <a href="https://minswap.org/swap?cA=&tA=&cB=328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b2&tB=7393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4" target="_blank" style="text-decoration:none;"><span class="badge bg-minswap" title="Open Pair in Minswap">MINSWAP ↗</span></a>
+                                </h3>
                                 <span class="apr-badge">APR <span id="oracle-min-apr">-</span>% (30d)</span>
                             </div>
                             <div class="data-row" style="font-size: 1.1rem;"><span class="data-label">Price:</span><span class="data-value" style="font-size: 1.25rem;"><span id="oracle-min-price" class="loading">...</span> <span id="oracle-min-price-change-24h" class="change-badge"></span></span></div>
@@ -402,7 +407,9 @@
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin-bottom: 10px; margin-top: 25px;">
                         <div>
                             <div style="margin-bottom: 6px;">
-                                <div style="color: var(--neon-orange); font-size: 0.95rem; font-weight: 800; margin-bottom: 5px;">VLRM / ADA</div>
+                                <div style="color: var(--neon-orange); font-size: 0.95rem; font-weight: 800; margin-bottom: 5px;">
+                                    <a href="https://app.vyfi.io/dex?tokenA=63efb704b7396890e4d9539d030c0e667739043add65c00f96c586c056616c6f72756d&tokenB=lovelace" target="_blank" style="color: inherit; text-decoration: none;" title="Open Pair in VyFi">VLRM / ADA ↗</a>
+                                </div>
                                 <div style="display: flex; justify-content: space-between; align-items: center;">
                                     <span class="badge bg-vyfi">VYFI</span>
                                     <span class="apr-badge">APR <span id="vlrm-ada-apr">-</span>% (7d)</span>
@@ -415,7 +422,9 @@
                         </div>
                         <div style="border-left: 2px solid rgba(255,255,255,0.05); padding-left: 15px;">
                             <div style="margin-bottom: 6px;">
-                                <div style="color: var(--neon-orange); font-size: 0.95rem; font-weight: 800; margin-bottom: 5px;">VLRM / ORACLE</div>
+                                <div style="color: var(--neon-orange); font-size: 0.95rem; font-weight: 800; margin-bottom: 5px;">
+                                    <a href="https://app.vyfi.io/dex?tokenA=63efb704b7396890e4d9539d030c0e667739043add65c00f96c586c056616c6f72756d&tokenB=328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b27393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4" target="_blank" style="color: inherit; text-decoration: none;" title="Open Pair in VyFi">VLRM / ORACLE ↗</a>
+                                </div>
                                 <div style="display: flex; justify-content: space-between; align-items: center;">
                                     <span class="badge bg-vyfi">VYFI</span>
                                     <span class="apr-badge">APR <span id="vlrm-oracle-apr">-</span>% (7d)</span>
@@ -493,11 +502,15 @@
         const ORACLE = "328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b27393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
         const ORACLE_TOTAL_SUPPLY = 1000000;
         
-        const VYFI_LINK = "https://app.vyfi.io/dex?tokenA=lovelace&tokenB=804f5530198154628ce71b6bd5a889410ea9036c64188597af2f21bc56594649";
-        const MINSWAP_LINK = "https://app-monorepo-mainnet-prod.minswap.org/swap?currencySymbolA=&tokenNameA=&currencySymbolB=328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b2&tokenNameB=7393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
+        // Deep Links Directos
+        const VYFI_ORACLE_ADA_LINK = "https://app.vyfi.io/dex?tokenA=328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b27393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4&tokenB=lovelace";
+        const VYFI_VLRM_ADA_LINK = "https://app.vyfi.io/dex?tokenA=63efb704b7396890e4d9539d030c0e667739043add65c00f96c586c056616c6f72756d&tokenB=lovelace";
+        const MINSWAP_ORACLE_ADA_LINK = "https://minswap.org/swap?cA=&tA=&cB=328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b2&tB=7393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
+        const VYFI_VLRM_ORACLE_LINK = "https://app.vyfi.io/dex?tokenA=63efb704b7396890e4d9539d030c0e667739043add65c00f96c586c056616c6f72756d&tokenB=328a18bac517630826a106bff1a55caf455de84cdba98416f8e093b27393c37310950f58596be5013b942d52accb931c2800cf132db36fb5fd7d71c4";
 
         const LAYOUT_VERSION = "v6.0"; 
 
+        // Configuración de Umbrales de Alerta
         let defaultConf = { simDex: 1000, simTri: 1000, feeNet: 0.2, feeMin: 0.7, feeVyfi: 1.9, lpFeeMin: 0.3, lpFeeVyfi: 0.3, targetSpread: 25, targetDisc: 30, targetTri: 5 };
         let savedConf = JSON.parse(localStorage.getItem('l4va_config')) || {};
         let conf = { ...defaultConf, ...savedConf }; 
@@ -1289,22 +1302,24 @@
                             const vaultCard = document.querySelector('[gs-id="card-arb-vault"] .card');
                             animateValue('discrepancy', 'vault-banner-discrepancy', bestDeviation, val => (val>0?'+':'') + val.toFixed(2) + '%');
 
-                            let targetLink = targetDexForVault === "Minswap" ? MINSWAP_LINK + dexAmountParam : VYFI_LINK + dexAmountParam; 
+                            let targetLink = targetDexForVault === "Minswap" ? MINSWAP_ORACLE_ADA_LINK + dexAmountParam : VYFI_ORACLE_ADA_LINK + dexAmountParam; 
                             
-                            if (Math.abs(bestDeviation) < conf.targetDisc) { 
+                            // MODIFICADO: Muestra siempre los botones. El color de la variable y el GLOW se activan con el threshold.
+                            if (bestDeviation > 0) { 
+                                updateDOM('vault-banner-discrepancy', undefined, Math.abs(bestDeviation) >= conf.targetDisc ? "#10b981" : "rgba(255, 255, 255, 0.5)"); 
+                                if(vaultActionEl) vaultActionEl.innerHTML = `<a href="${targetLink}" target="_blank" class="badge-dark">Sell ${targetDexForVault}</a>`; 
+                            } else if (bestDeviation < 0) { 
+                                updateDOM('vault-banner-discrepancy', undefined, Math.abs(bestDeviation) >= conf.targetDisc ? "var(--neon-red)" : "rgba(255, 255, 255, 0.5)"); 
+                                if(vaultActionEl) vaultActionEl.innerHTML = `<a href="${targetLink}" target="_blank" class="badge-dark">Buy ${targetDexForVault}</a>`; 
+                            } else {
                                 updateDOM('vault-banner-discrepancy', undefined, "rgba(255, 255, 255, 0.5)"); 
                                 if(vaultActionEl) vaultActionEl.innerHTML = `<span style="color: rgba(255, 255, 255, 0.6);">Balanced</span>`; 
-                                if(vaultCard) vaultCard.classList.remove('glow-active');
-                            } 
-                            else { 
-                                if (bestDeviation > 0) { 
-                                    updateDOM('vault-banner-discrepancy', undefined, "#10b981"); 
-                                    if(vaultActionEl) vaultActionEl.innerHTML = `<a href="${targetLink}" target="_blank" class="badge-dark">Sell ${targetDexForVault}</a>`; 
-                                } else { 
-                                    updateDOM('vault-banner-discrepancy', undefined, "var(--neon-red)"); 
-                                    if(vaultActionEl) vaultActionEl.innerHTML = `<a href="${targetLink}" target="_blank" class="badge-dark">Buy ${targetDexForVault}</a>`; 
-                                }
-                                if(vaultCard) vaultCard.classList.add('glow-active');
+                            }
+
+                            // Glow effect
+                            if(vaultCard) {
+                                if (Math.abs(bestDeviation) >= conf.targetDisc) vaultCard.classList.add('glow-active');
+                                else vaultCard.classList.remove('glow-active');
                             }
                         }
                     } else { updateDOM('vault-tvl', `<span class="loading">API Offline</span>`); updateDOM('vault-fair-price', `-`); updateDOM('vault-banner-discrepancy', `-%`, "rgba(255, 255, 255, 0.5)"); updateDOM('vault-arbitrage-action', `<span style="color: rgba(255, 255, 255, 0.6);">Offline</span>`); }
@@ -1323,16 +1338,21 @@
                             oracleCardSpread.style.color = spread >= conf.targetSpread ? "#10b981" : "rgba(255,255,255,0.5)";
                         }
 
-                        if (spread < conf.targetSpread) { 
-                            if(oracleCardActionEl) oracleCardActionEl.innerHTML = `<span style="color: rgba(255, 255, 255, 0.6);">Low spread</span>`;
-                            if(dexCard) dexCard.classList.remove('glow-active');
-                        } 
-                        else { 
-                            let actionHTML = "";
-                            if (priceVyfi > priceMin) { actionHTML = `<a href="${MINSWAP_LINK}${dexAmountParam}" target="_blank" class="badge-dark">Buy Minswap</a> <a href="${VYFI_LINK}${dexAmountParam}" target="_blank" class="badge-dark">Sell VyFi</a>`; } 
-                            else { actionHTML = `<a href="${VYFI_LINK}${dexAmountParam}" target="_blank" class="badge-dark">Buy VyFi</a> <a href="${MINSWAP_LINK}${dexAmountParam}" target="_blank" class="badge-dark">Sell Minswap</a>`; }
-                            if(oracleCardActionEl) oracleCardActionEl.innerHTML = actionHTML;
-                            if(dexCard) dexCard.classList.add('glow-active');
+                        // MODIFICADO: Muestra siempre los botones. El GLOW y el color verde dependen del threshold.
+                        let actionHTML = "";
+                        if (priceVyfi > priceMin) { 
+                            actionHTML = `<a href="${MINSWAP_ORACLE_ADA_LINK}${dexAmountParam}" target="_blank" class="badge-dark">Buy Minswap</a> <a href="${VYFI_ORACLE_ADA_LINK}${dexAmountParam}" target="_blank" class="badge-dark">Sell VyFi</a>`; 
+                        } else if (priceVyfi < priceMin) { 
+                            actionHTML = `<a href="${VYFI_ORACLE_ADA_LINK}${dexAmountParam}" target="_blank" class="badge-dark">Buy VyFi</a> <a href="${MINSWAP_ORACLE_ADA_LINK}${dexAmountParam}" target="_blank" class="badge-dark">Sell Minswap</a>`; 
+                        } else {
+                            actionHTML = `<span style="color: rgba(255, 255, 255, 0.6);">Balanced</span>`;
+                        }
+                        if(oracleCardActionEl) oracleCardActionEl.innerHTML = actionHTML;
+
+                        // Glow effect
+                        if(dexCard) {
+                            if (spread >= conf.targetSpread) dexCard.classList.add('glow-active');
+                            else dexCard.classList.remove('glow-active');
                         }
                     }
                     
@@ -1351,7 +1371,7 @@
 
         async function startEngine() { 
             initSortable(); initCharts(); 
-            startProgressTimer(); // Inicia el reloj de latido
+            startProgressTimer(); 
             await fetchHistoryFromCloudflare(); 
             await fetchAdaData(); 
             await fetchDexData(); 
