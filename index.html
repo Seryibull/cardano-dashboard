@@ -118,7 +118,7 @@
 
         .card { border-radius: 20px; padding: 20px 25px; position: absolute; top: 0; left: 0; right: 0; bottom: 0; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); transition: background 0.3s ease, box-shadow 0.3s ease; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; }
         
-        /* 🌋 FONDOS REVERTIDOS (NEGROS PROFUNDOS) */
+        /* 🌋 FONDOS OSCUROS CLÁSICOS CON TEXTURA */
         .card-ada { box-shadow: 0 0 44px rgba(0, 0, 0, 0.88); background: var(--crater-texture), rgba(10, 11, 16, 0.98); background-blend-mode: soft-light, normal; }
         .card-ada:hover { box-shadow: 0 0 58px rgba(0, 0, 0, 1); background: var(--crater-texture), rgba(14, 15, 24, 1); background-blend-mode: soft-light, normal; }
         
@@ -241,7 +241,7 @@
         </div>
         <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: flex-end; margin-top: 5px;">
             <div class="header-btn" onclick="toggleRadarPanel()" title="Opportunity Radar Log">📜</div>
-            <div class="header-btn" onclick="toggleFullScreen()" title="Cinema / Wall Street Mode">𖩱</div>
+            <div class="header-btn" onclick="toggleFullScreen()" title="Cinema / Wall Street Mode">🖵</div>
             <div class="header-btn" id="edit-mode-btn" onclick="toggleEditMode()" title="Unlock Dashboard Layout">🔒</div>
             <div class="header-btn settings-btn" onclick="openSettings()" title="Settings">⚙️</div>
         </div>
@@ -739,7 +739,17 @@
         }
         
         function updateSparklines(vAdaTvl, vOraTvl, oVyfiTvl, oMinTvl, vaultTvl, pVAda, pVOra, pOVyfi, pOMin) {
-            chartHistory.vlrmAda.push(vAdaTvl); chartHistory.vlrmOracle.push(vOraTvl); chartHistory.oracleVyfi.push(oVyfiTvl); chartHistory.oracleMin.push(oMinTvl); chartHistory.vault.push(vaultTvl); chartHistory.totalLiq.push((oVyfiTvl !== null && oMinTvl !== null) ? (oVyfiTvl + oMinTvl) : null); chartHistory.pVlrmAda.push(pVAda); chartHistory.pVlrmOracle.push(pVOra); chartHistory.pOracleVyfi.push(pOVyfi); chartHistory.pOracleMin.push(pOMin);
+            // 🛑 APLICACIÓN DEL FILTRO DE CEROS EN TIEMPO REAL A LA LIQUIDEZ Y AL PRECIO
+            chartHistory.vlrmAda.push(vAdaTvl || null); 
+            chartHistory.vlrmOracle.push(vOraTvl || null); 
+            chartHistory.oracleVyfi.push(oVyfiTvl || null); 
+            chartHistory.oracleMin.push(oMinTvl || null); 
+            chartHistory.vault.push(vaultTvl || null); 
+            chartHistory.totalLiq.push((oVyfiTvl && oMinTvl) ? (oVyfiTvl + oMinTvl) : null); 
+            chartHistory.pVlrmAda.push(pVAda || null); 
+            chartHistory.pVlrmOracle.push(pVOra || null); 
+            chartHistory.pOracleVyfi.push(pOVyfi || null); 
+            chartHistory.pOracleMin.push(pOMin || null);
             
             if(chartHistory.vlrmAda.length > MAX_CHART_POINTS) { 
                 chartHistory.vlrmAda.shift(); chartHistory.vlrmOracle.shift(); chartHistory.oracleVyfi.shift(); chartHistory.oracleMin.shift(); chartHistory.vault.shift(); chartHistory.totalLiq.shift(); chartHistory.pVlrmAda.shift(); chartHistory.pVlrmOracle.shift(); chartHistory.pOracleVyfi.shift(); chartHistory.pOracleMin.shift(); 
@@ -1004,8 +1014,11 @@
                     const keysFill = Object.keys(expandedHistory);
                     for (let key of keysFill) { 
                         if (key === 'labels') continue; 
+                        // 🛑 MODIFICADO: APLICACIÓN DE FILTRO DE CEROS A LIQUIDEZ Y PRECIOS (EXCEPTO SPREADS/PERCENTAJES)
                         for (let k = 0; k < expandedHistory[key].length; k++) { 
-                            if (expandedHistory[key][k] === 0 && key.startsWith('p')) { expandedHistory[key][k] = null; }
+                            if (expandedHistory[key][k] === 0 && !['spread', 'discrepancy', 'vlrmOracleSpread'].includes(key)) { 
+                                expandedHistory[key][k] = null; 
+                            }
                         }
                     }
 
