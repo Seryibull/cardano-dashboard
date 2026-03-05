@@ -118,25 +118,25 @@
 
         .card { border-radius: 20px; padding: 20px 25px; position: absolute; top: 0; left: 0; right: 0; bottom: 0; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); transition: background 0.3s ease, box-shadow 0.3s ease; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; }
         
-        /* 🌋 Tarjetas 10% más claras (RGB incrementado) + Sombras altas */
-        .card-ada { box-shadow: 0 0 44px rgba(0, 0, 0, 0.88); background: var(--crater-texture), rgba(30, 31, 38, 0.98); background-blend-mode: soft-light, normal; }
-        .card-ada:hover { box-shadow: 0 0 58px rgba(0, 0, 0, 1); background: var(--crater-texture), rgba(36, 38, 48, 1); background-blend-mode: soft-light, normal; }
+        /* 🌋 FONDOS REVERTIDOS (NEGROS PROFUNDOS) */
+        .card-ada { box-shadow: 0 0 44px rgba(0, 0, 0, 0.88); background: var(--crater-texture), rgba(10, 11, 16, 0.98); background-blend-mode: soft-light, normal; }
+        .card-ada:hover { box-shadow: 0 0 58px rgba(0, 0, 0, 1); background: var(--crater-texture), rgba(14, 15, 24, 1); background-blend-mode: soft-light, normal; }
         
-        .card-vault { box-shadow: 0 0 44px rgba(0, 0, 0, 0.88); background: var(--crater-texture), rgba(35, 32, 28, 0.98); background-blend-mode: soft-light, normal; }
-        .card-vault:hover { box-shadow: 0 0 58px rgba(0, 0, 0, 1); background: var(--crater-texture), rgba(42, 38, 33, 1); background-blend-mode: soft-light, normal; }
+        .card-vault { box-shadow: 0 0 44px rgba(0, 0, 0, 0.88); background: var(--crater-texture), rgba(13, 11, 8, 0.98); background-blend-mode: soft-light, normal; }
+        .card-vault:hover { box-shadow: 0 0 58px rgba(0, 0, 0, 1); background: var(--crater-texture), rgba(18, 15, 10, 1); background-blend-mode: soft-light, normal; }
         
-        .card-orange { box-shadow: 0 0 44px rgba(0, 0, 0, 0.88); background: var(--crater-texture), rgba(36, 28, 25, 0.98); background-blend-mode: soft-light, normal; }
-        .card-orange:hover { box-shadow: 0 0 58px rgba(0, 0, 0, 1); background: var(--crater-texture), rgba(42, 33, 29, 1); background-blend-mode: soft-light, normal; }
+        .card-orange { box-shadow: 0 0 44px rgba(0, 0, 0, 0.88); background: var(--crater-texture), rgba(14, 8, 6, 0.98); background-blend-mode: soft-light, normal; }
+        .card-orange:hover { box-shadow: 0 0 58px rgba(0, 0, 0, 1); background: var(--crater-texture), rgba(18, 10, 8, 1); background-blend-mode: soft-light, normal; }
         
-        [gs-id="card-chart"] .card { box-shadow: 0 0 44px rgba(0, 0, 0, 0.88); background: rgba(30, 31, 38, 0.98); }
-        [gs-id="card-chart"] .card:hover { box-shadow: 0 0 58px rgba(0, 0, 0, 1); background: rgba(36, 38, 48, 1); }
+        [gs-id="card-chart"] .card { box-shadow: 0 0 44px rgba(0, 0, 0, 0.88); background: rgba(10, 11, 16, 0.98); }
+        [gs-id="card-chart"] .card:hover { box-shadow: 0 0 58px rgba(0, 0, 0, 1); background: rgba(14, 15, 24, 1); }
 
         /* EFECTO: RESPLANDOR VERDE */
         @keyframes greenAlertPulse {
             0% { box-shadow: 0 0 40px rgba(16, 185, 129, 0.3), inset 0 0 10px rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.4); }
             100% { box-shadow: 0 0 60px rgba(16, 185, 129, 0.9), inset 0 0 20px rgba(16, 185, 129, 0.3); border-color: rgba(16, 185, 129, 0.9); }
         }
-        .glow-active { animation: greenAlertPulse 1.5s infinite alternate ease-in-out !important; border-color: rgba(16, 185, 129, 0.8) !important; background: rgba(20, 25, 25, 0.98) !important; }
+        .glow-active { animation: greenAlertPulse 1.5s infinite alternate ease-in-out !important; border-color: rgba(16, 185, 129, 0.8) !important; background: rgba(10, 15, 15, 0.98) !important; }
 
         .spark-wrapper { position: relative; width: 100%; display: block; overflow: hidden; flex-shrink: 0; }
         .spark-wrapper canvas { position: absolute !important; top: 0 !important; left: 0 !important; width: 100% !important; height: 100% !important; display: block; }
@@ -241,7 +241,7 @@
         </div>
         <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: flex-end; margin-top: 5px;">
             <div class="header-btn" onclick="toggleRadarPanel()" title="Opportunity Radar Log">📜</div>
-            <div class="header-btn" onclick="toggleFullScreen()" title="Cinema / Wall Street Mode">🖵</div>
+            <div class="header-btn" onclick="toggleFullScreen()" title="Cinema / Wall Street Mode">𖩱</div>
             <div class="header-btn" id="edit-mode-btn" onclick="toggleEditMode()" title="Unlock Dashboard Layout">🔒</div>
             <div class="header-btn settings-btn" onclick="openSettings()" title="Settings">⚙️</div>
         </div>
@@ -945,13 +945,12 @@
                     
                     let totalLen = cloudHistory.labels.length;
                     
-                    // CÁLCULO DE SINCRONIZACIÓN TEMPORAL: Detectamos el cron del worker de Cloudflare y creamos huecos vacíos para no alterar el espacio de 24h
-                    let duplicates = 30; // Por defecto asumimos 15 min cron
+                    let duplicates = 30; 
                     if (totalLen > 1) {
                         let parseTime = (ts) => { let p = ts.split(':'); return parseInt(p[0]) * 60 + parseInt(p[1]); };
                         let m0 = parseTime(cloudHistory.labels[0] || "00:00"); let m1 = parseTime(cloudHistory.labels[1] || "00:00");
                         let diffMins = m1 - m0; if (diffMins < 0) diffMins += 24 * 60; 
-                        if (diffMins > 0) duplicates = diffMins * 2; // 2 puntos por minuto (cada 30s)
+                        if (diffMins > 0) duplicates = diffMins * 2; 
                     }
 
                     const getRightAligned = (arr, idx) => { if (!arr || !Array.isArray(arr)) return null; let offset = totalLen - arr.length; return idx >= offset ? arr[idx - offset] : null; };
@@ -1172,9 +1171,7 @@
                     let minApr = "-";
                     if(data.minOracleMetrics) {
                         let exactApr = parseFloat(data.minOracleMetrics.trading_fee_apr);
-                        if (!isNaN(exactApr) && exactApr > 0) {
-                            minApr = exactApr.toFixed(2);
-                        }
+                        if (!isNaN(exactApr) && exactApr > 0) { minApr = exactApr.toFixed(2); }
                     }
                     updateDOM('oracle-min-apr', minApr);
 
