@@ -96,7 +96,7 @@
         .tab-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--text-secondary); padding: 6px 15px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: 0.3s; display: flex; align-items: center; gap: 5px; font-size: 0.85rem;}
         .tab-btn:hover { background: rgba(255,255,255,0.1); color: white; }
         .tab-btn.active { background: rgba(255, 123, 0, 0.2); border-color: var(--neon-orange); color: white; box-shadow: 0 0 15px rgba(255, 123, 0, 0.3); }
-        .tab-btn-berry.active { background: rgba(255, 15, 91, 0.2); border-color: var(--neon-red); color: white; box-shadow: 0 0 15px rgba(255, 15, 91, 0.3); } /* Estilo especial para pestaña Berry */
+        .tab-btn-berry.active { background: rgba(255, 15, 91, 0.2); border-color: var(--neon-red); color: white; box-shadow: 0 0 15px rgba(255, 15, 91, 0.3); }
 
         .header-btn { font-size: 1.5rem; cursor: pointer; background: rgba(255,255,255,0.05); padding: 8px 12px; border-radius: 12px; transition: 0.3s; border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center;}
         .header-btn:hover { background: rgba(255,255,255,0.15); border-color: var(--neon-orange); }
@@ -119,24 +119,32 @@
 
         .card { border-radius: 20px; padding: 20px 25px; position: absolute; top: 0; left: 0; right: 0; bottom: 0; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); transition: background 0.3s ease, box-shadow 0.3s ease; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; }
         
-        .card-ada { box-shadow: 0 0 44px rgba(0, 0, 0, 0.88); background: var(--crater-texture), rgba(10, 11, 16, 0.98); background-blend-mode: soft-light, normal; }
-        .card-ada:hover { box-shadow: 0 0 58px rgba(0, 0, 0, 1); background: var(--crater-texture), rgba(14, 15, 24, 1); background-blend-mode: soft-light, normal; }
+        /* 🌋 FONDOS OSCUROS CLÁSICOS CON TEXTURA */
+        .card-ada { box-shadow: 0 0 44px rgba(0, 0, 0, 0.88); background: var(--crater-texture), rgba(30, 31, 38, 0.98); background-blend-mode: soft-light, normal; }
+        .card-ada:hover { box-shadow: 0 0 58px rgba(0, 0, 0, 1); background: var(--crater-texture), rgba(36, 38, 48, 1); background-blend-mode: soft-light, normal; }
         
-        .card-vault { box-shadow: 0 0 44px rgba(0, 0, 0, 0.88); background: var(--crater-texture), rgba(13, 11, 8, 0.98); background-blend-mode: soft-light, normal; }
-        .card-vault:hover { box-shadow: 0 0 58px rgba(0, 0, 0, 1); background: var(--crater-texture), rgba(18, 15, 10, 1); background-blend-mode: soft-light, normal; }
+        .card-vault { box-shadow: 0 0 44px rgba(0, 0, 0, 0.88); background: var(--crater-texture), rgba(35, 32, 28, 0.98); background-blend-mode: soft-light, normal; }
+        .card-vault:hover { box-shadow: 0 0 58px rgba(0, 0, 0, 1); background: var(--crater-texture), rgba(42, 38, 33, 1); background-blend-mode: soft-light, normal; }
         
-        .card-orange { box-shadow: 0 0 44px rgba(0, 0, 0, 0.88); background: var(--crater-texture), rgba(14, 8, 6, 0.98); background-blend-mode: soft-light, normal; }
-        .card-orange:hover { box-shadow: 0 0 58px rgba(0, 0, 0, 1); background: var(--crater-texture), rgba(18, 10, 8, 1); background-blend-mode: soft-light, normal; }
+        .card-orange { box-shadow: 0 0 44px rgba(0, 0, 0, 0.88); background: var(--crater-texture), rgba(36, 28, 25, 0.98); background-blend-mode: soft-light, normal; }
+        .card-orange:hover { box-shadow: 0 0 58px rgba(0, 0, 0, 1); background: var(--crater-texture), rgba(42, 33, 29, 1); background-blend-mode: soft-light, normal; }
+
+        /* 🟢 NUEVOS FONDOS PARA PESTAÑA BERRY */
+        .card-green { box-shadow: 0 0 44px rgba(0, 0, 0, 0.88); background: var(--crater-texture), rgba(20, 35, 25, 0.98); background-blend-mode: soft-light, normal; }
+        .card-green:hover { box-shadow: 0 0 58px rgba(0, 0, 0, 1); background: var(--crater-texture), rgba(24, 45, 30, 1); background-blend-mode: soft-light, normal; }
         
-        [gs-id*="card-chart"] .card { box-shadow: 0 0 44px rgba(0, 0, 0, 0.88); background: rgba(10, 11, 16, 0.98); }
-        [gs-id*="card-chart"] .card:hover { box-shadow: 0 0 58px rgba(0, 0, 0, 1); background: rgba(14, 15, 24, 1); }
+        .card-red { box-shadow: 0 0 44px rgba(0, 0, 0, 0.88); background: var(--crater-texture), rgba(38, 20, 24, 0.98); background-blend-mode: soft-light, normal; }
+        .card-red:hover { box-shadow: 0 0 58px rgba(0, 0, 0, 1); background: var(--crater-texture), rgba(48, 24, 30, 1); background-blend-mode: soft-light, normal; }
+        
+        [gs-id*="card-chart"] .card { box-shadow: 0 0 44px rgba(0, 0, 0, 0.88); background: rgba(30, 31, 38, 0.98); }
+        [gs-id*="card-chart"] .card:hover { box-shadow: 0 0 58px rgba(0, 0, 0, 1); background: rgba(36, 38, 48, 1); }
 
         /* EFECTO: RESPLANDOR VERDE */
         @keyframes greenAlertPulse {
             0% { box-shadow: 0 0 40px rgba(16, 185, 129, 0.3), inset 0 0 10px rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.4); }
             100% { box-shadow: 0 0 60px rgba(16, 185, 129, 0.9), inset 0 0 20px rgba(16, 185, 129, 0.3); border-color: rgba(16, 185, 129, 0.9); }
         }
-        .glow-active { animation: greenAlertPulse 1.5s infinite alternate ease-in-out !important; border-color: rgba(16, 185, 129, 0.8) !important; background: rgba(10, 15, 15, 0.98) !important; }
+        .glow-active { animation: greenAlertPulse 1.5s infinite alternate ease-in-out !important; border-color: rgba(16, 185, 129, 0.8) !important; background: rgba(20, 25, 25, 0.98) !important; }
 
         .spark-wrapper { position: relative; width: 100%; display: block; overflow: hidden; flex-shrink: 0; }
         .spark-wrapper canvas { position: absolute !important; top: 0 !important; left: 0 !important; width: 100% !important; height: 100% !important; display: block; }
@@ -490,9 +498,9 @@
     <div class="grid-stack grid-container" id="dashboard-berry" style="display: none;">
         
         <div class="grid-stack-item drag-item" gs-id="card-arb-vault-berry" gs-w="6" gs-h="2" gs-x="0" gs-y="0">
-            <div class="grid-stack-item-content card card-vault">
+            <div class="grid-stack-item-content card card-green">
                 <div style="flex-shrink: 0;">
-                    <div class="card-title" style="color: var(--vault-color);">Vault relics fair price BERRY</div>
+                    <div class="card-title" style="color: #10b981;">Vault fair price BERRY</div>
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <div class="data-row" style="margin: 0;"><span class="data-label" style="margin-right: 15px;">TVL:</span><span class="data-value" style="font-size: 1.2rem;"><span id="berry-vault-tvl"><span class="loading">...</span></span> <span id="berry-vault-change-24h" class="change-badge"></span></span></div>
                         <div class="data-row" style="margin: 0;"><span class="data-label" style="margin-right: 15px;">Fair price:</span><span class="data-value" id="berry-vault-fair-price" style="font-size: 1.2rem;">-</span></div>
@@ -525,7 +533,7 @@
         </div>
 
         <div class="grid-stack-item drag-item" gs-id="card-berry-ada" gs-w="6" gs-h="5" gs-x="0" gs-y="2">
-            <div class="grid-stack-item-content card card-vault" style="display: flex; flex-direction: column; justify-content: space-between;">
+            <div class="grid-stack-item-content card card-red" style="display: flex; flex-direction: column; justify-content: space-between;">
                 
                 <div style="flex-shrink: 0;">
                     <div class="card-title berry-title" style="font-size: 1.2rem; margin-bottom: 5px;">BERRY / ADA <span style="color: rgba(255, 15, 91, 0.6); text-transform: lowercase;">arbitrage</span></div>
@@ -613,7 +621,7 @@
     </div>
 
     <div class="footer-disclaimer">
-        This page is for informational purposes only. Nothing on this website constitutes investment advice. Always do your own research.
+        This page is for informational purposes only. Nothing on this website constitutes investment advice. Always do your research.
     </div>
 
     <script>
@@ -846,14 +854,14 @@
             if (rawVal === "") {
                 if (confKey === 'simDex') { let r = document.getElementById('sim-ada-range-oracle'); if(r) r.value = 0; recalculateDexSimulator(0); }
                 if (confKey === 'simTri') { let r = document.getElementById('sim-tri-range-oracle'); if(r) r.value = 0; recalculateTriSimulator(0); }
-                if (confKey === 'simDexBerry') { let r = document.getElementById('sim-ada-range-berry'); if(r) r.value = 0; } // Placeholder
+                if (confKey === 'simDexBerry') { let r = document.getElementById('sim-ada-range-berry'); if(r) r.value = 0; } 
                 return; 
             }
             let val = parseFloat(rawVal);
             if (!isNaN(val) && val >= 0) { conf[confKey] = val; localStorage.setItem('l4va_config', JSON.stringify(conf)); }
             if (confKey === 'simDex') { let range = document.getElementById('sim-ada-range-oracle'); if (range) range.value = val > 200 ? 200 : val; recalculateDexSimulator(isNaN(val) ? 0 : val); }
             if (confKey === 'simTri') { let range = document.getElementById('sim-tri-range-oracle'); if (range) range.value = val > 200 ? 200 : val; recalculateTriSimulator(isNaN(val) ? 0 : val); }
-            if (confKey === 'simDexBerry') { let range = document.getElementById('sim-ada-range-berry'); if (range) range.value = val > 200 ? 200 : val; } // Placeholder
+            if (confKey === 'simDexBerry') { let range = document.getElementById('sim-ada-range-berry'); if (range) range.value = val > 200 ? 200 : val; } 
         }
 
         const drawToleranceBandPlugin = {
@@ -885,13 +893,13 @@
                 options: chartOptions 
             });
 
-            // CHART PARA BERRY (Vacío por ahora)
+            // 🟢 CHART PARA BERRY (Línea de Vault en Verde)
             const ctxBerry = document.getElementById('arbitrageChartBerry').getContext('2d');
             chartInstanceBerry = new Chart(ctxBerry, {
                 type: 'line',
                 data: { labels: Array(MAX_CHART_POINTS).fill(''), datasets: [
                     { label: 'BERRY / ADA spread %', data: [], borderColor: '#ff0f5b', tension: 0.4, borderWidth: 2, pointRadius: 0, spanGaps: true },
-                    { label: 'Vault Discrepancy %', data: [], borderColor: '#fcd34d', tension: 0.4, borderWidth: 2, pointRadius: 0, spanGaps: true }
+                    { label: 'Vault Discrepancy %', data: [], borderColor: '#10b981', tension: 0.4, borderWidth: 2, pointRadius: 0, spanGaps: true }
                 ]},
                 options: chartOptions
             });
@@ -916,8 +924,8 @@
             sparkInstances.pOracleVyfi = createSpark('spark-oracle-vyfi-price', 'rgba(255, 255, 255, 1)', chartHistory.pOracleVyfi); 
             sparkInstances.pOracleMin = createSpark('spark-oracle-min-price', 'rgba(255, 255, 255, 1)', chartHistory.pOracleMin); 
 
-            // Sparks para BERRY (Vacíos por ahora, esperando conexión de API)
-            sparkInstances.berryVault = createSpark('spark-berry-vault', 'rgba(252, 211, 77, 1)', []);
+            // Sparks para BERRY (Línea de Vault verde)
+            sparkInstances.berryVault = createSpark('spark-berry-vault', 'rgba(16, 185, 129, 1)', []);
             sparkInstances.adaBerry = createSpark('spark-ada-berry', 'rgba(66, 133, 244, 1)', []);
             sparkInstances.pBerryVyfi = createSpark('spark-berry-vyfi-price', 'rgba(255, 255, 255, 1)', []);
             sparkInstances.berryVyfi = createSpark('spark-berry-vyfi', 'rgba(167, 139, 250, 1)', []);
@@ -1237,7 +1245,6 @@
                 let changeText = (adaChange > 0 ? "+" : "") + adaChange.toFixed(2) + "%";
 
                 updateDOM('ada-price-usd-oracle', `$${currentAdaUsd.toFixed(4)} <span id="ada-change-24h-oracle" class="change-badge" style="color:${changeColor}">${changeText}</span>`);
-                // 🛑 AÑADIDO: También actualizar la tarjeta clonada de BERRY
                 updateDOM('ada-price-usd-berry', `$${currentAdaUsd.toFixed(4)} <span id="ada-change-24h-berry" class="change-badge" style="color:${changeColor}">${changeText}</span>`);
 
                 if(sparkInstances.adaOracle) { 
@@ -1256,7 +1263,6 @@
                     sparkInstances.adaOracle.data.datasets[0].data = expandedAda; 
                     sparkInstances.adaOracle.update('none'); 
 
-                    // 🛑 AÑADIDO: También actualizar la gráfica de BERRY
                     if (sparkInstances.adaBerry) {
                         sparkInstances.adaBerry.data.labels = sparkInstances.adaOracle.data.labels;
                         sparkInstances.adaBerry.data.datasets[0].data = expandedAda;
