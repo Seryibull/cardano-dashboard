@@ -119,7 +119,6 @@
 
         .card { border-radius: 20px; padding: 20px 25px; position: absolute; top: 0; left: 0; right: 0; bottom: 0; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); transition: background 0.3s ease, box-shadow 0.3s ease; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; }
         
-        /* 🌋 FONDOS OSCUROS CLÁSICOS CON TEXTURA (Valores originales restaurados) */
         .card-ada { box-shadow: 0 0 44px rgba(0, 0, 0, 0.88); background: var(--crater-texture), rgba(10, 11, 16, 0.98); background-blend-mode: soft-light, normal; }
         .card-ada:hover { box-shadow: 0 0 58px rgba(0, 0, 0, 1); background: var(--crater-texture), rgba(14, 15, 24, 1); background-blend-mode: soft-light, normal; }
         
@@ -129,7 +128,6 @@
         .card-orange { box-shadow: 0 0 44px rgba(0, 0, 0, 0.88); background: var(--crater-texture), rgba(14, 8, 6, 0.98); background-blend-mode: soft-light, normal; }
         .card-orange:hover { box-shadow: 0 0 58px rgba(0, 0, 0, 1); background: var(--crater-texture), rgba(18, 10, 8, 1); background-blend-mode: soft-light, normal; }
 
-        /* 🟢 NUEVOS FONDOS PARA PESTAÑA BERRY (Nivel de oscuridad idéntico a las originales) */
         .card-green { box-shadow: 0 0 44px rgba(0, 0, 0, 0.88); background: var(--crater-texture), rgba(8, 14, 10, 0.98); background-blend-mode: soft-light, normal; }
         .card-green:hover { box-shadow: 0 0 58px rgba(0, 0, 0, 1); background: var(--crater-texture), rgba(10, 18, 12, 1); background-blend-mode: soft-light, normal; }
         
@@ -651,7 +649,9 @@
         let userPasskey = localStorage.getItem('l4va_passkey') || "";
         let chartInstance = null; let chartInstanceBerry = null; let sparkInstances = {}; 
         let currentAdaUsd = 0; let fetchInterval = null;
-        const MAX_CHART_POINTS = 1440;
+        
+        // 🔴 CORRECCIÓN CLAVE: El límite de historial web para 24h a 30s de refresco es 2880
+        const MAX_CHART_POINTS = 2880;
         
         let chartHistory = { 
             labels: [], spread: [], discrepancy: [], vlrmOracleSpread: [], vlrmAda: [], vlrmOracle: [], oracleVyfi: [], oracleMin: [], vault: [], totalLiq: [], pVlrmAda: [], pVlrmOracle: [], pOracleVyfi: [], pOracleMin: []
